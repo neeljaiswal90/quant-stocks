@@ -105,11 +105,11 @@ Required drift handling:
 
 | Item | Evidence state | Observation |
 |---|---|---|
-| Git repository | `COMMITTED_UNVERIFIED` | Clean branch `codex/linear-foundation` at `37f52cf918dba5a04d47c95940beeb12d196c73f`; four reviewed local commits exist. |
+| Git repository | `COMMITTED_UNVERIFIED` | Clean branch `codex/linear-foundation` at `cc43567826f6498abf156b76db71f2bea44410ff`; eight reviewed local commits exist before this memory update. |
 | Python package | `VERIFIED` locally | `qme` version `0.1.0`; CPython contract is `>=3.12,<3.13` and validation used CPython 3.12.10. |
-| Runtime/development locks | `VERIFIED` locally | Base runtime has no dependencies. Fully hashed build, development, and agent locks verify; clean agent resolution was dry-run only with runtime disabled. |
+| Runtime/development locks | `VERIFIED` locally | Base runtime pins `tzdata==2026.3` so IANA exchange-timezone behavior is reproducible on Windows. Fully hashed build, development, and agent locks verify; clean agent resolution was dry-run only with runtime disabled. |
 | Agent dependency | `COMMITTED/BLOCKED` | TradingAgents is pinned to archive SHA-256 and upstream commit `a33fd4c0f134485a43553a2c23a63cb14adbd88f`; the packet-native service, parent-attested supervisor, strict schemas, freshness authority, and evaluation gate remain missing. |
-| Core tests | `VERIFIED` locally | `python -m pytest -q -p no:cacheprovider` -> `113 passed`. |
+| Core tests | `VERIFIED` locally | `python -m pytest -q -p no:cacheprovider` -> `183 passed`. |
 | Lint and typing | `VERIFIED` locally | Ruff over `qme tests scripts` passes; strict mypy over `qme` and the verification scripts passes. |
 | Build/install | `VERIFIED` locally | Wheel build, clean no-dependency install, `pip check`, and both CLI help smokes pass. |
 | Fixture determinism | `VERIFIED` locally | Two independent canonical foundation manifests are byte-identical at SHA-256 `7468180f9ce2cce7bf6decdc6c54910966fd2a713e9da5b047689d4e78a28957`. |
@@ -130,6 +130,12 @@ The currently implemented QME package is limited to:
   unavailable until its discrete solver exists;
 - the frozen NEE-119 v0.1 signal/rank/selection/rational-weight/filter-child contract,
   with production use blocked on named point-in-time evidence registrations;
+- the NEE-120 economic-promotion and abort decision contract, with strict direction,
+  non-inferiority boundary, unit, immutable `NO_GO`, and sticky-abort behavior while all
+  unavailable mandate values remain explicit blockers;
+- the NEE-121 development/confirmation/retrospective/prospective split, independent
+  horizon purging, historical availability, append-only access lineage, and restart
+  contract, with pristine-holdout and prospective sufficiency claims blocked;
 - strict local tests for these boundaries.
 
 Agent output remains report-only. It has `trade_eligible=false` and cannot change
@@ -154,9 +160,10 @@ Synthetic NVDA values in tests are fixtures, not production research results.
 
 ### Affected live Linear snapshot
 
-After evidence reconciliation, NEE-117, NEE-118, and NEE-119 are `In Progress`; NEE-168
+After evidence reconciliation, NEE-117 through NEE-121 are `In Progress`; NEE-168
 through NEE-171 remain `Backlog`. NEE-118/119 moved from `Todo` only after their local
-commits, independent corrections, and validation evidence existed. All remain below
+commits, independent corrections, and validation evidence existed. NEE-120/121 follow
+the same evidence rule. All remain below
 `ACCEPTED` until their outstanding CI, runtime, or producer gates exist.
 
 ## 6. System mission and non-negotiable boundary
@@ -185,7 +192,7 @@ engine, agent orchestrator, broker controller, or alternative source of truth.
 | M1 market-data spine | `PLANNED` | Immutable raw receipts, schema validation, rate-limit/retry tests, replayable normalized outputs. |
 | M2 identity/corporate actions/coverage | `PLANNED` | Point-in-time identity and membership, explicit exclusions, adjustment fixtures, coverage gate. |
 | M3 deterministic signal/backtest | `IN_PROGRESS` | NEE-118/119 contracts are locally committed and tested; production engine, greatest-capital capacity solver, golden two-rebalance fixtures, and backtest remain. |
-| M4 reporting/validation | `PLANNED` | Registered metrics and tests, multiplicity controls, dev/validation/holdout isolation, immutable reports. |
+| M4 reporting/validation | `IN_PROGRESS` | NEE-120/121 governance is locally committed and tested; mandate thresholds, inference registrations, prospective evidence sufficiency, multiplicity execution, immutable empirical reports, and exact-SHA CI remain. |
 | M5 broker/paper operations | `PLANNED` | Preview-only default, account/environment allowlist, confirmation authority outside UI, reconciliation and abort evidence. |
 | M6 Nasdaq-100 agent review | `IN_PROGRESS/BLOCKED` | Full deterministic universe artifact, immutable evidence packets, process-isolated attested runtime, strict typed outputs, cross-ticker normalization. |
 | M7 deferred research extensions | `DEFERRED` | Promotion gates for any extension; no holdout tuning. |
@@ -333,7 +340,8 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No remote CI provenance:** four reviewed local commits exist, but there is no remote,
+1. **No remote CI provenance:** eight reviewed local commits exist before the current
+   memory update, but there is no remote,
    pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
    Nasdaq-100 producer schema is accepted.
@@ -396,6 +404,8 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-10 | Committed corrected NEE-119 v0.1 quantitative contract as `943da8dcecc1148cd158383a7b5682d0fe0a85ba`. | `COMMITTED_UNVERIFIED` | 41 focused tests; exact calendar anchors, rational weights, total-return methodology, near ties and immutable filter children pass. Production evidence registrations remain blocking. |
 | 2026-08-10 | Committed the local-only UI architecture contract as `37f52cf918dba5a04d47c95940beeb12d196c73f`. | `PLANNING_ONLY` | ADR/spec/review are committed; no UI code or runtime evidence exists. Full integration validation at this SHA: 113 tests, Ruff, strict mypy, compile, locks, wheel and CLI smokes pass. |
 | 2026-08-10 | Reconciled live Linear descriptions and comments with commit/test evidence; moved NEE-118 and NEE-119 from `Todo` to `In Progress`, retained NEE-117 `In Progress`, and retained NEE-168 `Backlog`. | `COMMITTED_UNVERIFIED` / `PLANNING_ONLY` | No ticket was marked Done. Exact-SHA remote CI, production evidence registrations, capacity solver, and UI implementation remain explicit gates. |
+| 2026-08-10 | Committed fail-closed NEE-120 promotion and abort governance as `5f9546e6308a4adadeccb6e06b1aeb900ca37285`. | `COMMITTED_UNVERIFIED` | 16 focused tests and exact arithmetic pass. Production remains `BLOCKED_UNRESOLVED_MANDATE`; no threshold, margin, AUM, inference, sample-size, or abort value was invented. |
+| 2026-08-10 | Committed NEE-121 sample/holdout governance and the pinned Windows IANA timezone dependency as `cc43567826f6498abf156b76db71f2bea44410ff`. | `COMMITTED_UNVERIFIED` | 54 focused tests; full suite 183 passed; Ruff, strict mypy, three hashed locks, and staged-byte secret scan pass. Confirmation provenance and prospective evidence sufficiency remain explicitly blocked. |
 
 ## 13. Per-ticket evidence record template
 
