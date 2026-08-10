@@ -1,0 +1,86 @@
+{
+  "schema_version": "qme.total_return_methodology.v1",
+  "methodology_id": "qme-point-in-time-total-return-close-v1",
+  "status": "FROZEN_BLOCKED_ON_PRODUCTION_EVENT_EVIDENCE",
+  "numeric_policy": {
+    "input_encoding": "canonical_decimal_string",
+    "binary_float_forbidden": true,
+    "decimal_precision_digits": 50,
+    "rounding_mode": "ROUND_HALF_EVEN",
+    "artifact_scale": 18
+  },
+  "required_lineage": [
+    "security_id",
+    "session",
+    "analysis_as_of",
+    "raw_close_snapshot_id",
+    "raw_close_snapshot_hash",
+    "corporate_action_snapshot_id",
+    "corporate_action_snapshot_hash",
+    "source_accepted_at",
+    "methodology_id",
+    "methodology_hash",
+    "revision_id"
+  ],
+  "session_event_order": [
+    "validate_prior_and_current_raw_close",
+    "apply_effective_split_to_prior_share_entitlement",
+    "convert_declared_dividend_to_post_split_per_share_coordinate",
+    "recognize_supported_distribution_available_by_cutoff",
+    "compute_total_return_gross_factor",
+    "reinvest_supported_cash_distribution_at_current_raw_close",
+    "publish_new_revision_without_rewriting_prior_revision"
+  ],
+  "gross_factor_formula": "split_factor_t * (raw_close_t + dividend_post_split_per_share_t) / raw_close_t_minus_1",
+  "index_formula": "tr_index_t = tr_index_t_minus_1 * gross_factor_t",
+  "dividend_reinvestment": {
+    "timing": "CURRENT_SESSION_RAW_CLOSE_AFTER_SUPPORTED_DISTRIBUTION_RECOGNITION",
+    "reinvestment_price": "raw_close_t",
+    "coordinate": "POST_SPLIT_CASH_PER_SHARE",
+    "ordinary_cash_dividend": "SUPPORTED_WITH_CUTOFF_VALID_TERMS",
+    "special_cash_dividend": "SUPPORTED_ONLY_WITH_EXPLICIT_CLASSIFICATION_AND_COORDINATE",
+    "negative_distribution_allowed": false
+  },
+  "split_policy": {
+    "factor_must_be_positive": true,
+    "event_order": "SPLIT_BEFORE_DIVIDEND_UNIT_CONVERSION",
+    "split_applied_before_dividend_coordinate_conversion": true,
+    "ambiguous_pre_or_post_split_dividend": "BLOCKED_AMBIGUOUS_EVENT_COORDINATE"
+  },
+  "unsupported_actions": [
+    "CASH_IN_LIEU_WITHOUT_PRICE",
+    "DELISTING_WITHOUT_TERMINAL_VALUE",
+    "MERGER_WITHOUT_REGISTERED_HANDLER",
+    "RETURN_OF_CAPITAL_WITHOUT_BASIS_HANDLER",
+    "RIGHTS_DISTRIBUTION_WITHOUT_REGISTERED_HANDLER",
+    "SPINOFF_WITHOUT_REGISTERED_HANDLER"
+  ],
+  "special_actions": {
+    "default": "UNSUPPORTED_FAIL_CLOSED",
+    "support_requires": "VERSIONED_HANDLER_ID_HASH_AND_POINT_IN_TIME_TERMS",
+    "silent_zero_value_forbidden": true
+  },
+  "late_corrections": {
+    "published_artifact_policy": "NEW_IMMUTABLE_REVISION",
+    "prior_revision_bytes_mutable": false,
+    "corrected_revision_requires_new_run_identity": true
+  },
+  "revision_policy": {
+    "late_correction_action": "CREATE_NEW_IMMUTABLE_REVISION",
+    "accepted_revision_rewrite_allowed": false,
+    "post_cutoff_event_in_current_run": "BLOCKED_POST_CUTOFF_EVENT",
+    "revised_result_requires_new_run_identity": true,
+    "revision_order_key": "source_accepted_at_then_source_event_id",
+    "duplicate_source_event_id": "BLOCKED_DUPLICATE_EVENT"
+  },
+  "fail_closed_states": [
+    "BLOCKED_AMBIGUOUS_EVENT_COORDINATE",
+    "BLOCKED_DUPLICATE_EVENT",
+    "BLOCKED_MISSING_CORPORATE_ACTION_SNAPSHOT",
+    "BLOCKED_MISSING_RAW_CLOSE",
+    "BLOCKED_NONFINITE_INPUT",
+    "BLOCKED_NONPOSITIVE_RAW_CLOSE",
+    "BLOCKED_POST_CUTOFF_EVENT",
+    "BLOCKED_UNSUPPORTED_SPECIAL_ACTION"
+  ]
+}

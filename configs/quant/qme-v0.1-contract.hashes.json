@@ -1,0 +1,29 @@
+{
+  "schema_version": "qme.quantitative_contract_hash_manifest.v1",
+  "contract_id": "qme-long-only-momentum-v0.1",
+  "status": "PREPARED_NOT_ATTACHED_TO_PHASE_GATE",
+  "hash_algorithm": "SHA-256",
+  "artifacts": [
+    {
+      "path": "docs/quant/QME_V0_1_QUANTITATIVE_CONTRACT.md",
+      "sha256": "f44fdab28e18f87e159e69587001b4f90b4b0922af9dd1ae628f0271ce8184d1"
+    },
+    {
+      "path": "configs/quant/qme-v0.1-contract.json",
+      "sha256": "47070e5827292e74567ae32aeff58bcc2c58e4720edaa2d557435eb2a5f472fa"
+    },
+    {
+      "path": "configs/quant/qme-v0.1-total-return-methodology.json",
+      "sha256": "95381821c1c8ff00e0e626b3d7ee36466d12c3be9e6b8cb75ee166f0043454ac"
+    },
+    {
+      "path": "schemas/quant/qme-v0.1-contract.schema.json",
+      "sha256": "083714adf4b5cfae9e403fce4bce3aaa5a8d04ba23cadbd1a07cba4ff2bafa46"
+    },
+    {
+      "path": "tests/fixtures/quant/v0_1_contract_cases.json",
+      "sha256": "ab59da50d3fc953916c38005c9c6d4ce107cf4278de1d9af7f2f364aa1dd9c29"
+    }
+  ],
+  "note": "Hashes are source-controlled phase-gate evidence. Linear attachment is outside this change scope."
+}
