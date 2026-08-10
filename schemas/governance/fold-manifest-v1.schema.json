@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/fold-manifest-v1.schema.json",
+  "title": "QME purged fold manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "governance_contract_id", "fold_id", "contract_version",
+    "sample_classification", "sample_window_start", "sample_window_end", "fold_end",
+    "fold_end_session_id", "fold_end_session_phase", "formation_window_start_session_id",
+    "formation_window_end_session_id", "formation_session_phase", "timezone_id", "calendar_id",
+    "calendar_sha256", "ordered_session_vector_sha256", "label_endpoint_registrations", "analysis_as_of",
+    "permitted_data_cutoff", "labels", "availability", "sample_access_log_head_hash",
+    "manifest_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "qme.fold_manifest.v1"},
+    "governance_contract_id": {"const": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1"},
+    "fold_id": {"type": "string", "minLength": 1},
+    "contract_version": {"type": "string", "minLength": 1},
+    "sample_classification": {"$ref": "#/$defs/classification"},
+    "sample_window_start": {"type": "string", "format": "date-time"},
+    "sample_window_end": {"type": ["string", "null"], "format": "date-time"},
+    "fold_end": {"type": "string", "format": "date-time"},
+    "fold_end_session_id": {"type": "string", "minLength": 1},
+    "fold_end_session_phase": {"const": "OPEN"},
+    "formation_window_start_session_id": {"type": "string", "minLength": 1},
+    "formation_window_end_session_id": {"type": ["string", "null"]},
+    "formation_session_phase": {"const": "CLOSE"},
+    "timezone_id": {"type": "string", "minLength": 1},
+    "calendar_id": {"type": "string", "minLength": 1},
+    "calendar_sha256": {"$ref": "#/$defs/hash"},
+    "ordered_session_vector_sha256": {"$ref": "#/$defs/hash"},
+    "label_endpoint_registrations": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["horizon", "endpoint_registration_id", "endpoint_registration_sha256"],
+        "properties": {
+          "horizon": {"enum": ["1M", "3M", "6M"]},
+          "endpoint_registration_id": {"type": "string", "minLength": 1},
+          "endpoint_registration_sha256": {"$ref": "#/$defs/hash"}
+        }
+      }
+    },
+    "analysis_as_of": {"type": "string", "format": "date-time"},
+    "permitted_data_cutoff": {"type": "string", "format": "date-time"},
+    "labels": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/labelDecision"}
+    },
+    "availability": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/availabilityDecision"}
+    },
+    "sample_access_log_head_hash": {"$ref": "#/$defs/hash"},
+    "manifest_hash": {"$ref": "#/$defs/hash"}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "classification": {
+      "enum": [
+        "DEVELOPMENT_2011_2018",
+        "ONE_TIME_HISTORICAL_CONFIRMATION_2019_2021",
+        "RETROSPECTIVE_EXTERNAL_STRESS_2022_PLUS",
+        "PROSPECTIVE_AFTER_FREEZE"
+      ]
+    },
+    "labelDecision": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "formation_id", "formation_at", "formation_session_id", "formation_session_ordinal", "formation_session_phase",
+        "formation_timezone_id", "horizon", "coordinate", "label_start", "label_end",
+        "label_start_session_id", "label_end_session_id", "label_start_session_ordinal", "label_end_session_ordinal", "session_phase", "calendar_id",
+        "calendar_sha256", "ordered_session_vector_sha256", "endpoint_registration_id",
+        "endpoint_registration_sha256", "disposition", "reason"
+      ],
+      "properties": {
+        "formation_id": {"type": "string", "minLength": 1},
+        "formation_at": {"type": "string", "format": "date-time"},
+        "formation_session_id": {"type": "string", "minLength": 1},
+        "formation_session_ordinal": {"type": "integer", "minimum": 0},
+        "formation_session_phase": {"const": "CLOSE"},
+        "formation_timezone_id": {"type": "string", "minLength": 1},
+        "horizon": {"enum": ["1M", "3M", "6M"]},
+        "coordinate": {"enum": ["TRADABLE_T_PLUS_1_OPEN_TO_T_PLUS_1_OPEN", "DIAGNOSTIC_CLOSE_TO_CLOSE_NOT_AUTHORITY"]},
+        "label_start": {"type": "string", "format": "date-time"},
+        "label_end": {"type": "string", "format": "date-time"},
+        "label_start_session_id": {"type": "string", "minLength": 1},
+        "label_end_session_id": {"type": "string", "minLength": 1},
+        "label_start_session_ordinal": {"type": "integer", "minimum": 0},
+        "label_end_session_ordinal": {"type": "integer", "minimum": 0},
+        "session_phase": {"enum": ["OPEN", "CLOSE"]},
+        "calendar_id": {"type": "string", "minLength": 1},
+        "calendar_sha256": {"$ref": "#/$defs/hash"},
+        "ordered_session_vector_sha256": {"$ref": "#/$defs/hash"},
+        "endpoint_registration_id": {"type": "string", "minLength": 1},
+        "endpoint_registration_sha256": {"$ref": "#/$defs/hash"},
+        "disposition": {"enum": ["RETAINED", "PURGED"]},
+        "reason": {"enum": ["LABEL_END_AT_OR_BEFORE_FOLD_END", "LABEL_END_AFTER_FOLD_END", "FORMATION_OUTSIDE_FOLD_SAMPLE_CLASSIFICATION", "FORMATION_OUTSIDE_BOUND_EXACT_WINDOW", "FORMATION_CALENDAR_BINDING_MISMATCH", "LABEL_CALENDAR_BINDING_MISMATCH", "LABEL_ENDPOINT_METHOD_UNREGISTERED_OR_MISMATCH", "LABEL_START_NOT_AFTER_FORMATION", "LABEL_START_NOT_EXACT_T_PLUS_1_OPEN"]}
+      }
+    },
+    "availabilityDecision": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "item_id", "item_kind", "content_sha256", "vintage_sha256", "effective_at",
+        "published_at", "vendor_available_at", "local_accepted_at", "revision_at",
+        "available_at", "observation_end_at", "source_cutoff_field", "source_cutoff_at",
+        "disposition", "reason"
+      ],
+      "properties": {
+        "item_id": {"type": "string", "minLength": 1},
+        "item_kind": {"enum": ["FEATURE", "CORPORATE_ACTION", "FILING", "FILL", "MODEL_INPUT", "EVIDENCE", "DATA_VINTAGE", "MEMBERSHIP_SNAPSHOT", "REFLECTION_MEMORY"]},
+        "content_sha256": {"$ref": "#/$defs/hash"},
+        "vintage_sha256": {"$ref": "#/$defs/hash"},
+        "effective_at": {"type": "string", "format": "date-time"},
+        "published_at": {"type": "string", "format": "date-time"},
+        "vendor_available_at": {"type": "string", "format": "date-time"},
+        "local_accepted_at": {"type": "string", "format": "date-time"},
+        "revision_at": {"type": "string", "format": "date-time"},
+        "available_at": {"type": "string", "format": "date-time"},
+        "observation_end_at": {"type": "string", "format": "date-time"},
+        "source_cutoff_field": {"type": ["string", "null"]},
+        "source_cutoff_at": {"type": ["string", "null"], "format": "date-time"},
+        "disposition": {"enum": ["PERMITTED", "BLOCKED"]},
+        "reason": {"enum": ["AVAILABLE_AT_OR_BEFORE_ANALYSIS_AS_OF", "EFFECTIVE_AFTER_ANALYSIS_AS_OF", "PUBLISHED_AFTER_ANALYSIS_AS_OF", "VENDOR_AVAILABLE_AFTER_ANALYSIS_AS_OF", "LOCAL_ACCEPTED_AFTER_ANALYSIS_AS_OF", "REVISION_AFTER_ANALYSIS_AS_OF", "OBSERVATION_AFTER_PERMITTED_SAMPLE_CUTOFF", "DATA_VINTAGE_AT_AFTER_ANALYSIS_AS_OF", "MEMBERSHIP_SNAPSHOT_AS_OF_AFTER_ANALYSIS_AS_OF", "FILING_ACCEPTED_AT_AFTER_ANALYSIS_AS_OF", "REFLECTION_CREATED_AT_AFTER_ANALYSIS_AS_OF"]}
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "qme.sample_holdout_fixture.v1",
+  "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+  "fixture_status": "SYNTHETIC_NOT_EMPIRICAL_NOT_PRODUCTION_REGISTRATION",
+  "calendar": {
+    "calendar_id": "SYNTHETIC_NYSE_CALENDAR_V1",
+    "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "ordered_session_vector_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "timezone_id": "America/New_York",
+    "fold_end_session_id": "2018-12-31",
+    "fold_end_session_phase": "OPEN",
+    "fold_end": "2018-12-31T14:30:00Z",
+    "analysis_as_of": "2018-12-31T14:30:00Z"
+  },
+  "synthetic_freeze_timestamp": "2026-08-10T20:00:00Z",
+  "classification_cases": [
+    {"id": "development-start", "formation_at": "2011-01-01T14:30:00Z", "expected": "DEVELOPMENT_2011_2018"},
+    {"id": "development-end", "formation_at": "2018-12-31T14:29:59Z", "expected": "DEVELOPMENT_2011_2018"},
+    {"id": "confirmation-start", "formation_at": "2019-01-01T14:30:00Z", "expected": "ONE_TIME_HISTORICAL_CONFIRMATION_2019_2021"},
+    {"id": "confirmation-end", "formation_at": "2021-12-31T14:30:00Z", "expected": "ONE_TIME_HISTORICAL_CONFIRMATION_2019_2021"},
+    {"id": "retrospective-stress", "formation_at": "2022-01-03T14:30:00Z", "expected": "RETROSPECTIVE_EXTERNAL_STRESS_2022_PLUS"},
+    {"id": "prospective-after-freeze", "formation_at": "2026-08-10T20:00:00.000001Z", "expected": "PROSPECTIVE_AFTER_FREEZE"}
+  ],
+  "label_boundary_cases": [
+    {"id": "1m-before", "horizon": "1M", "relation": "BEFORE", "expected": "RETAINED"},
+    {"id": "1m-exact", "horizon": "1M", "relation": "EXACT", "expected": "RETAINED"},
+    {"id": "1m-after", "horizon": "1M", "relation": "AFTER", "expected": "PURGED"},
+    {"id": "3m-before", "horizon": "3M", "relation": "BEFORE", "expected": "RETAINED"},
+    {"id": "3m-exact", "horizon": "3M", "relation": "EXACT", "expected": "RETAINED"},
+    {"id": "3m-after", "horizon": "3M", "relation": "AFTER", "expected": "PURGED"},
+    {"id": "6m-before", "horizon": "6M", "relation": "BEFORE", "expected": "RETAINED"},
+    {"id": "6m-exact", "horizon": "6M", "relation": "EXACT", "expected": "RETAINED"},
+    {"id": "6m-after", "horizon": "6M", "relation": "AFTER", "expected": "PURGED"}
+  ],
+  "availability_cases": [
+    {"id": "all-coordinates-exact-boundary", "kind": "FEATURE", "mutation": "NONE", "expected_disposition": "PERMITTED", "expected_reason": "AVAILABLE_AT_OR_BEFORE_ANALYSIS_AS_OF"},
+    {"id": "effective-after", "kind": "FEATURE", "mutation": "EFFECTIVE_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "EFFECTIVE_AFTER_ANALYSIS_AS_OF"},
+    {"id": "published-after", "kind": "FEATURE", "mutation": "PUBLISHED_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "PUBLISHED_AFTER_ANALYSIS_AS_OF"},
+    {"id": "action-published-after", "kind": "CORPORATE_ACTION", "mutation": "PUBLISHED_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "PUBLISHED_AFTER_ANALYSIS_AS_OF"},
+    {"id": "fill-published-after", "kind": "FILL", "mutation": "PUBLISHED_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "PUBLISHED_AFTER_ANALYSIS_AS_OF"},
+    {"id": "model-input-published-after", "kind": "MODEL_INPUT", "mutation": "PUBLISHED_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "PUBLISHED_AFTER_ANALYSIS_AS_OF"},
+    {"id": "evidence-published-after", "kind": "EVIDENCE", "mutation": "PUBLISHED_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "PUBLISHED_AFTER_ANALYSIS_AS_OF"},
+    {"id": "vendor-after", "kind": "FEATURE", "mutation": "VENDOR_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "VENDOR_AVAILABLE_AFTER_ANALYSIS_AS_OF"},
+    {"id": "local-accepted-after", "kind": "FEATURE", "mutation": "LOCAL_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "LOCAL_ACCEPTED_AFTER_ANALYSIS_AS_OF"},
+    {"id": "revision-after", "kind": "FEATURE", "mutation": "REVISION_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "REVISION_AFTER_ANALYSIS_AS_OF"},
+    {"id": "observation-after", "kind": "FEATURE", "mutation": "OBSERVATION_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "OBSERVATION_AFTER_PERMITTED_SAMPLE_CUTOFF"},
+    {"id": "data-vintage-after", "kind": "DATA_VINTAGE", "mutation": "SOURCE_CUTOFF_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "DATA_VINTAGE_AT_AFTER_ANALYSIS_AS_OF"},
+    {"id": "membership-after", "kind": "MEMBERSHIP_SNAPSHOT", "mutation": "SOURCE_CUTOFF_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "MEMBERSHIP_SNAPSHOT_AS_OF_AFTER_ANALYSIS_AS_OF"},
+    {"id": "filing-amendment-after", "kind": "FILING", "mutation": "SOURCE_CUTOFF_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "FILING_ACCEPTED_AT_AFTER_ANALYSIS_AS_OF"},
+    {"id": "reflection-after", "kind": "REFLECTION_MEMORY", "mutation": "SOURCE_CUTOFF_AFTER", "expected_disposition": "BLOCKED", "expected_reason": "REFLECTION_CREATED_AT_AFTER_ANALYSIS_AS_OF"},
+    {"id": "pre-2011-feature-lookback", "kind": "FEATURE", "mutation": "PRE_2011_LOOKBACK", "expected_disposition": "PERMITTED", "expected_reason": "AVAILABLE_AT_OR_BEFORE_ANALYSIS_AS_OF"}
+  ],
+  "access_log": {
+    "trial_id": "trial-v0.1-001",
+    "run_id": "run-v0.1-001",
+    "query_id": "query-stress-window-001",
+    "analysis_as_of": "2021-12-31T21:00:00Z",
+    "data_vintage_at": "2021-12-31T20:59:00Z",
+    "data_vintage_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "request_content_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "artifact_id": "synthetic-sample-snapshot",
+    "artifact_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "prospective_change_cases": [
+    {"change_kind": "DOCUMENTATION_ONLY_NO_SEMANTIC_CHANGE", "requires_restart": false},
+    {"change_kind": "INFRASTRUCTURE_ONLY_NO_DATA_OR_RESULT_CHANGE", "requires_restart": false},
+    {"change_kind": "SPECIFICATION_CHANGE", "requires_restart": true},
+    {"change_kind": "FEATURE_CHANGE", "requires_restart": true},
+    {"change_kind": "LABEL_CHANGE", "requires_restart": true},
+    {"change_kind": "PORTFOLIO_CHANGE", "requires_restart": true},
+    {"change_kind": "DATA_METHOD_CHANGE", "requires_restart": true},
+    {"change_kind": "THRESHOLD_REGISTRATION", "requires_restart": true}
+  ]
+}

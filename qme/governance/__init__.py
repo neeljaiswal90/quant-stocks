@@ -1,0 +1,41 @@
+"""Deterministic sample and holdout governance contracts."""
+
+from qme.governance.sample_holdout import (
+    AccessEventType,
+    AccessMode,
+    AvailabilityItem,
+    ChangeKind,
+    DataItemKind,
+    FoldDefinition,
+    FormationObservation,
+    LabelCoordinate,
+    LabelHorizon,
+    LabelObservation,
+    ProspectiveProtocol,
+    SampleAccessEvent,
+    SampleAccessLog,
+    SampleClassification,
+    build_fold_manifest,
+    classify_sample,
+    validate_event_chain,
+)
+
+__all__ = [
+    "AccessEventType",
+    "AccessMode",
+    "AvailabilityItem",
+    "ChangeKind",
+    "DataItemKind",
+    "FoldDefinition",
+    "FormationObservation",
+    "LabelCoordinate",
+    "LabelHorizon",
+    "LabelObservation",
+    "ProspectiveProtocol",
+    "SampleAccessEvent",
+    "SampleAccessLog",
+    "SampleClassification",
+    "build_fold_manifest",
+    "classify_sample",
+    "validate_event_chain",
+]

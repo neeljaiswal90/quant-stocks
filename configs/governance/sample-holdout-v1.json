@@ -1,0 +1,161 @@
+{
+  "schema_version": "qme.sample_holdout_governance.v1",
+  "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+  "contract_status": "FROZEN_BLOCKED_ON_NAMED_REGISTRATIONS",
+  "authority": {
+    "ticket": "NEE-121",
+    "pristine_holdout_claimed": false,
+    "empirical_thresholds_inferred": false,
+    "unavailable_inputs": [
+      "preexisting_sample_access_ledger_for_2019_2021",
+      "production_label_endpoint_method_1M_id_hash",
+      "production_label_endpoint_method_3M_id_hash",
+      "production_label_endpoint_method_6M_id_hash",
+      "production_calendar_and_ordered_session_vector_id_hash",
+      "final_prospective_specification_freeze_timestamp",
+      "prospective_minimum_evidence_requirement"
+    ]
+  },
+  "sample_windows": [
+    {
+      "classification": "DEVELOPMENT_2011_2018",
+      "formation_start": "2011-01-01",
+      "formation_end": "2018-12-31",
+      "evidence_role": "DEVELOPMENT_REUSABLE_FOR_TUNING"
+    },
+    {
+      "classification": "ONE_TIME_HISTORICAL_CONFIRMATION_2019_2021",
+      "formation_start": "2019-01-01",
+      "formation_end": "2021-12-31",
+      "evidence_role": "ONE_TIME_CONFIRMATION_ONLY",
+      "prior_access_provenance": "UNKNOWN_BLOCKED_NO_PREEXISTING_ACCESS_LEDGER",
+      "pristine_holdout_claim_allowed": false
+    },
+    {
+      "classification": "RETROSPECTIVE_EXTERNAL_STRESS_2022_PLUS",
+      "formation_start": "2022-01-01",
+      "formation_end": "FINAL_REGISTERED_FREEZE_TIMESTAMP",
+      "evidence_role": "RETROSPECTIVE_EXTERNAL_STRESS_NOT_PRISTINE_HOLDOUT",
+      "first_successful_read_marks_spent": true
+    },
+    {
+      "classification": "PROSPECTIVE_AFTER_FREEZE",
+      "formation_start": "STRICTLY_AFTER_FINAL_REGISTERED_FREEZE_TIMESTAMP",
+      "formation_end": null,
+      "evidence_role": "PROSPECTIVE_PAPER_OR_FORWARD_OBSERVATION",
+      "production_freeze_timestamp": null,
+      "production_freeze_timestamp_status": "UNREGISTERED_BLOCKING"
+    }
+  ],
+  "calendar_and_session_contract": {
+    "required_bindings": [
+      "calendar_id",
+      "calendar_sha256",
+      "ordered_session_vector_sha256",
+      "timezone_id",
+      "formation_window_start_exact_timestamp",
+      "formation_window_end_exact_timestamp",
+      "formation_window_start_session_id",
+      "formation_window_end_session_id",
+      "formation_session_phase",
+      "fold_end_session_id",
+      "fold_end_session_phase",
+      "fold_end_exact_timestamp"
+    ],
+    "ordered_session_vector_rule": "STRICT_ASCENDING_UNIQUE_EXCHANGE_SESSIONS",
+    "nearest_session_substitution_allowed": false,
+    "bare_calendar_date_is_production_authority": false,
+    "formation_session_phase": "CLOSE",
+    "label_endpoint_and_fold_comparator_phase": "OPEN",
+    "fold_end_session_phase": "OPEN"
+  },
+  "label_contract": {
+    "horizons": ["1M", "3M", "6M"],
+    "purging_rule": "label_end <= fold_end",
+    "purging_applies_independently_per_horizon": true,
+    "exact_boundary": "RETAINED",
+    "after_boundary": "PURGED",
+    "tradable_coordinate": "TRADABLE_T_PLUS_1_OPEN_TO_T_PLUS_1_OPEN",
+    "tradable_label_start_rule": "label_start_session_ordinal = formation_session_ordinal + 1",
+    "diagnostic_coordinate": "DIAGNOSTIC_CLOSE_TO_CLOSE_NOT_AUTHORITY",
+    "endpoint_derivation": {
+      "1M": {"method_id": null, "method_sha256": null, "status": "UNREGISTERED_BLOCKING"},
+      "3M": {"method_id": null, "method_sha256": null, "status": "UNREGISTERED_BLOCKING"},
+      "6M": {"method_id": null, "method_sha256": null, "status": "UNREGISTERED_BLOCKING"}
+    },
+    "calendar_day_or_session_count_inference_allowed": false,
+    "embargo": {
+      "value": null,
+      "unit": null,
+      "status": "NOT_REGISTERED_NOT_ACTIVE",
+      "default_inference_allowed": false
+    }
+  },
+  "availability_contract": {
+    "rule": "available_at <= analysis_as_of",
+    "analysis_as_of_meaning": "HISTORICAL_DECISION_CUTOFF_NOT_RUN_NOW",
+    "available_at_formula": "max(published_at, vendor_available_at, local_accepted_at, revision_at)",
+    "required_coordinates": [
+      "effective_at",
+      "published_at",
+      "vendor_available_at",
+      "local_accepted_at",
+      "revision_at",
+      "observation_end_at",
+      "vintage_sha256",
+      "content_sha256"
+    ],
+    "source_specific_cutoffs": {
+      "DATA_VINTAGE": "data_vintage_at",
+      "MEMBERSHIP_SNAPSHOT": "membership_snapshot_as_of",
+      "FILING": "filing_accepted_at",
+      "REFLECTION_MEMORY": "reflection_created_at"
+    },
+    "pre_formation_feature_lookback_allowed": true,
+    "pre_formation_label_or_outcome_allowed": false
+  },
+  "sample_access_event_contract": {
+    "schema_version": "qme.sample_access_event.v1",
+    "append_only": true,
+    "hash_algorithm": "SHA-256",
+    "genesis_previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "event_types": ["ACCESS_ATTEMPT", "ACCESS_SUCCESS", "ACCESS_DENIAL", "ACCESS_RETRY"],
+    "required_causal_fields": [
+      "trial_id",
+      "run_id",
+      "query_id",
+      "analysis_as_of",
+      "data_vintage_at",
+      "data_vintage_sha256",
+      "request_content_sha256",
+      "parent_event_hash",
+      "previous_event_hash"
+    ],
+    "retry_overwrite_allowed": false,
+    "spent_window_trigger": "FIRST_ACCESS_SUCCESS"
+  },
+  "version_and_restart_contract": {
+    "non_restarting_changes": [
+      "DOCUMENTATION_ONLY_NO_SEMANTIC_CHANGE",
+      "INFRASTRUCTURE_ONLY_NO_DATA_OR_RESULT_CHANGE"
+    ],
+    "restart_required_changes": [
+      "SPECIFICATION_CHANGE",
+      "FEATURE_CHANGE",
+      "LABEL_CHANGE",
+      "PORTFOLIO_CHANGE",
+      "DATA_METHOD_CHANGE",
+      "THRESHOLD_REGISTRATION"
+    ],
+    "restart_rule": "NEW_VERSION_NEW_FREEZE_TIMESTAMP_PRIOR_OBSERVATIONS_NOT_INDEPENDENT",
+    "spent_window_can_be_reset_or_relabelled": false
+  },
+  "prospective_minimum_evidence_requirement": {
+    "minimum_duration": null,
+    "minimum_observations": null,
+    "minimum_information_threshold": null,
+    "status": "UNREGISTERED_BLOCKING",
+    "registration_must_precede_observations": true,
+    "go_no_go_state": "BLOCKED_PROSPECTIVE_EVIDENCE_REQUIREMENT_UNREGISTERED"
+  }
+}

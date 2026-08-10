@@ -1,0 +1,18 @@
+{
+  "schema_version": "qme.sample_holdout_hash_manifest.v1",
+  "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+  "status": "PREPARED_NOT_ATTACHED_TO_PHASE_GATE",
+  "hash_algorithm": "SHA-256",
+  "artifacts": [
+    {"path": "qme/governance/__init__.py", "sha256": "cff575dd207a2e6e44e4e1692e4b6ba51c1b97ff5c6ae431020ae010a84b082d"},
+    {"path": "qme/governance/sample_holdout.py", "sha256": "ab3354340b4c10f7ce94081d9234b1f3b96f7290d0ca7bd1d874af3246abb8c6"},
+    {"path": "docs/governance/SAMPLE_HOLDOUT_GOVERNANCE_V1.md", "sha256": "b022df797b974b4b3583235d015b067f36e60b390e6c67c99cd44c272a83cd05"},
+    {"path": "configs/governance/sample-holdout-v1.json", "sha256": "61d3c7186ec3931a1c053e33e86aa63d64065133c2ebef6c520c1a33ade7c279"},
+    {"path": "schemas/governance/sample-holdout-v1.schema.json", "sha256": "4bdbf4da210e1c7f2a3b1134a4a66de8b5368c7c2013af7a993df3ccdc9720a8"},
+    {"path": "schemas/governance/sample-access-event-v1.schema.json", "sha256": "2c01f376636c2aae8cda666e77f8aff517f5072b729b21cf2eed8eb452a786cb"},
+    {"path": "schemas/governance/fold-manifest-v1.schema.json", "sha256": "29eedc363aeb7f10119613b0702c41856c849000bb4699d53460457cc5067c91"},
+    {"path": "tests/fixtures/governance/sample-holdout-v1.vectors.json", "sha256": "5cb9ce9e00fb4b50ec7901adebe26b6d8333ac679de3a1c7a60b329ca5fb4376"},
+    {"path": "tests/governance/test_sample_holdout.py", "sha256": "fe2594af1b02c39d1acc008ea0c88b7440fe52b1fcbecd17072b3a21ddbf6707"}
+  ],
+  "note": "Synthetic fixtures are not empirical evidence or production registrations. Linear attachment is outside this change scope."
+}

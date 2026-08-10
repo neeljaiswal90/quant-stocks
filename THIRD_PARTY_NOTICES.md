@@ -10,7 +10,7 @@
 - Source archive SHA-256:
   `64fcea57cc6e78bae473a9d7bc2909e829950489dec6f696c9360f944eca6192`
 - Optional dependency lock SHA-256:
-  `6b1f12054f67b96d8a1e66fd3341b1e537ade272db8f0ca699ab749a61214d3d`
+  `c68b6ffaed54a2016fe68daf16c9bd0a2255f4215511587ce304a1aee04ce9ac`
 - License: Apache License 2.0
 - License SHA-256: `1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6`
 
