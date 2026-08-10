@@ -16,12 +16,16 @@ _PROVENANCE_HASH_LINE_ALLOWLIST = (
     r'"(?:upstream_commit|release_commit)"\s*:\s*"[0-9a-f]{7,40}"|'
     r'"(?:source_archive_sha256|license_sha256|build_lock_sha256|'
     r'transitive_lock_sha256|accounting_equation_spec_sha256|'
+    r'accounting_spec_sha256|accounting_config_sha256|'
+    r'accounting_executable_sha256|quantitative_contract_sha256|'
     r'total_return_methodology_sha256|calendar_hash|ordered_session_vector_hash|'
     r'ordered_filter_session_vector_hash)"\s*:\s*"[0-9a-f]{64}"'
 )
 _VALIDATED_HASH_MANIFESTS = {
     Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
+    Path("tests/fixtures/quant/economic-promotion-decision-v1.manifest.json"),
     Path("configs/quant/qme-v0.1-contract.hashes.json"),
+    Path("configs/governance/sample-holdout-v1.hashes.json"),
 }
 
 

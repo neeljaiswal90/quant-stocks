@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts.check_secrets import _VALIDATED_HASH_MANIFESTS, _validate_hash_manifest
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -52,6 +54,18 @@ def test_lock_files_are_content_hashed() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
+
+
+def test_secret_scanner_validates_every_registered_hash_manifest() -> None:
+    expected = {
+        Path("configs/governance/sample-holdout-v1.hashes.json"),
+        Path("configs/quant/qme-v0.1-contract.hashes.json"),
+        Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
+        Path("tests/fixtures/quant/economic-promotion-decision-v1.manifest.json"),
+    }
+    assert expected == _VALIDATED_HASH_MANIFESTS
+    for manifest in sorted(expected):
+        _validate_hash_manifest(manifest, staged=False)
 
 
 def test_foundation_schema_requires_all_lineage_identities() -> None:
