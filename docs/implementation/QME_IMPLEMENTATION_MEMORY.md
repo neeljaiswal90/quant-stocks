@@ -340,7 +340,7 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No remote CI provenance:** twelve reviewed local commits exist before the current
+1. **No remote CI provenance:** fourteen reviewed local commits exist before the current
    memory update, but there is no remote,
    pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
@@ -365,13 +365,21 @@ selection math. The UI renders those results and definitions; it never invents t
    snapshot schemas/fixtures, field registry, projection builder, local catalog/read
    models, Flask/Jinja/Waitress viewer, browser evidence, packaged artifact, or clean-
    machine evidence exists.
+10. **Golden rebalances are synthetic only:** NEE-116A now provides an independently
+    red-teamed exact-arithmetic oracle, complete static ledger, and production-ledger
+    conformance for two strategy variants and a benchmark. It is not production data,
+    does not establish tax-lot/capacity/delisting behavior, and retains a null human
+    reviewer identity; the full NEE-116 acceptance contract remains open.
 
 ## 11. Next required actions
 
 1. Configure a repository remote and run required CI against the exact branch SHA; do
    not mark NEE-117 accepted from local tests alone.
-2. Complete NEE-116 golden two-rebalance/corporate-action fixtures against the committed
-   NEE-118/119 contracts, then implement the production target/cost solver.
+2. Use the committed NEE-116A synthetic oracle to review production-sourced historical
+   fixtures only after point-in-time membership, raw-price, calendar, action, and source-
+   freshness evidence is registered; separately implement the production target/cost
+   and greatest-capital capacity solvers. Do not treat the synthetic slice as full
+   NEE-116 acceptance.
 3. Freeze the deterministic data, membership, feature, score/rank, eligibility, and
    full-universe artifact contracts.
 4. Complete point-in-time Nasdaq-100 producer work and create the first immutable
@@ -409,6 +417,7 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-10 | Committed manifest-aware secret scanning as `cb51c93cbb437653e301d940ea9882ca829afee4` after the final full-tree gate exposed allowlist drift for the new self-verifying governance manifests. | `COMMITTED_UNVERIFIED` | Regression validates all four registered manifests; 184 tests, Ruff, strict mypy, staged and 97-file full secret scans pass. |
 | 2026-08-10 | Committed repository-local script package marker as `5f776f54fd2588d49f1a3082ac4d44c43f154de4` after an independent ambient-Python run found a third-party `scripts` package shadowing the verification module. | `COMMITTED_UNVERIFIED` | Both ambient and locked CPython 3.12 environments pass all 184 tests; Ruff and strict mypy pass. |
 | 2026-08-10 | Independently audited the next execution wave against live Linear after NEE-120/121. | `BLOCKED` | NEE-116 and NEE-122 are explicitly blocked by NEE-117; NEE-123 through NEE-128 are blocked by the NEE-110 specification gate. No downstream ticket was started around those dependencies. The immediate external gate is a repository remote plus exact-HEAD CI evidence for NEE-117. |
+| 2026-08-10 | Committed the bounded NEE-116A golden two-rebalance fixture pack as `138a00af9b1880e119632ec3aacb417dc683c24b` after iterative independent adversarial review. | `COMMITTED_UNVERIFIED` | Independent Fraction oracle and complete static ledger cover source-inclusive point-in-time evidence, strict session/date/ordinal chronology, sells-before-buys, split/dividend/payment identities, integer orders with fractional custody, SELL transaction tax, two strategy variants, and benchmark conformance. Final gates: 214 tests in locked and ambient CPython, Ruff, strict mypy, Draft 2020-12 schema validation, manifest hashes, and staged secret scan pass. Full NEE-116 remains open for real evidence, unresolved tax-lot/capacity/delisting scope, human reviewer identity, and exact-SHA remote CI. |
 
 ## 13. Per-ticket evidence record template
 
