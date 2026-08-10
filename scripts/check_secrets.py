@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import subprocess
@@ -28,6 +29,13 @@ _VALIDATED_HASH_MANIFESTS = {
     Path("configs/quant/qme-v0.1-contract.hashes.json"),
     Path("configs/governance/sample-holdout-v1.hashes.json"),
 }
+_VALIDATED_AUTHORITY_BINDING_FILES = {
+    Path("configs/quant/golden-two-rebalance-v1.json"),
+    Path("qme/fixtures/golden_two_rebalance.py"),
+    Path("tests/fixtures/quant/golden-two-rebalance-v1.vectors.json"),
+}
+_AUTHORITY_BINDING_CONFIG = Path("configs/quant/golden-two-rebalance-v1.json")
+_AUTHORITY_HASH_LINE_ALLOWLIST = r'"sha256"\s*:\s*"[0-9a-f]{64}"'
 
 
 def _git_files(staged: bool) -> list[Path]:
@@ -84,7 +92,57 @@ def _validate_hash_manifest(path: Path, staged: bool) -> None:
             raise RuntimeError(f"{path} does not match reviewed bytes for {artifact}")
 
 
-def _detect_secrets(path: Path) -> list[dict[str, Any]]:
+def _authority_bindings(path: Path, staged: bool) -> dict[str, dict[str, str]]:
+    reviewed = _reviewed_bytes(path, staged)
+    if path.suffix == ".json":
+        document = json.loads(reviewed)
+        raw_bindings = document.get("authority_bindings") if isinstance(document, dict) else None
+    elif path.suffix == ".py":
+        module = ast.parse(reviewed.decode("utf-8"), filename=str(path))
+        raw_bindings = None
+        for node in module.body:
+            if not isinstance(node, ast.Assign):
+                continue
+            if any(isinstance(target, ast.Name) and target.id == "_AUTHORITY_BINDINGS" for target in node.targets):
+                raw_bindings = ast.literal_eval(node.value)
+                break
+    else:
+        raw_bindings = None
+    if not isinstance(raw_bindings, dict) or not raw_bindings:
+        raise RuntimeError(f"{path} has no supported authority_bindings object")
+    bindings: dict[str, dict[str, str]] = {}
+    for binding_id, raw_binding in raw_bindings.items():
+        if not isinstance(binding_id, str) or not isinstance(raw_binding, dict):
+            raise RuntimeError(f"{path} has an invalid authority binding")
+        if set(raw_binding) != {"path", "sha256"}:
+            raise RuntimeError(f"{path} authority binding {binding_id} has invalid fields")
+        bindings[binding_id] = {
+            "path": str(raw_binding["path"]),
+            "sha256": str(raw_binding["sha256"]),
+        }
+    return bindings
+
+
+def _validate_authority_binding_file(path: Path, staged: bool) -> None:
+    bindings = _authority_bindings(path, staged)
+    registered = _authority_bindings(_AUTHORITY_BINDING_CONFIG, staged)
+    if bindings != registered:
+        raise RuntimeError(f"{path} authority bindings differ from the registered config")
+    for binding_id, binding in bindings.items():
+        artifact = Path(binding["path"])
+        expected = binding["sha256"]
+        if artifact.is_absolute() or ".." in artifact.parts:
+            raise RuntimeError(f"{path} authority binding {binding_id} has an unsafe path")
+        if len(expected) != 64 or any(character not in "0123456789abcdef" for character in expected):
+            raise RuntimeError(f"{path} authority binding {binding_id} has an invalid SHA-256 digest")
+        if _artifact_digest(artifact, staged) != expected:
+            raise RuntimeError(f"{path} authority binding {binding_id} does not match reviewed bytes")
+
+
+def _detect_secrets(path: Path, extra_allowlist: str | None = None) -> list[dict[str, Any]]:
+    exclude_lines = _PROVENANCE_HASH_LINE_ALLOWLIST
+    if extra_allowlist is not None:
+        exclude_lines = f"(?:{exclude_lines})|(?:{extra_allowlist})"
     completed = subprocess.run(
         [
             sys.executable,
@@ -93,7 +151,7 @@ def _detect_secrets(path: Path) -> list[dict[str, Any]]:
             "scan",
             "--force-use-all-plugins",
             "--exclude-lines",
-            _PROVENANCE_HASH_LINE_ALLOWLIST,
+            exclude_lines,
             str(path),
         ],
         check=True,
@@ -117,12 +175,16 @@ def _scan(path: Path, staged: bool) -> list[dict[str, Any]]:
     if path in _VALIDATED_HASH_MANIFESTS:
         _validate_hash_manifest(path, staged)
         return []
+    extra_allowlist = None
+    if path in _VALIDATED_AUTHORITY_BINDING_FILES:
+        _validate_authority_binding_file(path, staged)
+        extra_allowlist = _AUTHORITY_HASH_LINE_ALLOWLIST
     if not staged:
-        return _detect_secrets(path)
+        return _detect_secrets(path, extra_allowlist)
     with tempfile.TemporaryDirectory(prefix="qme-secret-scan-") as directory:
         scan_path = Path(directory) / path.name
         scan_path.write_bytes(_reviewed_bytes(path, staged))
-        return _detect_secrets(scan_path)
+        return _detect_secrets(scan_path, extra_allowlist)
 
 
 def main() -> int:

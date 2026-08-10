@@ -5,7 +5,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-from scripts.check_secrets import _VALIDATED_HASH_MANIFESTS, _validate_hash_manifest
+from scripts.check_secrets import (
+    _VALIDATED_AUTHORITY_BINDING_FILES,
+    _VALIDATED_HASH_MANIFESTS,
+    _detect_secrets,
+    _scan,
+    _validate_authority_binding_file,
+    _validate_hash_manifest,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -67,6 +74,22 @@ def test_secret_scanner_validates_every_registered_hash_manifest() -> None:
     assert expected == _VALIDATED_HASH_MANIFESTS
     for manifest in sorted(expected):
         _validate_hash_manifest(manifest, staged=False)
+
+
+def test_secret_scanner_allows_only_semantically_validated_authority_hashes() -> None:
+    expected = {
+        Path("configs/quant/golden-two-rebalance-v1.json"),
+        Path("qme/fixtures/golden_two_rebalance.py"),
+        Path("tests/fixtures/quant/golden-two-rebalance-v1.vectors.json"),
+    }
+    assert expected == _VALIDATED_AUTHORITY_BINDING_FILES
+    for path in sorted(expected):
+        _validate_authority_binding_file(path, staged=False)
+        assert _scan(path, staged=False) == []
+
+    # Without the path-bounded semantic validation, the generic scanner still flags
+    # the same authority digests instead of globally excluding every `sha256` field.
+    assert _detect_secrets(Path("configs/quant/golden-two-rebalance-v1.json"))
 
 
 def test_foundation_schema_requires_all_lineage_identities() -> None:
