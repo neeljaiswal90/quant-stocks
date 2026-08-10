@@ -340,7 +340,7 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No remote CI provenance:** fourteen reviewed local commits exist before the current
+1. **No remote CI provenance:** seventeen reviewed local commits exist before the current
    memory update, but there is no remote,
    pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
@@ -419,6 +419,7 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-10 | Independently audited the next execution wave against live Linear after NEE-120/121. | `BLOCKED` | NEE-116 and NEE-122 are explicitly blocked by NEE-117; NEE-123 through NEE-128 are blocked by the NEE-110 specification gate. No downstream ticket was started around those dependencies. The immediate external gate is a repository remote plus exact-HEAD CI evidence for NEE-117. |
 | 2026-08-10 | Committed the bounded NEE-116A golden two-rebalance fixture pack as `138a00af9b1880e119632ec3aacb417dc683c24b` after iterative independent adversarial review. | `COMMITTED_UNVERIFIED` | Independent Fraction oracle and complete static ledger cover source-inclusive point-in-time evidence, strict session/date/ordinal chronology, sells-before-buys, split/dividend/payment identities, integer orders with fractional custody, SELL transaction tax, two strategy variants, and benchmark conformance. Final gates: 214 tests in locked and ambient CPython, Ruff, strict mypy, Draft 2020-12 schema validation, manifest hashes, and staged secret scan pass. Full NEE-116 remains open for real evidence, unresolved tax-lot/capacity/delisting scope, human reviewer identity, and exact-SHA remote CI. |
 | 2026-08-10 | Reconciled NEE-116 with the committed bounded-slice evidence and final independent GO review; moved the issue from `Todo` to `In Progress`. | `COMMITTED_UNVERIFIED` | Linear comment `68f95556-1dcf-4175-96d5-97e4d9abe040` records implementation SHA `138a00a...`, evidence-memory SHA `542ccd6...`, manifest identity, exact local gates, and all unavailable scope. Existing blockers and downstream relations remain unchanged; the issue was not marked Done. |
+| 2026-08-10 | Closed the NEE-116 full-tree secret-scan integration defect as `4e0844c2b4fc34159364567afc317451ecd110f7`. | `COMMITTED_UNVERIFIED` | The scanner now permits authority hashes only after path-bounded semantic parsing, canonical-binding equality, and digest recomputation; no global `sha256` exemption exists. Exact gates: 215 tests, Ruff, strict mypy on 23 source files, three verified locks, 107 tracked files with 0 findings, and two staged files with 0 findings. Linear comment `be3bf8b5-7359-4950-ac7f-86e22de68744` records the correction without changing NEE-116 scope or blockers. |
 
 ## 13. Per-ticket evidence record template
 
