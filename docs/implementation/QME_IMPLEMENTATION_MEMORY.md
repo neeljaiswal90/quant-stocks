@@ -105,11 +105,11 @@ Required drift handling:
 
 | Item | Evidence state | Observation |
 |---|---|---|
-| Git repository | `COMMITTED_UNVERIFIED` | Clean branch `codex/linear-foundation` at `cc43567826f6498abf156b76db71f2bea44410ff`; eight reviewed local commits exist before this memory update. |
+| Git repository | `COMMITTED_UNVERIFIED` | Clean branch `codex/linear-foundation` at `cb51c93cbb437653e301d940ea9882ca829afee4`; ten reviewed local commits exist before this memory update. |
 | Python package | `VERIFIED` locally | `qme` version `0.1.0`; CPython contract is `>=3.12,<3.13` and validation used CPython 3.12.10. |
 | Runtime/development locks | `VERIFIED` locally | Base runtime pins `tzdata==2026.3` so IANA exchange-timezone behavior is reproducible on Windows. Fully hashed build, development, and agent locks verify; clean agent resolution was dry-run only with runtime disabled. |
 | Agent dependency | `COMMITTED/BLOCKED` | TradingAgents is pinned to archive SHA-256 and upstream commit `a33fd4c0f134485a43553a2c23a63cb14adbd88f`; the packet-native service, parent-attested supervisor, strict schemas, freshness authority, and evaluation gate remain missing. |
-| Core tests | `VERIFIED` locally | `python -m pytest -q -p no:cacheprovider` -> `183 passed`. |
+| Core tests | `VERIFIED` locally | `python -m pytest -q -p no:cacheprovider` -> `184 passed`. |
 | Lint and typing | `VERIFIED` locally | Ruff over `qme tests scripts` passes; strict mypy over `qme` and the verification scripts passes. |
 | Build/install | `VERIFIED` locally | Wheel build, clean no-dependency install, `pip check`, and both CLI help smokes pass. |
 | Fixture determinism | `VERIFIED` locally | Two independent canonical foundation manifests are byte-identical at SHA-256 `7468180f9ce2cce7bf6decdc6c54910966fd2a713e9da5b047689d4e78a28957`. |
@@ -340,7 +340,7 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No remote CI provenance:** eight reviewed local commits exist before the current
+1. **No remote CI provenance:** ten reviewed local commits exist before the current
    memory update, but there is no remote,
    pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
@@ -406,6 +406,7 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-10 | Reconciled live Linear descriptions and comments with commit/test evidence; moved NEE-118 and NEE-119 from `Todo` to `In Progress`, retained NEE-117 `In Progress`, and retained NEE-168 `Backlog`. | `COMMITTED_UNVERIFIED` / `PLANNING_ONLY` | No ticket was marked Done. Exact-SHA remote CI, production evidence registrations, capacity solver, and UI implementation remain explicit gates. |
 | 2026-08-10 | Committed fail-closed NEE-120 promotion and abort governance as `5f9546e6308a4adadeccb6e06b1aeb900ca37285`. | `COMMITTED_UNVERIFIED` | 16 focused tests and exact arithmetic pass. Production remains `BLOCKED_UNRESOLVED_MANDATE`; no threshold, margin, AUM, inference, sample-size, or abort value was invented. |
 | 2026-08-10 | Committed NEE-121 sample/holdout governance and the pinned Windows IANA timezone dependency as `cc43567826f6498abf156b76db71f2bea44410ff`. | `COMMITTED_UNVERIFIED` | 54 focused tests; full suite 183 passed; Ruff, strict mypy, three hashed locks, and staged-byte secret scan pass. Confirmation provenance and prospective evidence sufficiency remain explicitly blocked. |
+| 2026-08-10 | Committed manifest-aware secret scanning as `cb51c93cbb437653e301d940ea9882ca829afee4` after the final full-tree gate exposed allowlist drift for the new self-verifying governance manifests. | `COMMITTED_UNVERIFIED` | Regression validates all four registered manifests; 184 tests, Ruff, strict mypy, staged and 97-file full secret scans pass. |
 
 ## 13. Per-ticket evidence record template
 
