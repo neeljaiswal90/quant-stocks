@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/quant/accounting-equations-v1.schema.json",
+  "title": "QME frozen accounting equations v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "equation_spec_id",
+    "coordinate",
+    "execution",
+    "precision",
+    "cost_and_turnover",
+    "capacity",
+    "metrics",
+    "tax_scope",
+    "external_flows"
+  ],
+  "properties": {
+    "$schema": { "const": "../../schemas/quant/accounting-equations-v1.schema.json" },
+    "schema_version": { "const": "qme.accounting_equations.v1" },
+    "equation_spec_id": { "const": "NEE-118-QME-ACCOUNTING-V1" },
+    "coordinate": {
+      "const": {
+        "signal_price_basis": "CUTOFF_AWARE_TOTAL_RETURN_ALLOWED",
+        "screen_price_basis": "RAW",
+        "execution_observation_type": "RAW_EXECUTION_PRICE",
+        "position_basis": "RAW_SHARES",
+        "mark_observation_type": "RAW_MARK",
+        "adv_observation_type": "RAW_ADV_NOTIONAL",
+        "required_evidence_fields": [
+          "security_id",
+          "source_id",
+          "snapshot_id",
+          "snapshot_sha256",
+          "calendar_id",
+          "calendar_sha256",
+          "observation_start_session",
+          "observation_end_session",
+          "available_at",
+          "analysis_as_of"
+        ],
+        "adjusted_total_return_or_untyped_ledger_input_action": "BLOCK"
+      }
+    },
+    "execution": {
+      "const": {
+        "signal_cutoff": "AFTER_CLOSE",
+        "minimum_fill_lag_sessions": 1,
+        "canonical_fill_field": "RAW_OPEN",
+        "canonical_mark_field": "RAW_CLOSE",
+        "same_session_fill_allowed": false,
+        "calendar_identity_binding_required": true,
+        "eligible_ordinal_rule": "SIGNAL_ORDINAL_PLUS_ONE",
+        "fill_order": "ALL_SELLS_THEN_ALL_BUYS",
+        "position_constraint_after_each_fill": "NO_SHORT",
+        "cash_constraint_after_each_fill": "NON_NEGATIVE",
+        "nonrepresentable_share_quantity_action": "BLOCK",
+        "missing_or_ambiguous_input_action": "BLOCK"
+      }
+    },
+    "precision": {
+      "const": {
+        "decimal_precision": 38,
+        "rounding_mode": "ROUND_HALF_EVEN",
+        "internal_currency_quantum": "0.00000001",
+        "report_currency_quantum": "0.01",
+        "share_storage_quantum": "0.00000001",
+        "default_order_quantum": "1",
+        "comparison_tolerance_base_currency": "0.000001",
+        "binary_float_inputs_allowed": false
+      }
+    },
+    "cost_and_turnover": {
+      "const": {
+        "gtn": "GTN = SUM(ABS(delta_raw_shares_i * raw_execution_price_i))",
+        "transaction_cost": "TC = SUM(ROUND_HALF_EVEN((transaction_cost_rate_bps / 10000) * ABS(delta_raw_shares_i * raw_execution_price_i), internal_currency_quantum))",
+        "transaction_cost_rate_unit": "BASIS_POINTS",
+        "gtn_ratio": "GTN_ratio = GTN / NAV_minus",
+        "one_way_turnover": "one_way_turnover = GTN / (2 * NAV_minus)",
+        "costs_exclude_transaction_taxes": true,
+        "external_flow_adjusted_turnover_supported": false
+      }
+    },
+    "capacity": {
+      "const": {
+        "trade_notional_basis": "ABS(delta_raw_shares) * raw_execution_price",
+        "adv_notional_basis": "MEAN(raw_close * raw_volume)",
+        "adv_window_ends_no_later_than_signal_cutoff": true,
+        "maximum_participation_is_required_run_parameter": true,
+        "fixed_vector_diagnostic_status": "NON_AUTHORITATIVE_FIXED_TRADE_DIAGNOSTIC",
+        "portfolio_capacity_status": "UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED",
+        "portfolio_capacity_output": null,
+        "authoritative_portfolio_capacity_definition": "GREATEST_K_WHOSE_ORDERS_FROM_THE_SAME_DISCRETE_COST_AWARE_TARGET_SOLVER_SATISFY_EVERY_PARTICIPATION_CASH_POSITION_AND_PORTFOLIO_CONSTRAINT_AFTER_POST_VERIFICATION"
+      }
+    },
+    "metrics": {
+      "const": {
+        "annualization_factor": "252",
+        "elapsed_year_days": "365.2425",
+        "volatility_denominator": "SAMPLE_N_MINUS_1",
+        "risk_free_input": "PERIOD_MATCHED_ARITHMETIC_RETURN",
+        "mar_input": "PERIOD_MATCHED_ARITHMETIC_RETURN",
+        "maximum_drawdown_orientation": "POSITIVE_MAGNITUDE",
+        "hit_rate": "POSITIVE_OVER_NON_ZERO_SESSION_RETURNS",
+        "hit_rate_required_evidence": [
+          "non_zero_observation_count",
+          "zero_return_count",
+          "total_observation_count"
+        ],
+        "zero_denominator": "UNDEFINED"
+      }
+    },
+    "tax_scope": {
+      "const": {
+        "transaction_tax_assessment_required": true,
+        "assessment_base": "RAW_FILL_NOTIONAL",
+        "allowed_assessment_sides": ["NONE", "BUY", "SELL", "BOTH"],
+        "rate_unit": "BASIS_POINTS",
+        "rate_domain": "0_INCLUSIVE_TO_10000_EXCLUSIVE",
+        "rounding_mode": "ROUND_HALF_EVEN",
+        "currency_quantum": "0.00000001",
+        "required_policy_evidence": ["policy_id", "policy_sha256", "source_id"],
+        "unsupported_or_ambiguous_assessment_action": "BLOCK",
+        "capital_gains_tax": "OUT_OF_SCOPE",
+        "canonical_metric_label": "PRE_CAPITAL_GAINS_TAX_AFTER_TRANSACTION_COSTS_AND_SUPPORTED_TRANSACTION_TAX",
+        "unsupported_after_tax_metric_action": "UNDEFINED"
+      }
+    },
+    "external_flows": {
+      "const": {
+        "canonical_runs_allow_external_flows": false,
+        "non_zero_flow_action": "BLOCK",
+        "time_weighted_return_treatment": "NOT_FROZEN"
+      }
+    }
+  }
+}

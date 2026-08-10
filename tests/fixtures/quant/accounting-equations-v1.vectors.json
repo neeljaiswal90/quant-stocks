@@ -1,0 +1,206 @@
+{
+  "schema_version": "qme.accounting_fixture_vectors.v1",
+  "equation_spec_id": "NEE-118-QME-ACCOUNTING-V1",
+  "accounting": {
+    "cash_minus": "10000",
+    "positions_minus": { "AAA": "10" },
+    "raw_marks": {
+      "AAA": {
+        "coordinate": "RAW_MARK",
+        "value": "100",
+        "evidence": {
+          "security_id": "AAA",
+          "source_id": "fixture-market-data",
+          "snapshot_id": "fixture-aaa-20260105",
+          "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "calendar_id": "XNAS",
+          "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "observation_start_session": "2026-01-05",
+          "observation_end_session": "2026-01-05",
+          "available_at": "2026-01-05T14:31:00+00:00",
+          "analysis_as_of": "2026-01-05T21:00:00+00:00"
+        }
+      },
+      "BBB": {
+        "coordinate": "RAW_MARK",
+        "value": "50",
+        "evidence": {
+          "security_id": "BBB",
+          "source_id": "fixture-market-data",
+          "snapshot_id": "fixture-bbb-20260105",
+          "snapshot_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "calendar_id": "XNAS",
+          "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "observation_start_session": "2026-01-05",
+          "observation_end_session": "2026-01-05",
+          "available_at": "2026-01-05T14:31:00+00:00",
+          "analysis_as_of": "2026-01-05T21:00:00+00:00"
+        }
+      }
+    },
+    "receivables_minus": "50",
+    "trades": [
+      {
+        "symbol": "AAA",
+        "delta_raw_shares": "-2",
+        "raw_execution_price": {
+          "coordinate": "RAW_EXECUTION_PRICE",
+          "value": "100",
+          "evidence": {
+            "security_id": "AAA",
+            "source_id": "fixture-market-data",
+            "snapshot_id": "fixture-aaa-20260105",
+            "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "calendar_id": "XNAS",
+            "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "observation_start_session": "2026-01-05",
+            "observation_end_session": "2026-01-05",
+            "available_at": "2026-01-05T14:31:00+00:00",
+            "analysis_as_of": "2026-01-05T21:00:00+00:00"
+          }
+        }
+      },
+      {
+        "symbol": "BBB",
+        "delta_raw_shares": "10",
+        "raw_execution_price": {
+          "coordinate": "RAW_EXECUTION_PRICE",
+          "value": "50",
+          "evidence": {
+            "security_id": "BBB",
+            "source_id": "fixture-market-data",
+            "snapshot_id": "fixture-bbb-20260105",
+            "snapshot_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "calendar_id": "XNAS",
+            "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "observation_start_session": "2026-01-05",
+            "observation_end_session": "2026-01-05",
+            "available_at": "2026-01-05T14:31:00+00:00",
+            "analysis_as_of": "2026-01-05T21:00:00+00:00"
+          }
+        }
+      }
+    ],
+    "transaction_cost_rate_bps": "10",
+    "transaction_tax_policy": {
+      "policy_id": "fixture-sec-fee-v1",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "source_id": "fixture-tax-source",
+      "assessment_base": "RAW_FILL_NOTIONAL",
+      "assessment_side": "SELL",
+      "rate_bps": "15",
+      "rounding_mode": "ROUND_HALF_EVEN",
+      "currency_quantum": "0.00000001"
+    },
+    "expected": {
+      "nav_minus": "11050.00000000",
+      "gtn": "700.00000000",
+      "transaction_cost": "0.70000000",
+      "transaction_taxes": "0.30000000",
+      "cash_plus": "9699.00000000",
+      "positions_plus": { "AAA": "8.00000000", "BBB": "10.00000000" },
+      "nav_plus": "11049.00000000",
+      "gtn_ratio": "0.063348416289592760180995475113122171946",
+      "one_way_turnover": "0.031674208144796380090497737556561085973",
+      "self_financing_residual": "0.00000000"
+    }
+  },
+  "corporate_actions": {
+    "starting_raw_shares": "100",
+    "starting_raw_mark": "50",
+    "split_factor": "2",
+    "post_split_raw_shares": "200.00000000",
+    "post_split_raw_mark": "25",
+    "dividend_cash_per_post_split_share": "1",
+    "ex_dividend_raw_mark": "24",
+    "recognized_receivable": "200.00000000",
+    "nav_before": "5000.00000000",
+    "nav_after_split": "5000.00000000",
+    "nav_ex_dividend": "5000.00000000",
+    "nav_after_pay_date": "5000.00000000"
+  },
+  "returns": {
+    "navs": ["100", "110", "99", "108.9"],
+    "period_returns": ["0.1", "-0.1", "0.1"],
+    "drawdown_recovery_navs": ["100", "120", "90", "120", "130"],
+    "maximum_drawdown": "0.25",
+    "hit_rate_returns": ["0.1", "0", "-0.1", "0.2"],
+    "hit_rate_nonzero": "0.66666666666666666666666666666666666667",
+    "hit_rate_observations": 3,
+    "hit_rate_zero_return_count": 1,
+    "hit_rate_total_observations": 4
+  },
+  "capacity": {
+    "raw_adv_notional": {
+      "AAA": {
+        "coordinate": "RAW_ADV_NOTIONAL",
+        "value": "4000",
+        "evidence": {
+          "security_id": "AAA",
+          "source_id": "fixture-market-data",
+          "snapshot_id": "fixture-aaa-adv",
+          "snapshot_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "calendar_id": "XNAS",
+          "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "observation_start_session": "2025-12-01",
+          "observation_end_session": "2026-01-02",
+          "available_at": "2026-01-02T21:01:00+00:00",
+          "analysis_as_of": "2026-01-02T22:00:00+00:00"
+        }
+      },
+      "BBB": {
+        "coordinate": "RAW_ADV_NOTIONAL",
+        "value": "2500",
+        "evidence": {
+          "security_id": "BBB",
+          "source_id": "fixture-market-data",
+          "snapshot_id": "fixture-bbb-adv",
+          "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "calendar_id": "XNAS",
+          "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "observation_start_session": "2025-12-01",
+          "observation_end_session": "2026-01-02",
+          "available_at": "2026-01-02T21:01:00+00:00",
+          "analysis_as_of": "2026-01-02T22:00:00+00:00"
+        }
+      }
+    },
+    "maximum_participation": "0.10",
+    "expected_participation": { "AAA": "0.05000000", "BBB": "0.20000000" },
+    "expected_utilization": { "AAA": "0.500000", "BBB": "2.000000" },
+    "expected_maximum_utilization": "2.000000",
+    "within_limit": false,
+    "diagnostic_status": "NON_AUTHORITATIVE_FIXED_TRADE_DIAGNOSTIC",
+    "portfolio_capacity": null,
+    "portfolio_capacity_status": "UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED"
+  },
+  "execution_timing": {
+    "signal_session": {
+      "calendar_id": "XNAS",
+      "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "session_date": "2026-01-02",
+      "ordinal": 100
+    },
+    "eligible_session": {
+      "calendar_id": "XNAS",
+      "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "session_date": "2026-01-05",
+      "ordinal": 101
+    },
+    "fill_session": {
+      "calendar_id": "XNAS",
+      "calendar_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "session_date": "2026-01-05",
+      "ordinal": 101
+    }
+  },
+  "rounding": {
+    "target_notional": "1000",
+    "raw_execution_price": "33",
+    "whole_share_target": "30",
+    "half_even_down_input": "2.345",
+    "half_even_down_report": "2.34",
+    "half_even_up_input": "2.355",
+    "half_even_up_report": "2.36"
+  }
+}

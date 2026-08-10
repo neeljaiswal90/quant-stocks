@@ -1,0 +1,14 @@
+{
+  "schema_version": "qme.frozen_equation_manifest.v1",
+  "equation_spec_id": "NEE-118-QME-ACCOUNTING-V1",
+  "hash_algorithm": "sha256",
+  "artifacts": {
+    "configs/quant/accounting-equations-v1.json": "decb3d52dea8b4020f011554848bb9a7c6164827cfe319be36fc46c78b8c2e0c",
+    "docs/quant/QME_ACCOUNTING_EXECUTION_METRICS_SPEC.md": "27e906a612eb61a2f12947ff3696cb907d56d883e45c99a7503011fe13bb8840",
+    "qme/quant/__init__.py": "1ad6a69c8ea20a11a8e90b458232e9591c13642f3548ea2562052cb1d7041db4",
+    "qme/quant/equations.py": "ac0589b3d4184334a90698196aecd44cf26d43393bafc238c1f6acc1cf80fe83",
+    "schemas/quant/accounting-equations-v1.schema.json": "0a116c628be011b34db004940820155ac293b6c8ca33e59cff000b4bd7d55c4a",
+    "tests/fixtures/quant/accounting-equations-v1.vectors.json": "e6e85f92258e6d1c97aa9527c73cd98a164d8823ed006ddbe852be8ae47d6b38"
+  },
+  "fixture_outputs_sha256": "e6e85f92258e6d1c97aa9527c73cd98a164d8823ed006ddbe852be8ae47d6b38"
+}
