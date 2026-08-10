@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/foundation-run-manifest.v1.json",
+  "title": "QME foundation fixture run manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repository_commit",
+    "dirty_worktree",
+    "lock_hash",
+    "config_hash",
+    "schema_hash",
+    "data_hash",
+    "output_hash",
+    "python_version",
+    "platform",
+    "python_implementation",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "qme.foundation_run_manifest.v1"},
+    "repository_commit": {"type": "string", "minLength": 1},
+    "dirty_worktree": {"type": "boolean"},
+    "lock_hash": {"$ref": "#/$defs/sha256"},
+    "config_hash": {"$ref": "#/$defs/sha256"},
+    "schema_hash": {"$ref": "#/$defs/sha256"},
+    "data_hash": {"$ref": "#/$defs/sha256"},
+    "output_hash": {"$ref": "#/$defs/sha256"},
+    "python_version": {"type": "string", "minLength": 1},
+    "platform": {"type": "string", "minLength": 1},
+    "python_implementation": {"type": "string", "minLength": 1},
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config", "data", "lock", "output", "schema"],
+      "properties": {
+        "config": {"$ref": "#/$defs/artifact"},
+        "data": {"$ref": "#/$defs/artifact"},
+        "lock": {"$ref": "#/$defs/artifact"},
+        "output": {"$ref": "#/$defs/artifact"},
+        "schema": {"$ref": "#/$defs/artifact"}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "size_bytes"],
+      "properties": {
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

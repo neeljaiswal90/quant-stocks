@@ -1,0 +1,9 @@
+{
+  "schema_version": "qme.config.v1",
+  "data_root_environment_variable": "QME_DATA_ROOT",
+  "windows_data_root_example": "D:\\qme-data",
+  "canonical_data_source": "alpha_vantage",
+  "execution_venue": "webull",
+  "allow_network_in_backtest": false,
+  "allow_unconfirmed_live_orders": false
+}

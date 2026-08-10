@@ -1,0 +1,3 @@
+# Exact upstream source archive and content hash. Transitives are in
+# requirements-agents.lock.
+tradingagents @ https://github.com/tauricresearch/tradingagents/archive/a33fd4c0f134485a43553a2c23a63cb14adbd88f.zip#sha256=64fcea57cc6e78bae473a9d7bc2909e829950489dec6f696c9360f944eca6192

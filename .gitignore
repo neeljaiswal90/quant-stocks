@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local environments and secrets
+.env
+.env.*
+!.env.example
+.venv/
+.venv-*/
+venv/
+
+# Runtime data and generated artifacts
+/data/
+/cache/
+/results/
+/reports/
+*.log
+*.log.*
+*.pid
+# User-owned legacy/vendor tool checkouts are reference material, not QME source.
+/tools/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+{
+  "schema_version": "qme.third_party.v1",
+  "name": "tradingagents",
+  "repository": "https://github.com/tauricresearch/tradingagents",
+  "package_version": "0.3.1",
+  "integration_version": "0.3.1+git.a33fd4c",
+  "upstream_commit": "a33fd4c0f134485a43553a2c23a63cb14adbd88f",
+  "release_commit": "01477f9a",
+  "source_archive_url": "https://github.com/tauricresearch/tradingagents/archive/a33fd4c0f134485a43553a2c23a63cb14adbd88f.zip",
+  "source_archive_sha256": "64fcea57cc6e78bae473a9d7bc2909e829950489dec6f696c9360f944eca6192",
+  "license": "Apache-2.0",
+  "license_sha256": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6",
+  "integration_mode": "optional_dependency_report_only",
+  "source_vendored": false,
+  "build_lock_file": "requirements-agent-build.lock",
+  "build_lock_sha256": "ba1050b1e65a325522264d89282b73a58593ad703ab7f6f0649b3e0f4058f020",
+  "transitive_lock_file": "requirements-agents.lock",
+  "transitive_lock_sha256": "6b1f12054f67b96d8a1e66fd3341b1e537ade272db8f0ca699ab749a61214d3d",
+  "transitive_lock_status": "verified_cp312_windows_dry_run_no_build_isolation",
+  "packet_native_backend_status": "missing_blocking_runtime"
+}
