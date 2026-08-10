@@ -1,0 +1,152 @@
+{
+  "schema_version": "qme.economic_promotion_vectors.v1",
+  "decision_spec_id": "NEE-120-QME-ECONOMIC-DECISION-V1",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "policy": {
+    "trial_id": "synthetic-trial-v1",
+    "version": 1,
+    "artifact_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "registered_at": "2026-01-01T00:00:00+00:00",
+    "validation_outputs_opened_at": "2026-01-02T00:00:00+00:00"
+  },
+  "required_gate_ids": ["RISK_LIMITS", "CAPACITY", "OBSERVATION_REQUIREMENT"],
+  "passing_gates": [
+    {
+      "gate_id": "RISK_LIMITS",
+      "status": "PASS",
+      "evidence_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "gate_id": "CAPACITY",
+      "status": "PASS",
+      "evidence_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "gate_id": "OBSERVATION_REQUIREMENT",
+      "status": "PASS",
+      "evidence_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "decision_cases": [
+    {
+      "case_id": "HIGHER_PASS",
+      "direction": "HIGHER_IS_BETTER",
+      "strategy_metric": "0.12",
+      "benchmark_metric": "0.10",
+      "raw_delta_lower_bound": "0.005",
+      "raw_delta_upper_bound": "0.035",
+      "noninferiority_margin": "0.01",
+      "evidence_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "metric_units": "ARITHMETIC_RETURN",
+      "noninferiority_margin_units": "ARITHMETIC_RETURN",
+      "economic_effect_threshold": "0",
+      "economic_effect_units": "ARITHMETIC_RETURN",
+      "economic_effect_rule": "ORIENTED_CONFIDENCE_BOUND_STRICT_GT"
+    },
+    {
+      "case_id": "HIGHER_FAIL",
+      "direction": "HIGHER_IS_BETTER",
+      "strategy_metric": "0.08",
+      "benchmark_metric": "0.10",
+      "raw_delta_lower_bound": "-0.03",
+      "raw_delta_upper_bound": "-0.01",
+      "noninferiority_margin": "0.005",
+      "evidence_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "metric_units": "ARITHMETIC_RETURN",
+      "noninferiority_margin_units": "ARITHMETIC_RETURN",
+      "economic_effect_threshold": null,
+      "economic_effect_units": null,
+      "economic_effect_rule": null
+    },
+    {
+      "case_id": "EXACT_NI_BOUNDARY_FAILS",
+      "direction": "HIGHER_IS_BETTER",
+      "strategy_metric": "0",
+      "benchmark_metric": "0",
+      "raw_delta_lower_bound": "-0.02",
+      "raw_delta_upper_bound": "0.02",
+      "noninferiority_margin": "0.02",
+      "evidence_sha256": "abababababababababababababababababababababababababababababababab",
+      "metric_units": "ARITHMETIC_RETURN",
+      "noninferiority_margin_units": "ARITHMETIC_RETURN",
+      "economic_effect_threshold": null,
+      "economic_effect_units": null,
+      "economic_effect_rule": null
+    },
+    {
+      "case_id": "MISSING_MARGIN_NO_GO",
+      "direction": "HIGHER_IS_BETTER",
+      "strategy_metric": "0.12",
+      "benchmark_metric": "0.10",
+      "raw_delta_lower_bound": "0.005",
+      "raw_delta_upper_bound": "0.035",
+      "noninferiority_margin": null,
+      "evidence_sha256": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "metric_units": "ARITHMETIC_RETURN",
+      "noninferiority_margin_units": "ARITHMETIC_RETURN",
+      "economic_effect_threshold": null,
+      "economic_effect_units": null,
+      "economic_effect_rule": null
+    },
+    {
+      "case_id": "LOWER_DIRECTION_REVERSAL_PASS",
+      "direction": "LOWER_IS_BETTER",
+      "strategy_metric": "0.08",
+      "benchmark_metric": "0.10",
+      "raw_delta_lower_bound": "-0.03",
+      "raw_delta_upper_bound": "-0.01",
+      "noninferiority_margin": "0.005",
+      "evidence_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "metric_units": "ARITHMETIC_RETURN",
+      "noninferiority_margin_units": "ARITHMETIC_RETURN",
+      "economic_effect_threshold": "0",
+      "economic_effect_units": "ARITHMETIC_RETURN",
+      "economic_effect_rule": "ORIENTED_CONFIDENCE_BOUND_STRICT_GT"
+    }
+  ],
+  "abort": {
+    "initial_state": {
+      "policy_version": 1,
+      "status": "ARMED",
+      "restart_authority_id": "synthetic-risk-owner",
+      "reason_codes": []
+    },
+    "required_rule_ids": ["SYNTHETIC_ABORT_RULE"],
+    "clear_observations": [
+      {
+        "rule_id": "SYNTHETIC_ABORT_RULE",
+        "status": "CLEAR",
+        "evidence_sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    ],
+    "triggered_observations": [
+      {
+        "rule_id": "SYNTHETIC_ABORT_RULE",
+        "status": "TRIGGERED",
+        "evidence_sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+      }
+    ],
+    "resume_approval": {
+      "authority_id": "synthetic-risk-owner",
+      "policy_version": 1,
+      "approved_at": "2026-01-03T00:00:00+00:00",
+      "approval_sha256": "6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  },
+  "post_unblinding": {
+    "valid_candidate": {
+      "trial_id": "synthetic-trial-v2",
+      "version": 2,
+      "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "registered_at": "2026-01-03T00:00:00+00:00",
+      "validation_outputs_opened_at": null
+    },
+    "invalid_same_trial_candidate": {
+      "trial_id": "synthetic-trial-v1",
+      "version": 2,
+      "artifact_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "registered_at": "2026-01-03T00:00:00+00:00",
+      "validation_outputs_opened_at": null
+    }
+  }
+}

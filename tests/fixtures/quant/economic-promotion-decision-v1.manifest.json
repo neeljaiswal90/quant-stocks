@@ -1,0 +1,16 @@
+{
+  "schema_version": "qme.economic_promotion_manifest.v1",
+  "decision_spec_id": "NEE-120-QME-ECONOMIC-DECISION-V1",
+  "hash_algorithm": "sha256",
+  "artifacts": {
+    "configs/quant/economic-promotion-decision-v1.json": "4857af126f6a010cd598030e90d868dae19235c44450bf60058a3e2aaa3dec2a",
+    "docs/quant/QME_ECONOMIC_PROMOTION_DECISION_SPEC.md": "f38f2b6d1e2b546f9477770d1d4a42894e0c5c94e6245aa36bb57efb2687c835",
+    "qme/promotion/__init__.py": "53f5390495f19518c95ceb082db6cc03e649d132bc83065f239fff94d6ef3cce",
+    "qme/promotion/decision.py": "7ae9e874d195abcb5edf6079c1af9116fa59a12c6c900279340aea1d076e2df9",
+    "schemas/quant/economic-promotion-decision-v1.schema.json": "fbbbc434460b308957ab4935def42740e6f54757f27d009a31707d52083c86ef",
+    "tests/fixtures/quant/economic-promotion-decision-v1.vectors.json": "0a563565836aa08820fc4e820f34e8a8cc95c3b00bfa0c64779dedc898b995e0",
+    "tests/fixtures/quant/economic-promotion-decision-v1.expected.json": "7ee5640cddb892ff087f51f42add0a97de56a87b6ab308f3a7667bf2a5af4f27"
+  },
+  "expected_outputs_sha256": "7ee5640cddb892ff087f51f42add0a97de56a87b6ab308f3a7667bf2a5af4f27",
+  "canonical_expected_outputs_sha256": "2c9061de71df19d40bfd09c846f7b4a41bb624efa72f0b86388f50ed5de7ff93"
+}

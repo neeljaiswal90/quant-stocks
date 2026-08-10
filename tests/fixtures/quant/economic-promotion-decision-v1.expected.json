@@ -1,0 +1,58 @@
+{
+  "schema_version": "qme.economic_promotion_expected.v1",
+  "decision_spec_id": "NEE-120-QME-ECONOMIC-DECISION-V1",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "decision_cases": {
+    "HIGHER_PASS": {
+      "criterion_status": "PASS",
+      "promotion_status": "GO",
+      "oriented_delta": "0.02",
+      "oriented_confidence_bound": "0.005",
+      "noninferiority_threshold": "-0.01",
+      "reason": "PASS"
+    },
+    "HIGHER_FAIL": {
+      "criterion_status": "NO_GO",
+      "promotion_status": "NO_GO",
+      "oriented_delta": "-0.02",
+      "oriented_confidence_bound": "-0.03",
+      "noninferiority_threshold": "-0.005",
+      "reason": "NON_INFERIORITY_BOUND_NOT_STRICTLY_ABOVE_THRESHOLD"
+    },
+    "EXACT_NI_BOUNDARY_FAILS": {
+      "criterion_status": "NO_GO",
+      "promotion_status": "NO_GO",
+      "oriented_delta": "0",
+      "oriented_confidence_bound": "-0.02",
+      "noninferiority_threshold": "-0.02",
+      "reason": "NON_INFERIORITY_BOUND_NOT_STRICTLY_ABOVE_THRESHOLD"
+    },
+    "MISSING_MARGIN_NO_GO": {
+      "criterion_status": "UNRESOLVED_BLOCKER",
+      "promotion_status": "NO_GO",
+      "oriented_delta": null,
+      "oriented_confidence_bound": null,
+      "noninferiority_threshold": null,
+      "reason": "MISSING_REQUIRED_CRITERION_INPUT"
+    },
+    "LOWER_DIRECTION_REVERSAL_PASS": {
+      "criterion_status": "PASS",
+      "promotion_status": "GO",
+      "oriented_delta": "0.02",
+      "oriented_confidence_bound": "0.01",
+      "noninferiority_threshold": "-0.005",
+      "reason": "PASS"
+    }
+  },
+  "abort": {
+    "clear_status": "ARMED",
+    "triggered_status": "ABORTED",
+    "missing_observation_status": "ABORTED",
+    "sticky_status_without_approval": "ABORTED",
+    "approved_resume_status": "ARMED"
+  },
+  "post_unblinding": {
+    "valid_new_version_new_trial": "ACCEPTED",
+    "same_trial_overwrite": "REJECTED"
+  }
+}

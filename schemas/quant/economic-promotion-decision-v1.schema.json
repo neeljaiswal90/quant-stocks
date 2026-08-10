@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/quant/economic-promotion-decision-v1.schema.json",
+  "title": "QME NEE-120 economic promotion decision v1 unresolved mandate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "decision_spec_id",
+    "contract_status",
+    "authority",
+    "contract_bindings",
+    "primary_objective",
+    "risk_and_capacity_mandate",
+    "inference_registration",
+    "decision_math",
+    "live_abort_registration"
+  ],
+  "properties": {
+    "$schema": { "const": "../../schemas/quant/economic-promotion-decision-v1.schema.json" },
+    "schema_version": { "const": "qme.economic_promotion_decision.v1" },
+    "decision_spec_id": { "const": "NEE-120-QME-ECONOMIC-DECISION-V1" },
+    "contract_status": { "const": "BLOCKED_UNRESOLVED_MANDATE" },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ticket",
+        "empirical_results_used",
+        "signed_artifact_before_unblinding",
+        "post_unblinding_change_rule",
+        "failure_action"
+      ],
+      "properties": {
+        "ticket": { "const": "NEE-120" },
+        "empirical_results_used": { "const": false },
+        "signed_artifact_before_unblinding": { "$ref": "#/$defs/unresolvedMandateField" },
+        "post_unblinding_change_rule": { "const": "NEW_VERSION_NEW_TRIAL_NO_OVERWRITE" },
+        "failure_action": { "const": "IMMUTABLE_NO_GO_NO_AUTOMATIC_RETUNING" }
+      }
+    },
+    "contract_bindings": {
+      "const": {
+        "accounting_spec_id": "NEE-118-QME-ACCOUNTING-V1",
+        "accounting_spec_path": "docs/quant/QME_ACCOUNTING_EXECUTION_METRICS_SPEC.md",
+        "accounting_spec_sha256": "27e906a612eb61a2f12947ff3696cb907d56d883e45c99a7503011fe13bb8840",
+        "accounting_config_path": "configs/quant/accounting-equations-v1.json",
+        "accounting_config_sha256": "decb3d52dea8b4020f011554848bb9a7c6164827cfe319be36fc46c78b8c2e0c",
+        "accounting_executable_path": "qme/quant/equations.py",
+        "accounting_executable_sha256": "ac0589b3d4184334a90698196aecd44cf26d43393bafc238c1f6acc1cf80fe83",
+        "quantitative_contract_id": "qme-long-only-momentum-v0.1",
+        "quantitative_contract_path": "configs/quant/qme-v0.1-contract.json",
+        "quantitative_contract_sha256": "47070e5827292e74567ae32aeff58bcc2c58e4720edaa2d557435eb2a5f472fa",
+        "primary_filter_control": "NONE",
+        "maximum_drawdown_metric": "POSITIVE_MAGNITUDE",
+        "turnover_metric_options": ["GTN_RATIO", "ONE_WAY_TURNOVER"],
+        "transaction_cost_semantics": "REGISTERED_PER_FILL_BASE_CURRENCY_TC",
+        "tax_metric_label": "PRE_CAPITAL_GAINS_TAX_AFTER_TRANSACTION_COSTS_AND_SUPPORTED_TRANSACTION_TAX",
+        "portfolio_capacity_status": "UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED",
+        "non_authoritative_conflicting_ticket_formulas": ["NEE-132", "NEE-136", "NEE-150"]
+      }
+    },
+    "primary_objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_id",
+        "direction",
+        "benchmark_id",
+        "benchmark_implementation",
+        "estimand",
+        "analysis_unit",
+        "eligible_population",
+        "observation_weighting",
+        "date_alignment_and_aggregation",
+        "paired_missing_observation_policy",
+        "minimum_economic_effect_delta_econ",
+        "economic_effect_decision_rule",
+        "noninferiority_margin_delta_ni"
+      ],
+      "properties": {
+        "metric_id": { "$ref": "#/$defs/unresolvedMandateField" },
+        "direction": { "$ref": "#/$defs/unresolvedMandateField" },
+        "benchmark_id": { "$ref": "#/$defs/unresolvedMandateField" },
+        "benchmark_implementation": { "$ref": "#/$defs/unresolvedMandateField" },
+        "estimand": { "$ref": "#/$defs/unresolvedMandateField" },
+        "analysis_unit": { "$ref": "#/$defs/unresolvedMandateField" },
+        "eligible_population": { "$ref": "#/$defs/unresolvedMandateField" },
+        "observation_weighting": { "$ref": "#/$defs/unresolvedMandateField" },
+        "date_alignment_and_aggregation": { "$ref": "#/$defs/unresolvedMandateField" },
+        "paired_missing_observation_policy": { "$ref": "#/$defs/unresolvedMandateField" },
+        "minimum_economic_effect_delta_econ": { "$ref": "#/$defs/unresolvedMandateField" },
+        "economic_effect_decision_rule": { "$ref": "#/$defs/unresolvedMandateField" },
+        "noninferiority_margin_delta_ni": { "$ref": "#/$defs/unresolvedMandateField" }
+      }
+    },
+    "risk_and_capacity_mandate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_issuer_weight",
+        "maximum_sector_weight",
+        "maximum_volatility",
+        "maximum_drawdown_positive_magnitude",
+        "turnover_metric_selection",
+        "maximum_turnover",
+        "maximum_tax_drag",
+        "minimum_cash_buffer",
+        "expected_aum",
+        "maximum_participation_policy",
+        "portfolio_capacity"
+      ],
+      "properties": {
+        "maximum_issuer_weight": { "$ref": "#/$defs/unresolvedMandateField" },
+        "maximum_sector_weight": { "$ref": "#/$defs/unresolvedMandateField" },
+        "maximum_volatility": { "$ref": "#/$defs/unresolvedMandateField" },
+        "maximum_drawdown_positive_magnitude": { "$ref": "#/$defs/unresolvedMandateField" },
+        "turnover_metric_selection": { "$ref": "#/$defs/unresolvedMandateField" },
+        "maximum_turnover": { "$ref": "#/$defs/unresolvedMandateField" },
+        "maximum_tax_drag": { "$ref": "#/$defs/unresolvedMandateField" },
+        "minimum_cash_buffer": { "$ref": "#/$defs/unresolvedMandateField" },
+        "expected_aum": { "$ref": "#/$defs/unresolvedMandateField" },
+        "maximum_participation_policy": { "$ref": "#/$defs/unresolvedMandateField" },
+        "portfolio_capacity": { "$ref": "#/$defs/unresolvedMandateField" }
+      }
+    },
+    "inference_registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confidence_level",
+        "alpha",
+        "dependence_aware_interval_method",
+        "block_length_or_selection_rule",
+        "resampling_seed",
+        "resampling_replicate_count",
+        "comparison_family_and_multiplicity_rule",
+        "selection_rule_and_family_size_m",
+        "cost_and_tax_scenario",
+        "prospective_observation_length_or_information_requirement",
+        "missing_data_policy"
+      ],
+      "properties": {
+        "confidence_level": { "$ref": "#/$defs/unresolvedMandateField" },
+        "alpha": { "$ref": "#/$defs/unresolvedMandateField" },
+        "dependence_aware_interval_method": { "$ref": "#/$defs/unresolvedMandateField" },
+        "block_length_or_selection_rule": { "$ref": "#/$defs/unresolvedMandateField" },
+        "resampling_seed": { "$ref": "#/$defs/unresolvedMandateField" },
+        "resampling_replicate_count": { "$ref": "#/$defs/unresolvedMandateField" },
+        "comparison_family_and_multiplicity_rule": { "$ref": "#/$defs/unresolvedMandateField" },
+        "selection_rule_and_family_size_m": { "$ref": "#/$defs/unresolvedMandateField" },
+        "cost_and_tax_scenario": { "$ref": "#/$defs/unresolvedMandateField" },
+        "prospective_observation_length_or_information_requirement": {
+          "$ref": "#/$defs/unresolvedMandateField"
+        },
+        "missing_data_policy": { "const": "FAIL_CLOSED_NO_GO" }
+      }
+    },
+    "decision_math": {
+      "const": {
+        "raw_delta": "strategy_metric - benchmark_metric",
+        "higher_is_better_oriented_delta": "strategy_metric - benchmark_metric",
+        "higher_is_better_oriented_bound": "raw_delta_lower_bound",
+        "lower_is_better_oriented_delta": "benchmark_metric - strategy_metric",
+        "lower_is_better_oriented_bound": "-raw_delta_upper_bound",
+        "noninferiority_rule": "oriented_confidence_bound > -delta_ni",
+        "exact_boundary_action": "NO_GO",
+        "missing_or_failed_criterion_action": "NO_GO",
+        "promotion_claim_scope": "PROSPECTIVE_EVIDENCE_ONLY_NO_LIVE_ORDER_AUTHORITY"
+      }
+    },
+    "live_abort_registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abort_metric_id",
+        "abort_threshold",
+        "abort_orientation_and_operator",
+        "abort_lookback",
+        "abort_persistence",
+        "abort_owner",
+        "restart_authority",
+        "verified_checkpoint_and_input_hash_policy",
+        "prospective_evidence_clock_resume_or_restart_rule",
+        "missing_rule_or_observation_action",
+        "aborted_state_persistence"
+      ],
+      "properties": {
+        "abort_metric_id": { "$ref": "#/$defs/unresolvedMandateField" },
+        "abort_threshold": { "$ref": "#/$defs/unresolvedMandateField" },
+        "abort_orientation_and_operator": { "$ref": "#/$defs/unresolvedMandateField" },
+        "abort_lookback": { "$ref": "#/$defs/unresolvedMandateField" },
+        "abort_persistence": { "$ref": "#/$defs/unresolvedMandateField" },
+        "abort_owner": { "$ref": "#/$defs/unresolvedMandateField" },
+        "restart_authority": { "$ref": "#/$defs/unresolvedMandateField" },
+        "verified_checkpoint_and_input_hash_policy": {
+          "$ref": "#/$defs/unresolvedMandateField"
+        },
+        "prospective_evidence_clock_resume_or_restart_rule": {
+          "$ref": "#/$defs/unresolvedMandateField"
+        },
+        "missing_rule_or_observation_action": { "const": "FAIL_SAFE_ABORT" },
+        "aborted_state_persistence": {
+          "const": "STICKY_UNTIL_MATCHING_EXPLICIT_RESTART_APPROVAL"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "unresolvedMandateField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "value",
+        "units",
+        "mandate_source",
+        "approval_owner",
+        "approved_at",
+        "effective_version",
+        "sensitivity_range"
+      ],
+      "properties": {
+        "status": { "const": "UNRESOLVED_BLOCKER" },
+        "value": { "type": "null" },
+        "units": { "type": "null" },
+        "mandate_source": { "type": ["string", "null"] },
+        "approval_owner": { "type": "null" },
+        "approved_at": { "type": "null" },
+        "effective_version": { "type": "null" },
+        "sensitivity_range": { "type": "null" }
+      }
+    }
+  }
+}

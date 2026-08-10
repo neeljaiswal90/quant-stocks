@@ -1,0 +1,493 @@
+{
+  "$schema": "../../schemas/quant/economic-promotion-decision-v1.schema.json",
+  "schema_version": "qme.economic_promotion_decision.v1",
+  "decision_spec_id": "NEE-120-QME-ECONOMIC-DECISION-V1",
+  "contract_status": "BLOCKED_UNRESOLVED_MANDATE",
+  "authority": {
+    "ticket": "NEE-120",
+    "empirical_results_used": false,
+    "signed_artifact_before_unblinding": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "post_unblinding_change_rule": "NEW_VERSION_NEW_TRIAL_NO_OVERWRITE",
+    "failure_action": "IMMUTABLE_NO_GO_NO_AUTOMATIC_RETUNING"
+  },
+  "contract_bindings": {
+    "accounting_spec_id": "NEE-118-QME-ACCOUNTING-V1",
+    "accounting_spec_path": "docs/quant/QME_ACCOUNTING_EXECUTION_METRICS_SPEC.md",
+    "accounting_spec_sha256": "27e906a612eb61a2f12947ff3696cb907d56d883e45c99a7503011fe13bb8840",
+    "accounting_config_path": "configs/quant/accounting-equations-v1.json",
+    "accounting_config_sha256": "decb3d52dea8b4020f011554848bb9a7c6164827cfe319be36fc46c78b8c2e0c",
+    "accounting_executable_path": "qme/quant/equations.py",
+    "accounting_executable_sha256": "ac0589b3d4184334a90698196aecd44cf26d43393bafc238c1f6acc1cf80fe83",
+    "quantitative_contract_id": "qme-long-only-momentum-v0.1",
+    "quantitative_contract_path": "configs/quant/qme-v0.1-contract.json",
+    "quantitative_contract_sha256": "47070e5827292e74567ae32aeff58bcc2c58e4720edaa2d557435eb2a5f472fa",
+    "primary_filter_control": "NONE",
+    "maximum_drawdown_metric": "POSITIVE_MAGNITUDE",
+    "turnover_metric_options": ["GTN_RATIO", "ONE_WAY_TURNOVER"],
+    "transaction_cost_semantics": "REGISTERED_PER_FILL_BASE_CURRENCY_TC",
+    "tax_metric_label": "PRE_CAPITAL_GAINS_TAX_AFTER_TRANSACTION_COSTS_AND_SUPPORTED_TRANSACTION_TAX",
+    "portfolio_capacity_status": "UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED",
+    "non_authoritative_conflicting_ticket_formulas": ["NEE-132", "NEE-136", "NEE-150"]
+  },
+  "primary_objective": {
+    "metric_id": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "direction": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "benchmark_id": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "benchmark_implementation": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "estimand": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "analysis_unit": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "eligible_population": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "observation_weighting": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "date_alignment_and_aggregation": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "paired_missing_observation_policy": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "minimum_economic_effect_delta_econ": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "economic_effect_decision_rule": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "noninferiority_margin_delta_ni": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    }
+  },
+  "risk_and_capacity_mandate": {
+    "maximum_issuer_weight": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "maximum_sector_weight": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "maximum_volatility": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "maximum_drawdown_positive_magnitude": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "turnover_metric_selection": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "maximum_turnover": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "maximum_tax_drag": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "minimum_cash_buffer": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "expected_aum": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "maximum_participation_policy": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "portfolio_capacity": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": "NEE-118_UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED",
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    }
+  },
+  "inference_registration": {
+    "confidence_level": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "alpha": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "dependence_aware_interval_method": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "block_length_or_selection_rule": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "resampling_seed": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "resampling_replicate_count": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "comparison_family_and_multiplicity_rule": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "selection_rule_and_family_size_m": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "cost_and_tax_scenario": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "prospective_observation_length_or_information_requirement": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "missing_data_policy": "FAIL_CLOSED_NO_GO"
+  },
+  "decision_math": {
+    "raw_delta": "strategy_metric - benchmark_metric",
+    "higher_is_better_oriented_delta": "strategy_metric - benchmark_metric",
+    "higher_is_better_oriented_bound": "raw_delta_lower_bound",
+    "lower_is_better_oriented_delta": "benchmark_metric - strategy_metric",
+    "lower_is_better_oriented_bound": "-raw_delta_upper_bound",
+    "noninferiority_rule": "oriented_confidence_bound > -delta_ni",
+    "exact_boundary_action": "NO_GO",
+    "missing_or_failed_criterion_action": "NO_GO",
+    "promotion_claim_scope": "PROSPECTIVE_EVIDENCE_ONLY_NO_LIVE_ORDER_AUTHORITY"
+  },
+  "live_abort_registration": {
+    "abort_metric_id": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "abort_threshold": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "abort_orientation_and_operator": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "abort_lookback": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "abort_persistence": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "abort_owner": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "restart_authority": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "verified_checkpoint_and_input_hash_policy": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "prospective_evidence_clock_resume_or_restart_rule": {
+      "status": "UNRESOLVED_BLOCKER",
+      "value": null,
+      "units": null,
+      "mandate_source": null,
+      "approval_owner": null,
+      "approved_at": null,
+      "effective_version": null,
+      "sensitivity_range": null
+    },
+    "missing_rule_or_observation_action": "FAIL_SAFE_ABORT",
+    "aborted_state_persistence": "STICKY_UNTIL_MATCHING_EXPLICIT_RESTART_APPROVAL"
+  }
+}
