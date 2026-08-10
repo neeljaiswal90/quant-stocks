@@ -16,7 +16,8 @@ _PROVENANCE_HASH_LINE_ALLOWLIST = (
     r'"(?:upstream_commit|release_commit)"\s*:\s*"[0-9a-f]{7,40}"|'
     r'"(?:source_archive_sha256|license_sha256|build_lock_sha256|'
     r'transitive_lock_sha256|accounting_equation_spec_sha256|'
-    r'total_return_methodology_sha256)"\s*:\s*"[0-9a-f]{64}"'
+    r'total_return_methodology_sha256|calendar_hash|ordered_session_vector_hash|'
+    r'ordered_filter_session_vector_hash)"\s*:\s*"[0-9a-f]{64}"'
 )
 _VALIDATED_HASH_MANIFESTS = {
     Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),

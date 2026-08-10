@@ -99,20 +99,22 @@ Required drift handling:
 - A generated branch name, project percentage, ticket description, or planning approval
   never establishes implementation.
 
-## 5. Verified snapshot — 2026-08-09
+## 5. Verified snapshot — 2026-08-10
 
 ### Repository and validation
 
 | Item | Evidence state | Observation |
 |---|---|---|
-| Git repository | `LOCAL_UNCOMMITTED` | `main` has no commits; all current project files are untracked. |
-| Python package | `VERIFIED` locally | `qme` version `0.1.0`; Python `>=3.10,<3.14`. |
-| Runtime dependencies | `VERIFIED` locally | The base project declares no runtime dependencies. |
-| Agent dependency | `PLANNED/BLOCKED` | Optional TradingAgents dependency is pinned to `a33fd4c0f134485a43553a2c23a63cb14adbd88f`; transitive hashed lock and attested runtime remain missing. |
-| Core tests | `VERIFIED` locally | Latest `python -m pytest -q` -> `41 passed`; elapsed time is intentionally omitted because it varies by run. |
-| Core lint | `VERIFIED` locally | `python -m ruff check qme tests` -> `All checks passed!`. |
-| Whole-tree lint | `BLOCKED` | `python -m ruff check .` reports 523 findings, primarily in legacy, prototype, or vendored code; no whole-repository green claim is valid. |
-| CI provenance | `BLOCKED` | No committed SHA or repository CI evidence exists yet. |
+| Git repository | `COMMITTED_UNVERIFIED` | Clean branch `codex/linear-foundation` at `37f52cf918dba5a04d47c95940beeb12d196c73f`; four reviewed local commits exist. |
+| Python package | `VERIFIED` locally | `qme` version `0.1.0`; CPython contract is `>=3.12,<3.13` and validation used CPython 3.12.10. |
+| Runtime/development locks | `VERIFIED` locally | Base runtime has no dependencies. Fully hashed build, development, and agent locks verify; clean agent resolution was dry-run only with runtime disabled. |
+| Agent dependency | `COMMITTED/BLOCKED` | TradingAgents is pinned to archive SHA-256 and upstream commit `a33fd4c0f134485a43553a2c23a63cb14adbd88f`; the packet-native service, parent-attested supervisor, strict schemas, freshness authority, and evaluation gate remain missing. |
+| Core tests | `VERIFIED` locally | `python -m pytest -q -p no:cacheprovider` -> `113 passed`. |
+| Lint and typing | `VERIFIED` locally | Ruff over `qme tests scripts` passes; strict mypy over `qme` and the verification scripts passes. |
+| Build/install | `VERIFIED` locally | Wheel build, clean no-dependency install, `pip check`, and both CLI help smokes pass. |
+| Fixture determinism | `VERIFIED` locally | Two independent canonical foundation manifests are byte-identical at SHA-256 `7468180f9ce2cce7bf6decdc6c54910966fd2a713e9da5b047689d4e78a28957`. |
+| Scoped quality policy | `VERIFIED` locally | CI deliberately checks `qme`, `tests`, and `scripts`; user-owned `/tools/` checkouts and local environments are ignored and were not committed. |
+| CI provenance | `BLOCKED` | The repository has no configured remote and no exact-SHA GitHub Actions run URL; local evidence is not `CI_VERIFIED`. |
 
 ### Implemented local surface
 
@@ -122,7 +124,13 @@ The currently implemented QME package is limited to:
 - a packet tool gateway;
 - a disabled-by-default TradingAgents adapter boundary;
 - a single-evidence-packet `qme-agent-review` CLI;
-- strict local tests for the existing safety boundary.
+- safe data-root and canonical lineage/manifest foundations;
+- the frozen NEE-118 accounting/execution/cost/turnover/metric equation contract and
+  executable arithmetic reference, with authoritative portfolio capacity explicitly
+  unavailable until its discrete solver exists;
+- the frozen NEE-119 v0.1 signal/rank/selection/rational-weight/filter-child contract,
+  with production use blocked on named point-in-time evidence registrations;
+- strict local tests for these boundaries.
 
 Agent output remains report-only. It has `trade_eligible=false` and cannot change
 deterministic ranks, portfolio weights, or orders. The unmodified upstream
@@ -134,26 +142,22 @@ The repository does not yet contain accepted implementations for:
 
 - production Alpha Vantage ingestion and immutable normalized stores;
 - point-in-time identity, Nasdaq-100 membership, or full-universe coverage;
-- the canonical 12-1 signal, ranking, eligibility, selection, and portfolio engine;
-- self-financing accounting, cost/capacity, backtest, or quantitative validation;
+- the production 12-1 signal, ranking, eligibility, selection, target solver, and
+  full-universe portfolio engine;
+- the complete event ledger, authoritative capacity solver, walk-forward backtest, or
+  empirical quantitative validation;
 - an immutable full-universe score artifact or cross-ticker agent result batch;
 - a Webull production execution or reconciliation path;
 - a web API, frontend package, dashboard, or browser tests.
 
 Synthetic NVDA values in tests are fixtures, not production research results.
 
-### Live Linear snapshot
+### Affected live Linear snapshot
 
-After adding the UI workstream on 2026-08-09, the project contained 64 non-archived
-issues:
-
-- 55 `Backlog`
-- 6 `Todo`: NEE-116, NEE-118, NEE-119, NEE-120, NEE-121, NEE-122
-- 3 `In Progress`: NEE-117, NEE-153, NEE-163
-
-Those three `In Progress` tickets remain `LOCAL_UNCOMMITTED` from a repository-evidence
-perspective. No ticket is justified as `CI_VERIFIED`, `MERGED`, `RUNTIME_EVIDENCED`,
-or `ACCEPTED` at this snapshot.
+At the implementation observation, NEE-117 remained `In Progress`; NEE-118 and NEE-119
+remained `Todo`; and NEE-168 through NEE-171 remained `Backlog`. Repository commits do
+not silently change workflow state. These tickets will receive exact local evidence and
+remain below `ACCEPTED` until their outstanding CI, runtime, or producer gates exist.
 
 ## 6. System mission and non-negotiable boundary
 
@@ -177,15 +181,15 @@ engine, agent orchestrator, broker controller, or alternative source of truth.
 
 | Workstream | Status | Exit evidence required |
 |---|---|---|
-| M0 foundation | `IN_PROGRESS` | First reviewed commit, clean install, hashed dependency resolution, CI tied to SHA, configuration/lineage tests. |
+| M0 foundation | `COMMITTED_UNVERIFIED` | Local commit `9fee0ab`; clean install, locks, lineage and tests pass. Exact-SHA remote CI is still required. |
 | M1 market-data spine | `PLANNED` | Immutable raw receipts, schema validation, rate-limit/retry tests, replayable normalized outputs. |
 | M2 identity/corporate actions/coverage | `PLANNED` | Point-in-time identity and membership, explicit exclusions, adjustment fixtures, coverage gate. |
-| M3 deterministic signal/backtest | `PLANNED` | Frozen formulas, ranking/missing/tie policies, self-financing accounting, costs/capacity, hand-checkable fixtures. |
+| M3 deterministic signal/backtest | `IN_PROGRESS` | NEE-118/119 contracts are locally committed and tested; production engine, greatest-capital capacity solver, golden two-rebalance fixtures, and backtest remain. |
 | M4 reporting/validation | `PLANNED` | Registered metrics and tests, multiplicity controls, dev/validation/holdout isolation, immutable reports. |
 | M5 broker/paper operations | `PLANNED` | Preview-only default, account/environment allowlist, confirmation authority outside UI, reconciliation and abort evidence. |
 | M6 Nasdaq-100 agent review | `IN_PROGRESS/BLOCKED` | Full deterministic universe artifact, immutable evidence packets, process-isolated attested runtime, strict typed outputs, cross-ticker normalization. |
 | M7 deferred research extensions | `DEFERRED` | Promotion gates for any extension; no holdout tuning. |
-| M8 read-only UI | `PLANNED` — local-only architecture approved | Deterministic content-addressed snapshots, research dashboard, operations evidence console, exact-SHA quant-integrity/read-only/accessibility/performance evidence. |
+| M8 read-only UI | `PLANNING_ONLY` — architecture committed | Local-only ADR commit `37f52cf`; deterministic snapshots, viewer code, browser/accessibility/performance evidence remain unimplemented. |
 
 ## 8. M8 UI implementation decision
 
@@ -329,8 +333,8 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No commit provenance:** all current work is untracked; establish a reviewed initial
-   commit and CI before claiming integrated implementation.
+1. **No remote CI provenance:** four reviewed local commits exist, but there is no remote,
+   pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
    Nasdaq-100 producer schema is accepted.
 3. **Agent runtime disabled:** current adapter is a safety boundary, not an operational
@@ -343,30 +347,36 @@ selection math. The UI renders those results and definitions; it never invents t
    payload lineage.
 6. **No safe broker mutation authority:** the UI must not import or expose legacy Webull
    helpers; it may only display accepted immutable preview/reconciliation artifacts.
-7. **Whole-tree quality gate unresolved:** core checks pass, but the full repository has
-   523 lint findings and no scoped CI policy yet.
-8. **UI implementation unresolved:** the local-only architecture is approved, but no
+7. **Production quantitative registrations absent:** minimum breadth, source-class
+   freshness, point-in-time identity/membership, and production total-return event
+   evidence remain deliberately unregistered and blocking; no result is inferred.
+8. **Authoritative portfolio capacity unavailable:** the fixed-trade participation
+   diagnostic is not portfolio capacity; the greatest-capital discrete solver remains
+   `UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED`.
+9. **UI implementation unresolved:** the local-only architecture is approved, but no
    snapshot schemas/fixtures, field registry, projection builder, local catalog/read
    models, Flask/Jinja/Waitress viewer, browser evidence, packaged artifact, or clean-
    machine evidence exists.
 
 ## 11. Next required actions
 
-1. Commit the reviewed foundation and establish exact-SHA CI and a hashed dependency
-   lock.
-2. Freeze the deterministic data, membership, feature, score/rank, eligibility, and
+1. Configure a repository remote and run required CI against the exact branch SHA; do
+   not mark NEE-117 accepted from local tests alone.
+2. Complete NEE-116 golden two-rebalance/corporate-action fixtures against the committed
+   NEE-118/119 contracts, then implement the production target/cost solver.
+3. Freeze the deterministic data, membership, feature, score/rank, eligibility, and
    full-universe artifact contracts.
-3. Complete point-in-time Nasdaq-100 producer work and create the first immutable
+4. Complete point-in-time Nasdaq-100 producer work and create the first immutable
    universe fixture plus corrupt/degraded variants.
-4. Execute NEE-169 Stage 0: commit producer/snapshot schemas, field/source-pointer
+5. Execute NEE-169 Stage 0: commit producer/snapshot schemas, field/source-pointer
    registry, state/completeness mapping, membership-hash/Decimal vectors, resource bounds,
    benchmarks, and valid/adversarial fixtures.
-5. Build and verify the deterministic content-addressed snapshot builder, then implement
+6. Build and verify the deterministic content-addressed snapshot builder, then implement
    the local in-memory catalog/read models and unauthenticated loopback viewer.
-6. Build the deterministic research dashboard before agent and broker views.
-7. Add agent-review views only after typed batch outputs and receipts validate.
-8. Add preview/reconciliation views only after canonical operations artifacts exist.
-9. Attach browser, accessibility, performance, and deterministic snapshot
+7. Build the deterministic research dashboard before agent and broker views.
+8. Add agent-review views only after typed batch outputs and receipts validate.
+9. Add preview/reconciliation views only after canonical operations artifacts exist.
+10. Attach browser, accessibility, performance, and deterministic snapshot
    evidence to an exact committed SHA.
 
 ## 12. Progress log
@@ -381,6 +391,10 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-09 | Compared independent SPA and server-rendered proposals, red-teamed the preferred design, and recorded ADR-001. | `PLANNING_ONLY` | Flask/Jinja/Waitress plus signed offline projection is preferred and conditionally approved for Stage 0; production is `NO-GO` pending P0-1 through P0-7 and exact-SHA evidence. |
 | 2026-08-09 | Final independent audit found and the plan resolved catalog rollback/omission, builder/signer custody, control-file recursion, public-session side effects, quarantine, numeric-display, membership-hash, completeness, and route-identity specification gaps. | `PLANNING_ONLY` | Contracts and NEE-168/169/170/171 were reconciled; no implementation exists and Stage 0A remains unaccepted until committed fixtures prove the mechanisms. |
 | 2026-08-10 | Owner changed the UI scope to a single trusted user on one local computer with no authentication or security program. ADR-001 and the independent review now approve an unauthenticated local Flask/Jinja/Waitress viewer over deterministic content-addressed JSON snapshots; NEE-168/169/170/171 descriptions and audit comments were reconciled without changing Backlog state or dependencies. | `PLANNING_ONLY` | Supersedes the 2026-08-09 auth/signing/catalog-high-water/Windows-isolation plan. Preserve schema/checksum/provenance, exact member-set/hash, Decimal fidelity, fail-closed state, read-only/no-order, accessibility, and measured-performance gates. |
+| 2026-08-10 | Created reviewed foundation commit `9fee0ab0fa7f55503524d7024ff1998ab6f78f6b` with fully hashed locks, CI workflow, safe data-root/lineage contracts, staged-byte secret scanning, and hard-disabled agent runtime. | `COMMITTED_UNVERIFIED` | Local clean install/build/CLI/lock/secret checks pass; exact-SHA remote CI remains absent. |
+| 2026-08-10 | Committed corrected NEE-118 accounting contract as `21c6cde0b14d30d055a5bad9de52a4ff01e5b438`. | `COMMITTED_UNVERIFIED` | 14 focused tests; raw-coordinate evidence, sell-before-buy, per-fill costs/taxes, timing, strict schemas and undefined capacity state pass. |
+| 2026-08-10 | Committed corrected NEE-119 v0.1 quantitative contract as `943da8dcecc1148cd158383a7b5682d0fe0a85ba`. | `COMMITTED_UNVERIFIED` | 41 focused tests; exact calendar anchors, rational weights, total-return methodology, near ties and immutable filter children pass. Production evidence registrations remain blocking. |
+| 2026-08-10 | Committed the local-only UI architecture contract as `37f52cf918dba5a04d47c95940beeb12d196c73f`. | `PLANNING_ONLY` | ADR/spec/review are committed; no UI code or runtime evidence exists. Full integration validation at this SHA: 113 tests, Ruff, strict mypy, compile, locks, wheel and CLI smokes pass. |
 
 ## 13. Per-ticket evidence record template
 
