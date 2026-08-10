@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/experiment-registry-export-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_id",
+    "causal_authority",
+    "integrity_scope",
+    "source_verification_disposition",
+    "production_blockers",
+    "event_count",
+    "head_hash",
+    "state_sha256",
+    "events",
+    "policies",
+    "families",
+    "trials",
+    "timestamp_anomalies",
+    "export_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "qme.experiment_registry_export.v1"},
+    "registry_id": {"const": "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1"},
+    "causal_authority": {"const": "SOURCE_GLOBAL_SEQUENCE_NOT_WALL_CLOCK"},
+    "integrity_scope": {
+      "const": "HASH_CHAIN_AND_ACKNOWLEDGED_HEADS_ARE_INTEGRITY_NOT_AUTHENTICATION"
+    },
+    "source_verification_disposition": {
+      "const": "IDENTIFIERS_AND_HASHES_RECORDED_BYTES_NOT_RESOLVED_BY_DOMAIN_KERNEL"
+    },
+    "production_blockers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "event_count": {"type": "integer", "minimum": 0},
+    "head_hash": {"$ref": "#/$defs/sha256"},
+    "state_sha256": {"$ref": "#/$defs/sha256"},
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "experiment-registry-event-v1.schema.json"
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/policyRow"}
+    },
+    "families": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/familyDisclosure"}
+    },
+    "trials": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/trialRow"}
+    },
+    "timestamp_anomalies": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/timestampAnomaly"}
+    },
+    "export_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "nullableText": {
+      "oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]
+    },
+    "nullablePositiveInteger": {
+      "oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]
+    },
+    "policyRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "family_frozen_sequence",
+        "family_freeze_cause",
+        "multiplicity",
+        "grid_reconciliation"
+      ],
+      "properties": {
+        "policy": {
+          "$ref": "experiment-registry-event-v1.schema.json#/$defs/runtimePolicy"
+        },
+        "family_frozen_sequence": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "family_freeze_cause": {
+          "oneOf": [{"const": "FIRST_TRIAL_STARTED"}, {"type": "null"}]
+        },
+        "multiplicity": {"$ref": "#/$defs/multiplicity"},
+        "grid_reconciliation": {"$ref": "#/$defs/gridReconciliation"}
+      }
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["REGISTERED", "RUNNING", "COMPLETED", "FAILED", "SKIPPED", "ABANDONED"],
+      "properties": {
+        "REGISTERED": {"type": "integer", "minimum": 0},
+        "RUNNING": {"type": "integer", "minimum": 0},
+        "COMPLETED": {"type": "integer", "minimum": 0},
+        "FAILED": {"type": "integer", "minimum": 0},
+        "SKIPPED": {"type": "integer", "minimum": 0},
+        "ABANDONED": {"type": "integer", "minimum": 0}
+      }
+    },
+    "registeredValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value"],
+      "properties": {
+        "status": {"enum": ["REGISTERED", "UNREGISTERED_BLOCKER"]},
+        "value": {
+          "oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]
+        }
+      }
+    },
+    "effectiveTrials": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value", "model_binding", "independence_assumed"],
+      "properties": {
+        "status": {"const": "UNREGISTERED_BLOCKER"},
+        "value": {"type": "null"},
+        "model_binding": {"type": "null"},
+        "independence_assumed": {"const": false}
+      }
+    },
+    "multiplicityCore": {
+      "type": "object",
+      "required": [
+        "policy_id",
+        "production_authority",
+        "counting_status",
+        "expected_structural_family_size",
+        "expected_report_family_size",
+        "registered_trial_count",
+        "execution_run_count",
+        "registered_structural_count",
+        "registered_report_count",
+        "registered_selection_unit_count",
+        "minimum_exposed_selection_opportunity_count",
+        "off_grid_manual_count",
+        "status_counts",
+        "cost_selection_role",
+        "family_size_m",
+        "effective_trials_n_eff"
+      ],
+      "properties": {
+        "policy_id": {"$ref": "#/$defs/text"},
+        "production_authority": {
+          "enum": [
+            "BLOCKED_UNRESOLVED_PRODUCTION_REGISTRATIONS",
+            "BLOCKED_OFF_GRID_MANUAL_ATTEMPTS_NOT_IN_REGISTERED_FAMILY",
+            "TEST_ONLY_SYNTHETIC_NON_EMPIRICAL"
+          ]
+        },
+        "counting_status": {
+          "enum": [
+            "RECONCILABLE_TO_REGISTERED_POLICY",
+            "BLOCKED_OFF_GRID_MANUAL_ATTEMPTS_NOT_IN_REGISTERED_FAMILY"
+          ]
+        },
+        "expected_structural_family_size": {"const": 96},
+        "expected_report_family_size": {"const": 288},
+        "registered_trial_count": {"type": "integer", "minimum": 0},
+        "execution_run_count": {"type": "integer", "minimum": 0},
+        "registered_structural_count": {"type": "integer", "minimum": 0},
+        "registered_report_count": {"type": "integer", "minimum": 0},
+        "registered_selection_unit_count": {"type": "integer", "minimum": 0},
+        "minimum_exposed_selection_opportunity_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "off_grid_manual_count": {"type": "integer", "minimum": 0},
+        "status_counts": {"$ref": "#/$defs/statusCounts"},
+        "cost_selection_role": {
+          "enum": ["REPORTING_ONLY", "SELECTION_ELIGIBLE", "UNREGISTERED_BLOCKER"]
+        },
+        "family_size_m": {"$ref": "#/$defs/registeredValue"},
+        "effective_trials_n_eff": {"$ref": "#/$defs/effectiveTrials"}
+      }
+    },
+    "multiplicity": {
+      "allOf": [{"$ref": "#/$defs/multiplicityCore"}],
+      "unevaluatedProperties": false
+    },
+    "coordinateArrayOrNull": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 5,
+            "items": {"$ref": "#/$defs/text"}
+          }
+        }
+      ]
+    },
+    "gridReconciliation": {
+      "allOf": [
+        {"$ref": "#/$defs/multiplicityCore"},
+        {
+          "type": "object",
+          "required": [
+            "reconciliation_status",
+            "missing_structural_coordinates",
+            "missing_report_coordinates"
+          ],
+          "properties": {
+            "reconciliation_status": {
+              "enum": [
+                "BLOCKED_UNREGISTERED_PRODUCTION_DIMENSION_VALUES",
+                "BLOCKED_OFF_GRID_MANUAL_ATTEMPTS",
+                "COMPLETE_TEST_ONLY",
+                "INCOMPLETE_TEST_ONLY"
+              ]
+            },
+            "missing_structural_coordinates": {"$ref": "#/$defs/coordinateArrayOrNull"},
+            "missing_report_coordinates": {"$ref": "#/$defs/coordinateArrayOrNull"},
+            "unexpected_structural_coordinates": {"$ref": "#/$defs/coordinateArrayOrNull"},
+            "unexpected_report_coordinates": {"$ref": "#/$defs/coordinateArrayOrNull"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "trialRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trial_id",
+        "configuration_sha256",
+        "registration_sha256",
+        "registered_sequence",
+        "registered_event_hash",
+        "registered_at",
+        "status",
+        "run_id",
+        "run_attempts",
+        "terminal_reason",
+        "terminal_sequence",
+        "registration",
+        "sample_access_bindings",
+        "outcomes"
+      ],
+      "properties": {
+        "trial_id": {"$ref": "#/$defs/text"},
+        "configuration_sha256": {"$ref": "#/$defs/sha256"},
+        "registration_sha256": {"$ref": "#/$defs/sha256"},
+        "registered_sequence": {"type": "integer", "minimum": 1},
+        "registered_event_hash": {"$ref": "#/$defs/sha256"},
+        "registered_at": {"type": "string", "format": "date-time"},
+        "status": {
+          "enum": ["REGISTERED", "RUNNING", "COMPLETED", "FAILED", "SKIPPED", "ABANDONED"]
+        },
+        "run_id": {"$ref": "#/$defs/nullableText"},
+        "run_attempts": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/runAttempt"}
+        },
+        "terminal_reason": {"$ref": "#/$defs/nullableText"},
+        "terminal_sequence": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "registration": {
+          "$ref": "experiment-registry-event-v1.schema.json#/$defs/trialRegistration"
+        },
+        "sample_access_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "experiment-registry-event-v1.schema.json#/$defs/sampleAccessBinding"
+          }
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {"$ref": "experiment-registry-event-v1.schema.json#/$defs/outcome"}
+        }
+      }
+    },
+    "runAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "started_sequence",
+        "started_at",
+        "terminal_disposition",
+        "terminal_reason",
+        "terminal_sequence",
+        "terminal_at"
+      ],
+      "properties": {
+        "run_id": {"$ref": "#/$defs/text"},
+        "started_sequence": {"type": "integer", "minimum": 1},
+        "started_at": {"type": "string", "format": "date-time"},
+        "terminal_disposition": {
+          "oneOf": [
+            {
+              "enum": [
+                "TECHNICAL_RETRY_SUPERSEDED",
+                "COMPLETED",
+                "FAILED",
+                "SKIPPED",
+                "ABANDONED"
+              ]
+            },
+            {"type": "null"}
+          ]
+        },
+        "terminal_reason": {"$ref": "#/$defs/nullableText"},
+        "terminal_sequence": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "terminal_at": {
+          "oneOf": [
+            {"type": "string", "format": "date-time"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "familyDisclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "hypothesis_id",
+        "policy_ids",
+        "trial_count",
+        "execution_run_count",
+        "unique_research_specification_count",
+        "minimum_exposed_selection_opportunity_count",
+        "off_grid_manual_count",
+        "status_counts",
+        "cumulative_family_size_m",
+        "disposition"
+      ],
+      "properties": {
+        "family_id": {"$ref": "#/$defs/text"},
+        "hypothesis_id": {"$ref": "#/$defs/text"},
+        "policy_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "trial_count": {"type": "integer", "minimum": 1},
+        "execution_run_count": {"type": "integer", "minimum": 0},
+        "unique_research_specification_count": {"type": "integer", "minimum": 1},
+        "minimum_exposed_selection_opportunity_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "off_grid_manual_count": {"type": "integer", "minimum": 0},
+        "status_counts": {"$ref": "#/$defs/statusCounts"},
+        "cumulative_family_size_m": {"$ref": "#/$defs/registeredValue"},
+        "disposition": {
+          "enum": [
+            "REGISTERED_SINGLE_POLICY_FAMILY",
+            "BLOCKED_REQUIRES_CUMULATIVE_FAMILY_POLICY"
+          ]
+        }
+      }
+    },
+    "timestampAnomaly": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "sequence",
+        "occurred_at",
+        "latest_prior_occurred_at",
+        "disposition"
+      ],
+      "properties": {
+        "event_id": {"$ref": "#/$defs/text"},
+        "sequence": {"type": "integer", "minimum": 1},
+        "occurred_at": {"type": "string", "format": "date-time"},
+        "latest_prior_occurred_at": {"type": "string", "format": "date-time"},
+        "disposition": {"const": "ANOMALY_METADATA_ONLY_SEQUENCE_REMAINS_AUTHORITY"}
+      }
+    }
+  }
+}

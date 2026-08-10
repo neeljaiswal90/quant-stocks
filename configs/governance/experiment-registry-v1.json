@@ -1,0 +1,119 @@
+{
+  "$schema": "../../schemas/governance/experiment-registry-policy-v1.schema.json",
+  "schema_version": "qme.experiment_registry_production_policy.v1",
+  "registry_contract_id": "qme-global-experiment-registry-v1",
+  "canonicalization_id": "qme.foundation.canonical_json.v1",
+  "production_status": "BLOCKED_UNREGISTERED_FAMILY_AND_DEPENDENCE_METHOD",
+  "authority_bindings": {
+    "nee_119_quantitative_contract": {
+      "path": "configs/quant/qme-v0.1-contract.json",
+      "sha256": "47070e5827292e74567ae32aeff58bcc2c58e4720edaa2d557435eb2a5f472fa"
+    },
+    "nee_120_promotion_config": {
+      "path": "configs/quant/economic-promotion-decision-v1.json",
+      "sha256": "4857af126f6a010cd598030e90d868dae19235c44450bf60058a3e2aaa3dec2a"
+    },
+    "nee_120_promotion_manifest": {
+      "path": "tests/fixtures/quant/economic-promotion-decision-v1.manifest.json",
+      "sha256": "e087cd29f1bbe6f7d066c32631fe6f6586da84c0eb7b33045cec7162d7c4a36a"
+    },
+    "nee_121_governance_manifest": {
+      "path": "configs/governance/sample-holdout-v1.hashes.json",
+      "sha256": "e28864a8067f8e233ea880f0082299916d986ed68614a6782616aa93f96f91a2"
+    },
+    "nee_121_sample_access_schema": {
+      "path": "schemas/governance/sample-access-event-v1.schema.json",
+      "sha256": "2c01f376636c2aae8cda666e77f8aff517f5072b729b21cf2eed8eb452a786cb"
+    }
+  },
+  "storage_contract": {
+    "logical_root": "governance/experiment_registry/<registry_id>",
+    "event_pattern": "events/<20-digit-sequence>-<event-sha256>.json",
+    "export_pattern": "exports/<head-event-sha256>.registry-export.json",
+    "authority": "IMMUTABLE_EVENT_FILES_ONLY",
+    "writer_serialization": "OS_HELD_FILE_LOCK",
+    "publication": "REPLAY_UNDER_LOCK_THEN_NO_CLOBBER_HARDLINK",
+    "mutable_head": false,
+    "authentication_claim": "NONE_LOCAL_SINGLE_USER"
+  },
+  "structural_grid_cardinalities": {
+    "lookbacks": 4,
+    "holding_rules": 3,
+    "rebalance_rules": 2,
+    "filters": 4,
+    "cost_reports_per_structure": 3,
+    "structural_configuration_count": 96,
+    "reported_output_count": 288
+  },
+  "registered_filter_ids": [
+    "NONE",
+    "QQQ_TR_SMA_14",
+    "QQQ_TR_SMA_200",
+    "SPY_TR_SMA_200"
+  ],
+  "production_registrations": {
+    "lookback_axis_values": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    },
+    "holding_rule_axis_values": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    },
+    "rebalance_rule_axis_values": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    },
+    "cost_and_tax_scenarios": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    },
+    "comparison_family_and_selection_rule": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    },
+    "selection_hypothesis_count_m": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    },
+    "effective_trials_model": {
+      "status": "UNREGISTERED_BLOCKER",
+      "estimator_id": null,
+      "implementation_sha256": null,
+      "dependence_assumption": null,
+      "input_policy_sha256": null,
+      "n_eff": null
+    },
+    "single_trial_dsr_benchmark": {
+      "status": "UNREGISTERED_BLOCKER",
+      "value": null,
+      "authority_sha256": null
+    }
+  },
+  "counting_contract": {
+    "family_freeze_rule": "ALL_TRIALS_REGISTERED_BEFORE_FIRST_TRIAL_START",
+    "planned_outcome_rule": "EXACTLY_ONE_OUTCOME_PER_COST_WITH_EXPLICIT_SELECTION_ROLE",
+    "sample_access_rule": "ONE_STRICTLY_EXTENDING_NEE121_GLOBAL_CHAIN_WITH_EXACT_TRIAL_DATA_AND_SUCCESS_CITATION",
+    "reporting_only_cost_rule": "ONE_SELECTION_UNIT_PER_STRUCTURAL_CONFIGURATION",
+    "selection_affecting_cost_rule": "ONE_SELECTION_UNIT_PER_STRUCTURE_AND_COST_SCENARIO",
+    "off_grid_rule": "RETAIN_AND_DISCLOSE",
+    "abandoned_failed_skipped_rule": "RETAIN_AND_DISCLOSE",
+    "technical_retry_rule": "SAME_TRIAL_NEW_RUN_ID_WITH_REASON_AND_SUPERSEDED_RUN_DISPOSITION_UNLESS_SPECIFICATION_CHANGES",
+    "holm_input": "REGISTERED_SELECTION_HYPOTHESIS_COUNT_M_ONLY",
+    "dsr_input": "SEPARATELY_REGISTERED_N_EFF_ONLY",
+    "implicit_independence": "FORBIDDEN"
+  },
+  "claims_contract": {
+    "may_claim_production_family_size": false,
+    "may_claim_effective_trials": false,
+    "may_compute_dsr": false,
+    "may_claim_prospective_evidence": false,
+    "may_authorize_promotion": false
+  }
+}

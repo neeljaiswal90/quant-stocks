@@ -23,18 +23,28 @@ _PROVENANCE_HASH_LINE_ALLOWLIST = (
     r'ordered_filter_session_vector_hash)"\s*:\s*"[0-9a-f]{64}"'
 )
 _VALIDATED_HASH_MANIFESTS = {
+    Path("configs/governance/experiment-registry-v1.hashes.json"),
     Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
     Path("tests/fixtures/quant/economic-promotion-decision-v1.manifest.json"),
     Path("tests/fixtures/quant/golden-two-rebalance-v1.manifest.json"),
     Path("configs/quant/qme-v0.1-contract.hashes.json"),
     Path("configs/governance/sample-holdout-v1.hashes.json"),
 }
-_VALIDATED_AUTHORITY_BINDING_FILES = {
-    Path("configs/quant/golden-two-rebalance-v1.json"),
-    Path("qme/fixtures/golden_two_rebalance.py"),
-    Path("tests/fixtures/quant/golden-two-rebalance-v1.vectors.json"),
+_AUTHORITY_BINDING_CONFIGS = {
+    Path("configs/governance/experiment-registry-v1.json"): Path(
+        "configs/governance/experiment-registry-v1.json"
+    ),
+    Path("configs/quant/golden-two-rebalance-v1.json"): Path(
+        "configs/quant/golden-two-rebalance-v1.json"
+    ),
+    Path("qme/fixtures/golden_two_rebalance.py"): Path(
+        "configs/quant/golden-two-rebalance-v1.json"
+    ),
+    Path("tests/fixtures/quant/golden-two-rebalance-v1.vectors.json"): Path(
+        "configs/quant/golden-two-rebalance-v1.json"
+    ),
 }
-_AUTHORITY_BINDING_CONFIG = Path("configs/quant/golden-two-rebalance-v1.json")
+_VALIDATED_AUTHORITY_BINDING_FILES = frozenset(_AUTHORITY_BINDING_CONFIGS)
 _AUTHORITY_HASH_LINE_ALLOWLIST = r'"sha256"\s*:\s*"[0-9a-f]{64}"'
 
 
@@ -125,7 +135,7 @@ def _authority_bindings(path: Path, staged: bool) -> dict[str, dict[str, str]]:
 
 def _validate_authority_binding_file(path: Path, staged: bool) -> None:
     bindings = _authority_bindings(path, staged)
-    registered = _authority_bindings(_AUTHORITY_BINDING_CONFIG, staged)
+    registered = _authority_bindings(_AUTHORITY_BINDING_CONFIGS[path], staged)
     if bindings != registered:
         raise RuntimeError(f"{path} authority bindings differ from the registered config")
     for binding_id, binding in bindings.items():

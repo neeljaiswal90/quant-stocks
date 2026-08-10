@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/experiment-registry-production-policy-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "registry_contract_id",
+    "canonicalization_id",
+    "production_status",
+    "authority_bindings",
+    "storage_contract",
+    "structural_grid_cardinalities",
+    "registered_filter_ids",
+    "production_registrations",
+    "counting_contract",
+    "claims_contract"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/experiment-registry-policy-v1.schema.json"},
+    "schema_version": {"const": "qme.experiment_registry_production_policy.v1"},
+    "registry_contract_id": {"const": "qme-global-experiment-registry-v1"},
+    "canonicalization_id": {"const": "qme.foundation.canonical_json.v1"},
+    "production_status": {"const": "BLOCKED_UNREGISTERED_FAMILY_AND_DEPENDENCE_METHOD"},
+    "authority_bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nee_119_quantitative_contract",
+        "nee_120_promotion_config",
+        "nee_120_promotion_manifest",
+        "nee_121_governance_manifest",
+        "nee_121_sample_access_schema"
+      ],
+      "properties": {
+        "nee_119_quantitative_contract": {"$ref": "#/$defs/artifactBinding"},
+        "nee_120_promotion_config": {"$ref": "#/$defs/artifactBinding"},
+        "nee_120_promotion_manifest": {"$ref": "#/$defs/artifactBinding"},
+        "nee_121_governance_manifest": {"$ref": "#/$defs/artifactBinding"},
+        "nee_121_sample_access_schema": {"$ref": "#/$defs/artifactBinding"}
+      }
+    },
+    "storage_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_root",
+        "event_pattern",
+        "export_pattern",
+        "authority",
+        "writer_serialization",
+        "publication",
+        "mutable_head",
+        "authentication_claim"
+      ],
+      "properties": {
+        "logical_root": {"const": "governance/experiment_registry/<registry_id>"},
+        "event_pattern": {"const": "events/<20-digit-sequence>-<event-sha256>.json"},
+        "export_pattern": {"const": "exports/<head-event-sha256>.registry-export.json"},
+        "authority": {"const": "IMMUTABLE_EVENT_FILES_ONLY"},
+        "writer_serialization": {"const": "OS_HELD_FILE_LOCK"},
+        "publication": {"const": "REPLAY_UNDER_LOCK_THEN_NO_CLOBBER_HARDLINK"},
+        "mutable_head": {"const": false},
+        "authentication_claim": {"const": "NONE_LOCAL_SINGLE_USER"}
+      }
+    },
+    "structural_grid_cardinalities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lookbacks",
+        "holding_rules",
+        "rebalance_rules",
+        "filters",
+        "cost_reports_per_structure",
+        "structural_configuration_count",
+        "reported_output_count"
+      ],
+      "properties": {
+        "lookbacks": {"const": 4},
+        "holding_rules": {"const": 3},
+        "rebalance_rules": {"const": 2},
+        "filters": {"const": 4},
+        "cost_reports_per_structure": {"const": 3},
+        "structural_configuration_count": {"const": 96},
+        "reported_output_count": {"const": 288}
+      }
+    },
+    "registered_filter_ids": {
+      "const": ["NONE", "QQQ_TR_SMA_14", "QQQ_TR_SMA_200", "SPY_TR_SMA_200"]
+    },
+    "production_registrations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lookback_axis_values",
+        "holding_rule_axis_values",
+        "rebalance_rule_axis_values",
+        "cost_and_tax_scenarios",
+        "comparison_family_and_selection_rule",
+        "selection_hypothesis_count_m",
+        "effective_trials_model",
+        "single_trial_dsr_benchmark"
+      ],
+      "properties": {
+        "lookback_axis_values": {"$ref": "#/$defs/unregistered"},
+        "holding_rule_axis_values": {"$ref": "#/$defs/unregistered"},
+        "rebalance_rule_axis_values": {"$ref": "#/$defs/unregistered"},
+        "cost_and_tax_scenarios": {"$ref": "#/$defs/unregistered"},
+        "comparison_family_and_selection_rule": {"$ref": "#/$defs/unregistered"},
+        "selection_hypothesis_count_m": {"$ref": "#/$defs/unregistered"},
+        "effective_trials_model": {"$ref": "#/$defs/unregisteredEffectiveTrials"},
+        "single_trial_dsr_benchmark": {"$ref": "#/$defs/unregistered"}
+      }
+    },
+    "counting_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_freeze_rule",
+        "planned_outcome_rule",
+        "sample_access_rule",
+        "reporting_only_cost_rule",
+        "selection_affecting_cost_rule",
+        "off_grid_rule",
+        "abandoned_failed_skipped_rule",
+        "technical_retry_rule",
+        "holm_input",
+        "dsr_input",
+        "implicit_independence"
+      ],
+      "properties": {
+        "family_freeze_rule": {
+          "const": "ALL_TRIALS_REGISTERED_BEFORE_FIRST_TRIAL_START"
+        },
+        "planned_outcome_rule": {
+          "const": "EXACTLY_ONE_OUTCOME_PER_COST_WITH_EXPLICIT_SELECTION_ROLE"
+        },
+        "sample_access_rule": {
+          "const": "ONE_STRICTLY_EXTENDING_NEE121_GLOBAL_CHAIN_WITH_EXACT_TRIAL_DATA_AND_SUCCESS_CITATION"
+        },
+        "reporting_only_cost_rule": {"const": "ONE_SELECTION_UNIT_PER_STRUCTURAL_CONFIGURATION"},
+        "selection_affecting_cost_rule": {"const": "ONE_SELECTION_UNIT_PER_STRUCTURE_AND_COST_SCENARIO"},
+        "off_grid_rule": {"const": "RETAIN_AND_DISCLOSE"},
+        "abandoned_failed_skipped_rule": {"const": "RETAIN_AND_DISCLOSE"},
+        "technical_retry_rule": {
+          "const": "SAME_TRIAL_NEW_RUN_ID_WITH_REASON_AND_SUPERSEDED_RUN_DISPOSITION_UNLESS_SPECIFICATION_CHANGES"
+        },
+        "holm_input": {"const": "REGISTERED_SELECTION_HYPOTHESIS_COUNT_M_ONLY"},
+        "dsr_input": {"const": "SEPARATELY_REGISTERED_N_EFF_ONLY"},
+        "implicit_independence": {"const": "FORBIDDEN"}
+      }
+    },
+    "claims_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_claim_production_family_size",
+        "may_claim_effective_trials",
+        "may_compute_dsr",
+        "may_claim_prospective_evidence",
+        "may_authorize_promotion"
+      ],
+      "properties": {
+        "may_claim_production_family_size": {"const": false},
+        "may_claim_effective_trials": {"const": false},
+        "may_compute_dsr": {"const": false},
+        "may_claim_prospective_evidence": {"const": false},
+        "may_authorize_promotion": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifactBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "unregistered": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value", "authority_sha256"],
+      "properties": {
+        "status": {"const": "UNREGISTERED_BLOCKER"},
+        "value": {"type": "null"},
+        "authority_sha256": {"type": "null"}
+      }
+    },
+    "unregisteredEffectiveTrials": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "estimator_id",
+        "implementation_sha256",
+        "dependence_assumption",
+        "input_policy_sha256",
+        "n_eff"
+      ],
+      "properties": {
+        "status": {"const": "UNREGISTERED_BLOCKER"},
+        "estimator_id": {"type": "null"},
+        "implementation_sha256": {"type": "null"},
+        "dependence_assumption": {"type": "null"},
+        "input_policy_sha256": {"type": "null"},
+        "n_eff": {"type": "null"}
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "qme.experiment_registry_fixture_vectors.v1",
+  "evidence_class": "TEST_ONLY_SYNTHETIC_NON_EMPIRICAL",
+  "production_use": "FORBIDDEN",
+  "structural_grid": {
+    "lookback": ["L1", "L2", "L3", "L4"],
+    "holding_period": ["H1", "H2", "H3"],
+    "rebalance": ["R1", "R2"],
+    "filter": ["NONE", "QQQ_TR_SMA_14", "QQQ_TR_SMA_200", "SPY_TR_SMA_200"],
+    "cost_scenarios": ["COST_LOW", "COST_BASE", "COST_HIGH"]
+  },
+  "counting_cases": [
+    {
+      "case_id": "REPORTING_ONLY_COSTS",
+      "cost_selection_role": "REPORTING_ONLY",
+      "expected_structural_configuration_count": 96,
+      "expected_reported_output_count": 288,
+      "expected_selection_hypothesis_count_m": 96,
+      "expected_effective_trials_n_eff": null
+    },
+    {
+      "case_id": "SELECTION_ELIGIBLE_COSTS",
+      "cost_selection_role": "SELECTION_ELIGIBLE",
+      "expected_structural_configuration_count": 96,
+      "expected_reported_output_count": 288,
+      "expected_selection_hypothesis_count_m": 288,
+      "expected_effective_trials_n_eff": null
+    },
+    {
+      "case_id": "PRODUCTION_UNRESOLVED",
+      "cost_selection_role": "UNREGISTERED_BLOCKER",
+      "expected_structural_configuration_count": 96,
+      "expected_reported_output_count": 288,
+      "expected_selection_hypothesis_count_m": null,
+      "expected_effective_trials_n_eff": null
+    }
+  ],
+  "adversarial_cases": [
+    "EVENT_HASH_MUTATION",
+    "UNKNOWN_EVENT_FIELD",
+    "ACCESS_BEFORE_START",
+    "ACCESS_WRONG_RUN",
+    "STRICT_GLOBAL_NEE121_PREFIX_EXTENSION",
+    "REGISTERED_PIT_WINDOW_MISMATCH",
+    "ACCESS_BINDING_AFTER_EMBEDDED_ACCESS",
+    "OUTCOME_WITHOUT_ACCESS_SUCCESS",
+    "OUTCOME_BEFORE_SUCCESSFUL_ACCESS",
+    "OUTCOME_WRONG_OR_HIDDEN_SAMPLE_WINDOW",
+    "UNPLANNED_OR_INCOMPLETE_OUTCOME_SET",
+    "TECHNICAL_RETRY_WITHOUT_REASON",
+    "TECHNICAL_RETRY_CUMULATIVE_SAMPLE_EXPOSURE",
+    "SUPERSEDED_RUN_SUCCESS_CANNOT_AUTHORIZE_OUTCOME",
+    "THREE_POLICY_VERSION_LATEST_PARENT_LINEAGE",
+    "STRUCTURAL_ID_COORDINATE_AND_PARENT_ROLLOVER",
+    "DIRTY_REPOSITORY_WITHOUT_PATCH_AND_UNTRACKED_BINDINGS",
+    "TERMINAL_TRIAL_EDIT",
+    "TRIAL_AFTER_POLICY_OUTPUT_OPEN",
+    "BACKWARD_WALL_CLOCK",
+    "DUPLICATE_GRID_ALIAS",
+    "OFF_GRID_REGISTERED_VALUE",
+    "NONCANONICAL_EVENT_BYTES",
+    "NORMALIZED_TIMESTAMP_BYTE_MISMATCH",
+    "OVERSIZED_EVENT_BEFORE_PUBLICATION",
+    "BEFORE_AND_AFTER_LINK_CRASH_RECOVERY",
+    "CONFLICTING_EXISTING_EXPORT",
+    "FRESH_STORE_LOCK_INITIALIZATION_RACE",
+    "UNEXPECTED_EVENT_FILENAME",
+    "CONCURRENT_WINDOWS_APPEND"
+  ]
+}

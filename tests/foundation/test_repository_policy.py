@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from scripts.check_secrets import (
+    _AUTHORITY_BINDING_CONFIGS,
     _VALIDATED_AUTHORITY_BINDING_FILES,
     _VALIDATED_HASH_MANIFESTS,
     _detect_secrets,
@@ -65,6 +66,7 @@ def test_lock_files_are_content_hashed() -> None:
 
 def test_secret_scanner_validates_every_registered_hash_manifest() -> None:
     expected = {
+        Path("configs/governance/experiment-registry-v1.hashes.json"),
         Path("configs/governance/sample-holdout-v1.hashes.json"),
         Path("configs/quant/qme-v0.1-contract.hashes.json"),
         Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
@@ -78,11 +80,15 @@ def test_secret_scanner_validates_every_registered_hash_manifest() -> None:
 
 def test_secret_scanner_allows_only_semantically_validated_authority_hashes() -> None:
     expected = {
+        Path("configs/governance/experiment-registry-v1.json"),
         Path("configs/quant/golden-two-rebalance-v1.json"),
         Path("qme/fixtures/golden_two_rebalance.py"),
         Path("tests/fixtures/quant/golden-two-rebalance-v1.vectors.json"),
     }
     assert expected == _VALIDATED_AUTHORITY_BINDING_FILES
+    assert _AUTHORITY_BINDING_CONFIGS[
+        Path("configs/governance/experiment-registry-v1.json")
+    ] == Path("configs/governance/experiment-registry-v1.json")
     for path in sorted(expected):
         _validate_authority_binding_file(path, staged=False)
         assert _scan(path, staged=False) == []

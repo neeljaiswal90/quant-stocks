@@ -1,0 +1,33 @@
+{
+  "schema_version": "qme.experiment_registry_fixture_expected.v1",
+  "evidence_class": "TEST_ONLY_SYNTHETIC_NON_EMPIRICAL",
+  "production_status": "BLOCKED_UNREGISTERED_FAMILY_AND_DEPENDENCE_METHOD",
+  "identities": {
+    "structural_configuration_count": "4*3*2*4=96",
+    "reported_output_count": "96*3=288",
+    "holm_input": "REGISTERED_SELECTION_HYPOTHESIS_COUNT_M_ONLY",
+    "dsr_input": "SEPARATELY_REGISTERED_N_EFF_ONLY"
+  },
+  "reporting_only_costs": {
+    "structural_configuration_count": 96,
+    "reported_output_count": 288,
+    "selection_hypothesis_count_m": 96,
+    "effective_trials_status": "UNREGISTERED_BLOCKER",
+    "effective_trials_n_eff": null
+  },
+  "selection_eligible_costs": {
+    "structural_configuration_count": 96,
+    "reported_output_count": 288,
+    "selection_hypothesis_count_m": 288,
+    "effective_trials_status": "UNREGISTERED_BLOCKER",
+    "effective_trials_n_eff": null
+  },
+  "production_unresolved": {
+    "selection_hypothesis_count_status": "UNREGISTERED_BLOCKER",
+    "selection_hypothesis_count_m": null,
+    "effective_trials_status": "UNREGISTERED_BLOCKER",
+    "effective_trials_n_eff": null,
+    "may_compute_dsr": false,
+    "may_authorize_promotion": false
+  }
+}

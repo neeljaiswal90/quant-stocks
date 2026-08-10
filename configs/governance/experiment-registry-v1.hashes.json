@@ -1,0 +1,73 @@
+{
+  "schema_version": "qme.experiment_registry_artifact_manifest.v1",
+  "artifact_id": "NEE-122A-LOCAL-SYNTHETIC-REGISTRY-KERNEL",
+  "implementation_status": "COMMITTED_UNVERIFIED",
+  "production_status": "BLOCKED_UNREGISTERED_FAMILY_AND_DEPENDENCE_METHOD",
+  "integrity_scope": "SHA256_BINDS_REVIEWED_BYTES_NOT_AUTHENTICITY",
+  "artifacts": [
+    {
+      "path": "pyproject.toml",
+      "sha256": "480c0bfd334e8e33da9512df1e80278bdcf37a285d0d7239e8209ae4631c41d9"
+    },
+    {
+      "path": "requirements-dev.lock",
+      "sha256": "281e451444ad6eb53cd03e7ac716efaa2521d32d7e1dd98ac253d5f576bf365e"
+    },
+    {
+      "path": "scripts/check_secrets.py",
+      "sha256": "8cf8d2965d05fb005b09ec62876b1f14ca36b09cdf732e192046cb78a7fd4ee2"
+    },
+    {
+      "path": "tests/foundation/test_repository_policy.py",
+      "sha256": "45ad1e65187362f571c44b47ffc9931c19a080f16a3b4a098d4738fe51c58a99"
+    },
+    {
+      "path": "configs/governance/experiment-registry-v1.json",
+      "sha256": "16cc38d2ae3b6e1d261691b56f0e6960554f5926420e9527d8880c8b5e1d53be"
+    },
+    {
+      "path": "docs/governance/EXPERIMENT_REGISTRY_V1.md",
+      "sha256": "6b3f3d36d8dfe5093f15d6f7fe6f42f46f0987e3c47f4b9d46b6a60f3b47b8c7"
+    },
+    {
+      "path": "qme/experiments/__init__.py",
+      "sha256": "1516b7b0d14f96d6c4c8ca641bd95cc2d71ef8d2827aa47dbc82c29bab56ae4e"
+    },
+    {
+      "path": "qme/experiments/registry.py",
+      "sha256": "dba251da59362a2fc44c966058a3f067f0e810a39551a929e5e603e56f014785"
+    },
+    {
+      "path": "qme/experiments/store.py",
+      "sha256": "f30d54774839fae70f17daa5c9e8166348fdf58ba9690dda3bd9e30bb81d7c6d"
+    },
+    {
+      "path": "schemas/governance/experiment-registry-policy-v1.schema.json",
+      "sha256": "cbad39d200ae4601ef909852517603f4aaacea1ffbb21b5d58d0efd19068cd89"
+    },
+    {
+      "path": "schemas/governance/experiment-registry-event-v1.schema.json",
+      "sha256": "13af6b3ed185bdbda638d5ace74ce9c2989a7173f8c8f9981483f6eeb429de52"
+    },
+    {
+      "path": "schemas/governance/experiment-registry-export-v1.schema.json",
+      "sha256": "2e6b9baeb1b8a875e587da366a9f8b3d3fc60a66284c915583acd9ab102ea309"
+    },
+    {
+      "path": "tests/fixtures/governance/experiment-registry-v1.vectors.json",
+      "sha256": "9bacf7ba28da6380a86376a569036ea4bcc0324509e6c377aec5fa4e4f86c43e"
+    },
+    {
+      "path": "tests/fixtures/governance/experiment-registry-v1.expected.json",
+      "sha256": "0f4f5e705027a321c54efb327935c3944d0ac274447e6139c029152c48437446"
+    },
+    {
+      "path": "tests/experiments/test_experiment_registry.py",
+      "sha256": "0d0c4f3850bf0581578133e1f51302de317d66413c121b857978e86219f85203"
+    },
+    {
+      "path": "tests/experiments/test_registry_policy.py",
+      "sha256": "5c37a66560bcb3329d6a2b6bcd59f4c59f2bda90154b6e4c6f26b2a4eda76e5a"
+    }
+  ]
+}
