@@ -154,10 +154,10 @@ Synthetic NVDA values in tests are fixtures, not production research results.
 
 ### Affected live Linear snapshot
 
-At the implementation observation, NEE-117 remained `In Progress`; NEE-118 and NEE-119
-remained `Todo`; and NEE-168 through NEE-171 remained `Backlog`. Repository commits do
-not silently change workflow state. These tickets will receive exact local evidence and
-remain below `ACCEPTED` until their outstanding CI, runtime, or producer gates exist.
+After evidence reconciliation, NEE-117, NEE-118, and NEE-119 are `In Progress`; NEE-168
+through NEE-171 remain `Backlog`. NEE-118/119 moved from `Todo` only after their local
+commits, independent corrections, and validation evidence existed. All remain below
+`ACCEPTED` until their outstanding CI, runtime, or producer gates exist.
 
 ## 6. System mission and non-negotiable boundary
 
@@ -395,6 +395,7 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-10 | Committed corrected NEE-118 accounting contract as `21c6cde0b14d30d055a5bad9de52a4ff01e5b438`. | `COMMITTED_UNVERIFIED` | 14 focused tests; raw-coordinate evidence, sell-before-buy, per-fill costs/taxes, timing, strict schemas and undefined capacity state pass. |
 | 2026-08-10 | Committed corrected NEE-119 v0.1 quantitative contract as `943da8dcecc1148cd158383a7b5682d0fe0a85ba`. | `COMMITTED_UNVERIFIED` | 41 focused tests; exact calendar anchors, rational weights, total-return methodology, near ties and immutable filter children pass. Production evidence registrations remain blocking. |
 | 2026-08-10 | Committed the local-only UI architecture contract as `37f52cf918dba5a04d47c95940beeb12d196c73f`. | `PLANNING_ONLY` | ADR/spec/review are committed; no UI code or runtime evidence exists. Full integration validation at this SHA: 113 tests, Ruff, strict mypy, compile, locks, wheel and CLI smokes pass. |
+| 2026-08-10 | Reconciled live Linear descriptions and comments with commit/test evidence; moved NEE-118 and NEE-119 from `Todo` to `In Progress`, retained NEE-117 `In Progress`, and retained NEE-168 `Backlog`. | `COMMITTED_UNVERIFIED` / `PLANNING_ONLY` | No ticket was marked Done. Exact-SHA remote CI, production evidence registrations, capacity solver, and UI implementation remain explicit gates. |
 
 ## 13. Per-ticket evidence record template
 
