@@ -1,0 +1,237 @@
+{
+  "schema_version": "qme.golden_two_rebalance_expected.v1",
+  "fixture_spec_id": "NEE-116A-GOLDEN-TWO-REBALANCE-V1",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "review": {"status": "AWAITING_INDEPENDENT_REVIEW", "reviewer_identity": null},
+  "strategy_variants": {
+    "WHOLE_SHARE_ORDERS_WITH_FRACTIONAL_CUSTODY": {
+      "initial_nav": "1020.00000000",
+      "rebalance_1": {
+        "rebalance_id": "strategy-r1",
+        "nav_minus": "1020.00000000",
+        "gross_trade_notional": "1000.00000000",
+        "transaction_cost": "1.00000000",
+        "transaction_tax": "1.00000000",
+        "fill_states": [
+          {
+            "fill_index": 0, "symbol": "AAA", "side": "SELL",
+            "delta_raw_shares": "-5.00000000", "gross_notional": "500.00000000",
+            "transaction_cost": "0.50000000", "transaction_tax": "1.00000000",
+            "cash_after_fill": "518.50000000",
+            "positions_after_fill": {"AAA": "5.00000000"}
+          },
+          {
+            "fill_index": 1, "symbol": "BBB", "side": "BUY",
+            "delta_raw_shares": "10.00000000", "gross_notional": "500.00000000",
+            "transaction_cost": "0.50000000", "transaction_tax": "0.00000000",
+            "cash_after_fill": "18.00000000",
+            "positions_after_fill": {"AAA": "5.00000000", "BBB": "10.00000000"}
+          }
+        ],
+        "cash_plus": "18.00000000",
+        "positions_plus": {"AAA": "5.00000000", "BBB": "10.00000000"},
+        "receivables_plus": "0.00000000",
+        "nav_plus": "1018.00000000",
+        "self_financing_residual": "0.00000000"
+      },
+      "shared_action_timeline": {
+        "event_order": ["SPLIT", "DIVIDEND_ENTITLEMENT"],
+        "applied_event_registry_after": ["strategy-split", "strategy-dividend", "strategy-payment"],
+        "post_split_raw_shares": "12.50000000",
+        "split_reference_value_before": "500.00000000",
+        "split_reference_value_after": "500.00000000",
+        "nav_after_split": "1018.00000000",
+        "dividend_eligible_raw_shares": "12.50000000",
+        "dividend_receivable": "25.00000000",
+        "nav_after_entitlement": "1018.00000000",
+        "cash_after_payment": "43.00000000",
+        "receivables_after_payment": "0.00000000",
+        "nav_after_payment": "1018.00000000"
+      },
+      "rebalance_2": {
+        "rebalance_id": "strategy-r2-whole",
+        "nav_minus": "1018.00000000",
+        "gross_trade_notional": "352.00000000",
+        "transaction_cost": "0.35200000",
+        "transaction_tax": "0.40000000",
+        "fill_states": [
+          {
+            "fill_index": 0, "symbol": "BBB", "side": "SELL",
+            "delta_raw_shares": "-4.00000000", "gross_notional": "200.00000000",
+            "transaction_cost": "0.20000000", "transaction_tax": "0.40000000",
+            "cash_after_fill": "242.40000000",
+            "positions_after_fill": {"AAA": "12.50000000", "BBB": "6.00000000"}
+          },
+          {
+            "fill_index": 1, "symbol": "AAA", "side": "BUY",
+            "delta_raw_shares": "4.00000000", "gross_notional": "152.00000000",
+            "transaction_cost": "0.15200000", "transaction_tax": "0.00000000",
+            "cash_after_fill": "90.24800000",
+            "positions_after_fill": {"AAA": "16.50000000", "BBB": "6.00000000"}
+          }
+        ],
+        "cash_plus": "90.24800000",
+        "positions_plus": {"AAA": "16.50000000", "BBB": "6.00000000"},
+        "receivables_plus": "0.00000000",
+        "nav_plus": "1017.24800000",
+        "self_financing_residual": "0.00000000"
+      },
+      "final_nav": "1017.24800000"
+    },
+    "FRACTIONAL_CUSTODY_INTEGER_ORDERS": {
+      "initial_nav": "1020.00000000",
+      "rebalance_1": {
+        "rebalance_id": "strategy-r1",
+        "nav_minus": "1020.00000000",
+        "gross_trade_notional": "1000.00000000",
+        "transaction_cost": "1.00000000",
+        "transaction_tax": "1.00000000",
+        "fill_states": [
+          {
+            "fill_index": 0, "symbol": "AAA", "side": "SELL",
+            "delta_raw_shares": "-5.00000000", "gross_notional": "500.00000000",
+            "transaction_cost": "0.50000000", "transaction_tax": "1.00000000",
+            "cash_after_fill": "518.50000000",
+            "positions_after_fill": {"AAA": "5.00000000"}
+          },
+          {
+            "fill_index": 1, "symbol": "BBB", "side": "BUY",
+            "delta_raw_shares": "10.00000000", "gross_notional": "500.00000000",
+            "transaction_cost": "0.50000000", "transaction_tax": "0.00000000",
+            "cash_after_fill": "18.00000000",
+            "positions_after_fill": {"AAA": "5.00000000", "BBB": "10.00000000"}
+          }
+        ],
+        "cash_plus": "18.00000000",
+        "positions_plus": {"AAA": "5.00000000", "BBB": "10.00000000"},
+        "receivables_plus": "0.00000000",
+        "nav_plus": "1018.00000000",
+        "self_financing_residual": "0.00000000"
+      },
+      "shared_action_timeline": {
+        "event_order": ["SPLIT", "DIVIDEND_ENTITLEMENT"],
+        "applied_event_registry_after": ["strategy-split", "strategy-dividend", "strategy-payment"],
+        "post_split_raw_shares": "12.50000000",
+        "split_reference_value_before": "500.00000000",
+        "split_reference_value_after": "500.00000000",
+        "nav_after_split": "1018.00000000",
+        "dividend_eligible_raw_shares": "12.50000000",
+        "dividend_receivable": "25.00000000",
+        "nav_after_entitlement": "1018.00000000",
+        "cash_after_payment": "43.00000000",
+        "receivables_after_payment": "0.00000000",
+        "nav_after_payment": "1018.00000000"
+      },
+      "rebalance_2": {
+        "rebalance_id": "strategy-r2-fractional",
+        "nav_minus": "1018.00000000",
+        "gross_trade_notional": "478.00000000",
+        "transaction_cost": "0.47800000",
+        "transaction_tax": "0.50000000",
+        "fill_states": [
+          {
+            "fill_index": 0, "symbol": "BBB", "side": "SELL",
+            "delta_raw_shares": "-5.00000000", "gross_notional": "250.00000000",
+            "transaction_cost": "0.25000000", "transaction_tax": "0.50000000",
+            "cash_after_fill": "292.25000000",
+            "positions_after_fill": {"AAA": "12.50000000", "BBB": "5.00000000"}
+          },
+          {
+            "fill_index": 1, "symbol": "AAA", "side": "BUY",
+            "delta_raw_shares": "6.00000000", "gross_notional": "228.00000000",
+            "transaction_cost": "0.22800000", "transaction_tax": "0.00000000",
+            "cash_after_fill": "64.02200000",
+            "positions_after_fill": {"AAA": "18.50000000", "BBB": "5.00000000"}
+          }
+        ],
+        "cash_plus": "64.02200000",
+        "positions_plus": {"AAA": "18.50000000", "BBB": "5.00000000"},
+        "receivables_plus": "0.00000000",
+        "nav_plus": "1017.02200000",
+        "self_financing_residual": "0.00000000"
+      },
+      "final_nav": "1017.02200000"
+    }
+  },
+  "benchmark": {
+    "benchmark_id": "SYNTHETIC_BENCHMARK_SAME_LEDGER",
+    "ledger_output": {
+      "initial_nav": "1020.00000000",
+      "rebalance_1": {
+        "rebalance_id": "benchmark-r1",
+        "nav_minus": "1020.00000000",
+        "gross_trade_notional": "800.00000000",
+        "transaction_cost": "0.80000000",
+        "transaction_tax": "0.80000000",
+        "fill_states": [
+          {
+            "fill_index": 0, "symbol": "AAA", "side": "SELL",
+            "delta_raw_shares": "-4.00000000", "gross_notional": "400.00000000",
+            "transaction_cost": "0.40000000", "transaction_tax": "0.80000000",
+            "cash_after_fill": "418.80000000",
+            "positions_after_fill": {"AAA": "6.00000000"}
+          },
+          {
+            "fill_index": 1, "symbol": "BBB", "side": "BUY",
+            "delta_raw_shares": "8.00000000", "gross_notional": "400.00000000",
+            "transaction_cost": "0.40000000", "transaction_tax": "0.00000000",
+            "cash_after_fill": "18.40000000",
+            "positions_after_fill": {"AAA": "6.00000000", "BBB": "8.00000000"}
+          }
+        ],
+        "cash_plus": "18.40000000",
+        "positions_plus": {"AAA": "6.00000000", "BBB": "8.00000000"},
+        "receivables_plus": "0.00000000",
+        "nav_plus": "1018.40000000",
+        "self_financing_residual": "0.00000000"
+      },
+      "shared_action_timeline": {
+        "event_order": ["SPLIT", "DIVIDEND_ENTITLEMENT"],
+        "applied_event_registry_after": ["benchmark-split", "benchmark-dividend", "benchmark-payment"],
+        "post_split_raw_shares": "15.00000000",
+        "split_reference_value_before": "600.00000000",
+        "split_reference_value_after": "600.00000000",
+        "nav_after_split": "1018.40000000",
+        "dividend_eligible_raw_shares": "15.00000000",
+        "dividend_receivable": "30.00000000",
+        "nav_after_entitlement": "1018.40000000",
+        "cash_after_payment": "48.40000000",
+        "receivables_after_payment": "0.00000000",
+        "nav_after_payment": "1018.40000000"
+      },
+      "rebalance_2": {
+        "rebalance_id": "benchmark-r2",
+        "nav_minus": "1018.40000000",
+        "gross_trade_notional": "176.00000000",
+        "transaction_cost": "0.17600000",
+        "transaction_tax": "0.20000000",
+        "fill_states": [
+          {
+            "fill_index": 0, "symbol": "BBB", "side": "SELL",
+            "delta_raw_shares": "-2.00000000", "gross_notional": "100.00000000",
+            "transaction_cost": "0.10000000", "transaction_tax": "0.20000000",
+            "cash_after_fill": "148.10000000",
+            "positions_after_fill": {"AAA": "15.00000000", "BBB": "6.00000000"}
+          },
+          {
+            "fill_index": 1, "symbol": "AAA", "side": "BUY",
+            "delta_raw_shares": "2.00000000", "gross_notional": "76.00000000",
+            "transaction_cost": "0.07600000", "transaction_tax": "0.00000000",
+            "cash_after_fill": "72.02400000",
+            "positions_after_fill": {"AAA": "17.00000000", "BBB": "6.00000000"}
+          }
+        ],
+        "cash_plus": "72.02400000",
+        "positions_plus": {"AAA": "17.00000000", "BBB": "6.00000000"},
+        "receivables_plus": "0.00000000",
+        "nav_plus": "1018.02400000",
+        "self_financing_residual": "0.00000000"
+      },
+      "final_nav": "1018.02400000"
+    }
+  },
+  "blocked_cases": {
+    "missing-open": "BLOCKED_MISSING_OFFICIAL_RAW_OPEN",
+    "unsupported-held-action": "BLOCKED_UNSUPPORTED_HELD_CORPORATE_ACTION"
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/quant/golden-two-rebalance-v1.schema.json",
+  "title": "NEE-116A bounded synthetic golden two-rebalance fixture",
+  "$comment": "Oracle-enforced cross-field rules bind initial marks to the R1 signal session and one snapshot identity; action marks and split/dividend terms bind the action session and one snapshot identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema", "schema_version", "fixture_spec_id", "data_class", "review",
+    "authority_bindings", "units", "evidence_registry", "policies",
+    "strategy_common", "strategy_variants", "benchmark", "blocked_cases",
+    "explicitly_excluded_unresolved_scope"
+  ],
+  "properties": {
+    "$schema": {"const": "../../../schemas/quant/golden-two-rebalance-v1.schema.json"},
+    "schema_version": {"const": "qme.golden_two_rebalance_fixture.v1"},
+    "fixture_spec_id": {"const": "NEE-116A-GOLDEN-TWO-REBALANCE-V1"},
+    "data_class": {"const": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY"},
+    "review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reviewer_identity"],
+      "properties": {
+        "status": {"const": "AWAITING_INDEPENDENT_REVIEW"},
+        "reviewer_identity": {"type": "null"}
+      }
+    },
+    "authority_bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nee_118_spec", "nee_118_config", "nee_118_executable", "nee_119_contract", "nee_119_spec", "nee_119_total_return_methodology"],
+      "properties": {
+        "nee_118_spec": {"$ref": "#/$defs/binding"},
+        "nee_118_config": {"$ref": "#/$defs/binding"},
+        "nee_118_executable": {"$ref": "#/$defs/binding"},
+        "nee_119_contract": {"$ref": "#/$defs/binding"},
+        "nee_119_spec": {"$ref": "#/$defs/binding"},
+        "nee_119_total_return_methodology": {"$ref": "#/$defs/binding"}
+      }
+    },
+    "units": {
+      "type": "object", "additionalProperties": false,
+      "required": ["currency_quantum", "share_storage_quantum"],
+      "properties": {
+        "currency_quantum": {"const": "0.00000001"},
+        "share_storage_quantum": {"const": "0.00000001"}
+      }
+    },
+    "evidence_registry": {
+      "type": "object", "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/evidence"}
+    },
+    "policies": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy_id", "policy_sha256", "source_id", "transaction_cost_rate_bps", "transaction_tax_rate_bps", "transaction_tax_side", "transaction_tax_base", "rounding_mode", "currency_quantum"],
+      "properties": {
+        "policy_id": {"type": "string", "minLength": 1},
+        "policy_sha256": {"$ref": "#/$defs/sha256"},
+        "source_id": {"const": "SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY"},
+        "transaction_cost_rate_bps": {"const": "10"},
+        "transaction_tax_rate_bps": {"const": "20"},
+        "transaction_tax_side": {"const": "SELL"},
+        "transaction_tax_base": {"const": "RAW_FILL_NOTIONAL"},
+        "rounding_mode": {"const": "ROUND_HALF_EVEN"},
+        "currency_quantum": {"const": "0.00000001"}
+      }
+    },
+    "strategy_common": {
+      "type": "object", "additionalProperties": false,
+      "required": ["initial_state", "rebalance_1", "shared_action_timeline"],
+      "properties": {
+        "initial_state": {"$ref": "#/$defs/state"},
+        "rebalance_1": {"$ref": "#/$defs/rebalance"},
+        "shared_action_timeline": {"$ref": "#/$defs/action_timeline"}
+      }
+    },
+    "strategy_variants": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["variant_id", "rebalance_2"],
+        "properties": {
+          "variant_id": {"enum": ["WHOLE_SHARE_ORDERS_WITH_FRACTIONAL_CUSTODY", "FRACTIONAL_CUSTODY_INTEGER_ORDERS"]},
+          "rebalance_2": {"$ref": "#/$defs/rebalance"}
+        }
+      }
+    },
+    "benchmark": {
+      "type": "object", "additionalProperties": false,
+      "required": ["benchmark_id", "initial_state", "rebalance_1", "shared_action_timeline", "rebalance_2"],
+      "properties": {
+        "benchmark_id": {"const": "SYNTHETIC_BENCHMARK_SAME_LEDGER"},
+        "initial_state": {"$ref": "#/$defs/state"},
+        "rebalance_1": {"$ref": "#/$defs/rebalance"},
+        "shared_action_timeline": {"$ref": "#/$defs/action_timeline"},
+        "rebalance_2": {"$ref": "#/$defs/rebalance"}
+      }
+    },
+    "blocked_cases": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {"$ref": "#/$defs/blocked_case"}
+    },
+    "explicitly_excluded_unresolved_scope": {
+      "const": [
+        "ASYMMETRIC_BUY_SELL_COSTS", "SUCCESSFUL_MISSING_OPEN_FALLBACK",
+        "CAPACITY_OR_TARGET_TRIM_SOLVER", "MERGER_OR_DELISTING_OUTCOME",
+        "ADVERSE_DELISTING_HAIRCUT", "TAX_LOT_REALIZATION_CONVENTION",
+        "REVIEWER_IDENTITY", "PRODUCTION_EVIDENCE"
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "decimal": {"type": "string", "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$"},
+    "q8_decimal": {"type": "string", "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]{1,8})?$"},
+    "binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["security_id", "source_id", "snapshot_id", "snapshot_sha256", "calendar_id", "calendar_sha256", "observation_start_session", "observation_end_session", "available_at", "analysis_as_of"],
+      "properties": {
+        "security_id": {"type": "string", "minLength": 1},
+        "source_id": {"const": "SYNTHETIC_FIXTURE"},
+        "snapshot_id": {"type": "string", "minLength": 1},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "calendar_id": {"const": "XNAS"},
+        "calendar_sha256": {"$ref": "#/$defs/sha256"},
+        "observation_start_session": {"type": "string", "format": "date"},
+        "observation_end_session": {"type": "string", "format": "date"},
+        "available_at": {"type": "string", "format": "date-time"},
+        "analysis_as_of": {"type": "string", "format": "date-time"}
+      }
+    },
+    "typed_value": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coordinate", "value", "evidence_id"],
+      "properties": {
+        "coordinate": {"enum": ["RAW_MARK", "RAW_EXECUTION_PRICE"]},
+        "value": {"$ref": "#/$defs/decimal"},
+        "evidence_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "session": {
+      "type": "object", "additionalProperties": false,
+      "required": ["calendar_id", "calendar_sha256", "session_date", "ordinal"],
+      "properties": {
+        "calendar_id": {"const": "XNAS"}, "calendar_sha256": {"$ref": "#/$defs/sha256"},
+        "session_date": {"type": "string", "format": "date"},
+        "ordinal": {"type": "integer", "minimum": 0}
+      }
+    },
+    "state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cash", "positions", "receivables", "raw_marks"],
+      "properties": {
+        "cash": {"$ref": "#/$defs/q8_decimal"},
+        "positions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/q8_decimal"}},
+        "receivables": {"$ref": "#/$defs/q8_decimal"},
+        "raw_marks": {"type": "object", "additionalProperties": {"$ref": "#/$defs/typed_value"}}
+      }
+    },
+    "trade": {
+      "type": "object", "additionalProperties": false,
+      "required": ["symbol", "delta_raw_shares", "raw_execution_price"],
+      "properties": {
+        "symbol": {"type": "string", "minLength": 1},
+        "delta_raw_shares": {"$ref": "#/$defs/decimal"},
+        "raw_execution_price": {"$ref": "#/$defs/typed_value"}
+      }
+    },
+    "rebalance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rebalance_id", "signal_session", "eligible_session", "fill_session", "order_quantum", "raw_marks", "trades"],
+      "properties": {
+        "rebalance_id": {"type": "string", "minLength": 1},
+        "signal_session": {"$ref": "#/$defs/session"},
+        "eligible_session": {"$ref": "#/$defs/session"},
+        "fill_session": {"$ref": "#/$defs/session"},
+        "order_quantum": {"const": "1"},
+        "raw_marks": {"type": "object", "additionalProperties": {"$ref": "#/$defs/typed_value"}},
+        "trades": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/trade"}}
+      }
+    },
+    "action_timeline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["session", "event_order", "applied_event_registry_before", "split", "dividend", "raw_marks_after_split", "raw_marks_after_entitlement", "payment"],
+      "properties": {
+        "session": {"$ref": "#/$defs/session"},
+        "event_order": {"const": ["SPLIT", "DIVIDEND_ENTITLEMENT"]},
+        "applied_event_registry_before": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "split": {
+          "type": "object", "additionalProperties": false,
+          "required": ["event_id", "security_id", "split_factor", "evidence_id"],
+          "properties": {"event_id": {"type": "string", "minLength": 1}, "security_id": {"type": "string", "minLength": 1}, "split_factor": {"$ref": "#/$defs/decimal"}, "evidence_id": {"type": "string", "minLength": 1}}
+        },
+        "dividend": {
+          "type": "object", "additionalProperties": false,
+          "required": ["event_id", "security_id", "share_basis", "raw_cash_per_share", "evidence_id"],
+          "properties": {"event_id": {"type": "string", "minLength": 1}, "security_id": {"type": "string", "minLength": 1}, "share_basis": {"const": "POST_SPLIT"}, "raw_cash_per_share": {"$ref": "#/$defs/decimal"}, "evidence_id": {"type": "string", "minLength": 1}}
+        },
+        "raw_marks_after_split": {"type": "object", "additionalProperties": {"$ref": "#/$defs/typed_value"}},
+        "raw_marks_after_entitlement": {"type": "object", "additionalProperties": {"$ref": "#/$defs/typed_value"}},
+        "payment": {
+          "type": "object", "additionalProperties": false,
+          "required": ["event_id", "dividend_event_id", "session", "evidence_id"],
+          "properties": {"event_id": {"type": "string", "minLength": 1}, "dividend_event_id": {"type": "string", "minLength": 1}, "session": {"$ref": "#/$defs/session"}, "evidence_id": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "blocked_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["case_id", "case_type", "held_raw_shares", "input"],
+      "properties": {
+        "case_id": {"type": "string", "minLength": 1},
+        "case_type": {"enum": ["MISSING_OFFICIAL_RAW_OPEN", "UNSUPPORTED_HELD_CORPORATE_ACTION"]},
+        "held_raw_shares": {"$ref": "#/$defs/decimal"},
+        "input": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

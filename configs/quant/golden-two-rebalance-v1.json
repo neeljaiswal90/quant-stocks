@@ -1,0 +1,59 @@
+{
+  "schema_version": "qme.golden_two_rebalance_config.v1",
+  "fixture_spec_id": "NEE-116A-GOLDEN-TWO-REBALANCE-V1",
+  "status": "BOUNDED_FIXTURE_ORACLE_AWAITING_INDEPENDENT_REVIEW",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "reviewer_identity": null,
+  "accounting_policy": {
+    "transaction_cost_rate_bps": "10",
+    "transaction_tax_rate_bps": "20",
+    "transaction_tax_side": "SELL",
+    "transaction_tax_base": "RAW_FILL_NOTIONAL",
+    "rounding_mode": "ROUND_HALF_EVEN",
+    "currency_quantum": "0.00000001",
+    "share_storage_quantum": "0.00000001"
+  },
+  "authority_bindings": {
+    "nee_118_spec": {
+      "path": "docs/quant/QME_ACCOUNTING_EXECUTION_METRICS_SPEC.md",
+      "sha256": "27e906a612eb61a2f12947ff3696cb907d56d883e45c99a7503011fe13bb8840"
+    },
+    "nee_118_config": {
+      "path": "configs/quant/accounting-equations-v1.json",
+      "sha256": "decb3d52dea8b4020f011554848bb9a7c6164827cfe319be36fc46c78b8c2e0c"
+    },
+    "nee_118_executable": {
+      "path": "qme/quant/equations.py",
+      "sha256": "ac0589b3d4184334a90698196aecd44cf26d43393bafc238c1f6acc1cf80fe83"
+    },
+    "nee_119_contract": {
+      "path": "configs/quant/qme-v0.1-contract.json",
+      "sha256": "47070e5827292e74567ae32aeff58bcc2c58e4720edaa2d557435eb2a5f472fa"
+    },
+    "nee_119_spec": {
+      "path": "docs/quant/QME_V0_1_QUANTITATIVE_CONTRACT.md",
+      "sha256": "f44fdab28e18f87e159e69587001b4f90b4b0922af9dd1ae628f0271ce8184d1"
+    },
+    "nee_119_total_return_methodology": {
+      "path": "configs/quant/qme-v0.1-total-return-methodology.json",
+      "sha256": "95381821c1c8ff00e0e626b3d7ee36466d12c3be9e6b8cb75ee166f0043454ac"
+    }
+  },
+  "fixture_cases": [
+    "WHOLE_SHARE_ORDERS_WITH_FRACTIONAL_CUSTODY",
+    "FRACTIONAL_CUSTODY_INTEGER_ORDERS",
+    "BENCHMARK_SAME_LEDGER",
+    "MISSING_OFFICIAL_RAW_OPEN_BLOCKED",
+    "UNSUPPORTED_HELD_CORPORATE_ACTION_BLOCKED"
+  ],
+  "explicitly_excluded_unresolved_scope": [
+    "ASYMMETRIC_BUY_SELL_COSTS",
+    "SUCCESSFUL_MISSING_OPEN_FALLBACK",
+    "CAPACITY_OR_TARGET_TRIM_SOLVER",
+    "MERGER_OR_DELISTING_OUTCOME",
+    "ADVERSE_DELISTING_HAIRCUT",
+    "TAX_LOT_REALIZATION_CONVENTION",
+    "REVIEWER_IDENTITY",
+    "PRODUCTION_EVIDENCE"
+  ]
+}

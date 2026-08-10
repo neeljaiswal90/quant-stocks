@@ -1,0 +1,41 @@
+{
+  "schema_version": "qme.golden_two_rebalance_hash_manifest.v1",
+  "fixture_spec_id": "NEE-116A-GOLDEN-TWO-REBALANCE-V1",
+  "status": "BOUNDED_FIXTURE_ORACLE_AWAITING_INDEPENDENT_REVIEW",
+  "hash_algorithm": "SHA-256",
+  "canonical_expected_json_sha256": "11f351740960cc6fdf93e6e61b0a84d2ec5fafdecabc01b5aa0d723ab1fe54f9",
+  "artifacts": [
+    {
+      "path": "docs/quant/QME_GOLDEN_TWO_REBALANCE_FIXTURE_SPEC.md",
+      "sha256": "9bc011e571b60767378669316d5ffffb0e7fd41b23a967c6f8c46fbcf1bebc99"
+    },
+    {
+      "path": "configs/quant/golden-two-rebalance-v1.json",
+      "sha256": "14c0781041e8fa16300e931805abfce3d56896e8aab50d983669673f1af41436"
+    },
+    {
+      "path": "schemas/quant/golden-two-rebalance-v1.schema.json",
+      "sha256": "6012d35ca6173f7d04852af69a9ea37145d890d8145f8acf75c8d7a04ae88674"
+    },
+    {
+      "path": "qme/fixtures/__init__.py",
+      "sha256": "87a2b8ae982bbd893c73b47b7564598a24c39bb0331ae0bcc586e92231ac7a89"
+    },
+    {
+      "path": "qme/fixtures/golden_two_rebalance.py",
+      "sha256": "ba51c6ea9ef5611667f7aa24b6aaa23f6af179a0954d29049921357a96993cc2"
+    },
+    {
+      "path": "tests/fixtures/quant/golden-two-rebalance-v1.vectors.json",
+      "sha256": "1e4b2d569f88e3b996f3c208f0f3ba08756bb9e2c2b5134e9a515c3d72d3f2bb"
+    },
+    {
+      "path": "tests/fixtures/quant/golden-two-rebalance-v1.expected.json",
+      "sha256": "08ec14be67de2cd9120fa4fc017369823bb6f05b79dd483fc06fa5ed19dc0b47"
+    },
+    {
+      "path": "tests/quant/test_golden_two_rebalance.py",
+      "sha256": "728af7b14e6797de0bc5c829d5afaefe3ac0baabb9851e238561db4a52a62ae2"
+    }
+  ]
+}

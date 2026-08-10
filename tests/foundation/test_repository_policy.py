@@ -62,6 +62,7 @@ def test_secret_scanner_validates_every_registered_hash_manifest() -> None:
         Path("configs/quant/qme-v0.1-contract.hashes.json"),
         Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
         Path("tests/fixtures/quant/economic-promotion-decision-v1.manifest.json"),
+        Path("tests/fixtures/quant/golden-two-rebalance-v1.manifest.json"),
     }
     assert expected == _VALIDATED_HASH_MANIFESTS
     for manifest in sorted(expected):

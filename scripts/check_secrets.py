@@ -24,6 +24,7 @@ _PROVENANCE_HASH_LINE_ALLOWLIST = (
 _VALIDATED_HASH_MANIFESTS = {
     Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
     Path("tests/fixtures/quant/economic-promotion-decision-v1.manifest.json"),
+    Path("tests/fixtures/quant/golden-two-rebalance-v1.manifest.json"),
     Path("configs/quant/qme-v0.1-contract.hashes.json"),
     Path("configs/governance/sample-holdout-v1.hashes.json"),
 }
