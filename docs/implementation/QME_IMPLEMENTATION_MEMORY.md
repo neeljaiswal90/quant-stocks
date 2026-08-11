@@ -340,7 +340,7 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No remote CI provenance:** seventeen reviewed local commits exist before the current
+1. **No remote CI provenance:** twenty-three reviewed local commits exist before the current
    memory update, but there is no remote,
    pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
@@ -370,6 +370,10 @@ selection math. The UI renders those results and definitions; it never invents t
     conformance for two strategy variants and a benchmark. It is not production data,
     does not establish tax-lot/capacity/delisting behavior, and retains a null human
     reviewer identity; the full NEE-116 acceptance contract remains open.
+11. **Specification freeze remains blocked:** NEE-110A now verifies six M0 artifact
+    sets and 51 leaf references, but retains 27 unresolved inputs. Its closure is
+    `BLOCKED_UNRESOLVED_INPUTS`, acceptance and downstream authorization are false,
+    and NEE-114 plus NEE-123 through NEE-128 remain blocked.
 
 ## 11. Next required actions
 
@@ -380,8 +384,10 @@ selection math. The UI renders those results and definitions; it never invents t
    freshness evidence is registered; separately implement the production target/cost
    and greatest-capital capacity solvers. Do not treat the synthetic slice as full
    NEE-116 acceptance.
-3. Freeze the deterministic data, membership, feature, score/rank, eligibility, and
-   full-universe artifact contracts.
+3. Resolve and independently approve the 27 NEE-110 registrations before producing a
+   later accepted specification freeze; do not start NEE-123 through NEE-128 from the
+   bounded candidate. Then freeze the deterministic data, membership, feature,
+   score/rank, eligibility, and full-universe artifact contracts.
 4. Complete point-in-time Nasdaq-100 producer work and create the first immutable
    universe fixture plus corrupt/degraded variants.
 5. Execute NEE-169 Stage 0: commit producer/snapshot schemas, field/source-pointer
@@ -423,6 +429,8 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-10 | Committed the bounded NEE-122A append-only experiment registry as `0fe54f639bdb4e6ce332fc6721cc96f78b68fe8e` after iterative independent runtime, schema, quantitative, and Windows-concurrency review. | `COMMITTED_UNVERIFIED` | Immutable canonical event chain, deterministic replay/export, exact 96/288 synthetic reconciliation, off-grid and retry retention, policy-family freeze, successor lineage, point-in-time sample windows, cumulative exposure controls, and fail-closed unregistered `m`/`N_eff` are implemented. Exact gates: 57 focused and 272 full tests, zero-error Draft 2020-12 matrix, Ruff, strict mypy on 27 source files, three verified locks, wheel build, 107-file and 17-stage secret scans, 16 exact manifest hashes, and final Windows fresh-init/writer stress. Production family, selection, dependence estimator, correlated-trial evidence, remote exact-SHA CI, and NEE-117 remain blocking. |
 | 2026-08-10 | Reconciled NEE-122 with the committed bounded-slice evidence; moved the issue from `Todo` to `In Progress` and recorded Linear comment `2019c360-98f3-487b-a852-b65823438120`. | `COMMITTED_UNVERIFIED` | Read-back preserves NEE-117 as blocker, NEE-110/NEE-140 as downstream issues, and all existing relations. NEE-122 remains open because the production family/selection/dependence policy, correlated-trial estimator fixture, empirical evidence, and exact-SHA remote CI are unavailable. |
 | 2026-08-11 | Corrected the recorded outer SHA-256 for the committed NEE-122 artifact manifest after an independent clean-HEAD rehash found a transcription error. | `COMMITTED_UNVERIFIED` | The authoritative `configs/governance/experiment-registry-v1.hashes.json` digest is `de48d871df01e7e4d69592964188d4a75a8a533b2edd06923c7856227e41f6d9`, not `de48d87129215c9e64af1a521f2e9dd34412e82c6630488967fe5e4b24d1f6d9`. All 16 entries inside the manifest independently match; implementation code, tests, and the bounded-slice verdict are unchanged. The append-only evidence ledger event and Linear correction comment `48ff6b6d-db87-47e3-8457-6014ef03702e` preserve history rather than rewriting it. |
+| 2026-08-11 | Committed the bounded NEE-110A fail-closed specification-freeze candidate as `0704f061f7072f3d9bcf002fa910f62c27bbfa1f` after three independent adversarial reviews. | `COMMITTED_UNVERIFIED` | Six M0 artifact sets and 51 leaf references rehash exactly; 27 blockers remain. Exact gates: 32 focused/repository and 298 full tests, Ruff, strict mypy on 28 source files, three verified locks, successful package build, 10-file staged and 127-file tracked secret scans, and zero surviving P0/P1. Manifest `bf863fd60a9a5cbf976dae483577a6f1f5ba10f0c7fd1cfbeaacfc21a0b18e3b` has 6/6 matches. Closure remains blocked and does not authorize NEE-114 or NEE-123 through NEE-128. |
+| 2026-08-11 | Rebound the NEE-122 integration manifest after registering the NEE-110A self-manifest and its path-bounded provenance scan. | `COMMITTED_UNVERIFIED` | The experiment-registry implementation is unchanged. The LF-stable outer manifest is now `aebdca44dc207f9d87b5349b0c9fe19af5ac77abfcfdc53d0662a9a198dd728f` with 16/16 entries matching; NEE-110A binds this exact integration identity. |
 
 ## 13. Per-ticket evidence record template
 
