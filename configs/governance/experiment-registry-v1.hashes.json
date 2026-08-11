@@ -15,11 +15,11 @@
     },
     {
       "path": "scripts/check_secrets.py",
-      "sha256": "8cf8d2965d05fb005b09ec62876b1f14ca36b09cdf732e192046cb78a7fd4ee2"
+      "sha256": "da2a7df4268f24510e77751fe3926b3f251532f275939969ca8d3f85b46af203"
     },
     {
       "path": "tests/foundation/test_repository_policy.py",
-      "sha256": "45ad1e65187362f571c44b47ffc9931c19a080f16a3b4a098d4738fe51c58a99"
+      "sha256": "ff0de268e8d5c16fe22405ceb5f5a14b432b0c913db68601214fd341a9d402ee"
     },
     {
       "path": "configs/governance/experiment-registry-v1.json",

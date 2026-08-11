@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/specification-freeze-export-v1.schema.json",
+  "title": "QME NEE-110A specification-freeze candidate export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "freeze_id",
+    "ticket_id",
+    "policy_identity",
+    "repository_evidence",
+    "artifact_sets",
+    "artifact_index",
+    "artifact_reference_count",
+    "cross_contract_checks",
+    "unresolved_blocker_codes",
+    "claims",
+    "ci_evidence",
+    "effective_trials_registration",
+    "closure",
+    "canonicalization",
+    "derived_evidence_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "qme.specification_freeze_export.v1"},
+    "freeze_id": {"const": "NEE-110A-SPECIFICATION-FREEZE-CANDIDATE-V1"},
+    "ticket_id": {"const": "NEE-110"},
+    "policy_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "policy_sha256"],
+      "properties": {
+        "policy_id": {"const": "NEE-110A-SPECIFICATION-FREEZE-CANDIDATE-V1"},
+        "policy_sha256": {"const": "f11546e4f9f0b4d7066d4d68c002edbe26d1451e7ffd5540b2b37fb11be50719"}
+      }
+    },
+    "repository_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit_sha", "dirty_worktree", "evidence_maturity"],
+      "properties": {
+        "commit_sha": {"anyOf": [{"const": "UNCOMMITTED"}, {"type": "string", "pattern": "^[0-9a-f]{40}$"}]},
+        "dirty_worktree": {"type": "boolean"},
+        "evidence_maturity": {
+          "enum": ["LOCAL_UNCOMMITTED", "COMMITTED_UNVERIFIED"]
+        }
+      }
+    },
+    "artifact_sets": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "prefixItems": [
+        {"const": {"artifact_set_id": "NEE-116A-GOLDEN-FIXTURE", "ticket_id": "NEE-116", "manifest_path": "tests/fixtures/quant/golden-two-rebalance-v1.manifest.json", "manifest_sha256": "2e1e880f6f7ef244d82fe3dd2baa30dfe464fb6e7545bd18ca55ab2a9e2d143c", "leaf_count": 8, "integrity_state": "HASH_VERIFIED", "evidence_state": "COMMITTED_UNVERIFIED", "embedded_status": "BOUNDED_FIXTURE_ORACLE_AWAITING_INDEPENDENT_REVIEW"}},
+        {"const": {"artifact_set_id": "NEE-118-ACCOUNTING", "ticket_id": "NEE-118", "manifest_path": "tests/fixtures/quant/accounting-equations-v1.manifest.json", "manifest_sha256": "d2f042da9ecf1f28d019af1a8ae0d18d56af018175dc3bafa3699df55025f0ee", "leaf_count": 6, "integrity_state": "HASH_VERIFIED", "evidence_state": "COMMITTED_UNVERIFIED", "embedded_status": "UNSPECIFIED"}},
+        {"const": {"artifact_set_id": "NEE-119-QUANT-CONTRACT", "ticket_id": "NEE-119", "manifest_path": "configs/quant/qme-v0.1-contract.hashes.json", "manifest_sha256": "84970ccb3cf8d1d0a63efae90f3a32e07ce973b4f37ef000a1702980188e6be3", "leaf_count": 5, "integrity_state": "HASH_VERIFIED", "evidence_state": "COMMITTED_UNVERIFIED", "embedded_status": "PREPARED_NOT_ATTACHED_TO_PHASE_GATE"}},
+        {"const": {"artifact_set_id": "NEE-120-PROMOTION", "ticket_id": "NEE-120", "manifest_path": "tests/fixtures/quant/economic-promotion-decision-v1.manifest.json", "manifest_sha256": "e087cd29f1bbe6f7d066c32631fe6f6586da84c0eb7b33045cec7162d7c4a36a", "leaf_count": 7, "integrity_state": "HASH_VERIFIED", "evidence_state": "COMMITTED_UNVERIFIED", "embedded_status": "UNSPECIFIED"}},
+        {"const": {"artifact_set_id": "NEE-121-HOLDOUT", "ticket_id": "NEE-121", "manifest_path": "configs/governance/sample-holdout-v1.hashes.json", "manifest_sha256": "e28864a8067f8e233ea880f0082299916d986ed68614a6782616aa93f96f91a2", "leaf_count": 9, "integrity_state": "HASH_VERIFIED", "evidence_state": "COMMITTED_UNVERIFIED", "embedded_status": "PREPARED_NOT_ATTACHED_TO_PHASE_GATE"}},
+        {"const": {"artifact_set_id": "NEE-122-EXPERIMENT-REGISTRY", "ticket_id": "NEE-122", "manifest_path": "configs/governance/experiment-registry-v1.hashes.json", "manifest_sha256": "aebdca44dc207f9d87b5349b0c9fe19af5ac77abfcfdc53d0662a9a198dd728f", "leaf_count": 16, "integrity_state": "HASH_VERIFIED", "evidence_state": "COMMITTED_UNVERIFIED", "embedded_status": "COMMITTED_UNVERIFIED"}}
+      ],
+      "items": false
+    },
+    "artifact_index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "unique_artifact_count", "reference_count"],
+      "properties": {
+        "sha256": {"const": "90cded90e5cb9b1b35461de3484d41e1ceaa6e6c654b8e4182c4201dfd60b44b"},
+        "unique_artifact_count": {"const": 51},
+        "reference_count": {"const": 51}
+      }
+    },
+    "artifact_reference_count": {"const": 51},
+    "cross_contract_checks": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "prefixItems": [
+        {"const": {"check_id": "ALL_REGISTERED_CHILD_BYTES", "status": "PASS"}},
+        {"const": {"check_id": "FULL_CROSS_CONTRACT_SEMANTIC_APPROVAL", "status": "BLOCKED"}},
+        {"const": {"check_id": "STRICT_OPERATIONAL_CONFIG_V1", "status": "BLOCKED"}}
+      ],
+      "items": false
+    },
+    "unresolved_blocker_codes": {
+      "type": "array",
+      "minItems": 27,
+      "maxItems": 27,
+      "uniqueItems": true,
+      "prefixItems": [
+        {"const": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL"},
+        {"const": "NEE-110-QME-CONFIG-V1-CONTRACT"},
+        {"const": "NEE-116-ASYMMETRIC-COST-METHOD"},
+        {"const": "NEE-116-CAPACITY-SOLVER"},
+        {"const": "NEE-116-CORPORATE-ACTION-EDGE-CASES"},
+        {"const": "NEE-116-HUMAN-INDEPENDENT-REVIEW"},
+        {"const": "NEE-116-OFFICIAL-OPEN-FALLBACK"},
+        {"const": "NEE-116-PRODUCTION-PIT-DATA"},
+        {"const": "NEE-116-TAX-LOT-METHOD"},
+        {"const": "NEE-117-EXACT-SHA-REMOTE-CI"},
+        {"const": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP"},
+        {"const": "NEE-119-AV-PROXY-EVIDENCE"},
+        {"const": "NEE-119-MINIMUM-ELIGIBLE-BREADTH"},
+        {"const": "NEE-119-PRODUCTION-SOURCE-FRESHNESS"},
+        {"const": "NEE-120-AUM-CAPACITY-LIMITS"},
+        {"const": "NEE-120-INFERENCE-POLICY"},
+        {"const": "NEE-120-PREREGISTRATION-APPROVAL"},
+        {"const": "NEE-120-PROMOTION-MANDATE"},
+        {"const": "NEE-121-CALENDAR-SESSION-REGISTRATION"},
+        {"const": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP"},
+        {"const": "NEE-121-HISTORICAL-ACCESS-PROVENANCE"},
+        {"const": "NEE-121-LABEL-ENDPOINT-REGISTRATIONS"},
+        {"const": "NEE-121-PROSPECTIVE-EVIDENCE-SUFFICIENCY"},
+        {"const": "NEE-122-CORRELATED-TRIAL-FIXTURE"},
+        {"const": "NEE-122-DEPENDENCE-ESTIMATOR"},
+        {"const": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"},
+        {"const": "NEE-122-PRODUCTION-FAMILY-POLICY"}
+      ],
+      "items": false
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "uniqueItems": true,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "AUTHORITATIVE_POINT_IN_TIME_NDX_MEMBERSHIP"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "DATA_SPINE_START_AUTHORIZED"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "DEFLATED_SHARPE_RATIO"}, "status": {"const": "FORBIDDEN"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "EFFECTIVE_TRIALS_N_EFF"}, "status": {"const": "FORBIDDEN"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "EMPIRICAL_PERFORMANCE"}, "status": {"const": "FORBIDDEN"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "EXACT_SHA_REMOTE_CI"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "LOCAL_QUANT_MECHANICS"}, "status": {"const": "SUPPORTED_BOUNDED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "NASDAQ_100_READY"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "PORTFOLIO_CAPACITY"}, "status": {"const": "FORBIDDEN"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "PRODUCTION_DATA_COVERAGE_AND_FRESHNESS"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "PRODUCTION_SPECIFICATION_ACCEPTED"}, "status": {"const": "BLOCKED"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "PROSPECTIVE_HOLDOUT"}, "status": {"const": "FORBIDDEN"}}}]},
+        {"allOf": [{"$ref": "#/$defs/claim"}, {"properties": {"claim_id": {"const": "SYNTHETIC_ARITHMETIC_CONFORMANCE"}, "status": {"const": "SUPPORTED_BOUNDED"}}}]}
+      ],
+      "items": false
+    },
+    "ci_evidence": {"$ref": "#/$defs/ciEvidence"},
+    "effective_trials_registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "estimate", "estimator", "required_registration_fields"],
+      "properties": {
+        "status": {"const": "UNREGISTERED_BLOCKER"},
+        "estimate": {"type": "null"},
+        "estimator": {"type": "null"},
+        "required_registration_fields": {
+          "type": "array",
+          "minItems": 20,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "prefixItems": [
+            {"const": "semantic_target"},
+            {"const": "estimator_version_hash"},
+            {"const": "family_and_m_binding"},
+            {"const": "return_matrix_artifact_hash"},
+            {"const": "return_frequency_and_benchmark_basis"},
+            {"const": "common_calendar_and_missingness_policy"},
+            {"const": "null_centering_and_standardization"},
+            {"const": "dependence_or_resampling_method"},
+            {"const": "block_rule_seed_and_replicates"},
+            {"const": "psd_regularization_and_solver_bounds"},
+            {"const": "negative_correlation_and_single_trial_rules"},
+            {"const": "monte_carlo_interval_and_tolerance"},
+            {"const": "independent_fixture_hash"},
+            {"const": "sharpe_estimator_and_annualization"},
+            {"const": "cross_trial_sharpe_variance_estimator"},
+            {"const": "eligible_trial_inclusion_rule"},
+            {"const": "sample_length_convention"},
+            {"const": "skewness_and_kurtosis_convention"},
+            {"const": "selected_trial_mapping"},
+            {"const": "single_trial_dsr_benchmark"}
+          ],
+          "items": false
+        }
+      }
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["integrity_state", "overall_state", "accepted", "downstream_start_authorized", "blocked_issue_ids"],
+      "properties": {
+        "integrity_state": {"const": "HASH_VERIFIED"},
+        "overall_state": {"const": "BLOCKED_UNRESOLVED_INPUTS"},
+        "accepted": {"const": false},
+        "downstream_start_authorized": {"const": false},
+        "blocked_issue_ids": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "prefixItems": [
+            {"const": "NEE-114"},
+            {"const": "NEE-123"},
+            {"const": "NEE-124"},
+            {"const": "NEE-125"},
+            {"const": "NEE-126"},
+            {"const": "NEE-127"},
+            {"const": "NEE-128"}
+          ],
+          "items": false
+        }
+      }
+    },
+    "canonicalization": {"const": "qme.foundation.canonical_json.v1"},
+    "derived_evidence_sha256": {"const": "be290d1bfaa64d0d842261f13309aa62d61c51160534cb618fb7af9642d9ba49"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifactSetResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_set_id", "ticket_id", "manifest_path", "manifest_sha256", "leaf_count", "integrity_state", "evidence_state", "embedded_status"],
+      "properties": {
+        "artifact_set_id": {
+          "enum": [
+            "NEE-116A-GOLDEN-FIXTURE",
+            "NEE-118-ACCOUNTING",
+            "NEE-119-QUANT-CONTRACT",
+            "NEE-120-PROMOTION",
+            "NEE-121-HOLDOUT",
+            "NEE-122-EXPERIMENT-REGISTRY"
+          ]
+        },
+        "ticket_id": {"type": "string", "pattern": "^NEE-[0-9]+$"},
+        "manifest_path": {"type": "string", "minLength": 1},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "leaf_count": {"type": "integer", "minimum": 1},
+        "integrity_state": {"const": "HASH_VERIFIED"},
+        "evidence_state": {"const": "COMMITTED_UNVERIFIED"},
+        "embedded_status": {"type": ["string", "null"]}
+      }
+    },
+    "crossCheck": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["check_id", "status", "evidence"],
+          "properties": {
+            "check_id": {"type": "string", "minLength": 1},
+            "status": {"const": "PASS"},
+            "evidence": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["check_id", "status", "blocked_by"],
+          "properties": {
+            "check_id": {"type": "string", "minLength": 1},
+            "status": {"const": "BLOCKED"},
+            "blocked_by": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+          }
+        }
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "status"],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["SUPPORTED_BOUNDED", "SUPPORTED_WITH_LIMITATION", "BLOCKED", "FORBIDDEN"]}
+      }
+    },
+    "ciEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tested_commit", "required_checks_passed"],
+      "properties": {
+        "status": {"enum": ["MISSING", "SHA_MISMATCH", "FAILED_REQUIRED_CHECKS", "CALLER_ASSERTED_UNVERIFIED"]},
+        "tested_commit": {"type": ["string", "null"]},
+        "required_checks_passed": {"type": "boolean"},
+        "workflow": {"type": "string", "minLength": 1},
+        "run_url": {"type": "string", "minLength": 1},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "MISSING"}}},
+          "then": {"not": {"anyOf": [{"required": ["workflow"]}, {"required": ["run_url"]}, {"required": ["artifact_sha256"]}]}}
+        },
+        {
+          "if": {"properties": {"status": {"enum": ["SHA_MISMATCH", "FAILED_REQUIRED_CHECKS", "CALLER_ASSERTED_UNVERIFIED"]}}},
+          "then": {"required": ["workflow", "run_url", "artifact_sha256"]}
+        }
+      ]
+    }
+  }
+}

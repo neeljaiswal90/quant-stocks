@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/specification-freeze-policy-v1.schema.json",
+  "title": "QME NEE-110A immutable specification-freeze policy",
+  "description": "The v1 schema is intentionally an exact registration. Any semantic change requires a new policy/schema version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_id",
+    "ticket_id",
+    "canonicalization",
+    "artifact_sets",
+    "unresolved_blockers"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "qme.specification_freeze_policy.v1"
+    },
+    "policy_id": {
+      "const": "NEE-110A-SPECIFICATION-FREEZE-CANDIDATE-V1"
+    },
+    "ticket_id": {
+      "const": "NEE-110"
+    },
+    "canonicalization": {
+      "const": "qme.foundation.canonical_json.v1"
+    },
+    "artifact_sets": {
+      "const": [
+        {
+          "artifact_set_id": "NEE-116A-GOLDEN-FIXTURE",
+          "ticket_id": "NEE-116",
+          "manifest_path": "tests/fixtures/quant/golden-two-rebalance-v1.manifest.json",
+          "manifest_sha256": "2e1e880f6f7ef244d82fe3dd2baa30dfe464fb6e7545bd18ca55ab2a9e2d143c",
+          "required_leaf_count": 8,
+          "evidence_state": "COMMITTED_UNVERIFIED"
+        },
+        {
+          "artifact_set_id": "NEE-118-ACCOUNTING",
+          "ticket_id": "NEE-118",
+          "manifest_path": "tests/fixtures/quant/accounting-equations-v1.manifest.json",
+          "manifest_sha256": "d2f042da9ecf1f28d019af1a8ae0d18d56af018175dc3bafa3699df55025f0ee",
+          "required_leaf_count": 6,
+          "evidence_state": "COMMITTED_UNVERIFIED"
+        },
+        {
+          "artifact_set_id": "NEE-119-QUANT-CONTRACT",
+          "ticket_id": "NEE-119",
+          "manifest_path": "configs/quant/qme-v0.1-contract.hashes.json",
+          "manifest_sha256": "84970ccb3cf8d1d0a63efae90f3a32e07ce973b4f37ef000a1702980188e6be3",
+          "required_leaf_count": 5,
+          "evidence_state": "COMMITTED_UNVERIFIED"
+        },
+        {
+          "artifact_set_id": "NEE-120-PROMOTION",
+          "ticket_id": "NEE-120",
+          "manifest_path": "tests/fixtures/quant/economic-promotion-decision-v1.manifest.json",
+          "manifest_sha256": "e087cd29f1bbe6f7d066c32631fe6f6586da84c0eb7b33045cec7162d7c4a36a",
+          "required_leaf_count": 7,
+          "evidence_state": "COMMITTED_UNVERIFIED"
+        },
+        {
+          "artifact_set_id": "NEE-121-HOLDOUT",
+          "ticket_id": "NEE-121",
+          "manifest_path": "configs/governance/sample-holdout-v1.hashes.json",
+          "manifest_sha256": "e28864a8067f8e233ea880f0082299916d986ed68614a6782616aa93f96f91a2",
+          "required_leaf_count": 9,
+          "evidence_state": "COMMITTED_UNVERIFIED"
+        },
+        {
+          "artifact_set_id": "NEE-122-EXPERIMENT-REGISTRY",
+          "ticket_id": "NEE-122",
+          "manifest_path": "configs/governance/experiment-registry-v1.hashes.json",
+          "manifest_sha256": "aebdca44dc207f9d87b5349b0c9fe19af5ac77abfcfdc53d0662a9a198dd728f",
+          "required_leaf_count": 16,
+          "evidence_state": "COMMITTED_UNVERIFIED"
+        }
+      ]
+    },
+    "unresolved_blockers": {
+      "const": [
+        {
+          "blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+          "ticket_id": "NEE-110",
+          "category": "GOVERNANCE",
+          "description": "No reviewed unified semantic and quantitative phase-gate approval exists."
+        },
+        {
+          "blocker_code": "NEE-110-QME-CONFIG-V1-CONTRACT",
+          "ticket_id": "NEE-110",
+          "category": "CONFIGURATION",
+          "description": "The operational qme.config.v1 schema and fail-closed loader are not implemented."
+        },
+        {
+          "blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD",
+          "ticket_id": "NEE-116",
+          "category": "QUANTITATIVE_METHOD",
+          "description": "Accepted asymmetric buy and sell cost fixtures and policy are unavailable."
+        },
+        {
+          "blocker_code": "NEE-116-CAPACITY-SOLVER",
+          "ticket_id": "NEE-116",
+          "category": "QUANTITATIVE_METHOD",
+          "description": "Authoritative capacity requires the same discrete cost-aware target solver and is unavailable."
+        },
+        {
+          "blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+          "ticket_id": "NEE-116",
+          "category": "EVIDENCE_COVERAGE",
+          "description": "Merger, delisting, and unresolved corporate-action edge cases lack accepted fixtures."
+        },
+        {
+          "blocker_code": "NEE-116-HUMAN-INDEPENDENT-REVIEW",
+          "ticket_id": "NEE-116",
+          "category": "REVIEW",
+          "description": "A registered human reviewer identity and dated approval are unavailable."
+        },
+        {
+          "blocker_code": "NEE-116-OFFICIAL-OPEN-FALLBACK",
+          "ticket_id": "NEE-116",
+          "category": "DATA_POLICY",
+          "description": "Missing official raw open must remain blocking; no fallback source is registered."
+        },
+        {
+          "blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+          "ticket_id": "NEE-116",
+          "category": "DATA_EVIDENCE",
+          "description": "Only synthetic arithmetic evidence exists; accepted point-in-time production data do not."
+        },
+        {
+          "blocker_code": "NEE-116-TAX-LOT-METHOD",
+          "ticket_id": "NEE-116",
+          "category": "QUANTITATIVE_METHOD",
+          "description": "Capital-gains lot selection and after-tax methodology are explicitly undefined."
+        },
+        {
+          "blocker_code": "NEE-117-EXACT-SHA-REMOTE-CI",
+          "ticket_id": "NEE-117",
+          "category": "EXTERNAL_EVIDENCE",
+          "description": "No repository remote, exact-SHA GitHub Actions run, artifact URL, or required-check enforcement exists."
+        },
+        {
+          "blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+          "ticket_id": "NEE-119",
+          "category": "DATA_AUTHORITY",
+          "description": "No accepted point-in-time Nasdaq-100 membership authority or immutable membership snapshot is registered."
+        },
+        {
+          "blocker_code": "NEE-119-AV-PROXY-EVIDENCE",
+          "ticket_id": "NEE-119",
+          "category": "DATA_EVIDENCE",
+          "description": "No reviewed Alpha Vantage common-stock proxy artifact is bound into this freeze candidate."
+        },
+        {
+          "blocker_code": "NEE-119-MINIMUM-ELIGIBLE-BREADTH",
+          "ticket_id": "NEE-119",
+          "category": "MANDATE",
+          "description": "The minimum eligible breadth boundary remains an unregistered blocking value."
+        },
+        {
+          "blocker_code": "NEE-119-PRODUCTION-SOURCE-FRESHNESS",
+          "ticket_id": "NEE-119",
+          "category": "DATA_POLICY",
+          "description": "Authoritative source-class freshness and acceptance policy are unavailable."
+        },
+        {
+          "blocker_code": "NEE-120-AUM-CAPACITY-LIMITS",
+          "ticket_id": "NEE-120",
+          "category": "MANDATE",
+          "description": "AUM, risk, turnover, tax, and capacity limits have no owner-approved values."
+        },
+        {
+          "blocker_code": "NEE-120-INFERENCE-POLICY",
+          "ticket_id": "NEE-120",
+          "category": "STATISTICAL_METHOD",
+          "description": "Alpha, intervals, dependence method, block rule, multiplicity family, and sample requirement are unresolved."
+        },
+        {
+          "blocker_code": "NEE-120-PROMOTION-MANDATE",
+          "ticket_id": "NEE-120",
+          "category": "MANDATE",
+          "description": "Economic objective, benchmark, margins, abort authority, and restart authority are unresolved."
+        },
+        {
+          "blocker_code": "NEE-120-PREREGISTRATION-APPROVAL",
+          "ticket_id": "NEE-120",
+          "category": "GOVERNANCE",
+          "description": "No signed or content-bound owner preregistration approval exists before outcome unblinding."
+        },
+        {
+          "blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+          "ticket_id": "NEE-121",
+          "category": "TIME_COORDINATE",
+          "description": "Accepted calendar and ordered session-vector identities are unavailable."
+        },
+        {
+          "blocker_code": "NEE-121-HISTORICAL-ACCESS-PROVENANCE",
+          "ticket_id": "NEE-121",
+          "category": "GOVERNANCE",
+          "description": "The proposed confirmation window has unknown prior-access provenance."
+        },
+        {
+          "blocker_code": "NEE-121-LABEL-ENDPOINT-REGISTRATIONS",
+          "ticket_id": "NEE-121",
+          "category": "TIME_COORDINATE",
+          "description": "One-month, three-month, and six-month label endpoint rules lack registered identifiers and hashes."
+        },
+        {
+          "blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+          "ticket_id": "NEE-121",
+          "category": "GOVERNANCE",
+          "description": "The final prospective specification-freeze timestamp and evidence hash are unavailable."
+        },
+        {
+          "blocker_code": "NEE-121-PROSPECTIVE-EVIDENCE-SUFFICIENCY",
+          "ticket_id": "NEE-121",
+          "category": "EMPIRICAL_EVIDENCE",
+          "description": "No owner-approved prospective minimum evidence duration or information requirement exists."
+        },
+        {
+          "blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+          "ticket_id": "NEE-122",
+          "category": "STATISTICAL_EVIDENCE",
+          "description": "No independently validated correlated-trial fixture supports an effective-trials method."
+        },
+        {
+          "blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR",
+          "ticket_id": "NEE-122",
+          "category": "STATISTICAL_METHOD",
+          "description": "The N_eff semantic target, estimator, matrix policy, resampling settings, bounds, and uncertainty rules are unregistered."
+        },
+        {
+          "blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+          "ticket_id": "NEE-122",
+          "category": "GOVERNANCE",
+          "description": "Production-scale inclusion proof for the complete NEE-121 access chain is unavailable."
+        },
+        {
+          "blocker_code": "NEE-122-PRODUCTION-FAMILY-POLICY",
+          "ticket_id": "NEE-122",
+          "category": "MULTIPLICITY",
+          "description": "Production dimensions, selection rule, cost treatment, comparison family m, and off-grid policy are unregistered."
+        }
+      ]
+    }
+  }
+}

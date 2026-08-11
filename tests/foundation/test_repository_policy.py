@@ -7,6 +7,7 @@ from pathlib import Path
 
 from scripts.check_secrets import (
     _AUTHORITY_BINDING_CONFIGS,
+    _REGISTERED_PROVENANCE_HASH_FILES,
     _VALIDATED_AUTHORITY_BINDING_FILES,
     _VALIDATED_HASH_MANIFESTS,
     _detect_secrets,
@@ -67,6 +68,7 @@ def test_lock_files_are_content_hashed() -> None:
 def test_secret_scanner_validates_every_registered_hash_manifest() -> None:
     expected = {
         Path("configs/governance/experiment-registry-v1.hashes.json"),
+        Path("configs/governance/specification-freeze-v1.hashes.json"),
         Path("configs/governance/sample-holdout-v1.hashes.json"),
         Path("configs/quant/qme-v0.1-contract.hashes.json"),
         Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
@@ -96,6 +98,18 @@ def test_secret_scanner_allows_only_semantically_validated_authority_hashes() ->
     # Without the path-bounded semantic validation, the generic scanner still flags
     # the same authority digests instead of globally excluding every `sha256` field.
     assert _detect_secrets(Path("configs/quant/golden-two-rebalance-v1.json"))
+
+
+def test_freeze_provenance_hash_allowlist_is_path_bounded() -> None:
+    expected = {
+        Path("qme/governance/specification_freeze.py"),
+        Path("schemas/governance/specification-freeze-export-v1.schema.json"),
+        Path("tests/governance/test_specification_freeze.py"),
+    }
+    assert set(_REGISTERED_PROVENANCE_HASH_FILES) == expected
+    for path in sorted(expected):
+        assert _detect_secrets(path)
+        assert _scan(path, staged=False) == []
 
 
 def test_foundation_schema_requires_all_lineage_identities() -> None:

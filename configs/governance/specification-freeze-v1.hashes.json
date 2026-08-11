@@ -1,0 +1,34 @@
+{
+  "schema_version": "qme.specification_freeze_artifact_manifest.v1",
+  "artifact_id": "NEE-110A-SPECIFICATION-FREEZE-CANDIDATE-V1",
+  "implementation_status": "BOUNDED_CANDIDATE",
+  "closure_status": "BLOCKED_UNRESOLVED_INPUTS",
+  "integrity_scope": "SHA256_BINDS_REVIEWED_BYTES_NOT_AUTHENTICITY_OR_ACCEPTANCE",
+  "artifacts": [
+    {
+      "path": "configs/governance/specification-freeze-policy-v1.json",
+      "sha256": "0bee3c76e8e013c975db2c2d5f76dbebdc57fda1a9571369e5d9094cb6c6c24d"
+    },
+    {
+      "path": "docs/governance/SPECIFICATION_FREEZE_V1.md",
+      "sha256": "bb9dda183c80e99ff629327ab1e0a37e27684b4a11ce8f36a5c8318337c53db5"
+    },
+    {
+      "path": "qme/governance/specification_freeze.py",
+      "sha256": "87ee02402ce6948dbcb0982828ccac4f09b342a8490888172495362e29f01953"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-policy-v1.schema.json",
+      "sha256": "8721fb2e2fde1525d068067d2dd027f17b21969b95f70f7aab734ea5cca32365"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-export-v1.schema.json",
+      "sha256": "d450af7b3eb311b233eddb64aea4e5e79ddee938c3c147947982789dcc445e31"
+    },
+    {
+      "path": "tests/governance/test_specification_freeze.py",
+      "sha256": "a329a002013b6490185cbd9cf3cb7a39583121d332ee8c16821e4f03aff83b68"
+    }
+  ],
+  "note": "This bounded candidate verifies reviewed local inputs and refuses NEE-110 closure. It is not production, empirical, remote-CI, Nasdaq-100 membership, N_eff, DSR, or capacity evidence."
+}

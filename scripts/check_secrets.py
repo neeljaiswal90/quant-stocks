@@ -19,11 +19,13 @@ _PROVENANCE_HASH_LINE_ALLOWLIST = (
     r'transitive_lock_sha256|accounting_equation_spec_sha256|'
     r'accounting_spec_sha256|accounting_config_sha256|'
     r'accounting_executable_sha256|quantitative_contract_sha256|'
+    r'manifest_sha256|'
     r'total_return_methodology_sha256|calendar_hash|ordered_session_vector_hash|'
     r'ordered_filter_session_vector_hash)"\s*:\s*"[0-9a-f]{64}"'
 )
 _VALIDATED_HASH_MANIFESTS = {
     Path("configs/governance/experiment-registry-v1.hashes.json"),
+    Path("configs/governance/specification-freeze-v1.hashes.json"),
     Path("tests/fixtures/quant/accounting-equations-v1.manifest.json"),
     Path("tests/fixtures/quant/economic-promotion-decision-v1.manifest.json"),
     Path("tests/fixtures/quant/golden-two-rebalance-v1.manifest.json"),
@@ -46,6 +48,19 @@ _AUTHORITY_BINDING_CONFIGS = {
 }
 _VALIDATED_AUTHORITY_BINDING_FILES = frozenset(_AUTHORITY_BINDING_CONFIGS)
 _AUTHORITY_HASH_LINE_ALLOWLIST = r'"sha256"\s*:\s*"[0-9a-f]{64}"'
+_REGISTERED_PROVENANCE_HASH_FILES = {
+    Path("qme/governance/specification_freeze.py"): (
+        r'(?:POLICY_DOCUMENT_SHA256|ARTIFACT_INDEX_SHA256|DERIVED_EVIDENCE_SHA256)'
+        r'\s*=\s*"[0-9a-f]{64}"|^\s*"[0-9a-f]{64}",?\s*$'
+    ),
+    Path("schemas/governance/specification-freeze-export-v1.schema.json"): (
+        r'"(?:policy_sha256|sha256|derived_evidence_sha256)"\s*:\s*'
+        r'\{"const":\s*"[0-9a-f]{64}"\}'
+    ),
+    Path("tests/governance/test_specification_freeze.py"): (
+        r'"sha256"\s*:\s*"[0-9a-f]{64}"'
+    ),
+}
 
 
 def _git_files(staged: bool) -> list[Path]:
@@ -185,10 +200,14 @@ def _scan(path: Path, staged: bool) -> list[dict[str, Any]]:
     if path in _VALIDATED_HASH_MANIFESTS:
         _validate_hash_manifest(path, staged)
         return []
-    extra_allowlist = None
+    extra_allowlist = _REGISTERED_PROVENANCE_HASH_FILES.get(path)
     if path in _VALIDATED_AUTHORITY_BINDING_FILES:
         _validate_authority_binding_file(path, staged)
-        extra_allowlist = _AUTHORITY_HASH_LINE_ALLOWLIST
+        extra_allowlist = (
+            _AUTHORITY_HASH_LINE_ALLOWLIST
+            if extra_allowlist is None
+            else f"(?:{extra_allowlist})|(?:{_AUTHORITY_HASH_LINE_ALLOWLIST})"
+        )
     if not staged:
         return _detect_secrets(path, extra_allowlist)
     with tempfile.TemporaryDirectory(prefix="qme-secret-scan-") as directory:
