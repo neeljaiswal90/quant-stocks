@@ -14,7 +14,7 @@ $commands = @(
     @("-m", "mypy", "qme", "scripts\verify_lock.py", "scripts\check_secrets.py"),
     @("-m", "pytest", "-q", "-p", "no:cacheprovider"),
     @("-m", "compileall", "-q", "qme", "tests", "scripts"),
-    @("scripts\verify_lock.py", "requirements-agent-build.lock", "requirements-dev.lock", "requirements-agents.lock"),
+    @("scripts\verify_lock.py", "requirements-agent-build.lock", "requirements-runtime.lock", "requirements-dev.lock", "requirements-agents.lock"),
     @("-m", "qme.cli.foundation", "--help"),
     @("-m", "qme.cli.agent_review", "--help")
 )

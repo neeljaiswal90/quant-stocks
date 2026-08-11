@@ -1,11 +1,12 @@
 # Foundation reproducibility contract
 
-Status: implemented locally; remote CI evidence remains unavailable until a Git remote exists.
+Status: implemented locally and connected to the project GitHub repository; an exact-SHA
+remote CI run is still required for acceptance.
 
 ## Supported environment
 
 - CPython 3.12 only for v0.1.
-- Runtime QME has no third-party dependency.
+- `requirements-runtime.lock` contains the exact, hashed runtime dependency set.
 - `requirements-dev.lock` contains the exact, hashed build and verification toolchain.
 - `requirements-agents.lock` contains the exact, hashed optional TradingAgents source archive
   and all resolved transitive dependencies. Installing it does not enable agent execution.
@@ -13,10 +14,11 @@ Status: implemented locally; remote CI evidence remains unavailable until a Git 
 Regenerate a lock only in CPython 3.12, review its dependency diff, and run:
 
 ```powershell
+py -3.12 -m piptools compile pyproject.toml --generate-hashes --allow-unsafe --strip-extras --output-file requirements-runtime.lock
 py -3.12 -m piptools compile pyproject.toml --extra dev --generate-hashes --allow-unsafe --strip-extras --output-file requirements-dev.lock
 py -3.12 -m piptools compile requirements-agent-build.in --generate-hashes --allow-unsafe --strip-extras --output-file requirements-agent-build.lock
 py -3.12 -m piptools compile pyproject.toml --extra agents --generate-hashes --allow-unsafe --strip-extras --output-file requirements-agents.lock
-py -3.12 scripts\verify_lock.py requirements-agent-build.lock requirements-dev.lock requirements-agents.lock
+py -3.12 scripts\verify_lock.py requirements-agent-build.lock requirements-runtime.lock requirements-dev.lock requirements-agents.lock
 ```
 
 The TradingAgents source requirement uses both the audited commit in its URL and the
@@ -55,7 +57,9 @@ After installing the development lock, run:
 .\scripts\verify.ps1 -Python 'py -3.12'
 ```
 
-The GitHub workflow repeats the lock, wheel, CLI, lint, strict typing, unit,
+The GitHub workflow installs the hashed runtime lock into a clean environment before
+installing the wheel with dependency resolution disabled. It then repeats the lock,
+wheel, CLI, dependency-consistency, lint, strict typing, unit,
 architecture, secret, deterministic-fixture, and clean-worktree checks. A local pass is
 not a substitute for a green exact-SHA remote run and required branch checks.
 
