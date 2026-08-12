@@ -7,6 +7,7 @@ import json
 from collections.abc import Sequence
 from pathlib import Path
 
+from qme.foundation.config import ConfigError, load_qme_config
 from qme.foundation.data_root import DataRootError, DataRootLayout
 from qme.foundation.lineage import (
     LineageError,
@@ -25,6 +26,12 @@ def build_parser() -> argparse.ArgumentParser:
     initialize.add_argument("--repository-root", type=Path, default=Path.cwd())
     initialize.add_argument("--dry-run", action="store_true")
 
+    validate = commands.add_parser(
+        "validate-config", help="validate qme.config.v1 without initializing storage"
+    )
+    validate.add_argument("--repository-root", type=Path, default=Path.cwd())
+    validate.add_argument("--config", type=Path, required=True)
+
     manifest = commands.add_parser("manifest", help="generate one canonical fixture manifest")
     manifest.add_argument("--repository-root", type=Path, default=Path.cwd())
     manifest.add_argument("--lock", type=Path, required=True)
@@ -38,6 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    result: dict[str, object]
     try:
         if args.command == "init-data-root":
             layout = DataRootLayout.from_path(
@@ -49,6 +57,16 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "status": "VALID_DATA_ROOT" if args.dry_run else "DATA_ROOT_READY",
                 "directories": [str(item) for item in directories],
                 "dry_run": bool(args.dry_run),
+            }
+        elif args.command == "validate-config":
+            config = load_qme_config(
+                args.config.resolve(strict=False),
+                repository_root=args.repository_root.resolve(strict=False),
+            )
+            result = {
+                "status": "VALID_QME_CONFIG",
+                "config": config.manifest_document(),
+                "data_root_configured": True,
             }
         else:
             commit, dirty = repository_state(args.repository_root)
@@ -67,7 +85,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "manifest_sha256": digest,
                 "path": str(args.manifest_out.resolve(strict=True)),
             }
-    except (DataRootError, FileExistsError, FileNotFoundError, LineageError, OSError) as exc:
+    except (
+        ConfigError,
+        DataRootError,
+        FileExistsError,
+        FileNotFoundError,
+        LineageError,
+        OSError,
+    ) as exc:
         print(json.dumps({"status": "FOUNDATION_ERROR", "error": str(exc)}, sort_keys=True))
         return 2
     print(json.dumps(result, indent=2, sort_keys=True))
