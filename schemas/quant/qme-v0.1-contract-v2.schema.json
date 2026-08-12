@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/quant/qme-v0.1-contract-v2.schema.json",
+  "title": "QME long-only momentum quantitative contract v2 exact schema",
+  "description": "Exact root const freezes all V2 authority, lineage, carried strategy semantics, typed blockers, nonclaims, states, and precedence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "contract_id",
+    "contract_version",
+    "contract_status",
+    "semantic_sha256",
+    "metadata",
+    "authority",
+    "lineage",
+    "claims",
+    "numeric_policy",
+    "contract_bindings",
+    "point_in_time_identity",
+    "eligibility",
+    "signal",
+    "ranking",
+    "selection",
+    "weighting",
+    "filters",
+    "reason_code_precedence",
+    "fail_closed_states"
+  ],
+  "properties": {
+    "$schema": {},
+    "schema_version": {},
+    "contract_id": {},
+    "contract_version": {},
+    "contract_status": {},
+    "semantic_sha256": {},
+    "metadata": {},
+    "authority": {},
+    "lineage": {},
+    "claims": {},
+    "numeric_policy": {},
+    "contract_bindings": {},
+    "point_in_time_identity": {},
+    "eligibility": {},
+    "signal": {},
+    "ranking": {},
+    "selection": {},
+    "weighting": {},
+    "filters": {},
+    "reason_code_precedence": {},
+    "fail_closed_states": {}
+  },
+  "const": {
+    "$schema": "../../schemas/quant/qme-v0.1-contract-v2.schema.json",
+    "schema_version": "qme.quantitative_contract.v2",
+    "contract_id": "qme-long-only-momentum-v0.1",
+    "contract_version": 2,
+    "contract_status": "REGISTERED_DECISIONS_PRODUCTION_EVIDENCE_BLOCKED",
+    "semantic_sha256": "8375890d:bcc1b0c6:ae75058f:a5cfd966:43d8eb3b:06c686b7:90a5de6d:a5789263",
+    "metadata": {
+      "document_type": "QUANTITATIVE_CONTRACT",
+      "ticket": "NEE-119",
+      "strategy_version": "v0.1",
+      "stable_strategy_identity": true,
+      "scope": "BROAD_AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY"
+    },
+    "authority": {
+      "ticket": "NEE-119",
+      "empirical_results_used": false,
+      "source_label": "OWNER_MANDATE_2026-08-12",
+      "owner_approval": {
+        "approval_owner": "neeljaiswal90",
+        "approved_at": "2026-08-12T16:57:29Z"
+      },
+      "proposal": {
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"
+      },
+      "m0_registration": {
+        "registration_id": "M0-OWNER-MANDATE-REGISTRATION-2026-08-12-V1",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "manifest_path": "configs/governance/m0-registration-v1.hashes.json",
+        "manifest_sha256": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db",
+        "protected_main_commit": "fd0a3847:7ba73e6f:4b9e3d6b:26af8de3:46a1ddcc",
+        "effective_at": "2026-08-12T17:40:28Z"
+      },
+      "materialization_crosswalk": {
+        "crosswalk_id": "NEE-172-S0A-1-CONTRACT-MATERIALIZATION-CROSSWALK-V2",
+        "path": "configs/governance/s0a-contract-materialization-crosswalk-v2.json",
+        "sha256": "11f1de4d:51816cad:7d958fe9:2946e18f:e968d9de:7537006e:00f80577:c11942d1"
+      },
+      "unavailable_inputs": [
+        "production_point_in_time_membership_and_identity_snapshot_pair",
+        "production_total_return_raw_receipts_and_corporate_action_fixture_evidence"
+      ],
+      "notes": "Registered authority and breadth decisions are materialized. No unavailable production evidence is inferred."
+    },
+    "lineage": {
+      "predecessor_schema_version": "qme.quantitative_contract.v1",
+      "predecessor_contract_id": "qme-long-only-momentum-v0.1",
+      "predecessor_path": "configs/quant/qme-v0.1-contract.json",
+      "predecessor_sha256": "47070e58:27292e74:567ae32a:eff58bcc:2c58e472:0edaa2d5:57435eb2:a5f472fa",
+      "version_change_policy": "NEW_VERSION_NO_OVERWRITE"
+    },
+    "claims": {
+      "production_ready": false,
+      "data_spine_start_authorized": false,
+      "empirical_performance_available": false,
+      "alpha_proven": false,
+      "authoritative_nasdaq_100_membership_available": false,
+      "production_point_in_time_evidence_available": false
+    },
+    "numeric_policy": {
+      "input_encoding": "canonical_decimal_string",
+      "binary_float_forbidden": true,
+      "decimal_precision_digits": 50,
+      "rounding_mode": "ROUND_HALF_EVEN",
+      "signal_artifact_scale": 18,
+      "weight_artifact_scale": 18,
+      "basis_points_denominator": 10000
+    },
+    "contract_bindings": {
+      "accounting_equation_spec_id": "NEE-118-QME-ACCOUNTING-V1",
+      "accounting_equation_spec_path": "docs/quant/QME_ACCOUNTING_EXECUTION_METRICS_SPEC.md",
+      "accounting_equation_spec_sha256": "27e906a6:12eb61a2:f12947ff:3696cb90:7d56d883:e45c99a7:503011fe:13bb8840",
+      "accounting_coordinate": "RAW_CASH_RAW_SHARES_RAW_EXECUTION_PRICES_RAW_MARKS",
+      "total_return_methodology_id": "qme-point-in-time-total-return-close-v1",
+      "total_return_methodology_path": "configs/quant/qme-v0.1-total-return-methodology.json",
+      "total_return_methodology_sha256": "95381821:c1c8ff00:e0e626b3:d7ee3646:6d12c3be:9e6b8cb7:5ee166f0:043454ac",
+      "source_freshness_policy": {
+        "policy_id": "qme-source-freshness-policy-v1",
+        "path": "configs/quant/source-freshness-policy-v1.json",
+        "sha256": "3dd94e35:0cc89023:e10efd2a:934e9a67:a502a1c8:4b5478db:82a98958:2ab71edc"
+      }
+    },
+    "point_in_time_identity": {
+      "stable_key": "security_id",
+      "stable_key_normalization": "UNICODE_NFC",
+      "stable_key_order": "UTF8_BYTES_ASCENDING",
+      "security_id_unique_within_snapshot": true,
+      "security_id_unique_after_normalization": true,
+      "membership_coordinate": "signal_session_close",
+      "required_run_bindings": [
+        "analysis_as_of",
+        "signal_session",
+        "exchange_calendar_id",
+        "exchange_calendar_hash",
+        "ordered_session_vector_hash",
+        "membership_snapshot_id",
+        "membership_snapshot_hash",
+        "identity_snapshot_id",
+        "identity_snapshot_hash",
+        "price_snapshot_id",
+        "price_snapshot_hash",
+        "total_return_methodology_id",
+        "total_return_methodology_hash",
+        "source_freshness_policy_hash",
+        "accounting_equation_spec_id",
+        "accounting_equation_spec_hash",
+        "common_raw_execution_mark_snapshot_hash",
+        "cost_policy_hash",
+        "tax_policy_hash",
+        "fee_policy_hash",
+        "contract_config_hash",
+        "contract_spec_hash"
+      ],
+      "universe_claim": "AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY",
+      "future_membership_or_identity_data_forbidden": true,
+      "membership_and_identity_authority": {
+        "membership_source": "ALPHA_VANTAGE_LISTING_STATUS_EXACT_SIGNAL_DATE",
+        "identity_cross_check": "SEC_CIK_FILING_AVAILABLE_BY_CUTOFF",
+        "source_order": [
+          "ALPHA_VANTAGE_LISTING_STATUS_ACTIVE_AND_DELISTED_EXACT_SIGNAL_DATE_MONTHLY_IMMUTABLE_RAW_CSV_SHA256",
+          "SEC_COMPANY_TICKERS_AND_SUBMISSIONS_CIK_CROSS_CHECK_NOT_MEMBERSHIP_AUTHORITY_FILING_AVAILABLE_BY_CUTOFF_OR_EXCLUDE",
+          "MANUAL_REVIEW_AMBIGUOUS_RENAMES_OR_REUSE_EXCLUDED_IN_V0_1"
+        ],
+        "blocker_clear_condition": "FIRST_IMMUTABLE_MEMBERSHIP_AND_IDENTITY_SNAPSHOT_PAIR_HASH_BOUND_IN_RUN",
+        "production_snapshot_pair": null,
+        "production_snapshot_pair_status": "UNAVAILABLE_PRODUCTION_EVIDENCE_BLOCKING"
+      }
+    },
+    "eligibility": {
+      "required_membership_status": "IN_UNIVERSE_AT_SIGNAL_SESSION",
+      "required_identity_status": "VERIFIED_AT_SIGNAL_CUTOFF",
+      "required_asset_class": "COMMON_STOCK_PROXY",
+      "excluded_asset_classes": [
+        "ADR",
+        "AMBIGUOUS_IDENTITY",
+        "ETF",
+        "PREFERRED",
+        "REIT",
+        "RIGHT",
+        "SPAC_ARTIFACT",
+        "UNIT",
+        "WARRANT",
+        "WHEN_ISSUED"
+      ],
+      "price_floor": {
+        "enabled": false,
+        "value": null,
+        "status": "NOT_REGISTERED_NOT_ACTIVE"
+      },
+      "liquidity_floor": {
+        "enabled": false,
+        "value": null,
+        "status": "NOT_REGISTERED_NOT_ACTIVE"
+      }
+    },
+    "signal": {
+      "name": "12_1_TOTAL_RETURN_LOG_MOMENTUM",
+      "signal_session_rule": "LAST_EXCHANGE_SESSION_OF_CALENDAR_MONTH",
+      "session_vector_order": "STRICT_ASCENDING_UNIQUE_EXCHANGE_SESSIONS",
+      "signal_session_position": "LAST_ELEMENT",
+      "recent_anchor_derivation": "ordered_sessions[index(signal_session)-21]",
+      "old_anchor_derivation": "ordered_sessions[index(signal_session)-252]",
+      "price_coordinate": "POINT_IN_TIME_TOTAL_RETURN_CLOSE_AS_KNOWN_AT_SIGNAL_CUTOFF",
+      "recent_anchor_exchange_session_offset": -21,
+      "old_anchor_exchange_session_offset": -252,
+      "minimum_observed_sessions_including_t": 253,
+      "formula": "ln(TR[t-21] / TR[t-252])",
+      "calculation_order": "decimal_ratio_then_natural_log",
+      "ranking_value": "UNROUNDED_50_DIGIT_DECIMAL_CONTEXT_RESULT",
+      "diagnostic_simple_return": {
+        "allowed": true,
+        "formula": "TR[t-21] / TR[t-252] - 1",
+        "label": "DIAGNOSTIC_SIMPLE_RETURN_NOT_AUTHORITY",
+        "may_replace_log_statistics": false
+      },
+      "nearest_session_substitution_allowed": false,
+      "nonpositive_anchor_allowed": false,
+      "authoritative_freshness_policy_required": true,
+      "production_total_return_source_registration": {
+        "source_rule": {
+          "source_set": [
+            "ALPHA_VANTAGE_TIME_SERIES_DAILY_RAW_OHLCV",
+            "ALPHA_VANTAGE_DIVIDENDS",
+            "ALPHA_VANTAGE_SPLITS"
+          ],
+          "raw_response_cache": "IMMUTABLE",
+          "total_return_construction": "SELF_COMPUTED_UNDER_QME_POINT_IN_TIME_TOTAL_RETURN_CLOSE_V1",
+          "acceptance_evidence": "PRODUCTION_CORPORATE_ACTION_FIXTURE_SET_REPRODUCED_FROM_SNAPSHOTS",
+          "production_receipts_available": false
+        },
+        "production_receipts_and_fixture_evidence": null,
+        "status": "UNAVAILABLE_PRODUCTION_EVIDENCE_BLOCKING"
+      }
+    },
+    "ranking": {
+      "eligible_status": "SCORABLE",
+      "direction": "DESCENDING",
+      "best_rank": 1,
+      "rank_method": "UNIQUE_ORDINAL_AFTER_STABLE_TIE_BREAK",
+      "total_order": [
+        "signal_decimal_descending",
+        "security_id_utf8_bytes_ascending"
+      ],
+      "input_row_order_authoritative": false,
+      "duplicate_security_id_state": "INVALID_DUPLICATE_SECURITY_ID"
+    },
+    "selection": {
+      "formula": "min(50, floor(20 * N_t / 100))",
+      "integer_implementation": "min(50, (20 * N_t) // 100)",
+      "maximum_names": 50,
+      "fraction_numerator": 20,
+      "fraction_denominator": 100,
+      "minimum_selected_holdings": 30,
+      "minimum_rank_eligible_breadth": {
+        "value": 150,
+        "unit": "security_count",
+        "status": "REGISTERED_OWNER_MANDATE",
+        "source_type": "OWNER_MANDATE",
+        "acceptable_source_types": [
+          "OWNER_MANDATE",
+          "PRE_REGISTERED_UNIVERSE_EVIDENCE"
+        ],
+        "boundary_proof": "floor(0.2 * 150) = 30",
+        "sensitivity_range": [
+          125,
+          150,
+          200
+        ],
+        "sensitivity_role": "REPORTING_ONLY",
+        "nasdaq_100_profile_inherits_breadth": false
+      },
+      "breadth_equal_to_registered_minimum": "VALID",
+      "breadth_below_registered_minimum": "INVALID_INSUFFICIENT_BREADTH",
+      "zero_selection_size": "INVALID_ZERO_SELECTION_SIZE",
+      "boundary_tie_policy": "SPLIT_BY_STABLE_SECURITY_ID_ORDER"
+    },
+    "weighting": {
+      "control_target": "EQUAL_WEIGHT",
+      "ideal_weight_authority": "EXACT_RATIONAL",
+      "target_weight_rational": {
+        "numerator": 1,
+        "denominator": "K_t"
+      },
+      "decimal_weight_is_display_only": true,
+      "decimal_display_formula": "round_half_even(Decimal(1) / Decimal(K_t), 18)",
+      "trade_universe": "UNION_CURRENT_HOLDINGS_AND_SELECTED_SECURITIES",
+      "pre_trade_nav_identity": "cash_pre + sum(raw_positions_i * common_raw_execution_mark_i) + receivables_pre",
+      "pre_trade_nav_identity_tolerance": "0.000001",
+      "raw_position_storage_quantum": "0.00000001",
+      "fractional_raw_positions_allowed": true,
+      "order_quantum": "1",
+      "orders_must_be_integer_quantum_multiples": true,
+      "fractional_position_residual": "CARRIED_UNTIL_BOUND_CASH_IN_LIEU_OR_FRACTIONAL_DISPOSITION_HANDLER",
+      "unselected_current_holdings_target": "SELL_INTEGER_ORDERABLE_COMPONENT_CARRY_FRACTIONAL_RESIDUAL",
+      "selected_target_formula": "fractional_residual_i + floor(((pre_trade_nav / K_t) - fractional_residual_i * raw_execution_price_i) / raw_execution_price_i / order_quantum) * order_quantum",
+      "cost_rate_encoding": "INTEGER_BASIS_POINTS_FROM_REGISTERED_COST_POLICY",
+      "cost_rate_minimum_bps": 0,
+      "cost_rate_maximum_exclusive_bps": 10000,
+      "cash_formula": "cash_pre + sum((raw_positions_i - target_raw_positions_i) * common_raw_execution_mark_i) - TC - TAX - supported_withholding - fees",
+      "cash_components": [
+        "TC_FROM_BOUND_NEE_118_COST_FUNCTION",
+        "TAX_FROM_BOUND_NEE_118_TAX_FUNCTION",
+        "SUPPORTED_WITHHOLDING_FROM_BOUND_NEE_118_EVENT_FUNCTION",
+        "FEES_FROM_BOUND_NEE_118_FEE_FUNCTION"
+      ],
+      "component_rounding": "ROUND_HALF_EVEN_TO_BOUND_NEE_118_INTERNAL_CURRENCY_QUANTUM",
+      "negative_cash_repair": {
+        "enabled": true,
+        "step": "decrement_one_selected_target_order_quantum",
+        "choice_order": [
+          "current_target_notional_descending",
+          "security_id_utf8_bytes_descending"
+        ],
+        "recompute_tc_tax_withholding_fees_and_rounding_after_each_step": true,
+        "terminal_invariant": "cash_post >= 0"
+      },
+      "residual_cash": "EXPLICIT_NOT_REDISTRIBUTED",
+      "leverage_allowed": false
+    },
+    "filters": {
+      "primary_control": "NONE",
+      "control_artifact_is_immutable_parent": true,
+      "variant_artifacts_require_parent_control_hash": true,
+      "price_coordinate": "POINT_IN_TIME_TOTAL_RETURN_CLOSE_AS_KNOWN_AT_SIGNAL_CUTOFF",
+      "window_includes_signal_session": true,
+      "moving_average_formula": "sum(TR[t-j], j=0..L-1) / L",
+      "risk_on_comparison": "TR[t] > SMA_L[t]",
+      "equality_state": "RISK_OFF",
+      "risk_on_child_action": "COPY_PARENT_TARGET_RATIONALS_TO_SEPARATE_CHILD",
+      "risk_off_child_action": "TARGET_ALL_CASH_AND_LIQUIDATE_ORDERABLE_SELECTED_SHARES_UNDER_BOUND_NEE_118_SOLVER",
+      "child_required_bindings": [
+        "parent_control_artifact_hash",
+        "filter_variant_id",
+        "signal_session",
+        "analysis_as_of",
+        "calendar_id",
+        "calendar_hash",
+        "ordered_filter_session_vector_hash",
+        "benchmark_security_id",
+        "benchmark_identity_snapshot_hash",
+        "benchmark_total_return_snapshot_hash",
+        "source_freshness_policy_hash"
+      ],
+      "missing_or_cutoff_invalid_state": "FILTER_NOT_EVALUABLE",
+      "variants": [
+        {
+          "id": "NONE",
+          "classification": "PRIMARY_CONTROL",
+          "benchmark_ticker": null,
+          "benchmark_identity_requirement": "NOT_APPLICABLE",
+          "window_sessions": null
+        },
+        {
+          "id": "QQQ_TR_SMA_14",
+          "classification": "TESTED_HYPOTHESIS_CONSUMES_DEGREES_OF_FREEDOM",
+          "benchmark_ticker": "QQQ",
+          "benchmark_identity_requirement": "RESOLVE_TO_VERIFIED_SECURITY_ID_AT_SIGNAL_CUTOFF",
+          "window_sessions": 14
+        },
+        {
+          "id": "QQQ_TR_SMA_200",
+          "classification": "TESTED_HYPOTHESIS_CONSUMES_DEGREES_OF_FREEDOM",
+          "benchmark_ticker": "QQQ",
+          "benchmark_identity_requirement": "RESOLVE_TO_VERIFIED_SECURITY_ID_AT_SIGNAL_CUTOFF",
+          "window_sessions": 200
+        },
+        {
+          "id": "SPY_TR_SMA_200",
+          "classification": "TESTED_EXTENSION_CONSUMES_DEGREES_OF_FREEDOM",
+          "benchmark_ticker": "SPY",
+          "benchmark_identity_requirement": "RESOLVE_TO_VERIFIED_SECURITY_ID_AT_SIGNAL_CUTOFF",
+          "window_sessions": 200
+        }
+      ]
+    },
+    "reason_code_precedence": [
+      "INVALID_CONTRACT_IDENTITY",
+      "INVALID_POINT_IN_TIME_DATA_UNAVAILABLE",
+      "INVALID_FRESHNESS_POLICY_UNREGISTERED",
+      "INVALID_ACCOUNTING_BINDING",
+      "INVALID_TOTAL_RETURN_METHODOLOGY_BINDING",
+      "INVALID_CALENDAR_BINDING",
+      "INVALID_SESSION_VECTOR_DUPLICATE",
+      "INVALID_SESSION_VECTOR_ORDER",
+      "INVALID_SIGNAL_SESSION_NOT_LAST",
+      "INVALID_POST_CUTOFF_SESSION",
+      "INVALID_MEMBERSHIP_SNAPSHOT",
+      "INVALID_DUPLICATE_SECURITY_ID",
+      "INVALID_DUPLICATE_INPUT_ROW",
+      "EXCLUDED_NOT_IN_UNIVERSE",
+      "EXCLUDED_IDENTITY_UNVERIFIED",
+      "EXCLUDED_ASSET_CLASS",
+      "NOT_SCORABLE_INSUFFICIENT_HISTORY",
+      "NOT_SCORABLE_MISSING_ANCHOR_T_MINUS_21",
+      "NOT_SCORABLE_MISSING_ANCHOR_T_MINUS_252",
+      "NOT_SCORABLE_NONEXACT_ANCHOR_T_MINUS_21",
+      "NOT_SCORABLE_NONEXACT_ANCHOR_T_MINUS_252",
+      "NOT_SCORABLE_STALE_SOURCE",
+      "NOT_SCORABLE_NONFINITE_ANCHOR",
+      "NOT_SCORABLE_NONPOSITIVE_ANCHOR",
+      "INVALID_BREADTH_THRESHOLD_UNREGISTERED",
+      "INVALID_INSUFFICIENT_BREADTH",
+      "INVALID_ZERO_SELECTION_SIZE",
+      "INCLUDED_BOUNDARY_TIE_BREAK",
+      "INCLUDED_BY_RANK",
+      "EXCLUDED_BOUNDARY_TIE_BREAK",
+      "EXCLUDED_BELOW_SELECTION_CUTOFF"
+    ],
+    "fail_closed_states": [
+      "INVALID_CONTRACT_IDENTITY",
+      "INVALID_POINT_IN_TIME_DATA_UNAVAILABLE",
+      "INVALID_FRESHNESS_POLICY_UNREGISTERED",
+      "INVALID_ACCOUNTING_BINDING",
+      "INVALID_TOTAL_RETURN_METHODOLOGY_BINDING",
+      "INVALID_CALENDAR_BINDING",
+      "INVALID_SESSION_VECTOR_DUPLICATE",
+      "INVALID_SESSION_VECTOR_ORDER",
+      "INVALID_SIGNAL_SESSION_NOT_LAST",
+      "INVALID_POST_CUTOFF_SESSION",
+      "INVALID_MEMBERSHIP_SNAPSHOT",
+      "INVALID_DUPLICATE_SECURITY_ID",
+      "INVALID_DUPLICATE_INPUT_ROW",
+      "INVALID_BREADTH_THRESHOLD_UNREGISTERED",
+      "INVALID_INSUFFICIENT_BREADTH",
+      "INVALID_ZERO_SELECTION_SIZE",
+      "INVALID_WEIGHTING_INPUT",
+      "INVALID_NEGATIVE_POST_TRADE_CASH",
+      "FILTER_NOT_EVALUABLE"
+    ]
+  }
+}

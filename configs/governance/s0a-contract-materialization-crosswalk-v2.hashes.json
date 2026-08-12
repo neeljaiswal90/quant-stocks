@@ -1,0 +1,33 @@
+{
+  "schema_version": "qme.s0a_crosswalk_slice_manifest.v2",
+  "artifact_id": "NEE-172-S0A-1-CROSSWALK-SLICE-V2",
+  "implementation_status": "CORRECTED_CROSSWALK_ONLY",
+  "production_status": "BLOCKED_14_EVIDENCE_AND_ENGINEERING_ITEMS_REMAIN",
+  "integrity_scope": "SHA256_BINDS_REVIEWED_BYTES_NOT_AUTHENTICITY",
+  "artifacts": [
+    {
+      "path": "configs/governance/s0a-contract-materialization-crosswalk-v2.json",
+      "sha256": "11f1de4d:51816cad:7d958fe9:2946e18f:e968d9de:7537006e:00f80577:c11942d1"
+    },
+    {
+      "path": "docs/governance/S0A_CONTRACT_MATERIALIZATION_CROSSWALK_V2.md",
+      "sha256": "ef5968e3:9ddd1e71:fe43b331:038813e9:cba584bf:4c828973:3c35611f:076240fa"
+    },
+    {
+      "path": "qme/governance/materialization_crosswalk_v2.py",
+      "sha256": "fb5870fa:123e521d:bbb53e12:cb870e1d:eecc7a55:93d438f3:231bfe39:5f36680d"
+    },
+    {
+      "path": "schemas/governance/s0a-contract-materialization-crosswalk-v2.schema.json",
+      "sha256": "6502f6d9:e8652743:156ea389:06651f3d:f8cb630b:47d49d18:3c22a32e:6782df7e"
+    },
+    {
+      "path": "tests/governance/test_materialization_crosswalk_v2.py",
+      "sha256": "0b717372:9eae9eca:c0fa693d:0122e60f:2700e364:ff3f14bf:2a80cc70:3688eece"
+    },
+    {
+      "path": "tests/foundation/test_v2_hash_manifest_policy.py",
+      "sha256": "b4490c8b:cc4a6339:8c13b3e1:0f20e77e:7c154248:56ddc907:6b62bda5:f0c315c8"
+    }
+  ]
+}
