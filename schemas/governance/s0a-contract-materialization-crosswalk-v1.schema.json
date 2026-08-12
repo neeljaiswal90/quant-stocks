@@ -1,0 +1,517 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quant-stocks.local/schemas/governance/s0a-contract-materialization-crosswalk-v1.schema.json",
+  "title": "S0a Contract Materialization Crosswalk V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "crosswalk_id",
+    "status",
+    "semantic_sha256",
+    "authority",
+    "contract_targets",
+    "entries",
+    "remaining_blocker_codes",
+    "claims",
+    "nonclaims"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../../schemas/governance/s0a-contract-materialization-crosswalk-v1.schema.json"
+    },
+    "schema_version": {
+      "const": "qme.s0a_contract_materialization_crosswalk.v1"
+    },
+    "crosswalk_id": {
+      "const": "NEE-172-S0A-1-CONTRACT-MATERIALIZATION-CROSSWALK-V1"
+    },
+    "status": {
+      "const": "CROSSWALK_ONLY_OPERATIONAL_V2_CONTRACTS_NOT_CREATED"
+    },
+    "semantic_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approval_assertion_status",
+        "owner_approval",
+        "proposal",
+        "registration",
+        "registration_manifest"
+      ],
+      "properties": {
+        "approval_assertion_status": {
+          "const": "OWNER_APPROVED_PROTECTED_MAIN_REGISTRATION_NOT_CRYPTOGRAPHIC_SIGNATURE"
+        },
+        "owner_approval": {
+          "const": {
+            "approval_owner": "neeljaiswal90",
+            "approved_at": "2026-08-12T16:57:29Z"
+          }
+        },
+        "proposal": {
+          "const": {
+            "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+            "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+            "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"
+          }
+        },
+        "registration": {
+          "const": {
+            "id": "M0-OWNER-MANDATE-REGISTRATION-2026-08-12-V1",
+            "path": "configs/governance/m0-registration-v1.json",
+            "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+            "commit": "fd0a3847:7ba73e6f:4b9e3d6b:26af8de3:46a1ddcc",
+            "effective_at": "2026-08-12T17:40:28Z"
+          }
+        },
+        "registration_manifest": {
+          "const": {
+            "path": "configs/governance/m0-registration-v1.hashes.json",
+            "sha256": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db"
+          }
+        }
+      }
+    },
+    "contract_targets": {
+      "const": [
+        {
+          "ticket": "NEE-119",
+          "current_path": "configs/quant/qme-v0.1-contract.json",
+          "current_sha256": "47070e58:27292e74:567ae32a:eff58bcc:2c58e472:0edaa2d5:57435eb2:a5f472fa",
+          "proposed_v2_path": "configs/quant/qme-v0.1-contract-v2.json",
+          "identity_field": "contract_id",
+          "current_identity": "qme-long-only-momentum-v0.1",
+          "proposed_identity": "qme-long-only-momentum-v0.1",
+          "proposed_identity_status": "PRESERVE_STABLE_STRATEGY_ID"
+        },
+        {
+          "ticket": "NEE-120",
+          "current_path": "configs/quant/economic-promotion-decision-v1.json",
+          "current_sha256": "4857af12:6f6a010c:d598030e:90d868da:e19235c4:4450bf60:058a3e2a:aa3dec2a",
+          "proposed_v2_path": "configs/quant/economic-promotion-decision-v2.json",
+          "identity_field": "decision_spec_id",
+          "current_identity": "NEE-120-QME-ECONOMIC-DECISION-V1",
+          "proposed_identity": null,
+          "proposed_identity_status": "UNRESOLVED_REQUIRES_V2_REGISTRATION"
+        },
+        {
+          "ticket": "NEE-121",
+          "current_path": "configs/governance/sample-holdout-v1.json",
+          "current_sha256": "61d3c718:6ec3931a:1c053e33:e86aa63d:64065133:c2ebef6c:520c1a33:ade7c279",
+          "proposed_v2_path": "configs/governance/sample-holdout-v2.json",
+          "identity_field": "governance_contract_id",
+          "current_identity": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+          "proposed_identity": null,
+          "proposed_identity_status": "UNRESOLVED_REQUIRES_V2_REGISTRATION"
+        }
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 112,
+      "maxItems": 112,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "ticket",
+          "source",
+          "value",
+          "disposition",
+          "status",
+          "destination_json_pointers",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^S0A1-(116|119|120|121)-[0-9]{3}$"
+          },
+          "ticket": {
+            "enum": [
+              "NEE-116",
+              "NEE-119",
+              "NEE-120",
+              "NEE-121"
+            ]
+          },
+          "source": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "path",
+                  "sha256",
+                  "json_pointer"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "M0_REGISTRATION_POINTER"
+                  },
+                  "path": {
+                    "const": "configs/governance/m0-registration-v1.json"
+                  },
+                  "sha256": {
+                    "const": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756"
+                  },
+                  "json_pointer": {
+                    "type": "string",
+                    "pattern": "^/mandates/"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "path",
+                  "sha256",
+                  "commit",
+                  "section"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "HASH_BOUND_PROPOSAL_SECTION"
+                  },
+                  "path": {
+                    "const": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md"
+                  },
+                  "sha256": {
+                    "const": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c"
+                  },
+                  "commit": {
+                    "const": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"
+                  },
+                  "section": {
+                    "type": "string",
+                    "pattern": "^§[123]\\.[1-5]$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "artifact_id",
+                  "path",
+                  "sha256",
+                  "locator"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "REGISTERED_ARTIFACT_POINTER"
+                  },
+                  "artifact_id": {
+                    "enum": [
+                      "SOURCE_FRESHNESS_POLICY",
+                      "EXPERIMENT_FAMILY_POLICY",
+                      "LABEL_ENDPOINT_METHOD",
+                      "PRIOR_ACCESS_ATTESTATION"
+                    ]
+                  },
+                  "path": {
+                    "enum": [
+                      "configs/quant/source-freshness-policy-v1.json",
+                      "configs/governance/experiment-family-registration-v1.json",
+                      "configs/governance/label-endpoint-session-offset-v1.json",
+                      "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md"
+                    ]
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          },
+          "value": {},
+          "disposition": {
+            "enum": [
+              "MATERIALIZE_EXACT_VALUE",
+              "VALIDATE_EXISTING_EQUAL_VALUE",
+              "BIND_REGISTERED_ARTIFACT",
+              "RETAIN_TYPED_BLOCKER",
+              "AMBIGUOUS_REQUIRES_NEW_REGISTRATION",
+              "OUT_OF_SCOPE_WITH_EXACT_REASON"
+            ]
+          },
+          "status": {
+            "enum": [
+              "REGISTERED",
+              "REGISTERED_RULE_EVIDENCE_BLOCKED",
+              "TYPED_BLOCKER",
+              "AMBIGUOUS_BLOCKING",
+              "OUT_OF_SCOPE"
+            ]
+          },
+          "destination_json_pointers": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^/"
+            }
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "ticket": {
+                  "const": "NEE-116"
+                }
+              },
+              "required": [
+                "ticket"
+              ]
+            },
+            "then": {
+              "properties": {
+                "id": {
+                  "pattern": "^S0A1-116-[0-9]{3}$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "ticket": {
+                  "const": "NEE-119"
+                }
+              },
+              "required": [
+                "ticket"
+              ]
+            },
+            "then": {
+              "properties": {
+                "id": {
+                  "pattern": "^S0A1-119-[0-9]{3}$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "ticket": {
+                  "const": "NEE-120"
+                }
+              },
+              "required": [
+                "ticket"
+              ]
+            },
+            "then": {
+              "properties": {
+                "id": {
+                  "pattern": "^S0A1-120-[0-9]{3}$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "ticket": {
+                  "const": "NEE-121"
+                }
+              },
+              "required": [
+                "ticket"
+              ]
+            },
+            "then": {
+              "properties": {
+                "id": {
+                  "pattern": "^S0A1-121-[0-9]{3}$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "disposition": {
+                  "enum": [
+                    "MATERIALIZE_EXACT_VALUE",
+                    "VALIDATE_EXISTING_EQUAL_VALUE",
+                    "BIND_REGISTERED_ARTIFACT"
+                  ]
+                }
+              },
+              "required": [
+                "disposition"
+              ]
+            },
+            "then": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "REGISTERED",
+                    "REGISTERED_RULE_EVIDENCE_BLOCKED"
+                  ]
+                },
+                "destination_json_pointers": {
+                  "minItems": 1
+                },
+                "reason": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "disposition": {
+                  "const": "RETAIN_TYPED_BLOCKER"
+                }
+              },
+              "required": [
+                "disposition"
+              ]
+            },
+            "then": {
+              "properties": {
+                "status": {
+                  "const": "TYPED_BLOCKER"
+                },
+                "destination_json_pointers": {
+                  "minItems": 1
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "disposition": {
+                  "const": "AMBIGUOUS_REQUIRES_NEW_REGISTRATION"
+                }
+              },
+              "required": [
+                "disposition"
+              ]
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "status": {
+                  "const": "AMBIGUOUS_BLOCKING"
+                },
+                "destination_json_pointers": {
+                  "minItems": 1
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "disposition": {
+                  "const": "OUT_OF_SCOPE_WITH_EXACT_REASON"
+                }
+              },
+              "required": [
+                "disposition"
+              ]
+            },
+            "then": {
+              "properties": {
+                "status": {
+                  "const": "OUT_OF_SCOPE"
+                },
+                "destination_json_pointers": {
+                  "maxItems": 0
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "remaining_blocker_codes": {
+      "const": [
+        "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+        "NEE-116-ASYMMETRIC-COST-METHOD",
+        "NEE-116-CAPACITY-SOLVER",
+        "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        "NEE-116-PRODUCTION-PIT-DATA",
+        "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+        "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        "NEE-119-AV-PROXY-EVIDENCE",
+        "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+        "NEE-121-CALENDAR-SESSION-REGISTRATION",
+        "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+        "NEE-122-CORRELATED-TRIAL-FIXTURE",
+        "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+        "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"
+      ]
+    },
+    "claims": {
+      "const": {
+        "alpha_proven": false,
+        "data_spine_start_authorized": false,
+        "dsr_computable": false,
+        "effective_trials_computable": false,
+        "empirical_performance_available": false,
+        "milestone_m0_complete": false,
+        "operational_v2_contracts_created": false,
+        "owner_decisions_registered": true,
+        "portfolio_capacity_available": false,
+        "production_ready": false
+      }
+    },
+    "nonclaims": {
+      "const": [
+        "NO_OPERATIONAL_V2_CONTRACT_EXISTS_FROM_THIS_SLICE",
+        "NO_EXISTING_V1_CONTRACT_IS_MODIFIED_OR_SUPERSEDED",
+        "NO_BLOCKER_IS_RESOLVED_BY_THIS_CROSSWALK",
+        "NO_MILESTONE_M0_COMPLETION_OR_DATA_SPINE_START_AUTHORIZATION",
+        "NO_PRODUCTION_READINESS_OR_EMPIRICAL_PERFORMANCE_OR_ALPHA_CLAIM",
+        "NO_DSR_OR_EFFECTIVE_TRIALS_OR_PORTFOLIO_CAPACITY_CLAIM",
+        "NO_UNRESOLVED_METHOD_IS_PROMOTED_TO_AN_EXECUTABLE_RULE",
+        "NO_MISSING_PRODUCTION_EVIDENCE_IS_INFERRED"
+      ]
+    }
+  }
+}
