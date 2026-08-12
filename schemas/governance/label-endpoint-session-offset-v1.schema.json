@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/label-endpoint-session-offset-v1.schema.json",
+  "title": "QME label endpoint session-offset method v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "method_id", "authority", "coordinate", "horizons", "purge_rule", "purge_equality_retained", "embargo_sessions", "missing_endpoint_state", "calendar_binding_required"],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/label-endpoint-session-offset-v1.schema.json"},
+    "schema_version": {"const": "qme.label_endpoint_method.v1"},
+    "method_id": {"const": "qme-label-endpoint-session-offset-v1"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "coordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formation_phase", "label_start_formula", "label_start_phase", "label_end_formula", "label_end_phase", "row_count_formula", "nearest_session_substitution_allowed"],
+      "properties": {
+        "formation_phase": {"const": "CLOSE"},
+        "label_start_formula": {"const": "formation_session_ordinal + 1"},
+        "label_start_phase": {"const": "OPEN"},
+        "label_end_formula": {"const": "label_start_session_ordinal + horizon_session_intervals"},
+        "label_end_phase": {"const": "OPEN"},
+        "row_count_formula": {"const": "horizon_session_intervals + 1"},
+        "nearest_session_substitution_allowed": {"const": false}
+      }
+    },
+    "horizons": {
+      "const": [
+        {"horizon_id": "1M", "session_intervals": 21},
+        {"horizon_id": "3M", "session_intervals": 63},
+        {"horizon_id": "6M", "session_intervals": 126}
+      ]
+    },
+    "purge_rule": {"const": "RETAIN_IFF_LABEL_END_ORDINAL_LE_FOLD_END_ORDINAL"},
+    "purge_equality_retained": {"const": true},
+    "embargo_sessions": {"const": 0},
+    "missing_endpoint_state": {"const": "LABEL_NOT_CONSTRUCTIBLE"},
+    "calendar_binding_required": {"const": true}
+  },
+  "$defs": {
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ticket_id", "mandate_source_sha256", "mandate_source_commit", "approval_owner", "approved_at"],
+      "properties": {
+        "ticket_id": {"const": "NEE-121"},
+        "mandate_source_sha256": {"const": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c"},
+        "mandate_source_commit": {"const": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"},
+        "approval_owner": {"const": "neeljaiswal90"},
+        "approved_at": {"const": "2026-08-12T16:57:29Z", "format": "date-time"}
+      }
+    }
+  }
+}

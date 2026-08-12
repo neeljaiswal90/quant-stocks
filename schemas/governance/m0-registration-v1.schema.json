@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/m0-registration-v1.schema.json",
+  "title": "QME M0 owner mandate registration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "registration_id", "registration_status", "semantic_sha256", "authority", "registered_artifacts", "mandates", "blocker_dispositions", "claims"],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/m0-registration-v1.schema.json"},
+    "schema_version": {"const": "qme.m0_registration.v1"},
+    "registration_id": {"const": "M0-OWNER-MANDATE-REGISTRATION-2026-08-12-V1"},
+    "registration_status": {"const": "REGISTERED_DECISIONS_EVIDENCE_BLOCKERS_REMAIN"},
+    "semantic_sha256": {"type": "string", "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_owner", "approved_at", "mandate_source_path", "mandate_source_sha256", "mandate_source_commit", "pull_request_url", "protected_main_ci_url", "protected_main_ci_conclusion"],
+      "properties": {
+        "approval_owner": {"const": "neeljaiswal90"},
+        "approved_at": {"const": "2026-08-12T16:57:29Z", "format": "date-time"},
+        "mandate_source_path": {"const": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md"},
+        "mandate_source_sha256": {"const": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c"},
+        "mandate_source_commit": {"const": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"},
+        "pull_request_url": {"const": "https://github.com/neeljaiswal90/quant-stocks/pull/7", "format": "uri"},
+        "protected_main_ci_url": {"const": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31620202502", "format": "uri"},
+        "protected_main_ci_conclusion": {"const": "SUCCESS"}
+      }
+    },
+    "registered_artifacts": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artifact_id", "path", "sha256"],
+        "properties": {
+          "artifact_id": {"enum": ["SOURCE_FRESHNESS_POLICY", "LABEL_ENDPOINT_METHOD", "EXPERIMENT_FAMILY_POLICY", "PRIOR_ACCESS_ATTESTATION"]},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"}
+        }
+      }
+    },
+    "mandates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["account", "quantitative_contract", "promotion", "risk", "inference", "abort", "holdout", "review_and_accounting"],
+      "properties": {
+        "account": {"$ref": "#/$defs/nonemptyObject"},
+        "quantitative_contract": {"$ref": "#/$defs/nonemptyObject"},
+        "promotion": {"$ref": "#/$defs/nonemptyObject"},
+        "risk": {"$ref": "#/$defs/nonemptyObject"},
+        "inference": {"$ref": "#/$defs/nonemptyObject"},
+        "abort": {"$ref": "#/$defs/nonemptyObject"},
+        "holdout": {"$ref": "#/$defs/nonemptyObject"},
+        "review_and_accounting": {"$ref": "#/$defs/nonemptyObject"}
+      }
+    },
+    "blocker_dispositions": {
+      "type": "array",
+      "minItems": 27,
+      "maxItems": 27,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["blocker_code", "disposition", "replacement_blocker_code"],
+        "properties": {
+          "blocker_code": {"type": "string", "pattern": "^NEE-[0-9]+-[A-Z0-9-]+$"},
+          "disposition": {"enum": ["REMAINS_EVIDENCE_BLOCKER", "SUPERSEDED_BY_PROTECTED_MAIN_EVIDENCE", "REMAINS_ENGINEERING_EVIDENCE_BLOCKER", "REMAINS_PRODUCTION_EVIDENCE_BLOCKER", "SUPERSEDED_BY_DISCLOSED_OWNER_SELF_REVIEW", "RESOLVED_BY_REGISTERED_FAIL_CLOSED_NONE", "METHOD_REGISTERED_IMPLEMENTATION_REMAINS", "RESOLVED_BY_OWNER_REGISTRATION", "RESOLVED_BY_VERSIONED_POLICY", "MANDATE_REGISTERED_CAPACITY_SEPARATELY_BLOCKED", "RESOLVED_BY_PROTECTED_MAIN_OWNER_SOURCE", "RESOLVED_BY_LIMITED_OWNER_ATTESTATION", "RESOLVED_BY_VERSIONED_METHOD", "REMAINS_FINAL_DERIVED_EVIDENCE_BLOCKER"]},
+          "replacement_blocker_code": {"type": ["string", "null"], "pattern": "^NEE-[0-9]+-[A-Z0-9-]+$"}
+        }
+      }
+    },
+    "claims": {
+      "const": {
+        "production_ready": false,
+        "milestone_m0_complete": false,
+        "data_spine_start_authorized": false,
+        "empirical_performance_available": false,
+        "alpha_proven": false,
+        "effective_trials_computable": false,
+        "dsr_computable": false,
+        "portfolio_capacity_available": false,
+        "owner_decisions_registered": true
+      }
+    }
+  },
+  "$defs": {
+    "nonemptyObject": {
+      "type": "object",
+      "minProperties": 1
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/experiment-family-registration-v1.schema.json",
+  "title": "QME experiment family registration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "family_id", "authority", "axes", "cardinality", "cost_scenarios", "selection", "registration_rules", "effective_trials_method"],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/experiment-family-registration-v1.schema.json"},
+    "schema_version": {"const": "qme.experiment_family_registration.v1"},
+    "family_id": {"const": "QME-065-PRECOMMITTED-MOMENTUM-GRID-V1"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "axes": {
+      "const": {
+        "lookbacks": ["6-1", "9-1", "12-1", "12-2"],
+        "holding_rules": ["TOP_30", "TOP_50_QUINTILE_CAP", "TOP_QUINTILE"],
+        "rebalance_rules": ["MONTHLY", "WEEKLY"],
+        "filters": ["NONE", "QQQ_TR_SMA_14", "QQQ_TR_SMA_200", "SPY_TR_SMA_200"]
+      }
+    },
+    "cardinality": {
+      "const": {
+        "structural_configuration_count": 96,
+        "cost_report_count_per_structure": 3,
+        "reported_output_count": 288,
+        "selection_hypothesis_count_m": 96
+      }
+    },
+    "cost_scenarios": {
+      "const": [
+        {"cost_bps_per_side": 5, "selection_role": "REPORTING_ONLY"},
+        {"cost_bps_per_side": 10, "selection_role": "PRIMARY_SELECTION"},
+        {"cost_bps_per_side": 25, "selection_role": "REPORTING_ONLY"}
+      ]
+    },
+    "selection": {
+      "const": {
+        "rule": "PRE_COMMITTED_BASELINE_NO_WINNER_SELECTION",
+        "baseline": {"lookback": "12-1", "holding_rule": "TOP_50_QUINTILE_CAP", "rebalance_rule": "MONTHLY", "filter": "NONE", "cost_bps_per_side": 10},
+        "confirmatory_family_size_m": 1,
+        "other_structures_role": "ROBUSTNESS_REPORTING",
+        "selection_across_cost_scenarios_allowed": false
+      }
+    },
+    "registration_rules": {
+      "const": {
+        "all_grid_trials_before_first_trial_started": true,
+        "off_grid_requires_registration_before_start": true,
+        "abandoned_failed_skipped_retained": true,
+        "technical_retry_same_trial_new_run_id": true
+      }
+    },
+    "effective_trials_method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method_id", "status", "input", "minimum_common_months", "pairwise_complete_allowed", "covariance_estimator", "correlation_derivation", "point_estimator", "clamp_lower", "clamp_upper", "bootstrap_method", "bootstrap_replicates", "bootstrap_seed", "bootstrap_quantile_percent", "n_eff_used_rule", "failure_fallback_m", "may_compute_production_n_eff", "may_compute_dsr"],
+      "properties": {
+        "method_id": {"const": "qme-ledoit-wolf-participation-ratio-v1"},
+        "status": {"const": "REGISTERED_METHOD_PENDING_IMPLEMENTATION_AND_FIXTURE"},
+        "input": {"const": "COMMON_MONTHLY_NET_RETURN_MATRIX_10_BPS_DEVELOPMENT_WINDOW"},
+        "minimum_common_months": {"const": 60},
+        "pairwise_complete_allowed": {"const": false},
+        "covariance_estimator": {"const": "LEDOIT_WOLF"},
+        "correlation_derivation": {"const": "RESCALE_SHRUNK_COVARIANCE_BY_POSITIVE_FINITE_DIAGONAL"},
+        "point_estimator": {"const": "SQUARED_EIGENVALUE_SUM_DIVIDED_BY_SUM_OF_SQUARED_EIGENVALUES"},
+        "clamp_lower": {"const": 1},
+        "clamp_upper": {"const": 96},
+        "bootstrap_method": {"const": "STATIONARY_BLOCK_BOOTSTRAP_OVER_COMMON_MONTHS_REFIT_FULL_ESTIMATOR"},
+        "bootstrap_replicates": {"const": 2000},
+        "bootstrap_seed": {"const": 20260812},
+        "bootstrap_quantile_percent": {"const": "97.5"},
+        "n_eff_used_rule": {"const": "MIN_96_CEILING_P97_5"},
+        "failure_fallback_m": {"const": 96},
+        "may_compute_production_n_eff": {"const": false},
+        "may_compute_dsr": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ticket_id", "mandate_source_sha256", "mandate_source_commit", "approval_owner", "approved_at"],
+      "properties": {
+        "ticket_id": {"const": "NEE-122"},
+        "mandate_source_sha256": {"const": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c"},
+        "mandate_source_commit": {"const": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"},
+        "approval_owner": {"const": "neeljaiswal90"},
+        "approved_at": {"const": "2026-08-12T16:57:29Z", "format": "date-time"}
+      }
+    }
+  }
+}

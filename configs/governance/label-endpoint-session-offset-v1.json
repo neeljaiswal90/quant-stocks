@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schemas/governance/label-endpoint-session-offset-v1.schema.json",
+  "schema_version": "qme.label_endpoint_method.v1",
+  "method_id": "qme-label-endpoint-session-offset-v1",
+  "authority": {
+    "ticket_id": "NEE-121",
+    "mandate_source_sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+    "mandate_source_commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+    "approval_owner": "neeljaiswal90",
+    "approved_at": "2026-08-12T16:57:29Z"
+  },
+  "coordinate": {
+    "formation_phase": "CLOSE",
+    "label_start_formula": "formation_session_ordinal + 1",
+    "label_start_phase": "OPEN",
+    "label_end_formula": "label_start_session_ordinal + horizon_session_intervals",
+    "label_end_phase": "OPEN",
+    "row_count_formula": "horizon_session_intervals + 1",
+    "nearest_session_substitution_allowed": false
+  },
+  "horizons": [
+    {"horizon_id": "1M", "session_intervals": 21},
+    {"horizon_id": "3M", "session_intervals": 63},
+    {"horizon_id": "6M", "session_intervals": 126}
+  ],
+  "purge_rule": "RETAIN_IFF_LABEL_END_ORDINAL_LE_FOLD_END_ORDINAL",
+  "purge_equality_retained": true,
+  "embargo_sessions": 0,
+  "missing_endpoint_state": "LABEL_NOT_CONSTRUCTIBLE",
+  "calendar_binding_required": true
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "../../schemas/quant/source-freshness-policy-v1.schema.json",
+  "schema_version": "qme.source_freshness_policy.v1",
+  "policy_id": "qme-source-freshness-policy-v1",
+  "authority": {
+    "ticket_id": "NEE-119",
+    "mandate_source_path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+    "mandate_source_sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+    "mandate_source_commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+    "approval_owner": "neeljaiswal90",
+    "approved_at": "2026-08-12T16:57:29Z"
+  },
+  "time_coordinate": {
+    "signal_coordinate": "EXCHANGE_SESSION_CLOSE",
+    "decision_coordinate": "ANALYSIS_AS_OF_AFTER_ALL_MANDATORY_VENDOR_AVAILABILITY",
+    "earliest_fill_relation": "ANALYSIS_AS_OF_STRICTLY_BEFORE_EARLIEST_ELIGIBLE_FILL",
+    "required_timestamp_order": "OBSERVED_AT_LE_VENDOR_AVAILABLE_AT_LE_LOCAL_ACCEPTED_AT_LE_ANALYSIS_AS_OF",
+    "retrieval_time_may_backdate_availability": false,
+    "nearest_or_interpolated_substitution_allowed": false
+  },
+  "source_classes": [
+    {
+      "source_class": "EOD_PRICE_BAR",
+      "acceptance_rule": "EXACT_SIGNAL_SESSION_BAR_AVAILABLE_BY_ANALYSIS_AS_OF",
+      "maximum_age": 0,
+      "maximum_age_unit": "EXCHANGE_SESSIONS",
+      "violation_state": "NOT_SCORABLE_STALE_SOURCE"
+    },
+    {
+      "source_class": "CORPORATE_ACTIONS",
+      "acceptance_rule": "LATEST_IMMUTABLE_SNAPSHOT_ACCEPTED_BY_ANALYSIS_AS_OF_COVERS_SIGNAL_SESSION_AND_RETAINS_VENDOR_AVAILABILITY",
+      "maximum_age": null,
+      "maximum_age_unit": "EVENT_COVERAGE_NOT_AGE",
+      "violation_state": "NOT_SCORABLE_STALE_SOURCE"
+    },
+    {
+      "source_class": "MEMBERSHIP_LISTING",
+      "acceptance_rule": "ALPHA_VANTAGE_LISTING_STATUS_REQUESTED_FOR_EXACT_SIGNAL_SESSION_DATE",
+      "maximum_age": 0,
+      "maximum_age_unit": "EXCHANGE_SESSIONS",
+      "violation_state": "INVALID_MEMBERSHIP_SNAPSHOT"
+    },
+    {
+      "source_class": "IDENTITY",
+      "acceptance_rule": "VERIFIED_BY_CUTOFF_AND_REVERIFIED_WITHIN_30_CALENDAR_DAYS",
+      "maximum_age": 30,
+      "maximum_age_unit": "CALENDAR_DAYS",
+      "violation_state": "EXCLUDED_IDENTITY_UNVERIFIED"
+    },
+    {
+      "source_class": "BENCHMARK_TR_SERIES",
+      "acceptance_rule": "EXACT_SIGNAL_SESSION_BAR_AVAILABLE_BY_ANALYSIS_AS_OF",
+      "maximum_age": 0,
+      "maximum_age_unit": "EXCHANGE_SESSIONS",
+      "violation_state": "FILTER_NOT_EVALUABLE"
+    },
+    {
+      "source_class": "CALENDAR_SESSION_VECTOR",
+      "acceptance_rule": "PINNED_RUN_ARTIFACT_COVERS_SIGNAL_SESSION_AND_EARLIEST_FILL_SESSION",
+      "maximum_age": null,
+      "maximum_age_unit": "PINNED_ARTIFACT_NOT_AGE",
+      "violation_state": "INVALID_CALENDAR_BINDING"
+    }
+  ],
+  "identity_limit": "SEC_COMPANY_TICKERS_IS_CURRENT_CROSS_CHECK_NOT_HISTORICAL_MEMBERSHIP_AUTHORITY",
+  "failure_policy": "TYPED_FAILURE_NO_SUBSTITUTION"
+}

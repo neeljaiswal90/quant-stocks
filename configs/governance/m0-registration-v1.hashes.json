@@ -1,0 +1,19 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "manifest_id": "M0-OWNER-MANDATE-REGISTRATION-2026-08-12-V1",
+  "status": "REGISTERED_DECISIONS_EVIDENCE_BLOCKERS_REMAIN",
+  "artifacts": {
+    "configs/governance/experiment-family-registration-v1.json": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40",
+    "configs/governance/label-endpoint-session-offset-v1.json": "9fe2988e:c7276ea7:0bc919b7:2c643409:b8caaf4c:8e383ae0:3d34728b:30aa5557",
+    "configs/governance/m0-registration-v1.json": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+    "configs/quant/source-freshness-policy-v1.json": "3dd94e35:0cc89023:e10efd2a:934e9a67:a502a1c8:4b5478db:82a98958:2ab71edc",
+    "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+    "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md": "dbe8afa5:81939a39:495db6e9:9878bdbe:6405bc4f:7d79c049:6bb139f7:24b8fb4f",
+    "qme/governance/m0_registration.py": "42b77594:9cc7c92c:9c999624:9c8a2aa2:472aa6c0:2dee5e0d:9a2ce02e:c43c0d95",
+    "schemas/governance/experiment-family-registration-v1.schema.json": "48f537b2:b4dab0d2:03ce9cb6:91f5916e:e5751f19:c7c5a0ba:f7d51f23:1cee2cc7",
+    "schemas/governance/label-endpoint-session-offset-v1.schema.json": "19778685:e74b9efb:854bc31e:d4234c03:35fb06a8:3a4e46e1:7fdf8939:d0da6cfa",
+    "schemas/governance/m0-registration-v1.schema.json": "70026a07:cb2fcc66:2bf4eac2:380a0b0e:6c8d0965:cb2bede4:d82e576d:dfc15315",
+    "schemas/quant/source-freshness-policy-v1.schema.json": "b797e683:bab54b50:aab8fb31:1641f6e5:18a15437:1f13e3da:d7c426fa:038a8f9b",
+    "tests/governance/test_m0_registration.py": "69267f1e:955b17f9:00453a25:9e7ad7ca:8ee5f742:60fb70da:848775be:291c4d6a"
+  }
+}

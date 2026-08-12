@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/quant/source-freshness-policy-v1.schema.json",
+  "title": "QME source freshness policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "policy_id",
+    "authority",
+    "time_coordinate",
+    "source_classes",
+    "identity_limit",
+    "failure_policy"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/quant/source-freshness-policy-v1.schema.json"},
+    "schema_version": {"const": "qme.source_freshness_policy.v1"},
+    "policy_id": {"const": "qme-source-freshness-policy-v1"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ticket_id", "mandate_source_path", "mandate_source_sha256", "mandate_source_commit", "approval_owner", "approved_at"],
+      "properties": {
+        "ticket_id": {"const": "NEE-119"},
+        "mandate_source_path": {"const": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md"},
+        "mandate_source_sha256": {"const": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c"},
+        "mandate_source_commit": {"const": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"},
+        "approval_owner": {"const": "neeljaiswal90"},
+        "approved_at": {"const": "2026-08-12T16:57:29Z", "format": "date-time"}
+      }
+    },
+    "time_coordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal_coordinate", "decision_coordinate", "earliest_fill_relation", "required_timestamp_order", "retrieval_time_may_backdate_availability", "nearest_or_interpolated_substitution_allowed"],
+      "properties": {
+        "signal_coordinate": {"const": "EXCHANGE_SESSION_CLOSE"},
+        "decision_coordinate": {"const": "ANALYSIS_AS_OF_AFTER_ALL_MANDATORY_VENDOR_AVAILABILITY"},
+        "earliest_fill_relation": {"const": "ANALYSIS_AS_OF_STRICTLY_BEFORE_EARLIEST_ELIGIBLE_FILL"},
+        "required_timestamp_order": {"const": "OBSERVED_AT_LE_VENDOR_AVAILABLE_AT_LE_LOCAL_ACCEPTED_AT_LE_ANALYSIS_AS_OF"},
+        "retrieval_time_may_backdate_availability": {"const": false},
+        "nearest_or_interpolated_substitution_allowed": {"const": false}
+      }
+    },
+    "source_classes": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/sourceClass"}
+    },
+    "identity_limit": {"const": "SEC_COMPANY_TICKERS_IS_CURRENT_CROSS_CHECK_NOT_HISTORICAL_MEMBERSHIP_AUTHORITY"},
+    "failure_policy": {"const": "TYPED_FAILURE_NO_SUBSTITUTION"}
+  },
+  "$defs": {
+    "sourceClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_class", "acceptance_rule", "maximum_age", "maximum_age_unit", "violation_state"],
+      "properties": {
+        "source_class": {"enum": ["EOD_PRICE_BAR", "CORPORATE_ACTIONS", "MEMBERSHIP_LISTING", "IDENTITY", "BENCHMARK_TR_SERIES", "CALENDAR_SESSION_VECTOR"]},
+        "acceptance_rule": {"type": "string", "minLength": 1},
+        "maximum_age": {"type": ["integer", "null"], "minimum": 0},
+        "maximum_age_unit": {"enum": ["EXCHANGE_SESSIONS", "CALENDAR_DAYS", "EVENT_COVERAGE_NOT_AGE", "PINNED_ARTIFACT_NOT_AGE"]},
+        "violation_state": {"enum": ["NOT_SCORABLE_STALE_SOURCE", "INVALID_MEMBERSHIP_SNAPSHOT", "EXCLUDED_IDENTITY_UNVERIFIED", "FILTER_NOT_EVALUABLE", "INVALID_CALENDAR_BINDING"]}
+      }
+    }
+  }
+}
