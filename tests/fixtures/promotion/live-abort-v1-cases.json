@@ -1,0 +1,23 @@
+{
+  "schema_version": "qme.live_abort_kernel_cases.v1",
+  "artifact_id": "NEE-120-LIVE-ABORT-KERNEL-V1",
+  "nonclaims": [
+    "NO_ECONOMIC_PROMOTION_DECISION",
+    "NO_PRODUCTION_DATA_OR_WIRING",
+    "NO_RESUME_OR_RESTART_EXECUTION",
+    "NO_PORTFOLIO_CAPACITY_OR_ALPHA_CLAIM"
+  ],
+  "threshold_cases": [
+    {"id": "excess_exact_boundary_clear", "strategy_nav": "0.80", "strategy_peak": "1", "benchmark_nav": "0.90", "benchmark_peak": "1", "expected_excess": "0.10", "expected_count": 0, "expected_status": "ARMED"},
+    {"id": "excess_above_boundary_counts", "strategy_nav": "0.7999", "strategy_peak": "1", "benchmark_nav": "0.90", "benchmark_peak": "1", "expected_excess": "0.1001", "expected_count": 1, "expected_status": "ARMED"},
+    {"id": "absolute_exact_boundary_clear", "strategy_nav": "0.60", "strategy_peak": "1", "benchmark_nav": "0.60", "benchmark_peak": "1", "expected_excess": "0", "expected_count": 0, "expected_status": "ARMED"},
+    {"id": "absolute_above_boundary_aborts", "strategy_nav": "0.5999", "strategy_peak": "1", "benchmark_nav": "0.60", "benchmark_peak": "1", "expected_excess": "0.0001", "expected_count": 0, "expected_status": "ABORTED"}
+  ],
+  "fail_safe_cases": [
+    {"id": "reconciliation_failure", "field": "reconciliation_ok", "value": false, "reason": "RECONCILIATION_FAILURE"},
+    {"id": "schema_invalid", "field": "schema_valid", "value": false, "reason": "SCHEMA_INVALID_RUN"},
+    {"id": "mandatory_input_missing", "field": "mandatory_inputs_present", "value": false, "reason": "MISSING_MANDATORY_INPUT"},
+    {"id": "nav_missing", "field": "strategy_nav", "value": null, "reason": "MISSING_MANDATORY_INPUT"},
+    {"id": "binary_float_invalid", "field": "strategy_nav", "value": 0.8, "reason": "SCHEMA_INVALID_RUN"}
+  ]
+}
