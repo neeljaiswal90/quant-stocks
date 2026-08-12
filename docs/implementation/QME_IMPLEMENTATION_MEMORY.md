@@ -365,8 +365,8 @@ selection math. The UI renders those results and definitions; it never invents t
 9. **UI implementation is bounded:** NEE-169 Stages 0, 1, and 2A now provide strict
    contracts, deterministic synthetic projection, atomic content-addressed publication,
    and a startup-only immutable local catalog with exact `(run_id, snapshot_hash)` lookup
-   and opaque per-entry quarantine. The catalog implementation is locally committed but
-   not yet remote-CI verified. No production producer, Flask/Jinja/Waitress viewer,
+   and opaque per-entry quarantine. All three stages are merged to protected GitHub
+   `main` with exact-SHA CI evidence. No production producer, Flask/Jinja/Waitress viewer,
    browser/accessibility/performance qualification, or clean-machine evidence exists.
 10. **Golden rebalances are synthetic only:** NEE-116A now provides an independently
     red-teamed exact-arithmetic oracle, complete static ledger, and production-ledger
@@ -377,11 +377,18 @@ selection math. The UI renders those results and definitions; it never invents t
     sets and 51 leaf references, but retains 27 unresolved inputs. Its closure is
     `BLOCKED_UNRESOLVED_INPUTS`, acceptance and downstream authorization are false,
     and NEE-114 plus NEE-123 through NEE-128 remain blocked.
+12. **Operational configuration is strict and CI verified:** protected-main commit
+    `c4510ed57e41587262fb6b52f6d9d6aea4c49857` implements `qme.config.v1`, requires an
+    explicit external `QME_DATA_ROOT`, rejects policy/type/path drift, and exposes a
+    read-only validation command. This resolves one technical NEE-110 sub-blocker; it
+    does not resolve any empirical, point-in-time data, mandate, holdout, effective-
+    trials, DSR, or capacity registration.
 
 ## 11. Next required actions
 
 1. Preserve the protected GitHub `main` branch and required exact-SHA `foundation` check;
-   attach NEE-169 branch and main workflow evidence before promoting its evidence state.
+   every new bounded slice must pass both branch and protected-main workflows before its
+   evidence state is promoted.
 2. Use the committed NEE-116A synthetic oracle to review production-sourced historical
    fixtures only after point-in-time membership, raw-price, calendar, action, and source-
    freshness evidence is registered; separately implement the production target/cost
@@ -393,8 +400,8 @@ selection math. The UI renders those results and definitions; it never invents t
    score/rank, eligibility, and full-universe artifact contracts.
 4. Complete point-in-time Nasdaq-100 producer work and create the first immutable
    universe fixture plus corrupt/degraded variants.
-5. Publish and independently validate NEE-169 Stage 2A commit `c1c7f74...` on branch and
-   protected-main exact-SHA CI. Keep NEE-169 In Progress and preserve all relations.
+5. Keep NEE-169 In Progress and preserve all relations while implementing Stage 2B only
+   after an explicit dependency-governance decision for Flask and Waitress.
 6. Implement NEE-169 Stage 2B: an unauthenticated `127.0.0.1` Flask/Jinja/Waitress viewer
    that consumes only the frozen catalog/read models. Adding dependencies requires an
    explicit lock/specification-governance decision rather than silently changing the
@@ -441,6 +448,8 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-11 | Implemented and committed the bounded NEE-169 Stage 1 deterministic snapshot builder as `b27bd76cc0ad2f8d0d3d1e2ae9b0fd56d14a2c9b`. | `COMMITTED_UNVERIFIED` | Finalized synthetic producer receipts are validated and mapped without defaults; output rows are deterministically ordered, Decimal-formatted, and source-bound; payloads and manifest publish atomically to a never-overwritten hash directory. Exact local gates: 66 focused UI tests and 364 full tests, Ruff, strict mypy on 32 source files, four verified locks, wheel build, CLI module smoke, compile, 139-file tracked and 12-file staged secret scans. Production producers, catalog, viewer, browser/accessibility/performance, agent activation, and broker controls remain unavailable. |
 | 2026-08-11 | Merged NEE-169 Stage 1 through PR #3 as protected main SHA `7e0ac2571b415651ec3a588b17d41ba103f640be`; exact-main workflow `31559527159` passed. | `CI_VERIFIED — STAGE_1_BOUNDED` | A line-scoped allowlist correction for four static known-answer SHA fragments passed replacement branch workflow `31559379144`; the scanner was not relaxed. GitHub automation again briefly marked NEE-169 Done, and the issue was corrected to In Progress because Stages 2–3 and production compatibility remain open. Linear comment `aadd010b-4547-487c-8215-316357061793` records the evidence and remaining scope. |
 | 2026-08-11 | Implemented and committed NEE-169 Stage 2A immutable startup catalog as `c1c7f74f56727d6715d9f0a909a36242afb9fe7d`. | `COMMITTED_UNVERIFIED` | Exact run/hash lookup, same-run conflict visibility, bounded same-byte reads, canonical manifest/payload validation, immutable row models, opaque per-entry quarantine, 100 randomized discovery orders, and the 200-member boundary pass. Exact local gates: 84 focused UI tests and 382 full tests, Ruff, strict mypy on 33 source files, compile, four verified locks, wheel build, and 150-file tracked/staged secret scan. The local viewer, production producer compatibility, and browser/accessibility/performance qualification remain open. |
+| 2026-08-11 | Merged NEE-169 Stage 2A through PR #4 as protected-main SHA `1c3c258dd755741b300ed0dbf3f3232a81cd7d8b`; exact-main workflow `31561006797` passed. | `CI_VERIFIED — STAGE_2A_BOUNDED` | GitHub automation briefly marked NEE-169 Done; it was restored to In Progress. Linear comment `c3df92dd-ba23-4782-831b-6137d9c58e53` records branch/main evidence and the open viewer, production compatibility, browser, accessibility, performance, and clean-machine gates. |
+| 2026-08-12 | Implemented and merged the strict operational `qme.config.v1` contract through PR #5 as protected-main SHA `c4510ed57e41587262fb6b52f6d9d6aea4c49857`. | `CI_VERIFIED — BOUNDED_CONFIG_CONTRACT` | Branch workflow `31611951477` and protected-main workflow `31612222113` passed 405 tests, hashed locks, wheel/CLI smoke, lint, strict typing, compile, tracked-secret scan, deterministic replay, and clean-tree verification. Linear auto-closure was corrected; NEE-110 remains In Progress with comment `fb8ee4c3-2a5e-44ad-87e9-46126075a656` because NEE-116/120/121/122 and all registered production/owner inputs remain blocking. |
 
 ## 13. Per-ticket evidence record template
 
