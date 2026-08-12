@@ -20,6 +20,9 @@ POLICY_SCHEMA_VERSION: Final = "qme.ui.stage0_policy.v1"
 FIELD_MAP_SCHEMA_VERSION: Final = "qme.ui.field_map.v1"
 SNAPSHOT_MANIFEST_SCHEMA_VERSION: Final = "qme.ui.snapshot_manifest.v1"
 UNIVERSE_SCHEMA_VERSION: Final = "qme.ui.universe.v1"
+POLICY_ID: Final = "NEE-169-STAGE0-LOCAL-UI-CONTRACT-V1"
+FIELD_MAP_ID: Final = "NEE-169-STAGE0-FIELD-MAP-V1"
+SYNTHETIC_SOURCE_SCHEMA_VERSION: Final = "qme.synthetic.ui_source.v1"
 CANONICALIZATION_ID: Final = "qme.foundation.canonical_json.v1"
 MEMBERSHIP_ALGORITHM_ID: Final = "QME_MEMBERSHIP_SET_V1"
 MEMBERSHIP_DOMAIN: Final = b"QME_MEMBERSHIP_SET_V1\x00"
@@ -368,6 +371,101 @@ class FieldMapping:
         )
 
 
+_FIELD_CONTRACT: Final = {
+    "run.run_id": (
+        "producer.run_manifest.v1", "/run_id", "COPY", "qme.ui.copy.v1",
+        "IDENTITY", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "run.analysis_as_of": (
+        "producer.run_manifest.v1", "/analysis_as_of", "COPY", "qme.ui.copy.v1",
+        "PROVENANCE", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "run.membership_snapshot_id": (
+        "producer.run_manifest.v1", "/membership_snapshot_id", "COPY", "qme.ui.copy.v1",
+        "IDENTITY", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "run.membership_hash": (
+        "producer.run_manifest.v1", "/membership_hash", "COPY", "qme.ui.copy.v1",
+        "PROVENANCE", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "run.membership_count": (
+        "producer.run_manifest.v1", "/membership_count", "COPY", "qme.ui.copy.v1",
+        "QUANTITATIVE", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "run.run_status": (
+        "producer.run_manifest.v1", "/run_status", "COPY", "qme.ui.copy.v1",
+        "STATUS", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "run.completeness_status": (
+        "producer.run_manifest.v1", "/completeness_status", "COPY", "qme.ui.copy.v1",
+        "STATUS", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "universe[].security_id": (
+        "producer.universe_scores.v1", "/rows/*/security_id", "COPY", "qme.ui.copy.v1",
+        "IDENTITY", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "universe[].ticker": (
+        "producer.universe_scores.v1", "/rows/*/ticker", "COPY", "qme.ui.copy.v1",
+        "IDENTITY", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "universe[].company_name": (
+        "producer.universe_scores.v1", "/rows/*/company_name", "COPY", "qme.ui.copy.v1",
+        "IDENTITY", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "universe[].data_status": (
+        "producer.universe_scores.v1", "/rows/*/data_status", "COPY", "qme.ui.copy.v1",
+        "STATUS", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "universe[].rank": (
+        "producer.universe_scores.v1", "/rows/*/rank", "FORMAT_DECIMAL",
+        "qme.ui.format_decimal.v1", "QUANTITATIVE", "PRESERVE_EXPLICIT",
+        "RANK", "1", 0, "ROUND_HALF_EVEN",
+    ),
+    "universe[].rank.sort_key": (
+        "producer.universe_scores.v1", "/rows/*/rank", "MAKE_SORT_KEY",
+        "qme.ui.sort_key.v1", "PRESENTATION", "PRESERVE_EXPLICIT",
+        None, None, None, None,
+    ),
+    "universe[].momentum_12_1": (
+        "producer.universe_scores.v1", "/rows/*/momentum_12_1", "FORMAT_DECIMAL",
+        "qme.ui.format_decimal.v1", "QUANTITATIVE", "PRESERVE_EXPLICIT",
+        "PERCENT", "100", 2, "ROUND_HALF_EVEN",
+    ),
+    "universe[].momentum_12_1.sort_key": (
+        "producer.universe_scores.v1", "/rows/*/momentum_12_1", "MAKE_SORT_KEY",
+        "qme.ui.sort_key.v1", "PRESENTATION", "PRESERVE_EXPLICIT",
+        None, None, None, None,
+    ),
+    "universe[].selected": (
+        "producer.universe_scores.v1", "/rows/*/selected", "COPY", "qme.ui.copy.v1",
+        "STATUS", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+    "universe[].review_reasons": (
+        "producer.universe_scores.v1", "/rows/*/review_reasons", "COPY", "qme.ui.copy.v1",
+        "STATUS", "PRESERVE_EXPLICIT", None, None, None, None,
+    ),
+    "universe[].row_hash": (
+        "producer.universe_scores.v1", "/rows/*/row_hash", "COPY", "qme.ui.copy.v1",
+        "PROVENANCE", "REQUIRED_BLOCK", None, None, None, None,
+    ),
+}
+
+
+def _field_contract_tuple(mapping: FieldMapping) -> tuple[object, ...]:
+    return (
+        mapping.source_artifact_id,
+        mapping.source_json_pointer,
+        mapping.transform,
+        mapping.transform_version,
+        mapping.authority_class,
+        mapping.missing_policy,
+        mapping.unit,
+        mapping.scale,
+        mapping.display_precision,
+        mapping.rounding_mode,
+    )
+
+
 def validate_field_map(value: object) -> tuple[FieldMapping, ...]:
     document = _exact_object(
         value,
@@ -376,7 +474,8 @@ def validate_field_map(value: object) -> tuple[FieldMapping, ...]:
     )
     if document["schema_version"] != FIELD_MAP_SCHEMA_VERSION:
         raise ContractError("unsupported field-map schema")
-    _identifier(document["map_id"], "map_id")
+    if document["map_id"] != FIELD_MAP_ID:
+        raise ContractError("field-map identity differs from the frozen Stage 0 contract")
     if document["evidence_state"] != "SYNTHETIC_CONTRACT_ONLY":
         raise ContractError("Stage 0 field map must remain synthetic-contract-only")
     raw_fields = document["fields"]
@@ -386,6 +485,13 @@ def validate_field_map(value: object) -> tuple[FieldMapping, ...]:
     output_fields = [mapping.output_field for mapping in mappings]
     if len(output_fields) != len(set(output_fields)):
         raise ContractError("field map contains duplicate output fields")
+    if set(output_fields) != set(_FIELD_CONTRACT):
+        raise ContractError("field map output set differs from the frozen Stage 0 contract")
+    for mapping in mappings:
+        if mapping.source_schema_version != SYNTHETIC_SOURCE_SCHEMA_VERSION:
+            raise ContractError("field map source schema differs from the synthetic contract")
+        if _field_contract_tuple(mapping) != _FIELD_CONTRACT[mapping.output_field]:
+            raise ContractError(f"field mapping differs for {mapping.output_field}")
     return mappings
 
 
@@ -482,7 +588,8 @@ def validate_stage0_policy(value: object) -> None:
     )
     if document["schema_version"] != POLICY_SCHEMA_VERSION:
         raise ContractError("unsupported Stage 0 policy schema")
-    _identifier(document["policy_id"], "policy_id")
+    if document["policy_id"] != POLICY_ID:
+        raise ContractError("Stage 0 policy identity differs from the frozen contract")
     if document["evidence_state"] != "SYNTHETIC_CONTRACT_ONLY":
         raise ContractError("Stage 0 policy evidence state must remain synthetic")
     if document["canonicalization_id"] != CANONICALIZATION_ID:
@@ -579,6 +686,7 @@ _MANIFEST_FIELDS = frozenset(
         "membership_hash",
         "membership_snapshot_id",
         "producer_manifest_hash",
+        "projection_policy_hash",
         "run_id",
         "run_status",
         "schema_version",
@@ -636,6 +744,7 @@ def validate_snapshot_manifest(
         "field_map_hash",
         "membership_hash",
         "producer_manifest_hash",
+        "projection_policy_hash",
         "strategy_config_hash",
     ):
         _sha256(document[field], field)

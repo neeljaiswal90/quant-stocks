@@ -129,7 +129,8 @@ def _manifest(universe_bytes: bytes, universe: dict[str, Any]) -> dict[str, Any]
         "producer_manifest_hash": "0" * 64,
         "strategy_config_hash": "1" * 64,
         "code_revision": "SYNTHETIC-FIXTURE-CODE",
-        "data_policy_hash": hashlib.sha256(policy_bytes).hexdigest(),
+        "data_policy_hash": "2" * 64,
+        "projection_policy_hash": hashlib.sha256(policy_bytes).hexdigest(),
         "field_map_hash": hashlib.sha256(field_map_bytes).hexdigest(),
         "builder_revision": "SYNTHETIC_UNCOMMITTED",
         "artifact_index": [
@@ -146,7 +147,7 @@ def _manifest(universe_bytes: bytes, universe: dict[str, Any]) -> dict[str, Any]
 
 def test_public_schemas_and_registered_documents_are_strict() -> None:
     schema_paths = sorted(SCHEMA_ROOT.glob("*.schema.json"))
-    assert len(schema_paths) == 4
+    assert len(schema_paths) == 6
     for path in schema_paths:
         Draft202012Validator.check_schema(_load(path))
 
@@ -160,13 +161,16 @@ def test_public_schemas_and_registered_documents_are_strict() -> None:
     )
     validate_stage0_policy(policy)
     mappings = validate_field_map(field_map)
-    assert len(mappings) == 16
+    assert len(mappings) == 18
     assert all("default" not in item for item in field_map["fields"])
     assert {
         mapping.output_field
         for mapping in mappings
         if mapping.authority_class == "QUANTITATIVE"
     } == {"run.membership_count", "universe[].rank", "universe[].momentum_12_1"}
+    assert next(
+        mapping for mapping in mappings if mapping.output_field == "run.membership_count"
+    ).transform == "COPY"
 
 
 def test_policy_and_field_map_fail_closed_on_semantic_drift() -> None:

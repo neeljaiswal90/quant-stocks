@@ -59,17 +59,17 @@
     },
     {
       "authority_class": "QUANTITATIVE",
-      "display_precision": 0,
+      "display_precision": null,
       "missing_policy": "REQUIRED_BLOCK",
       "output_field": "run.membership_count",
-      "rounding_mode": "ROUND_HALF_EVEN",
-      "scale": "1",
+      "rounding_mode": null,
+      "scale": null,
       "source_artifact_id": "producer.run_manifest.v1",
       "source_json_pointer": "/membership_count",
       "source_schema_version": "qme.synthetic.ui_source.v1",
-      "transform": "FORMAT_DECIMAL",
-      "transform_version": "qme.ui.format_decimal.v1",
-      "unit": "COUNT"
+      "transform": "COPY",
+      "transform_version": "qme.ui.copy.v1",
+      "unit": null
     },
     {
       "authority_class": "STATUS",
@@ -170,6 +170,20 @@
       "unit": "RANK"
     },
     {
+      "authority_class": "PRESENTATION",
+      "display_precision": null,
+      "missing_policy": "PRESERVE_EXPLICIT",
+      "output_field": "universe[].rank.sort_key",
+      "rounding_mode": null,
+      "scale": null,
+      "source_artifact_id": "producer.universe_scores.v1",
+      "source_json_pointer": "/rows/*/rank",
+      "source_schema_version": "qme.synthetic.ui_source.v1",
+      "transform": "MAKE_SORT_KEY",
+      "transform_version": "qme.ui.sort_key.v1",
+      "unit": null
+    },
+    {
       "authority_class": "QUANTITATIVE",
       "display_precision": 2,
       "missing_policy": "PRESERVE_EXPLICIT",
@@ -182,6 +196,20 @@
       "transform": "FORMAT_DECIMAL",
       "transform_version": "qme.ui.format_decimal.v1",
       "unit": "PERCENT"
+    },
+    {
+      "authority_class": "PRESENTATION",
+      "display_precision": null,
+      "missing_policy": "PRESERVE_EXPLICIT",
+      "output_field": "universe[].momentum_12_1.sort_key",
+      "rounding_mode": null,
+      "scale": null,
+      "source_artifact_id": "producer.universe_scores.v1",
+      "source_json_pointer": "/rows/*/momentum_12_1",
+      "source_schema_version": "qme.synthetic.ui_source.v1",
+      "transform": "MAKE_SORT_KEY",
+      "transform_version": "qme.ui.sort_key.v1",
+      "unit": null
     },
     {
       "authority_class": "STATUS",
