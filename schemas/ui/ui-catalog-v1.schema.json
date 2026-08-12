@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/ui/ui-catalog-v1.schema.json",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "counts": {
+      "additionalProperties": false,
+      "properties": {
+        "BLOCKED": {"minimum": 0, "type": "integer"},
+        "DEGRADED": {"minimum": 0, "type": "integer"},
+        "INVALID": {"minimum": 0, "type": "integer"},
+        "MISSING": {"minimum": 0, "type": "integer"},
+        "STALE": {"minimum": 0, "type": "integer"},
+        "VALID": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["VALID", "DEGRADED", "STALE", "MISSING", "BLOCKED", "INVALID"],
+      "type": "object"
+    },
+    "quarantine": {
+      "additionalProperties": false,
+      "properties": {
+        "discovery_id": {"pattern": "^LOCAL-[0-9a-f]{64}$", "type": "string"},
+        "reason": {
+          "enum": [
+            "CONTRACT_VIOLATION", "FILE_CHANGED_DURING_READ", "FILE_SIZE_INVALID",
+            "INCOMPLETE_STAGING", "INVENTORY_MISMATCH", "MANIFEST_MISSING",
+            "MANIFEST_NOT_CANONICAL", "READ_ERROR", "REPARSE_POINT",
+            "PAYLOAD_NOT_CANONICAL",
+            "SNAPSHOT_HASH_MISMATCH", "UNRECOGNIZED_ENTRY"
+          ]
+        }
+      },
+      "required": ["discovery_id", "reason"],
+      "type": "object"
+    },
+    "snapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_as_of": {"format": "date-time", "type": "string"},
+        "builder_revision": {"pattern": "^(?:[0-9a-f]{40}|SYNTHETIC_UNCOMMITTED)$", "type": "string"},
+        "code_revision": {"minLength": 1, "type": "string"},
+        "completeness_status": {"enum": ["CONFLICTING", "INCOMPLETE", "COMPLETE"]},
+        "conflicting_run_id": {"type": "boolean"},
+        "data_policy_hash": {"$ref": "#/$defs/sha256"},
+        "evidence_state": {"const": "SYNTHETIC_FIXTURE"},
+        "field_map_hash": {"$ref": "#/$defs/sha256"},
+        "generated_at": {"format": "date-time", "type": "string"},
+        "member_status_counts": {"$ref": "#/$defs/counts"},
+        "membership_count": {"maximum": 200, "minimum": 1, "type": "integer"},
+        "membership_hash": {"$ref": "#/$defs/sha256"},
+        "membership_snapshot_id": {"minLength": 1, "type": "string"},
+        "producer_manifest_hash": {"$ref": "#/$defs/sha256"},
+        "projection_policy_hash": {"$ref": "#/$defs/sha256"},
+        "run_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+        "run_status": {
+          "enum": ["CORRUPT", "CONFLICTING", "UNSUPPORTED_SCHEMA", "INVALID", "MISSING", "BLOCKED", "STALE", "DEGRADED", "VALID"]
+        },
+        "snapshot_hash": {"$ref": "#/$defs/sha256"},
+        "strategy_config_hash": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "analysis_as_of", "builder_revision", "code_revision", "completeness_status",
+        "conflicting_run_id", "data_policy_hash", "evidence_state", "field_map_hash",
+        "generated_at", "member_status_counts", "membership_count", "membership_hash",
+        "membership_snapshot_id", "producer_manifest_hash", "projection_policy_hash",
+        "run_id", "run_status", "snapshot_hash", "strategy_config_hash"
+      ],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "conflicting_run_ids": {
+      "items": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+      "type": "array",
+      "uniqueItems": true
+    },
+    "quarantine_count": {"minimum": 0, "type": "integer"},
+    "quarantined": {"items": {"$ref": "#/$defs/quarantine"}, "type": "array", "uniqueItems": true},
+    "schema_version": {"const": "qme.ui.catalog.v1"},
+    "snapshot_count": {"minimum": 0, "type": "integer"},
+    "snapshots": {"items": {"$ref": "#/$defs/snapshot"}, "type": "array", "uniqueItems": true}
+  },
+  "required": [
+    "conflicting_run_ids", "quarantine_count", "quarantined", "schema_version",
+    "snapshot_count", "snapshots"
+  ],
+  "type": "object"
+}

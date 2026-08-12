@@ -146,6 +146,7 @@ def test_source_and_output_schemas_validate_exact_documents() -> None:
     assert {path.name for path in schema_paths} == {
         "synthetic-ui-producer-manifest-v1.schema.json",
         "synthetic-ui-source-v1.schema.json",
+        "ui-catalog-v1.schema.json",
         "ui-field-map-v1.schema.json",
         "ui-snapshot-manifest-v1.schema.json",
         "ui-stage0-policy-v1.schema.json",

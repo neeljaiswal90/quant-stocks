@@ -147,7 +147,7 @@ def _manifest(universe_bytes: bytes, universe: dict[str, Any]) -> dict[str, Any]
 
 def test_public_schemas_and_registered_documents_are_strict() -> None:
     schema_paths = sorted(SCHEMA_ROOT.glob("*.schema.json"))
-    assert len(schema_paths) == 6
+    assert len(schema_paths) == 7
     for path in schema_paths:
         Draft202012Validator.check_schema(_load(path))
 
