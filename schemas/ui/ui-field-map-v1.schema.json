@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/ui/ui-field-map-v1.schema.json",
+  "$defs": {
+    "mapping": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_class": {
+          "enum": ["IDENTITY", "STATUS", "QUANTITATIVE", "PRESENTATION", "PROVENANCE"]
+        },
+        "display_precision": {"anyOf": [{"type": "null"}, {"maximum": 18, "minimum": 0, "type": "integer"}]},
+        "missing_policy": {"enum": ["REQUIRED_BLOCK", "PRESERVE_EXPLICIT", "REDACT_REQUIRED"]},
+        "output_field": {"minLength": 1, "type": "string"},
+        "rounding_mode": {"anyOf": [{"type": "null"}, {"const": "ROUND_HALF_EVEN"}]},
+        "scale": {"anyOf": [{"type": "null"}, {"pattern": "^[0-9]+(?:\\.[0-9]+)?$", "type": "string"}]},
+        "source_artifact_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+        "source_json_pointer": {"pattern": "^/", "type": "string"},
+        "source_schema_version": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+        "transform": {"enum": ["COPY", "REDACT", "FORMAT_DECIMAL", "MAKE_SORT_KEY"]},
+        "transform_version": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+        "unit": {"anyOf": [{"type": "null"}, {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"}]}
+      },
+      "required": [
+        "authority_class", "display_precision", "missing_policy", "output_field",
+        "rounding_mode", "scale", "source_artifact_id", "source_json_pointer",
+        "source_schema_version", "transform", "transform_version", "unit"
+      ],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence_state": {"const": "SYNTHETIC_CONTRACT_ONLY"},
+    "fields": {"items": {"$ref": "#/$defs/mapping"}, "minItems": 1, "type": "array"},
+    "map_id": {"const": "NEE-169-STAGE0-FIELD-MAP-V1"},
+    "schema_version": {"const": "qme.ui.field_map.v1"}
+  },
+  "required": ["evidence_state", "fields", "map_id", "schema_version"],
+  "type": "object"
+}

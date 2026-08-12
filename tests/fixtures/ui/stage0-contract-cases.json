@@ -1,0 +1,64 @@
+{
+  "membership": {
+    "security_ids": [
+      "SEC-MSFT",
+      "SEC-AAPL",
+      "SEC-NVDA",
+      "SEC-AMZN",
+      "SEC-META",
+      "SEC-GOOGL"
+    ],
+    "status_counts": {
+      "BLOCKED": 1,
+      "DEGRADED": 1,
+      "INVALID": 1,
+      "MISSING": 1,
+      "STALE": 1,
+      "VALID": 1
+    }
+  },
+  "numeric_cases": [
+    {
+      "canonical_decimal": "0.12345",
+      "display_precision": 2,
+      "expected_display_decimal": "12.34",
+      "expected_display_text": "12.34%",
+      "name": "positive_half_even",
+      "scale": "100",
+      "unit": "PERCENT"
+    },
+    {
+      "canonical_decimal": "-0.12345",
+      "display_precision": 2,
+      "expected_display_decimal": "-12.34",
+      "expected_display_text": "-12.34%",
+      "name": "negative_half_even",
+      "scale": "100",
+      "unit": "PERCENT"
+    },
+    {
+      "canonical_decimal": "-0.00001",
+      "display_precision": 2,
+      "expected_display_decimal": "0.00",
+      "expected_display_text": "0.00%",
+      "name": "negative_zero_normalized",
+      "scale": "100",
+      "unit": "PERCENT"
+    },
+    {
+      "canonical_decimal": "1234.5",
+      "display_precision": 2,
+      "expected_display_decimal": "1234.50",
+      "expected_display_text": "$1234.50",
+      "name": "usd_no_locale_inference",
+      "scale": "1",
+      "unit": "USD"
+    }
+  ],
+  "quality_precedence_probe": [
+    "VALID",
+    "DEGRADED",
+    "BLOCKED",
+    "STALE"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/ui/ui-snapshot-manifest-v1.schema.json",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+        "path": {"pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]{0,255}\\.json$", "type": "string"},
+        "schema_version": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"maximum": 8388608, "minimum": 1, "type": "integer"}
+      },
+      "required": ["artifact_id", "path", "schema_version", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "counts": {
+      "additionalProperties": false,
+      "properties": {
+        "BLOCKED": {"minimum": 0, "type": "integer"},
+        "DEGRADED": {"minimum": 0, "type": "integer"},
+        "INVALID": {"minimum": 0, "type": "integer"},
+        "MISSING": {"minimum": 0, "type": "integer"},
+        "STALE": {"minimum": 0, "type": "integer"},
+        "VALID": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["VALID", "DEGRADED", "STALE", "MISSING", "BLOCKED", "INVALID"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "analysis_as_of": {"format": "date-time", "type": "string"},
+    "artifact_index": {"items": {"$ref": "#/$defs/artifact"}, "maxItems": 32, "minItems": 1, "type": "array"},
+    "builder_revision": {"pattern": "^(?:[0-9a-f]{40}|SYNTHETIC_UNCOMMITTED)$", "type": "string"},
+    "canonicalization_id": {"const": "qme.foundation.canonical_json.v1"},
+    "code_revision": {"minLength": 1, "type": "string"},
+    "completeness_status": {"enum": ["CONFLICTING", "INCOMPLETE", "COMPLETE"]},
+    "data_policy_hash": {"$ref": "#/$defs/sha256"},
+    "evidence_state": {"const": "SYNTHETIC_FIXTURE"},
+    "field_map_hash": {"$ref": "#/$defs/sha256"},
+    "generated_at": {"format": "date-time", "type": "string"},
+    "member_status_counts": {"$ref": "#/$defs/counts"},
+    "membership_count": {"maximum": 200, "minimum": 1, "type": "integer"},
+    "membership_hash": {"$ref": "#/$defs/sha256"},
+    "membership_snapshot_id": {"minLength": 1, "type": "string"},
+    "producer_manifest_hash": {"$ref": "#/$defs/sha256"},
+    "run_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+    "run_status": {
+      "enum": ["CORRUPT", "CONFLICTING", "UNSUPPORTED_SCHEMA", "INVALID", "MISSING", "BLOCKED", "STALE", "DEGRADED", "VALID"]
+    },
+    "schema_version": {"const": "qme.ui.snapshot_manifest.v1"},
+    "strategy_config_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "analysis_as_of", "artifact_index", "builder_revision", "canonicalization_id",
+    "code_revision", "completeness_status", "data_policy_hash", "evidence_state",
+    "field_map_hash", "generated_at", "member_status_counts", "membership_count",
+    "membership_hash", "membership_snapshot_id", "producer_manifest_hash", "run_id",
+    "run_status", "schema_version", "strategy_config_hash"
+  ],
+  "type": "object"
+}
