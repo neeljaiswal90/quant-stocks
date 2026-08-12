@@ -41,6 +41,29 @@ py -3.12 -m qme.cli.foundation init-data-root --data-root $env:QME_DATA_ROOT --r
 Canonical artifacts use logical IDs relative to the data root. A machine-specific
 absolute path therefore does not change an artifact hash.
 
+## Operational configuration
+
+`configs/qme.example.json` is the strict `qme.config.v1` policy, not a source of hidden
+runtime defaults. `schemas/qme-config-v1.schema.json` and
+`qme.foundation.load_qme_config` require the exact seven registered fields and reject
+unknown fields, duplicate keys, non-finite values, type coercion, network-enabled
+backtests, and unconfirmed live orders. The example `D:\qme-data` path is documentation
+only: runtime always requires an explicit `QME_DATA_ROOT` environment value and never
+creates the root while loading configuration.
+
+The loader reads one regular repository-owned file once, hashes its exact bytes, resolves
+the data root through the existing outside-repository contract, and emits a manifest
+record that omits both the machine-specific root and example path. Loading configuration
+does not initialize storage, contact Alpha Vantage, connect to Webull, or authorize an
+order.
+
+Validate the policy and configured root without creating any directories:
+
+```powershell
+$env:QME_DATA_ROOT = 'D:\qme-data'
+py -3.12 -m qme.cli.foundation validate-config --config .\configs\qme.example.json --repository-root .
+```
+
 ## Canonical fixture manifest
 
 `qme-foundation manifest` hashes the exact lock, configuration, schema, data, and output

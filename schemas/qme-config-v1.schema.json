@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/qme-config-v1.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "allow_network_in_backtest": {"const": false},
+    "allow_unconfirmed_live_orders": {"const": false},
+    "canonical_data_source": {"const": "alpha_vantage"},
+    "data_root_environment_variable": {"const": "QME_DATA_ROOT"},
+    "execution_venue": {"const": "webull"},
+    "schema_version": {"const": "qme.config.v1"},
+    "windows_data_root_example": {
+      "maxLength": 256,
+      "minLength": 3,
+      "pattern": "^[A-Za-z]:\\\\[^\\r\\n]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "data_root_environment_variable",
+    "windows_data_root_example",
+    "canonical_data_source",
+    "execution_venue",
+    "allow_network_in_backtest",
+    "allow_unconfirmed_live_orders"
+  ],
+  "type": "object"
+}

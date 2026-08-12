@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from qme.cli.foundation import main
 
 
@@ -53,3 +55,49 @@ def test_manifest_cli_refuses_to_replace_existing_file(tmp_path: Path, capsys) -
     assert destination.read_bytes() == first
     failure = json.loads(capsys.readouterr().out.splitlines()[-1])
     assert failure["status"] == "FOUNDATION_ERROR"
+
+
+def test_validate_config_cli_is_read_only_and_omits_local_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repository = Path(__file__).resolve().parents[2]
+    data_root = tmp_path / "private data root"
+    monkeypatch.setenv("QME_DATA_ROOT", str(data_root))
+    exit_code = main(
+        [
+            "validate-config",
+            "--repository-root",
+            str(repository),
+            "--config",
+            str(repository / "configs" / "qme.example.json"),
+        ]
+    )
+    assert exit_code == 0
+    assert not data_root.exists()
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "VALID_QME_CONFIG"
+    assert result["data_root_configured"] is True
+    assert str(data_root) not in json.dumps(result)
+    assert "windows_data_root_example" not in result["config"]
+
+
+def test_validate_config_cli_fails_when_data_root_is_unset(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repository = Path(__file__).resolve().parents[2]
+    monkeypatch.delenv("QME_DATA_ROOT", raising=False)
+    assert (
+        main(
+            [
+                "validate-config",
+                "--repository-root",
+                str(repository),
+                "--config",
+                str(repository / "configs" / "qme.example.json"),
+            ]
+        )
+        == 2
+    )
+    failure = json.loads(capsys.readouterr().out)
+    assert failure["status"] == "FOUNDATION_ERROR"
+    assert "QME_DATA_ROOT" in failure["error"]
