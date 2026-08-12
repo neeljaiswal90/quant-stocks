@@ -202,11 +202,11 @@ def test_builder_projects_exact_values_and_is_a_known_answer() -> None:
     assert build.snapshot_hash == hashlib.sha256(build.manifest_bytes).hexdigest()
     expected_snapshot_hash = "".join(
         (
-            "d956f1db139e1069",
-            "0eea47ed2b6a9441",
-            "3c59e345a742afab",
-            "f09ea1bb42e17ddd",
-        )  # pragma: allowlist secret
+            "d956f1db139e1069",  # pragma: allowlist secret
+            "0eea47ed2b6a9441",  # pragma: allowlist secret
+            "3c59e345a742afab",  # pragma: allowlist secret
+            "f09ea1bb42e17ddd",  # pragma: allowlist secret
+        )
     )
     assert build.snapshot_hash == expected_snapshot_hash
 
