@@ -1,0 +1,19 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-120-LIVE-ABORT-KERNEL-V1",
+  "implementation_status": "BOUNDED_DETERMINISTIC_TRIGGER_KERNEL",
+  "production_status": "NOT_PRODUCTION_WIRED",
+  "limitations": [
+    "ECONOMIC_PROMOTION_V2_IDENTITY_UNREGISTERED",
+    "NO_RESUME_OR_RESTART_EXECUTION",
+    "NO_PRODUCTION_DATA_OR_ORDER_AUTHORITY",
+    "PROSPECTIVE_INCEPTION_PEAK_LINEAGE_NOT_VERIFIED"
+  ],
+  "artifacts": [
+    {"path": "docs/quant/NEE_120_LIVE_ABORT_KERNEL_V1.md", "sha256": "49903d75:7ca8f8a1:c8529dd6:86db8ff6:aaa1bd36:50941bc5:9ed137c8:40be19f0"},
+    {"path": "qme/promotion/live_abort_v1.py", "sha256": "ba95f6ed:7571e0e2:b1184da1:e047988d:b6680bbf:99ebe83b:f28035d6:65d204bf"},
+    {"path": "schemas/promotion/live-abort-v1-cases.schema.json", "sha256": "b1e6b599:55c3abdb:acde14a5:4b18e0c1:9de9d44e:58e8f051:26550d22:1162f88f"},
+    {"path": "tests/fixtures/promotion/live-abort-v1-cases.json", "sha256": "82c9d2b5:fde24912:e731bef8:95a563d6:6e631685:756327d8:52f1d1ae:b4e1f52a"},
+    {"path": "tests/promotion/test_live_abort_v1.py", "sha256": "4cd0bcc1:34bfe09c:b3397160:7df1eee4:a1b00cb4:d72349aa:9fdb999e:ec0424ba"}
+  ]
+}

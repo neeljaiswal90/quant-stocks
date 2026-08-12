@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/promotion/live-abort-v1-cases.schema.json",
+  "title": "NEE-120 bounded live-abort kernel cases",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "nonclaims", "threshold_cases", "fail_safe_cases"],
+  "properties": {
+    "schema_version": {"const": "qme.live_abort_kernel_cases.v1"},
+    "artifact_id": {"const": "NEE-120-LIVE-ABORT-KERNEL-V1"},
+    "nonclaims": {
+      "const": ["NO_ECONOMIC_PROMOTION_DECISION", "NO_PRODUCTION_DATA_OR_WIRING", "NO_RESUME_OR_RESTART_EXECUTION", "NO_PORTFOLIO_CAPACITY_OR_ALPHA_CLAIM"]
+    },
+    "threshold_cases": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "strategy_nav", "strategy_peak", "benchmark_nav", "benchmark_peak", "expected_excess", "expected_count", "expected_status"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "strategy_nav": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"},
+          "strategy_peak": {"type": "string", "pattern": "^[1-9][0-9]*(\\.[0-9]+)?$"},
+          "benchmark_nav": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"},
+          "benchmark_peak": {"type": "string", "pattern": "^[1-9][0-9]*(\\.[0-9]+)?$"},
+          "expected_excess": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"},
+          "expected_count": {"type": "integer", "minimum": 0, "maximum": 5},
+          "expected_status": {"enum": ["ARMED", "ABORTED"]}
+        }
+      }
+    },
+    "fail_safe_cases": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "field", "value", "reason"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "field": {"enum": ["reconciliation_ok", "schema_valid", "mandatory_inputs_present", "strategy_nav"]},
+          "value": {},
+          "reason": {"enum": ["RECONCILIATION_FAILURE", "SCHEMA_INVALID_RUN", "MISSING_MANDATORY_INPUT"]}
+        }
+      }
+    }
+  }
+}
