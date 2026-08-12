@@ -1,0 +1,30 @@
+{
+  "schema_version": "qme.quantitative_contract_v2_fixture.v1",
+  "contract_id": "qme-long-only-momentum-v0.1",
+  "contract_version": 2,
+  "selection_boundary_cases": [
+    {"id": "below_floor", "rank_eligible_breadth": 149, "expected_state": "INVALID_INSUFFICIENT_BREADTH", "expected_selection_size": null},
+    {"id": "exact_floor", "rank_eligible_breadth": 150, "expected_state": "VALID", "expected_selection_size": 30},
+    {"id": "sensitivity_200", "rank_eligible_breadth": 200, "expected_state": "VALID", "expected_selection_size": 40},
+    {"id": "below_cap", "rank_eligible_breadth": 249, "expected_state": "VALID", "expected_selection_size": 49},
+    {"id": "exact_cap", "rank_eligible_breadth": 250, "expected_state": "VALID", "expected_selection_size": 50},
+    {"id": "above_cap", "rank_eligible_breadth": 251, "expected_state": "VALID", "expected_selection_size": 50},
+    {"id": "selection_cap", "rank_eligible_breadth": 255, "expected_state": "VALID", "expected_selection_size": 50}
+  ],
+  "invalid_breadth_inputs": [-1, true, false, 150.0, "150", null],
+  "required_typed_blockers": [
+    "production_point_in_time_membership_and_identity_snapshot_pair",
+    "production_total_return_raw_receipts_and_corporate_action_fixture_evidence"
+  ],
+  "forbidden_calendar_literals": ["XNAS", "XNYS"],
+  "expected_source_order": [
+    "ALPHA_VANTAGE_LISTING_STATUS_ACTIVE_AND_DELISTED_EXACT_SIGNAL_DATE_MONTHLY_IMMUTABLE_RAW_CSV_SHA256",
+    "SEC_COMPANY_TICKERS_AND_SUBMISSIONS_CIK_CROSS_CHECK_NOT_MEMBERSHIP_AUTHORITY_FILING_AVAILABLE_BY_CUTOFF_OR_EXCLUDE",
+    "MANUAL_REVIEW_AMBIGUOUS_RENAMES_OR_REUSE_EXCLUDED_IN_V0_1"
+  ],
+  "expected_total_return_source_set": [
+    "ALPHA_VANTAGE_TIME_SERIES_DAILY_RAW_OHLCV",
+    "ALPHA_VANTAGE_DIVIDENDS",
+    "ALPHA_VANTAGE_SPLITS"
+  ]
+}

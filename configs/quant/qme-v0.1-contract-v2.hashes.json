@@ -1,0 +1,16 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-119-QME-QUANTITATIVE-CONTRACT-V2-SLICE",
+  "implementation_status": "CONTRACT_V2_MATERIALIZED",
+  "production_status": "PRODUCTION_EVIDENCE_BLOCKED",
+  "integrity_scope": "NEW_V2_SLICE_ONLY_V1_IMMUTABLE",
+  "artifacts": [
+    {"path": "configs/quant/qme-v0.1-contract-v2.json", "sha256": "d71086f6:9176c1dc:ba82dcc8:dfd018b5:703ff059:f3fd526a:6a92f5c0:3370b285"},
+    {"path": "docs/quant/QME_V0_1_QUANTITATIVE_CONTRACT_V2.md", "sha256": "df918be1:8463ed92:f8846b0a:69b9a25f:9dfd6ded:8598e745:fae713a3:ea4caf4f"},
+    {"path": "qme/quant/contract_v2.py", "sha256": "f4f0d00f:c6a5a546:cc9a104e:e4a1956b:0cf567ab:29b0ebfe:0ca080cf:86631cde"},
+    {"path": "schemas/quant/qme-v0.1-contract-v2.schema.json", "sha256": "ddbecace:da67a16b:c6a898e7:cc1a0387:57aaca58:af670e33:8d9f3a7c:84443b11"},
+    {"path": "tests/fixtures/quant/v0_1_contract_v2_cases.json", "sha256": "c4b9d51d:9809aa20:01c08a4e:242fa900:af904f3f:fc991df8:46c0a5c1:6faf2e70"},
+    {"path": "tests/quant/test_v01_contract_v2.py", "sha256": "0b567c4b:b2683e27:f8b06e3d:8de3f619:18fafc7f:ec70913f:594d1929:0a3b5710"},
+    {"path": "tests/foundation/test_v2_hash_manifest_policy.py", "sha256": "b4490c8b:cc4a6339:8c13b3e1:0f20e77e:7c154248:56ddc907:6b62bda5:f0c315c8"}
+  ]
+}
