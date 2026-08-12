@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/stats/deterministic-kernel-v1-vectors.schema.json",
+  "title": "QME deterministic statistics kernel v1 known-answer vectors",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pcg32_official_reference",
+    "splitmix64_seeded_pcg32",
+    "stationary_bootstrap"
+  ],
+  "properties": {
+    "schema_version": {"const": "qme.deterministic_stats_kernel_vectors.v1"},
+    "pcg32_official_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_url", "initstate", "initseq", "first_six_hex"],
+      "properties": {
+        "source_url": {"const": "https://www.pcg-random.org/using-pcg-c.html"},
+        "initstate": {"const": 42},
+        "initseq": {"const": 54},
+        "first_six_hex": {"$ref": "#/$defs/sixHexWords"}
+      }
+    },
+    "splitmix64_seeded_pcg32": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seed",
+        "initstate",
+        "initseq",
+        "first_sixteen_hex",
+        "first_eight_uniform_hex",
+        "first_sixteen_indices_bound_7",
+        "first_sixteen_geometric_mean_4",
+        "bounded_index_adversarial"
+      ],
+      "properties": {
+        "seed": {"const": 20260812},
+        "initstate": {"type": "integer", "minimum": 0, "maximum": 18446744073709551615},
+        "initseq": {"type": "integer", "minimum": 0, "maximum": 18446744073709551615},
+        "first_sixteen_hex": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/hex32"}
+        },
+        "first_eight_uniform_hex": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {"type": "string", "pattern": "^0x[0-9a-f]+\\.[0-9a-f]+p[+-][0-9]+$"}
+        },
+        "first_sixteen_indices_bound_7": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": {"type": "integer", "minimum": 0, "maximum": 6}
+        },
+        "first_sixteen_geometric_mean_4": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "bounded_index_adversarial": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "large_bound",
+            "large_bound_first_rejected_hex",
+            "large_bound_first_result",
+            "full_uint32_bound_first_result"
+          ],
+          "properties": {
+            "large_bound": {"const": 2147483649},
+            "large_bound_first_rejected_hex": {"const": "4aa3d612"},
+            "large_bound_first_result": {"const": 67712858},
+            "full_uint32_bound_first_result": {"const": 1252251154}
+          }
+        }
+      }
+    },
+    "stationary_bootstrap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "series_length",
+        "replicate_count",
+        "mean_block_length",
+        "seed",
+        "canonical_replicates_sha256_words_be",
+        "explicit_replicates_mean_4",
+        "explicit_replicates_mean_1"
+      ],
+      "properties": {
+        "series_length": {"const": 12},
+        "replicate_count": {"const": 8},
+        "mean_block_length": {"const": 4},
+        "seed": {"const": 20260812},
+        "canonical_replicates_sha256_words_be": {"$ref": "#/$defs/sha256Words"},
+        "explicit_replicates_mean_4": {"$ref": "#/$defs/twoReplicatesOfFive"},
+        "explicit_replicates_mean_1": {"$ref": "#/$defs/twoReplicatesOfFive"}
+      }
+    }
+  },
+  "$defs": {
+    "hex32": {"type": "string", "pattern": "^[0-9a-f]{8}$"},
+    "sha256Words": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    },
+    "sixHexWords": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/hex32"}
+    },
+    "twoReplicatesOfFive": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "array",
+        "minItems": 5,
+        "maxItems": 5,
+        "items": {"type": "integer", "minimum": 0, "maximum": 4}
+      }
+    }
+  }
+}
