@@ -46,6 +46,7 @@
     "membership_hash": {"$ref": "#/$defs/sha256"},
     "membership_snapshot_id": {"minLength": 1, "type": "string"},
     "producer_manifest_hash": {"$ref": "#/$defs/sha256"},
+    "projection_policy_hash": {"$ref": "#/$defs/sha256"},
     "run_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
     "run_status": {
       "enum": ["CORRUPT", "CONFLICTING", "UNSUPPORTED_SCHEMA", "INVALID", "MISSING", "BLOCKED", "STALE", "DEGRADED", "VALID"]
@@ -57,8 +58,9 @@
     "analysis_as_of", "artifact_index", "builder_revision", "canonicalization_id",
     "code_revision", "completeness_status", "data_policy_hash", "evidence_state",
     "field_map_hash", "generated_at", "member_status_counts", "membership_count",
-    "membership_hash", "membership_snapshot_id", "producer_manifest_hash", "run_id",
-    "run_status", "schema_version", "strategy_config_hash"
+    "membership_hash", "membership_snapshot_id", "producer_manifest_hash",
+    "projection_policy_hash", "run_id", "run_status", "schema_version",
+    "strategy_config_hash"
   ],
   "type": "object"
 }

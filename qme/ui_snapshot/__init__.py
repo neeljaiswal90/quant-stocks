@@ -1,5 +1,17 @@
 """Deterministic, presentation-only snapshot contracts."""
 
+from qme.ui_snapshot.builder import (
+    PRODUCER_MANIFEST_FILENAME,
+    PRODUCER_MANIFEST_SCHEMA_VERSION,
+    SOURCE_RUN_PATH,
+    SOURCE_UNIVERSE_PATH,
+    PublicationResult,
+    SnapshotBuild,
+    build_synthetic_snapshot,
+    publish_snapshot,
+    read_bounded_file,
+    source_row_sha256,
+)
 from qme.ui_snapshot.contracts import (
     COMPLETENESS_STATES,
     MEMBER_STATUS_BUCKETS,
@@ -23,13 +35,23 @@ __all__ = [
     "QUALITY_PRECEDENCE",
     "ContractError",
     "FieldMapping",
+    "PRODUCER_MANIFEST_FILENAME",
+    "PRODUCER_MANIFEST_SCHEMA_VERSION",
+    "PublicationResult",
+    "SOURCE_RUN_PATH",
+    "SOURCE_UNIVERSE_PATH",
+    "SnapshotBuild",
     "aggregate_quality",
+    "build_synthetic_snapshot",
     "format_numeric_value",
     "membership_set_sha256",
+    "publish_snapshot",
+    "read_bounded_file",
     "reconcile_membership",
     "validate_field_map",
     "validate_numeric_value",
     "validate_snapshot_manifest",
     "validate_stage0_policy",
     "validate_universe_payload",
+    "source_row_sha256",
 ]

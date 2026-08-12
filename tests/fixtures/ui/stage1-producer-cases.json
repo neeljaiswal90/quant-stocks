@@ -1,0 +1,99 @@
+{
+  "code_revision": "SYNTHETIC-PRODUCER-V1",
+  "data_policy_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+  "expected_output_order": [
+    "SEC-AAPL",
+    "SEC-AMZN",
+    "SEC-GOOGL",
+    "SEC-META",
+    "SEC-MSFT",
+    "SEC-NVDA"
+  ],
+  "finalized_at": "2025-02-01T00:00:00Z",
+  "run": {
+    "analysis_as_of": "2025-01-31T21:00:00Z",
+    "completeness_status": "COMPLETE",
+    "member_status_counts": {
+      "BLOCKED": 1,
+      "DEGRADED": 1,
+      "INVALID": 1,
+      "MISSING": 1,
+      "STALE": 1,
+      "VALID": 1
+    },
+    "membership_snapshot_id": "SYNTHETIC-NDX-001",
+    "run_id": "SYNTHETIC-UI-001",
+    "run_status": "INVALID",
+    "security_ids": [
+      "SEC-MSFT",
+      "SEC-AAPL",
+      "SEC-NVDA",
+      "SEC-AMZN",
+      "SEC-META",
+      "SEC-GOOGL"
+    ]
+  },
+  "source_rows": [
+    {
+      "company_name": "Synthetic Nvidia",
+      "data_status": "STALE",
+      "momentum_12_1": null,
+      "rank": null,
+      "review_reasons": ["STALE_SOURCE"],
+      "security_id": "SEC-NVDA",
+      "selected": false,
+      "ticker": "NVDA"
+    },
+    {
+      "company_name": "Synthetic Apple",
+      "data_status": "VALID",
+      "momentum_12_1": "0.25005",
+      "rank": "1",
+      "review_reasons": ["SYNTHETIC_SELECTED"],
+      "security_id": "SEC-AAPL",
+      "selected": true,
+      "ticker": "AAPL"
+    },
+    {
+      "company_name": "Synthetic Amazon",
+      "data_status": "MISSING",
+      "momentum_12_1": null,
+      "rank": null,
+      "review_reasons": ["MISSING_SOURCE"],
+      "security_id": "SEC-AMZN",
+      "selected": false,
+      "ticker": "AMZN"
+    },
+    {
+      "company_name": "Synthetic Meta",
+      "data_status": "BLOCKED",
+      "momentum_12_1": null,
+      "rank": null,
+      "review_reasons": ["POLICY_BLOCKED"],
+      "security_id": "SEC-META",
+      "selected": false,
+      "ticker": "META"
+    },
+    {
+      "company_name": "Synthetic Alphabet",
+      "data_status": "INVALID",
+      "momentum_12_1": null,
+      "rank": null,
+      "review_reasons": ["INVALID_INPUT"],
+      "security_id": "SEC-GOOGL",
+      "selected": false,
+      "ticker": "GOOGL"
+    },
+    {
+      "company_name": "Synthetic Microsoft",
+      "data_status": "DEGRADED",
+      "momentum_12_1": "-0.12345",
+      "rank": "2",
+      "review_reasons": ["DEGRADED_SOURCE"],
+      "security_id": "SEC-MSFT",
+      "selected": false,
+      "ticker": "MSFT"
+    }
+  ],
+  "strategy_config_hash": "3333333333333333333333333333333333333333333333333333333333333333"
+}

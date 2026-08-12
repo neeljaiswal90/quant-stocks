@@ -196,7 +196,7 @@ engine, agent orchestrator, broker controller, or alternative source of truth.
 | M5 broker/paper operations | `PLANNED` | Preview-only default, account/environment allowlist, confirmation authority outside UI, reconciliation and abort evidence. |
 | M6 Nasdaq-100 agent review | `IN_PROGRESS/BLOCKED` | Full deterministic universe artifact, immutable evidence packets, process-isolated attested runtime, strict typed outputs, cross-ticker normalization. |
 | M7 deferred research extensions | `DEFERRED` | Promotion gates for any extension; no holdout tuning. |
-| M8 read-only UI | `IN_PROGRESS` — Stage 0 contracts committed | NEE-169 commit `d5aaf0d...` implements strict synthetic snapshot/universe/field-map contracts, membership and Decimal vectors, validators, resource bounds, and adversarial fixtures. Snapshot builder, catalog, viewer, browser/accessibility/performance evidence, and production producer integration remain unimplemented. |
+| M8 read-only UI | `IN_PROGRESS` — Stages 0–1 implemented | Protected main `8c06574f...` contains the CI-verified Stage 0 contracts. Stage 1 commit `b27bd76...` implements the bounded synthetic producer adapter, deterministic projection, atomic content-addressed publication, CLI module, and adversarial tests. Catalog, viewer, browser/accessibility/performance evidence, and production producer integration remain unimplemented. |
 
 ## 8. M8 UI implementation decision
 
@@ -280,7 +280,7 @@ rating must remain separate fields with separate provenance.
 | Package | Status | Scope | Principal integration gates |
 |---|---|---|---|
 | UI parent — [NEE-168](https://linear.app/neel-jaiswal/issue/NEE-168/qme-p8-read-only-evidence-and-operations-console) | `PLANNING_ONLY` | Completion gate for the read-only evidence and operations console. | All three child tickets |
-| UI-1 — [NEE-169](https://linear.app/neel-jaiswal/issue/NEE-169/build-deterministic-local-snapshot-catalog-read-only-api-and) | `COMMITTED_UNVERIFIED` — Stage 0 | Strict schema/field/state/Decimal/membership fixtures and validators are implemented. Deterministic snapshot publication, local catalog/read models, HTML+JSON, and memory view remain. | NEE-117 accepted; producer contracts remain fixture-only until downstream evidence is accepted |
+| UI-1 — [NEE-169](https://linear.app/neel-jaiswal/issue/NEE-169/build-deterministic-local-snapshot-catalog-read-only-api-and) | `CI_VERIFIED` Stage 0 / `COMMITTED_UNVERIFIED` Stage 1 | Strict contracts plus deterministic synthetic projection and atomic publication are implemented. Local catalog/read models, HTML+JSON, and memory view remain. | NEE-117 accepted; producer compatibility remains synthetic-fixture-only until downstream evidence is accepted |
 | UI-2 — [NEE-171](https://linear.app/neel-jaiswal/issue/NEE-171/build-deterministic-research-and-report-only-agent-review-dashboard) | `PLANNING_ONLY` | Overview, full universe, security detail, portfolio/risk, agent review, provenance. | NEE-169; NEE-146, 149, 150, 151, 154, 155, 166, 167 |
 | UI-3 — [NEE-170](https://linear.app/neel-jaiswal/issue/NEE-170/build-preview-and-reconciliation-evidence-console) | `PLANNING_ONLY` | Immutable preview/reconciliation evidence, accessibility, browser tests, packaging, performance. | NEE-169; NEE-157, 158, 159, 160, 161, 167 |
 
@@ -392,10 +392,10 @@ selection math. The UI renders those results and definitions; it never invents t
    score/rank, eligibility, and full-universe artifact contracts.
 4. Complete point-in-time Nasdaq-100 producer work and create the first immutable
    universe fixture plus corrupt/degraded variants.
-5. Complete NEE-169 Stage 1: build and verify the deterministic content-addressed snapshot
-   projection builder over the accepted Stage 0 fixture contract, with atomic publication,
-   strict no-default field mapping, and immutable manifest evidence.
-6. Implement
+5. Publish and independently validate NEE-169 Stage 1 on exact-SHA CI: deterministic
+   synthetic projection, strict no-default mapping, producer/row/membership binding, and
+   atomic content-addressed publication are implemented locally at `b27bd76...`.
+6. Implement NEE-169 Stage 2:
    the local in-memory catalog/read models and unauthenticated loopback viewer.
 7. Build the deterministic research dashboard before agent and broker views.
 8. Add agent-review views only after typed batch outputs and receipts validate.
@@ -435,6 +435,8 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-11 | Rebound the NEE-122 integration manifest after registering the NEE-110A self-manifest and its path-bounded provenance scan. | `COMMITTED_UNVERIFIED` | The experiment-registry implementation is unchanged. The LF-stable outer manifest is now `aebdca44dc207f9d87b5349b0c9fe19af5ac77abfcfdc53d0662a9a198dd728f` with 16/16 entries matching; NEE-110A binds this exact integration identity. |
 | 2026-08-11 | Reconciled NEE-110 and NEE-122 in Linear after exact-HEAD validation. | `COMMITTED_UNVERIFIED` | NEE-110 moved from Backlog to In Progress with comment `161b5f5e-b16f-4958-b00a-80d93d541d1d`; blockers NEE-116/120/121/122 and downstream NEE-114/123–128 were preserved. NEE-122 stayed In Progress and comment `1787f060-6be3-47e8-84f4-a50c07ac12f1` records the integration-manifest evolution. Neither ticket was closed or promoted to accepted evidence. |
 | 2026-08-11 | Implemented and committed the bounded NEE-169 Stage 0 deterministic UI contract candidate as `d5aaf0d470454a7de9030e6f63d2d805bccc9bb6`. | `COMMITTED_UNVERIFIED` | Strict policy, field map, snapshot/universe schemas, exact membership and Decimal behavior, state algebra, resource limits, manifest cross-binding, and adversarial synthetic fixtures pass. Full local gate: 326 tests, Ruff, strict mypy on 30 source files, four verified locks, wheel build, CLI smokes, staged-byte secret scan, and diff checks. No snapshot builder, catalog, Flask viewer, production Nasdaq-100 artifact, agent activation, or broker control is claimed. |
+| 2026-08-11 | Merged NEE-169 Stage 0 through PR #2 as protected main SHA `8c06574f3365edb34a1dd94e465e5abff0a002bb`; exact-main workflow `31557441870` passed. | `CI_VERIFIED — STAGE_0_BOUNDED` | GitHub automation briefly marked NEE-169 Done; the issue was corrected to In Progress because Stages 1–3 remain open. Linear comment `bfabefc7-34f2-4c35-b2dc-b178cb9ec080` records the exact branch/main workflows and remaining scope. |
+| 2026-08-11 | Implemented and committed the bounded NEE-169 Stage 1 deterministic snapshot builder as `b27bd76cc0ad2f8d0d3d1e2ae9b0fd56d14a2c9b`. | `COMMITTED_UNVERIFIED` | Finalized synthetic producer receipts are validated and mapped without defaults; output rows are deterministically ordered, Decimal-formatted, and source-bound; payloads and manifest publish atomically to a never-overwritten hash directory. Exact local gates: 66 focused UI tests and 364 full tests, Ruff, strict mypy on 32 source files, four verified locks, wheel build, CLI module smoke, compile, 139-file tracked and 12-file staged secret scans. Production producers, catalog, viewer, browser/accessibility/performance, agent activation, and broker controls remain unavailable. |
 
 ## 13. Per-ticket evidence record template
 
