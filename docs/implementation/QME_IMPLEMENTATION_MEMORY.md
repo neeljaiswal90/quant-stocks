@@ -340,9 +340,10 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 10. Discrepancies and blockers
 
-1. **No remote CI provenance:** twenty-three reviewed local commits exist before the current
-   memory update, but there is no remote,
-   pull request, or exact-SHA CI run. Evidence is `COMMITTED_UNVERIFIED`, not accepted.
+1. **Remote CI is operational but evidence remains slice-specific:** protected GitHub
+   `main` and the required Windows `foundation` check now verify merged NEE-117 and
+   NEE-169 Stage 0/1 commits. Every new slice still requires its own branch and protected-
+   main exact-SHA runs before it may be called `CI_VERIFIED`.
 2. **No production scoring artifact:** UI integration must use fixtures until the full
    Nasdaq-100 producer schema is accepted.
 3. **Agent runtime disabled:** current adapter is a safety boundary, not an operational
@@ -361,12 +362,12 @@ selection math. The UI renders those results and definitions; it never invents t
 8. **Authoritative portfolio capacity unavailable:** the fixed-trade participation
    diagnostic is not portfolio capacity; the greatest-capital discrete solver remains
    `UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED`.
-9. **UI implementation is bounded:** NEE-169 Stage 0 now provides strict snapshot and
-   universe schemas, a field/source-pointer registry, state/completeness rules, exact
-   membership and Decimal vectors, resource limits, and adversarial validators. It is
-   synthetic-contract evidence only; no production projection builder, local catalog/read
-   models, Flask/Jinja/Waitress viewer, browser evidence, packaged artifact, or clean-
-   machine evidence exists.
+9. **UI implementation is bounded:** NEE-169 Stages 0, 1, and 2A now provide strict
+   contracts, deterministic synthetic projection, atomic content-addressed publication,
+   and a startup-only immutable local catalog with exact `(run_id, snapshot_hash)` lookup
+   and opaque per-entry quarantine. The catalog implementation is locally committed but
+   not yet remote-CI verified. No production producer, Flask/Jinja/Waitress viewer,
+   browser/accessibility/performance qualification, or clean-machine evidence exists.
 10. **Golden rebalances are synthetic only:** NEE-116A now provides an independently
     red-teamed exact-arithmetic oracle, complete static ledger, and production-ledger
     conformance for two strategy variants and a benchmark. It is not production data,
@@ -392,11 +393,12 @@ selection math. The UI renders those results and definitions; it never invents t
    score/rank, eligibility, and full-universe artifact contracts.
 4. Complete point-in-time Nasdaq-100 producer work and create the first immutable
    universe fixture plus corrupt/degraded variants.
-5. Publish and independently validate NEE-169 Stage 1 on exact-SHA CI: deterministic
-   synthetic projection, strict no-default mapping, producer/row/membership binding, and
-   atomic content-addressed publication are implemented locally at `b27bd76...`.
-6. Implement NEE-169 Stage 2:
-   the local in-memory catalog/read models and unauthenticated loopback viewer.
+5. Publish and independently validate NEE-169 Stage 2A commit `c1c7f74...` on branch and
+   protected-main exact-SHA CI. Keep NEE-169 In Progress and preserve all relations.
+6. Implement NEE-169 Stage 2B: an unauthenticated `127.0.0.1` Flask/Jinja/Waitress viewer
+   that consumes only the frozen catalog/read models. Adding dependencies requires an
+   explicit lock/specification-governance decision rather than silently changing the
+   NEE-110/122 frozen dependency chain.
 7. Build the deterministic research dashboard before agent and broker views.
 8. Add agent-review views only after typed batch outputs and receipts validate.
 9. Add preview/reconciliation views only after canonical operations artifacts exist.
@@ -437,6 +439,8 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-11 | Implemented and committed the bounded NEE-169 Stage 0 deterministic UI contract candidate as `d5aaf0d470454a7de9030e6f63d2d805bccc9bb6`. | `COMMITTED_UNVERIFIED` | Strict policy, field map, snapshot/universe schemas, exact membership and Decimal behavior, state algebra, resource limits, manifest cross-binding, and adversarial synthetic fixtures pass. Full local gate: 326 tests, Ruff, strict mypy on 30 source files, four verified locks, wheel build, CLI smokes, staged-byte secret scan, and diff checks. No snapshot builder, catalog, Flask viewer, production Nasdaq-100 artifact, agent activation, or broker control is claimed. |
 | 2026-08-11 | Merged NEE-169 Stage 0 through PR #2 as protected main SHA `8c06574f3365edb34a1dd94e465e5abff0a002bb`; exact-main workflow `31557441870` passed. | `CI_VERIFIED — STAGE_0_BOUNDED` | GitHub automation briefly marked NEE-169 Done; the issue was corrected to In Progress because Stages 1–3 remain open. Linear comment `bfabefc7-34f2-4c35-b2dc-b178cb9ec080` records the exact branch/main workflows and remaining scope. |
 | 2026-08-11 | Implemented and committed the bounded NEE-169 Stage 1 deterministic snapshot builder as `b27bd76cc0ad2f8d0d3d1e2ae9b0fd56d14a2c9b`. | `COMMITTED_UNVERIFIED` | Finalized synthetic producer receipts are validated and mapped without defaults; output rows are deterministically ordered, Decimal-formatted, and source-bound; payloads and manifest publish atomically to a never-overwritten hash directory. Exact local gates: 66 focused UI tests and 364 full tests, Ruff, strict mypy on 32 source files, four verified locks, wheel build, CLI module smoke, compile, 139-file tracked and 12-file staged secret scans. Production producers, catalog, viewer, browser/accessibility/performance, agent activation, and broker controls remain unavailable. |
+| 2026-08-11 | Merged NEE-169 Stage 1 through PR #3 as protected main SHA `7e0ac2571b415651ec3a588b17d41ba103f640be`; exact-main workflow `31559527159` passed. | `CI_VERIFIED — STAGE_1_BOUNDED` | A line-scoped allowlist correction for four static known-answer SHA fragments passed replacement branch workflow `31559379144`; the scanner was not relaxed. GitHub automation again briefly marked NEE-169 Done, and the issue was corrected to In Progress because Stages 2–3 and production compatibility remain open. Linear comment `aadd010b-4547-487c-8215-316357061793` records the evidence and remaining scope. |
+| 2026-08-11 | Implemented and committed NEE-169 Stage 2A immutable startup catalog as `c1c7f74f56727d6715d9f0a909a36242afb9fe7d`. | `COMMITTED_UNVERIFIED` | Exact run/hash lookup, same-run conflict visibility, bounded same-byte reads, canonical manifest/payload validation, immutable row models, opaque per-entry quarantine, 100 randomized discovery orders, and the 200-member boundary pass. Exact local gates: 84 focused UI tests and 382 full tests, Ruff, strict mypy on 33 source files, compile, four verified locks, wheel build, and 150-file tracked/staged secret scan. The local viewer, production producer compatibility, and browser/accessibility/performance qualification remain open. |
 
 ## 13. Per-ticket evidence record template
 
