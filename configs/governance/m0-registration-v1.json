@@ -1,0 +1,164 @@
+{
+  "$schema": "../../schemas/governance/m0-registration-v1.schema.json",
+  "schema_version": "qme.m0_registration.v1",
+  "registration_id": "M0-OWNER-MANDATE-REGISTRATION-2026-08-12-V1",
+  "registration_status": "REGISTERED_DECISIONS_EVIDENCE_BLOCKERS_REMAIN",
+  "semantic_sha256": "ccd15d47:35e9f520:b0354cb8:97c982b1:64366482:5bccd51e:52b64509:40908c2a",
+  "authority": {
+    "approval_owner": "neeljaiswal90",
+    "approved_at": "2026-08-12T16:57:29Z",
+    "mandate_source_path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+    "mandate_source_sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+    "mandate_source_commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+    "pull_request_url": "https://github.com/neeljaiswal90/quant-stocks/pull/7",
+    "protected_main_ci_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31620202502",
+    "protected_main_ci_conclusion": "SUCCESS"
+  },
+  "registered_artifacts": [
+    {
+      "artifact_id": "SOURCE_FRESHNESS_POLICY",
+      "path": "configs/quant/source-freshness-policy-v1.json",
+      "sha256": "3dd94e35:0cc89023:e10efd2a:934e9a67:a502a1c8:4b5478db:82a98958:2ab71edc"
+    },
+    {
+      "artifact_id": "LABEL_ENDPOINT_METHOD",
+      "path": "configs/governance/label-endpoint-session-offset-v1.json",
+      "sha256": "9fe2988e:c7276ea7:0bc919b7:2c643409:b8caaf4c:8e383ae0:3d34728b:30aa5557"
+    },
+    {
+      "artifact_id": "EXPERIMENT_FAMILY_POLICY",
+      "path": "configs/governance/experiment-family-registration-v1.json",
+      "sha256": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40"
+    },
+    {
+      "artifact_id": "PRIOR_ACCESS_ATTESTATION",
+      "path": "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md",
+      "sha256": "dbe8afa5:81939a39:495db6e9:9878bdbe:6405bc4f:7d79c049:6bb139f7:24b8fb4f"
+    }
+  ],
+  "mandates": {
+    "account": {
+      "account_type": "TAXABLE_WEBULL_INDIVIDUAL",
+      "expected_aum_usd": "50000",
+      "aum_sensitivity_usd": ["25000", "100000"],
+      "account_balance_evidence_status": "OWNER_MANDATE_NOT_ACCOUNT_REPORT_EVIDENCE"
+    },
+    "quantitative_contract": {
+      "minimum_rank_eligible_breadth": 150,
+      "minimum_selected_holdings": 30,
+      "selection_formula": "min(50, floor(20 * N_t / 100))",
+      "breadth_boundary_proof": "floor(0.2 * 150) = 30",
+      "universe_claim": "AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY",
+      "membership_source": "ALPHA_VANTAGE_LISTING_STATUS_EXACT_SIGNAL_DATE",
+      "identity_cross_check": "SEC_CIK_FILING_AVAILABLE_BY_CUTOFF",
+      "nasdaq_100_profile_inherits_breadth": false
+    },
+    "promotion": {
+      "primary_metric_id": "NET_TC_PRE_CGT_LOG_CAGR_DELTA_VS_BENCHMARK",
+      "benchmark_id": "QQQ_TR_SAME_LEDGER",
+      "estimand": "12 * mean(monthly_log_nav_return_strategy - monthly_log_nav_return_benchmark)",
+      "economic_effect_threshold_annual_log_return": "0.01",
+      "noninferiority_margin_annual_log_return": "0.02",
+      "decision_rule": "POINT_ESTIMATE_GE_0_01_AND_ONE_SIDED_95_LCB_GT_NEGATIVE_0_02",
+      "superiority_or_alpha_claim_allowed": false,
+      "after_tax_co_primary_status": "PLANNED_BLOCKED_PENDING_TAX_LOT_IMPLEMENTATION"
+    },
+    "risk": {
+      "risk_profile": "MODERATE",
+      "maximum_issuer_weight": "0.10",
+      "maximum_sector_weight": "DIAGNOSTIC_ONLY_UNTIL_PIT_SECTOR_AUTHORITY",
+      "maximum_volatility": "NONE_DIAGNOSTIC_ONLY",
+      "maximum_absolute_drawdown": "0.40",
+      "maximum_one_way_turnover_per_year": "4.00",
+      "maximum_estimated_tax_drag_per_year": "0.02",
+      "minimum_cash_buffer_weight": "0.01",
+      "maximum_participation_of_adv20": "0.01",
+      "portfolio_capacity_status": "UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED"
+    },
+    "inference": {
+      "confidence_level": "0.95",
+      "primary_interval": "ONE_SIDED_STATIONARY_BLOCK_BOOTSTRAP",
+      "block_selection": "POLITIS_WHITE_AUTOMATIC_FLOOR_3_CAP_N_OVER_4",
+      "bootstrap_seed": 20260812,
+      "bootstrap_replicates": 10000,
+      "secondary_diagnostic": "NEWEY_WEST_HAC_T",
+      "confirmatory_family_size_m": 1,
+      "exploratory_structural_family_size_m": 96,
+      "reported_output_count": 288,
+      "primary_cost_bps_per_side": 10,
+      "reporting_only_cost_bps_per_side": [5, 25]
+    },
+    "abort": {
+      "metric_id": "CURRENT_DRAWDOWN_EXCESS_VS_BENCHMARK_POSITIVE_MAGNITUDE",
+      "metric_formula": "max(0, strategy_current_drawdown - benchmark_current_drawdown)",
+      "threshold": "0.10",
+      "persistence_exchange_sessions": 5,
+      "absolute_current_drawdown_immediate_abort": "0.40",
+      "abort_owner": "neeljaiswal90",
+      "performance_restart_rule": "NEW_VERSION_NEW_FREEZE_TIMESTAMP",
+      "infrastructure_resume_rule": "UNCHANGED_SPEC_VERIFIED_CHECKPOINT_ONLY"
+    },
+    "holdout": {
+      "confirmation_window": "2019-01-01/2021-12-31",
+      "confirmation_classification": "ONE_TIME_CONFIRMATION_ONLY",
+      "pristine_holdout_claim_allowed": false,
+      "label_horizon_session_intervals": {"1M": 21, "3M": 63, "6M": 126},
+      "embargo_sessions": 0,
+      "prospective_minimum_calendar_months": 6,
+      "prospective_minimum_reconciled_cycles": 6,
+      "live_simulated_monthly_return_rms_maximum": "0.005",
+      "prospective_claim_scope": "IMPLEMENTATION_FIDELITY_AND_OPERATIONAL_SAFETY_ONLY"
+    },
+    "review_and_accounting": {
+      "reviewer_id": "neeljaiswal90",
+      "reviewer_role": "OWNER_SELF_REVIEW_NOT_INDEPENDENT",
+      "independent_human_review_claim_allowed": false,
+      "official_open_fallback": "NONE_FAIL_CLOSED",
+      "tax_lot_method": "HIFO_IF_ACCOUNT_ELECTION_VERIFIED_ELSE_FIFO",
+      "tax_lot_implementation_status": "PENDING",
+      "wash_sale_scope": "STRATEGY_ACCOUNT_30_CALENDAR_DAYS_BEFORE_AND_AFTER_LOSS_SALE",
+      "cross_account_wash_sales": "OUT_OF_SCOPE_LABELED_UNDERSTATEMENT",
+      "sell_side_fee_sources": ["SEC_SECTION_31_DATED_RATE", "FINRA_TAF_DATED_RATE"]
+    }
+  },
+  "blocker_dispositions": [
+    {"blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL", "disposition": "REMAINS_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-110-QME-CONFIG-V1-CONTRACT", "disposition": "SUPERSEDED_BY_PROTECTED_MAIN_EVIDENCE", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD", "disposition": "REMAINS_ENGINEERING_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-CAPACITY-SOLVER", "disposition": "REMAINS_ENGINEERING_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES", "disposition": "REMAINS_PRODUCTION_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-HUMAN-INDEPENDENT-REVIEW", "disposition": "SUPERSEDED_BY_DISCLOSED_OWNER_SELF_REVIEW", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-OFFICIAL-OPEN-FALLBACK", "disposition": "RESOLVED_BY_REGISTERED_FAIL_CLOSED_NONE", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-PRODUCTION-PIT-DATA", "disposition": "REMAINS_PRODUCTION_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-116-TAX-LOT-METHOD", "disposition": "METHOD_REGISTERED_IMPLEMENTATION_REMAINS", "replacement_blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE"},
+    {"blocker_code": "NEE-117-EXACT-SHA-REMOTE-CI", "disposition": "SUPERSEDED_BY_PROTECTED_MAIN_EVIDENCE", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP", "disposition": "REMAINS_PRODUCTION_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-119-AV-PROXY-EVIDENCE", "disposition": "REMAINS_PRODUCTION_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-119-MINIMUM-ELIGIBLE-BREADTH", "disposition": "RESOLVED_BY_OWNER_REGISTRATION", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-119-PRODUCTION-SOURCE-FRESHNESS", "disposition": "RESOLVED_BY_VERSIONED_POLICY", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-120-AUM-CAPACITY-LIMITS", "disposition": "MANDATE_REGISTERED_CAPACITY_SEPARATELY_BLOCKED", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-120-INFERENCE-POLICY", "disposition": "METHOD_REGISTERED_IMPLEMENTATION_REMAINS", "replacement_blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE"},
+    {"blocker_code": "NEE-120-PROMOTION-MANDATE", "disposition": "RESOLVED_BY_OWNER_REGISTRATION", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-120-PREREGISTRATION-APPROVAL", "disposition": "RESOLVED_BY_PROTECTED_MAIN_OWNER_SOURCE", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION", "disposition": "REMAINS_PRODUCTION_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-121-HISTORICAL-ACCESS-PROVENANCE", "disposition": "RESOLVED_BY_LIMITED_OWNER_ATTESTATION", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-121-LABEL-ENDPOINT-REGISTRATIONS", "disposition": "RESOLVED_BY_VERSIONED_METHOD", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP", "disposition": "REMAINS_FINAL_DERIVED_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-121-PROSPECTIVE-EVIDENCE-SUFFICIENCY", "disposition": "RESOLVED_BY_OWNER_REGISTRATION", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE", "disposition": "REMAINS_ENGINEERING_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR", "disposition": "METHOD_REGISTERED_IMPLEMENTATION_REMAINS", "replacement_blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"},
+    {"blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION", "disposition": "REMAINS_ENGINEERING_EVIDENCE_BLOCKER", "replacement_blocker_code": null},
+    {"blocker_code": "NEE-122-PRODUCTION-FAMILY-POLICY", "disposition": "RESOLVED_BY_VERSIONED_POLICY", "replacement_blocker_code": null}
+  ],
+  "claims": {
+    "production_ready": false,
+    "milestone_m0_complete": false,
+    "data_spine_start_authorized": false,
+    "empirical_performance_available": false,
+    "alpha_proven": false,
+    "effective_trials_computable": false,
+    "dsr_computable": false,
+    "portfolio_capacity_available": false,
+    "owner_decisions_registered": true
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "../../schemas/governance/specification-freeze-policy-v2.schema.json",
+  "schema_version": "qme.specification_freeze_policy.v2",
+  "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V2",
+  "ticket_id": "NEE-110",
+  "policy_status": "BLOCKED_EVIDENCE_AND_ENGINEERING_ONLY",
+  "canonicalization": "qme.foundation.canonical_json.v1",
+  "supersedes": {
+    "policy_path": "configs/governance/specification-freeze-policy-v1.json",
+    "policy_file_sha256": "0bee3c76:e8e013c9:75db2c2d:5f76dbeb:dc57fda1:a9571369:e5d9094c:b6c6c24d",
+    "policy_semantic_sha256": "f11546e4:f9f0b4d7:066d4d68:c002edbe:26d1451e:7ffd5540:b2b37fb1:1be50719",
+    "evidence_manifest_path": "configs/governance/specification-freeze-v1.hashes.json",
+    "evidence_manifest_sha256": "bf863fd6:0a9a5cbf:976dae48:3577a6f1:f5ba10f0:c7fd1cfb:eaacfc21:a0b18e3b"
+  },
+  "registration": {
+    "manifest_path": "configs/governance/m0-registration-v1.hashes.json",
+    "manifest_sha256": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db",
+    "registration_path": "configs/governance/m0-registration-v1.json",
+    "registration_sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+    "registered_decisions": true,
+    "production_evidence_complete": false
+  },
+  "accepted_evidence": [
+    {
+      "evidence_id": "QME_CONFIG_V1_CONTRACT",
+      "resolves_blocker_code": "NEE-110-QME-CONFIG-V1-CONTRACT",
+      "commit_sha": "c4510ed5:7e415872:62fb6b52:f6d9d6ae:a4c49857",
+      "protected_main_ci_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31612222113",
+      "required_check": "foundation",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "evidence_id": "EXACT_SHA_REMOTE_CI",
+      "resolves_blocker_code": "NEE-117-EXACT-SHA-REMOTE-CI",
+      "commit_sha": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+      "protected_main_ci_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31620202502",
+      "required_check": "foundation",
+      "conclusion": "SUCCESS"
+    }
+  ],
+  "resolved_or_superseded_blocker_codes": [
+    "NEE-110-QME-CONFIG-V1-CONTRACT",
+    "NEE-116-HUMAN-INDEPENDENT-REVIEW",
+    "NEE-116-OFFICIAL-OPEN-FALLBACK",
+    "NEE-116-TAX-LOT-METHOD",
+    "NEE-117-EXACT-SHA-REMOTE-CI",
+    "NEE-119-MINIMUM-ELIGIBLE-BREADTH",
+    "NEE-119-PRODUCTION-SOURCE-FRESHNESS",
+    "NEE-120-AUM-CAPACITY-LIMITS",
+    "NEE-120-INFERENCE-POLICY",
+    "NEE-120-PROMOTION-MANDATE",
+    "NEE-120-PREREGISTRATION-APPROVAL",
+    "NEE-121-HISTORICAL-ACCESS-PROVENANCE",
+    "NEE-121-LABEL-ENDPOINT-REGISTRATIONS",
+    "NEE-121-PROSPECTIVE-EVIDENCE-SUFFICIENCY",
+    "NEE-122-DEPENDENCE-ESTIMATOR",
+    "NEE-122-PRODUCTION-FAMILY-POLICY"
+  ],
+  "unresolved_blockers": [
+    {"blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL", "ticket_id": "NEE-110", "category": "GOVERNANCE", "description": "The registered v2 package still requires final cross-contract semantic acceptance after all production evidence artifacts exist."},
+    {"blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD", "ticket_id": "NEE-116", "category": "ENGINEERING_EVIDENCE", "description": "Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."},
+    {"blocker_code": "NEE-116-CAPACITY-SOLVER", "ticket_id": "NEE-116", "category": "ENGINEERING_EVIDENCE", "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."},
+    {"blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES", "ticket_id": "NEE-116", "category": "PRODUCTION_EVIDENCE", "description": "The registered corporate-action targets do not yet have immutable provider and independent-source receipts plus accepted ledger fixtures."},
+    {"blocker_code": "NEE-116-PRODUCTION-PIT-DATA", "ticket_id": "NEE-116", "category": "PRODUCTION_EVIDENCE", "description": "Accepted point-in-time production data and receipts are unavailable."},
+    {"blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE", "ticket_id": "NEE-116", "category": "ENGINEERING_EVIDENCE", "description": "FIFO/HIFO election handling, lot accounting, and within-account wash-sale logic lack implementation and fixtures."},
+    {"blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP", "ticket_id": "NEE-119", "category": "PRODUCTION_EVIDENCE", "description": "No accepted point-in-time Nasdaq-100 membership authority or immutable membership snapshot is registered."},
+    {"blocker_code": "NEE-119-AV-PROXY-EVIDENCE", "ticket_id": "NEE-119", "category": "PRODUCTION_EVIDENCE", "description": "No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."},
+    {"blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE", "ticket_id": "NEE-120", "category": "ENGINEERING_EVIDENCE", "description": "The registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance fixtures."},
+    {"blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION", "ticket_id": "NEE-121", "category": "PRODUCTION_EVIDENCE", "description": "The pinned XNYS library, calendar artifact, ordered session vector, hashes, and closure/half-day fixtures are unavailable."},
+    {"blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP", "ticket_id": "NEE-121", "category": "FINAL_DERIVED_EVIDENCE", "description": "The final freeze timestamp is derived only after every other blocker is accepted and therefore remains unavailable."},
+    {"blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE", "ticket_id": "NEE-122", "category": "ENGINEERING_EVIDENCE", "description": "The analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures are not implemented and independently validated."},
+    {"blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE", "ticket_id": "NEE-122", "category": "ENGINEERING_EVIDENCE", "description": "The registered Ledoit-Wolf participation-ratio estimator and bootstrap uncertainty procedure are not implemented."},
+    {"blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION", "ticket_id": "NEE-122", "category": "ENGINEERING_EVIDENCE", "description": "A production-scale content-addressed NEE-121 access-chain export and inclusion proof remain unavailable."}
+  ],
+  "claims": {
+    "owner_decisions_registered": true,
+    "all_remaining_blockers_are_evidence_or_engineering": true,
+    "production_specification_accepted": false,
+    "milestone_m0_complete": false,
+    "data_spine_start_authorized": false,
+    "production_ready": false,
+    "empirical_performance_available": false,
+    "effective_trials_computable": false,
+    "dsr_computable": false,
+    "portfolio_capacity_available": false
+  },
+  "blocked_downstream_issue_ids": ["NEE-114", "NEE-123", "NEE-124", "NEE-125", "NEE-126", "NEE-127", "NEE-128"]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/specification-freeze-policy-v2.schema.json",
+  "title": "QME specification freeze policy v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "policy_id", "ticket_id", "policy_status", "canonicalization", "supersedes", "registration", "accepted_evidence", "resolved_or_superseded_blocker_codes", "unresolved_blockers", "claims", "blocked_downstream_issue_ids"],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/specification-freeze-policy-v2.schema.json"},
+    "schema_version": {"const": "qme.specification_freeze_policy.v2"},
+    "policy_id": {"const": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V2"},
+    "ticket_id": {"const": "NEE-110"},
+    "policy_status": {"const": "BLOCKED_EVIDENCE_AND_ENGINEERING_ONLY"},
+    "canonicalization": {"const": "qme.foundation.canonical_json.v1"},
+    "supersedes": {"type": "object", "additionalProperties": false, "required": ["policy_path", "policy_file_sha256", "policy_semantic_sha256", "evidence_manifest_path", "evidence_manifest_sha256"], "properties": {"policy_path": {"const": "configs/governance/specification-freeze-policy-v1.json"}, "policy_file_sha256": {"const": "0bee3c76:e8e013c9:75db2c2d:5f76dbeb:dc57fda1:a9571369:e5d9094c:b6c6c24d"}, "policy_semantic_sha256": {"const": "f11546e4:f9f0b4d7:066d4d68:c002edbe:26d1451e:7ffd5540:b2b37fb1:1be50719"}, "evidence_manifest_path": {"const": "configs/governance/specification-freeze-v1.hashes.json"}, "evidence_manifest_sha256": {"const": "bf863fd6:0a9a5cbf:976dae48:3577a6f1:f5ba10f0:c7fd1cfb:eaacfc21:a0b18e3b"}}},
+    "registration": {"type": "object", "additionalProperties": false, "required": ["manifest_path", "manifest_sha256", "registration_path", "registration_sha256", "registered_decisions", "production_evidence_complete"], "properties": {"manifest_path": {"const": "configs/governance/m0-registration-v1.hashes.json"}, "manifest_sha256": {"const": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db"}, "registration_path": {"const": "configs/governance/m0-registration-v1.json"}, "registration_sha256": {"const": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756"}, "registered_decisions": {"const": true}, "production_evidence_complete": {"const": false}}},
+    "accepted_evidence": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["evidence_id", "resolves_blocker_code", "commit_sha", "protected_main_ci_url", "required_check", "conclusion"], "properties": {"evidence_id": {"enum": ["QME_CONFIG_V1_CONTRACT", "EXACT_SHA_REMOTE_CI"]}, "resolves_blocker_code": {"enum": ["NEE-110-QME-CONFIG-V1-CONTRACT", "NEE-117-EXACT-SHA-REMOTE-CI"]}, "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){4}$"}, "protected_main_ci_url": {"type": "string", "format": "uri"}, "required_check": {"const": "foundation"}, "conclusion": {"const": "SUCCESS"}}}},
+    "resolved_or_superseded_blocker_codes": {"type": "array", "minItems": 16, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^NEE-[0-9]+-[A-Z0-9-]+$"}},
+    "unresolved_blockers": {"type": "array", "minItems": 14, "maxItems": 14, "uniqueItems": true, "items": {"$ref": "#/$defs/blocker"}},
+    "claims": {"const": {"owner_decisions_registered": true, "all_remaining_blockers_are_evidence_or_engineering": true, "production_specification_accepted": false, "milestone_m0_complete": false, "data_spine_start_authorized": false, "production_ready": false, "empirical_performance_available": false, "effective_trials_computable": false, "dsr_computable": false, "portfolio_capacity_available": false}},
+    "blocked_downstream_issue_ids": {"const": ["NEE-114", "NEE-123", "NEE-124", "NEE-125", "NEE-126", "NEE-127", "NEE-128"]}
+  },
+  "$defs": {
+    "blocker": {"type": "object", "additionalProperties": false, "required": ["blocker_code", "ticket_id", "category", "description"], "properties": {"blocker_code": {"type": "string", "pattern": "^NEE-[0-9]+-[A-Z0-9-]+$"}, "ticket_id": {"type": "string", "pattern": "^NEE-[0-9]+$"}, "category": {"enum": ["GOVERNANCE", "ENGINEERING_EVIDENCE", "PRODUCTION_EVIDENCE", "FINAL_DERIVED_EVIDENCE"]}, "description": {"type": "string", "minLength": 1}}}
+  }
+}

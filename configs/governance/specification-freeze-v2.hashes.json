@@ -1,0 +1,12 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "manifest_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V2",
+  "status": "BLOCKED_EVIDENCE_AND_ENGINEERING_ONLY",
+  "artifacts": {
+    "configs/governance/m0-registration-v1.hashes.json": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db",
+    "configs/governance/specification-freeze-policy-v2.json": "95bfbe9e:82521956:c24c83cc:dd4a0caf:ecd8a2c5:3434f761:23378d19:3bc52683",
+    "qme/governance/specification_freeze_v2.py": "f56ae091:eea0ee03:67dae997:f6a60999:899ca9d4:5c7a90bf:c8f62969:4429e333",
+    "schemas/governance/specification-freeze-policy-v2.schema.json": "a359c2d3:32ec1c7e:2fce2164:309f1dba:bb0427c6:9d4c8f8d:51bef2a1:33adf1a2",
+    "tests/governance/test_specification_freeze_v2_policy.py": "a42670ac:2e058b4d:a6ffbf69:9473848e:9d0e7193:fe88d842:f42676d8:a74db74a"
+  }
+}

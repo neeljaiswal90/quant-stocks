@@ -1,0 +1,68 @@
+{
+  "$schema": "../../schemas/governance/experiment-family-registration-v1.schema.json",
+  "schema_version": "qme.experiment_family_registration.v1",
+  "family_id": "QME-065-PRECOMMITTED-MOMENTUM-GRID-V1",
+  "authority": {
+    "ticket_id": "NEE-122",
+    "mandate_source_sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+    "mandate_source_commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+    "approval_owner": "neeljaiswal90",
+    "approved_at": "2026-08-12T16:57:29Z"
+  },
+  "axes": {
+    "lookbacks": ["6-1", "9-1", "12-1", "12-2"],
+    "holding_rules": ["TOP_30", "TOP_50_QUINTILE_CAP", "TOP_QUINTILE"],
+    "rebalance_rules": ["MONTHLY", "WEEKLY"],
+    "filters": ["NONE", "QQQ_TR_SMA_14", "QQQ_TR_SMA_200", "SPY_TR_SMA_200"]
+  },
+  "cardinality": {
+    "structural_configuration_count": 96,
+    "cost_report_count_per_structure": 3,
+    "reported_output_count": 288,
+    "selection_hypothesis_count_m": 96
+  },
+  "cost_scenarios": [
+    {"cost_bps_per_side": 5, "selection_role": "REPORTING_ONLY"},
+    {"cost_bps_per_side": 10, "selection_role": "PRIMARY_SELECTION"},
+    {"cost_bps_per_side": 25, "selection_role": "REPORTING_ONLY"}
+  ],
+  "selection": {
+    "rule": "PRE_COMMITTED_BASELINE_NO_WINNER_SELECTION",
+    "baseline": {
+      "lookback": "12-1",
+      "holding_rule": "TOP_50_QUINTILE_CAP",
+      "rebalance_rule": "MONTHLY",
+      "filter": "NONE",
+      "cost_bps_per_side": 10
+    },
+    "confirmatory_family_size_m": 1,
+    "other_structures_role": "ROBUSTNESS_REPORTING",
+    "selection_across_cost_scenarios_allowed": false
+  },
+  "registration_rules": {
+    "all_grid_trials_before_first_trial_started": true,
+    "off_grid_requires_registration_before_start": true,
+    "abandoned_failed_skipped_retained": true,
+    "technical_retry_same_trial_new_run_id": true
+  },
+  "effective_trials_method": {
+    "method_id": "qme-ledoit-wolf-participation-ratio-v1",
+    "status": "REGISTERED_METHOD_PENDING_IMPLEMENTATION_AND_FIXTURE",
+    "input": "COMMON_MONTHLY_NET_RETURN_MATRIX_10_BPS_DEVELOPMENT_WINDOW",
+    "minimum_common_months": 60,
+    "pairwise_complete_allowed": false,
+    "covariance_estimator": "LEDOIT_WOLF",
+    "correlation_derivation": "RESCALE_SHRUNK_COVARIANCE_BY_POSITIVE_FINITE_DIAGONAL",
+    "point_estimator": "SQUARED_EIGENVALUE_SUM_DIVIDED_BY_SUM_OF_SQUARED_EIGENVALUES",
+    "clamp_lower": 1,
+    "clamp_upper": 96,
+    "bootstrap_method": "STATIONARY_BLOCK_BOOTSTRAP_OVER_COMMON_MONTHS_REFIT_FULL_ESTIMATOR",
+    "bootstrap_replicates": 2000,
+    "bootstrap_seed": 20260812,
+    "bootstrap_quantile_percent": "97.5",
+    "n_eff_used_rule": "MIN_96_CEILING_P97_5",
+    "failure_fallback_m": 96,
+    "may_compute_production_n_eff": false,
+    "may_compute_dsr": false
+  }
+}
