@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/ui/ui-universe-v1.schema.json",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "numeric": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_decimal": {"pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$", "type": "string"},
+        "display_decimal": {"pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$", "type": "string"},
+        "display_precision": {"maximum": 18, "minimum": 0, "type": "integer"},
+        "display_text": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "missing_state": {"enum": ["PRESENT", "MISSING", "BLOCKED", "INVALID", "STALE"]},
+        "rounding_mode": {"const": "ROUND_HALF_EVEN"},
+        "scale": {"pattern": "^(?:0\\.[0-9]*[1-9][0-9]*|[1-9][0-9]*(?:\\.[0-9]+)?)$", "type": "string"},
+        "sort_key": {"maxLength": 256, "minLength": 1, "type": "string"},
+        "source_artifact_hash": {"$ref": "#/$defs/sha256"},
+        "source_pointer": {"pattern": "^/", "type": "string"},
+        "unit": {"enum": ["PERCENT", "USD", "RATIO", "COUNT", "RANK", "SHARES"]}
+      },
+      "required": [
+        "display_precision", "display_text", "missing_state", "rounding_mode", "scale",
+        "sort_key", "source_artifact_hash", "source_pointer", "unit"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "if": {"properties": {"missing_state": {"const": "PRESENT"}}, "required": ["missing_state"]},
+          "then": {"required": ["canonical_decimal", "display_decimal"]},
+          "else": {
+            "not": {"anyOf": [{"required": ["canonical_decimal"]}, {"required": ["display_decimal"]}]}
+          }
+        }
+      ]
+    },
+    "row": {
+      "additionalProperties": false,
+      "properties": {
+        "company_name": {"maxLength": 512, "minLength": 1, "type": "string"},
+        "data_status": {"enum": ["VALID", "DEGRADED", "STALE", "MISSING", "BLOCKED", "INVALID"]},
+        "momentum_12_1": {"$ref": "#/$defs/numeric"},
+        "rank": {"$ref": "#/$defs/numeric"},
+        "review_reasons": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true},
+        "row_hash": {"$ref": "#/$defs/sha256"},
+        "security_id": {"maxLength": 128, "minLength": 1, "pattern": "^[^/\\\\\\s]+$", "type": "string"},
+        "selected": {"type": "boolean"},
+        "ticker": {"maxLength": 32, "minLength": 1, "type": "string"}
+      },
+      "required": [
+        "company_name", "data_status", "momentum_12_1", "rank", "review_reasons",
+        "row_hash", "security_id", "selected", "ticker"
+      ],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "membership_count": {"maximum": 200, "minimum": 1, "type": "integer"},
+    "membership_hash": {"$ref": "#/$defs/sha256"},
+    "rows": {"items": {"$ref": "#/$defs/row"}, "maxItems": 200, "minItems": 1, "type": "array"},
+    "run_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "type": "string"},
+    "schema_version": {"const": "qme.ui.universe.v1"}
+  },
+  "required": ["membership_count", "membership_hash", "rows", "run_id", "schema_version"],
+  "type": "object"
+}

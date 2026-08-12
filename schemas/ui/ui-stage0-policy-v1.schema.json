@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/ui/ui-stage0-policy-v1.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_id": {"const": "qme.foundation.canonical_json.v1"},
+    "compatibility": {
+      "const": [
+        {
+          "producer_schema": "qme.synthetic.ui_source.v1",
+          "snapshot_schema": "qme.ui.snapshot_manifest.v1",
+          "status": "SYNTHETIC_FIXTURES_ONLY",
+          "universe_schema": "qme.ui.universe.v1"
+        }
+      ]
+    },
+    "completeness_states": {"const": ["CONFLICTING", "INCOMPLETE", "COMPLETE"]},
+    "evidence_state": {"const": "SYNTHETIC_CONTRACT_ONLY"},
+    "member_status_buckets": {
+      "const": ["VALID", "DEGRADED", "STALE", "MISSING", "BLOCKED", "INVALID"]
+    },
+    "membership": {
+      "const": {
+        "algorithm_id": "QME_MEMBERSHIP_SET_V1",
+        "case_policy": "PRESERVE_CASE_REJECT_CASEFOLD_COLLISION",
+        "domain_separator_utf8": "QME_MEMBERSHIP_SET_V1\\0",
+        "maximum_members": 200,
+        "normalization": "NFC",
+        "sort": "UTF8_BYTES_ASC"
+      }
+    },
+    "numeric_display": {
+      "const": {
+        "client_numeric_parsing": "FORBIDDEN",
+        "decimal_precision": 50,
+        "maximum_display_precision": 18,
+        "policy_id": "qme.ui.decimal_display.v1",
+        "rounding_mode": "ROUND_HALF_EVEN"
+      }
+    },
+    "policy_id": {"const": "NEE-169-STAGE0-LOCAL-UI-CONTRACT-V1"},
+    "production_activation": {"const": "BLOCKED_UNTIL_PRODUCER_SCHEMAS_ACCEPTED"},
+    "quality_precedence": {
+      "const": [
+        "CORRUPT", "CONFLICTING", "UNSUPPORTED_SCHEMA", "INVALID", "MISSING",
+        "BLOCKED", "STALE", "DEGRADED", "VALID"
+      ]
+    },
+    "resource_limits": {
+      "const": {
+        "maximum_artifacts": 32,
+        "maximum_json_depth": 32,
+        "maximum_members": 200,
+        "maximum_payload_bytes": 8388608,
+        "maximum_snapshot_bytes": 16777216,
+        "maximum_text_characters": 100000
+      }
+    },
+    "schema_version": {"const": "qme.ui.stage0_policy.v1"}
+  },
+  "required": [
+    "canonicalization_id", "compatibility", "completeness_states", "evidence_state",
+    "member_status_buckets", "membership", "numeric_display", "policy_id",
+    "production_activation", "quality_precedence", "resource_limits", "schema_version"
+  ],
+  "type": "object"
+}
