@@ -1,0 +1,75 @@
+{
+  "schema_version": "qme.deterministic_stats_kernel_vectors.v1",
+  "pcg32_official_reference": {
+    "source_url": "https://www.pcg-random.org/using-pcg-c.html",
+    "initstate": 42,
+    "initseq": 54,
+    "first_six_hex": [
+      "a15c02b7",
+      "7b47f409",
+      "ba1d3330",
+      "83d2f293",
+      "bfa4784b",
+      "cbed606e"
+    ]
+  },
+  "splitmix64_seeded_pcg32": {
+    "seed": 20260812,
+    "initstate": 4007265125838523138,
+    "initseq": 14898109804989224333,
+    "first_sixteen_hex": [
+      "4aa3d612",
+      "8409375b",
+      "e91d4237",
+      "b3a6701d",
+      "b350dbcb",
+      "cd95bc7d",
+      "26123a34",
+      "49abddd1",
+      "7c36833a",
+      "3443310e",
+      "613053a7",
+      "533ee885",
+      "7137277e",
+      "0fba57ef",
+      "0d266f00",
+      "1a342114"
+    ],
+    "first_eight_uniform_hex": [
+      "0x1.2a8f584800000p-2",
+      "0x1.08126eb600000p-1",
+      "0x1.d23a846e00000p-1",
+      "0x1.674ce03a00000p-1",
+      "0x1.66a1b79600000p-1",
+      "0x1.9b2b78fa00000p-1",
+      "0x1.3091d1a000000p-3",
+      "0x1.26af774400000p-2"
+    ],
+    "first_sixteen_indices_bound_7": [0, 6, 1, 1, 4, 1, 1, 3, 2, 4, 6, 1, 1, 1, 1, 2],
+    "first_sixteen_geometric_mean_4": [7, 8, 1, 12, 4, 1, 4, 2, 7, 3, 4, 2, 7, 8, 7, 1],
+    "bounded_index_adversarial": {
+      "large_bound": 2147483649,
+      "large_bound_first_rejected_hex": "4aa3d612",
+      "large_bound_first_result": 67712858,
+      "full_uint32_bound_first_result": 1252251154
+    }
+  },
+  "stationary_bootstrap": {
+    "series_length": 12,
+    "replicate_count": 8,
+    "mean_block_length": 4,
+    "seed": 20260812,
+    "canonical_replicates_sha256_words_be": [
+      2859350561,
+      604952037,
+      1343773392,
+      1069821688,
+      1482385342,
+      880694514,
+      21711734,
+      3277408922
+    ],
+    "explicit_replicates_mean_4": [[4, 0, 1, 2, 3], [4, 0, 1, 2, 3]],
+    "explicit_replicates_mean_1": [[4, 3, 1, 1, 2], [0, 3, 2, 0, 2]]
+  }
+}

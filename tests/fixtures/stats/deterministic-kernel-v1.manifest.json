@@ -1,0 +1,43 @@
+{
+  "schema_version": "qme.deterministic_stats_kernel_manifest.v1",
+  "artifact_id": "QME-DETERMINISTIC-STATS-KERNEL-V1",
+  "implementation_status": "BOUNDED_KERNEL_BLOCK_SELECTOR_UNAVAILABLE",
+  "artifacts": [
+    {
+      "path": "qme/stats/__init__.py",
+      "sha256_words_be": [3500815934, 3447986993, 980099487, 1464883426, 2061198357, 2352871552, 3147689296, 2845671704]
+    },
+    {
+      "path": "qme/stats/rng.py",
+      "sha256_words_be": [2676676063, 3225276803, 4031683738, 1231622879, 3032965482, 1081375714, 1197873613, 4055516717]
+    },
+    {
+      "path": "qme/stats/bootstrap.py",
+      "sha256_words_be": [569639616, 3497413683, 4215349466, 2234791162, 2564006183, 775328234, 1509537160, 1091614406]
+    },
+    {
+      "path": "schemas/stats/deterministic-kernel-v1-manifest.schema.json",
+      "sha256_words_be": [1371137514, 1872354317, 3091342610, 132038523, 2342007515, 4269006199, 1947209094, 2766719549]
+    },
+    {
+      "path": "schemas/stats/deterministic-kernel-v1-vectors.schema.json",
+      "sha256_words_be": [364248848, 2046649389, 3395676486, 336199333, 2697368651, 2659829229, 426596371, 3776698246]
+    },
+    {
+      "path": "tests/fixtures/stats/deterministic-kernel-v1.vectors.json",
+      "sha256_words_be": [3295935456, 1439570092, 3732549870, 215978182, 1070626837, 1638089868, 1812061652, 618804812]
+    },
+    {
+      "path": "tests/stats/test_deterministic_kernel.py",
+      "sha256_words_be": [2824144683, 3487179027, 3065575020, 1956856449, 3604049901, 1475141732, 3289092713, 2144383631]
+    },
+    {
+      "path": "docs/stats/DETERMINISTIC_STATS_KERNEL_V1.md",
+      "sha256_words_be": [1376780488, 1372426022, 949237931, 504534682, 1059090633, 1128265443, 2655796258, 3134847440]
+    }
+  ],
+  "limitations": [
+    "POLITIS_WHITE_AUTOMATIC_BLOCK_SELECTION_NOT_IMPLEMENTED",
+    "PRODUCTION_INFERENCE_REMAINS_BLOCKED"
+  ]
+}

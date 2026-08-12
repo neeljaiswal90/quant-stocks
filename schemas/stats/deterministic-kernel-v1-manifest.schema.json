@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/stats/deterministic-kernel-v1-manifest.schema.json",
+  "title": "QME deterministic statistics kernel v1 bounded manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "implementation_status", "artifacts", "limitations"],
+  "properties": {
+    "schema_version": {"const": "qme.deterministic_stats_kernel_manifest.v1"},
+    "artifact_id": {"const": "QME-DETERMINISTIC-STATS-KERNEL-V1"},
+    "implementation_status": {"const": "BOUNDED_KERNEL_BLOCK_SELECTOR_UNAVAILABLE"},
+    "artifacts": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256_words_be"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256_words_be": {"$ref": "#/$defs/sha256Words"}
+        }
+      }
+    },
+    "limitations": {
+      "const": [
+        "POLITIS_WHITE_AUTOMATIC_BLOCK_SELECTION_NOT_IMPLEMENTED",
+        "PRODUCTION_INFERENCE_REMAINS_BLOCKED"
+      ]
+    }
+  },
+  "$defs": {
+    "sha256Words": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    }
+  }
+}
