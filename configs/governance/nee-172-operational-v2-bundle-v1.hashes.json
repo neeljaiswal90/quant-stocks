@@ -1,0 +1,12 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-172-OPERATIONAL-V2-BUNDLE-V1",
+  "status": "MATERIALIZED_INTEGRITY_VERIFIED_ACTIVE_BLOCKERS_REMAIN",
+  "artifacts": [
+    {"path": "configs/governance/nee-172-operational-v2-bundle-v1.json", "sha256": "b133cb3d:a54fe242:816c77ec:93f7903b:f8672bb8:013c6504:b6ddb305:6646da1e"},
+    {"path": "docs/governance/NEE_172_OPERATIONAL_V2_BUNDLE_V1.md", "sha256": "dfd0dd27:22c828a3:fa23d488:fbdb0a79:09b68bac:d82c2b97:ca1f0c49:9a57fb96"},
+    {"path": "qme/governance/operational_v2_bundle.py", "sha256": "7265cfba:6c38e118:8c3ed91f:7daef106:2135daae:a1fce601:ef4b079c:93dcc789"},
+    {"path": "schemas/governance/nee-172-operational-v2-bundle-v1.schema.json", "sha256": "d1ebe465:fe43f781:4ca70f85:c3f9d779:ccb2b4d1:abeda11b:d3859a5a:08438070"},
+    {"path": "tests/governance/test_operational_v2_bundle.py", "sha256": "c4fa3eda:dee40df2:b23d9f2b:78bf96e4:efaba7fa:c3f1be5e:7ccf497c:c0409bc3"}
+  ]
+}

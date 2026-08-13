@@ -1,0 +1,15 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V3",
+  "status": "BLOCKED_14_ACTIVE",
+  "artifacts": [
+    {"path":"configs/governance/nee-172-operational-v2-bundle-v1.hashes.json","sha256":"00d014d6:3f409378:a1b4c7f9:95caf9b7:cb81e7be:48ba40f1:a5c85f6a:496d78df"},
+    {"path":"configs/governance/specification-freeze-export-v2.json","sha256":"899f222d:e69a63b1:0653dd63:10a98329:d496a06b:772cfcd5:de16e0b2:7bd9fcab"},
+    {"path":"configs/governance/specification-freeze-policy-v3.json","sha256":"a8af9098:52e71ec1:b91a5c23:30290bec:967e443b:d616997b:4020a599:0af0ec53"},
+    {"path":"docs/governance/SPECIFICATION_FREEZE_V3.md","sha256":"c3f847eb:19b5f7f2:01b09912:8a6f262f:74a34959:614b1805:b705c27a:95a885ce"},
+    {"path":"qme/governance/specification_freeze_v3.py","sha256":"d678778e:04b1ee77:f39b26f2:596931f5:70eb3704:46d3be6d:b5c52855:3210a7f7"},
+    {"path":"schemas/governance/specification-freeze-export-v2.schema.json","sha256":"dd6304a7:1fb50973:418489b3:be77589a:1b634e75:7f7de3cf:676e0f76:5fe63551"},
+    {"path":"schemas/governance/specification-freeze-policy-v3.schema.json","sha256":"a92de54e:328d9256:cbba5d31:bf236037:87729c58:93512107:9d1b13a1:787e55f4"},
+    {"path":"tests/governance/test_specification_freeze_v3.py","sha256":"f90e1fcd:5eeb422e:28d47e12:df6ad465:e992c0dd:53ff8fe1:613f37f2:d8465aa9"}
+  ]
+}
