@@ -1,0 +1,87 @@
+{
+  "schema_version": "qme.xnas_calendar_official_cases.v1",
+  "data_class": "BOUNDED_PRIMARY_SOURCE_CASES_NOT_COMPLETE_OFFICIAL_HISTORY",
+  "calendar_id": "XNAS_2010-01-04_2027-12-31_v1",
+  "sources": [
+    {
+      "source_id": "NASDAQ_SANDY_2012_10_29",
+      "publisher": "Nasdaq Trader",
+      "url": "https://www.nasdaqtrader.com/TraderNews.aspx?id=ETA2012-44",
+      "assertion": "NASDAQ U.S. equity markets closed on 2012-10-29"
+    },
+    {
+      "source_id": "NASDAQ_SANDY_2012_10_30",
+      "publisher": "Nasdaq Trader",
+      "url": "https://www.nasdaqtrader.com/TraderNews.aspx?id=mfqsnews2012-003",
+      "assertion": "NASDAQ U.S. equity markets closed on 2012-10-30"
+    },
+    {
+      "source_id": "NASDAQ_BUSH_2018_12_05",
+      "publisher": "Nasdaq Trader",
+      "url": "https://www.nasdaqtrader.com/TraderNews.aspx?id=ETA2018-98",
+      "assertion": "The Nasdaq Stock Market closed on 2018-12-05"
+    },
+    {
+      "source_id": "NASDAQ_THANKSGIVING_2018_11_23",
+      "publisher": "Nasdaq Trader",
+      "url": "https://www.nasdaqtrader.com/TraderNews.aspx?id=ETA2018-92",
+      "assertion": "Nasdaq day session closed at 13:00 America/New_York on 2018-11-23"
+    },
+    {
+      "source_id": "NASDAQ_CARTER_2025_01_09",
+      "publisher": "Nasdaq Trader",
+      "url": "https://www.nasdaqtrader.com/TraderNews.aspx?id=ETA2025-1",
+      "assertion": "The Nasdaq Stock Market closed on 2025-01-09"
+    },
+    {
+      "source_id": "NASDAQ_PUBLISHED_2026_CALENDAR",
+      "publisher": "Nasdaq Trader",
+      "url": "https://www.nasdaqtrader.com/trader.aspx?id=Calendar",
+      "assertion": "Published 2026 schedule lists 13:00 early closes on 2026-11-27 and 2026-12-24"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "sandy_closure_2012_10_29",
+      "source_id": "NASDAQ_SANDY_2012_10_29",
+      "session_id": "2012-10-29",
+      "expected": {"present": false, "market_open": null, "market_close": null, "close_class": null, "authority_phase": null}
+    },
+    {
+      "case_id": "sandy_closure_2012_10_30",
+      "source_id": "NASDAQ_SANDY_2012_10_30",
+      "session_id": "2012-10-30",
+      "expected": {"present": false, "market_open": null, "market_close": null, "close_class": null, "authority_phase": null}
+    },
+    {
+      "case_id": "bush_mourning_closure_2018_12_05",
+      "source_id": "NASDAQ_BUSH_2018_12_05",
+      "session_id": "2018-12-05",
+      "expected": {"present": false, "market_open": null, "market_close": null, "close_class": null, "authority_phase": null}
+    },
+    {
+      "case_id": "thanksgiving_early_close_2018_11_23",
+      "source_id": "NASDAQ_THANKSGIVING_2018_11_23",
+      "session_id": "2018-11-23",
+      "expected": {"present": true, "market_open": "2018-11-23T09:30:00-05:00", "market_close": "2018-11-23T13:00:00-05:00", "close_class": "EARLY_CLOSE", "authority_phase": "GENERATED_HISTORICAL_CANDIDATE"}
+    },
+    {
+      "case_id": "carter_mourning_closure_2025_01_09",
+      "source_id": "NASDAQ_CARTER_2025_01_09",
+      "session_id": "2025-01-09",
+      "expected": {"present": false, "market_open": null, "market_close": null, "close_class": null, "authority_phase": null}
+    },
+    {
+      "case_id": "published_future_thanksgiving_early_close_2026_11_27",
+      "source_id": "NASDAQ_PUBLISHED_2026_CALENDAR",
+      "session_id": "2026-11-27",
+      "expected": {"present": true, "market_open": "2026-11-27T09:30:00-05:00", "market_close": "2026-11-27T13:00:00-05:00", "close_class": "EARLY_CLOSE", "authority_phase": "GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY"}
+    },
+    {
+      "case_id": "published_future_christmas_early_close_2026_12_24",
+      "source_id": "NASDAQ_PUBLISHED_2026_CALENDAR",
+      "session_id": "2026-12-24",
+      "expected": {"present": true, "market_open": "2026-12-24T09:30:00-05:00", "market_close": "2026-12-24T13:00:00-05:00", "close_class": "EARLY_CLOSE", "authority_phase": "GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY"}
+    }
+  ]
+}
