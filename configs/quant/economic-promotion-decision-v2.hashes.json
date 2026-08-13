@@ -1,0 +1,14 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-120-QME-ECONOMIC-DECISION-V2",
+  "implementation_status": "OWNER_REGISTERED_OPERATIONAL_CONTRACT_IMPLEMENTATION_AND_EVIDENCE_BLOCKED",
+  "production_status": "BLOCKED_NO_PRODUCTION_EVIDENCE_OR_METHOD_IMPLEMENTATION",
+  "artifacts": [
+    {"path": "configs/quant/economic-promotion-decision-v2.json", "sha256": "02d055b0:26d9352e:aa0979cd:c158d9df:26ed6aad:06259567:291970c9:0a9359a8"},
+    {"path": "docs/quant/ECONOMIC_PROMOTION_DECISION_V2.md", "sha256": "71518d68:95f2fa65:f6e2b4a0:173f70fa:56fb0926:17faacb7:6c6ebb05:aaec0c89"},
+    {"path": "qme/promotion/decision_v2.py", "sha256": "3d47167b:3515b44b:084fbce8:6ee807d7:97f46d0e:54be719d:865706af:fb6c9b00"},
+    {"path": "schemas/quant/economic-promotion-decision-v2.schema.json", "sha256": "1012b328:732f68f6:fe80b4c6:bdae2e81:cc914ee6:cdd13784:dee22409:36709d6d"},
+    {"path": "tests/fixtures/promotion/economic-promotion-decision-v2.cases.json", "sha256": "5bd2a258:e9cab76e:220aafa5:7979ad95:a6910e1b:b24af613:6129bcaa:8785c86c"},
+    {"path": "tests/promotion/test_decision_v2.py", "sha256": "44e53e02:78edb19e:6f0bcc60:1b4a51e9:dddf908f:3a1cbceb:70fb0fb2:3cde8850"}
+  ]
+}

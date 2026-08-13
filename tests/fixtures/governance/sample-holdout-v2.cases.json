@@ -1,0 +1,30 @@
+{
+  "schema_version": "qme.sample_holdout_v2_cases.v1",
+  "rms_cases": [
+    {"id": "exact_threshold_passes", "cycle_count": 6, "distinct_months": 6, "difference": "0.005000000000000000", "mutation": null, "expected_status": "PASS_IMPLEMENTATION_FIDELITY_ONLY", "expected_mse": "0.000025000000000000", "expected_rms": "0.005000000000000000"},
+    {"id": "one_attounit_above_threshold_fails", "cycle_count": 6, "distinct_months": 6, "difference": "0.005000000000000001", "mutation": null, "expected_status": "FAIL_IMPLEMENTATION_FIDELITY_ONLY", "expected_mse": "0.000025000000000000", "expected_rms": "0.005000000000000001"},
+    {"id": "five_cycles_not_computable", "cycle_count": 5, "distinct_months": 5, "difference": "0.000000000000000000", "mutation": null, "expected_status": "NOT_COMPUTABLE_EVIDENCE_MINIMUM_NOT_MET", "expected_reason": "minimum_reconciled_cycles"},
+    {"id": "six_cycles_five_months_not_computable", "cycle_count": 6, "distinct_months": 5, "difference": "0.000000000000000000", "mutation": null, "expected_status": "NOT_COMPUTABLE_EVIDENCE_MINIMUM_NOT_MET", "expected_reason": "minimum_calendar_months"},
+    {"id": "duplicate_cycle_permanent_no_status", "cycle_count": 6, "distinct_months": 6, "difference": "0.000000000000000000", "mutation": "DUPLICATE_CYCLE", "expected_status": "NOT_COMPUTABLE_PERMANENT_NO_PROSPECTIVE_STATUS", "expected_reason": "duplicate_or_invalid_cycle"},
+    {"id": "endpoint_mismatch_permanent_no_status", "cycle_count": 6, "distinct_months": 6, "difference": "0.000000000000000000", "mutation": "ENDPOINT_MISMATCH", "expected_status": "NOT_COMPUTABLE_PERMANENT_NO_PROSPECTIVE_STATUS", "expected_reason": "endpoint_or_artifact_hash_mismatch"},
+    {"id": "unresolved_break_permanent_no_status", "cycle_count": 6, "distinct_months": 6, "difference": "0.000000000000000000", "mutation": "UNRESOLVED_BREAK", "expected_status": "NOT_COMPUTABLE_PERMANENT_NO_PROSPECTIVE_STATUS", "expected_reason": "unresolved_reconciliation_break"},
+    {"id": "noncanonical_decimal_permanent_no_status", "cycle_count": 6, "distinct_months": 6, "difference": "0.000000000000000000", "mutation": "NONCANONICAL_DECIMAL", "expected_status": "NOT_COMPUTABLE_PERMANENT_NO_PROSPECTIVE_STATUS", "expected_reason": "live_return must be a canonical decimal string"}
+  ],
+  "endpoint_cases": [
+    {"id": "one_month", "horizon": "1M", "formation_index": 0, "expected_start_index": 1, "expected_end_index": 22, "expected_row_count": 22},
+    {"id": "three_month", "horizon": "3M", "formation_index": 1, "expected_start_index": 2, "expected_end_index": 65, "expected_row_count": 64},
+    {"id": "six_month", "horizon": "6M", "formation_index": 2, "expected_start_index": 3, "expected_end_index": 129, "expected_row_count": 127}
+  ],
+  "purge_cases": [
+    {"label_end_ordinal": 100, "fold_end_ordinal": 100, "expected_retained": true},
+    {"label_end_ordinal": 101, "fold_end_ordinal": 100, "expected_retained": false}
+  ],
+  "gate_cases": [
+    {"id": "anchor_absent", "anchor_timestamp": null, "session_open_timestamp": "2026-08-14T09:30:00-04:00", "receipt_verified": false, "anchor_receipt_pair_valid": false, "registered_calendar_binding_verified": false, "registered_session_open_verified": false, "expected_status": "NO_PROSPECTIVE_STATUS", "expected_accrual": false, "expected_consumption": false},
+    {"id": "exact_anchor_not_after", "anchor_timestamp": "2026-08-14T09:30:00-04:00", "session_open_timestamp": "2026-08-14T09:30:00-04:00", "receipt_verified": false, "anchor_receipt_pair_valid": true, "registered_calendar_binding_verified": true, "registered_session_open_verified": true, "expected_status": "NOT_PROSPECTIVE", "expected_accrual": false, "expected_consumption": false},
+    {"id": "unverified_calendar_cannot_accrue", "anchor_timestamp": "2026-08-14T09:29:59-04:00", "session_open_timestamp": "2026-08-14T09:30:00-04:00", "receipt_verified": false, "anchor_receipt_pair_valid": true, "registered_calendar_binding_verified": false, "registered_session_open_verified": true, "expected_status": "NO_PROSPECTIVE_STATUS", "expected_accrual": false, "expected_consumption": false},
+    {"id": "accrues_before_receipt_but_cannot_be_consumed", "anchor_timestamp": "2026-08-14T09:29:59-04:00", "session_open_timestamp": "2026-08-14T09:30:00-04:00", "receipt_verified": false, "anchor_receipt_pair_valid": true, "registered_calendar_binding_verified": true, "registered_session_open_verified": true, "expected_status": "ACCRUED_NOT_CONSUMABLE", "expected_accrual": true, "expected_consumption": false},
+    {"id": "invalid_pair_permanent_no_status", "anchor_timestamp": "2026-08-14T09:29:59-04:00", "session_open_timestamp": "2026-08-14T09:30:00-04:00", "receipt_verified": true, "anchor_receipt_pair_valid": false, "registered_calendar_binding_verified": true, "registered_session_open_verified": true, "expected_status": "PERMANENTLY_NO_PROSPECTIVE_STATUS", "expected_accrual": false, "expected_consumption": false},
+    {"id": "verified_pair_consumable", "anchor_timestamp": "2026-08-14T09:29:59-04:00", "session_open_timestamp": "2026-08-14T09:30:00-04:00", "receipt_verified": true, "anchor_receipt_pair_valid": true, "registered_calendar_binding_verified": true, "registered_session_open_verified": true, "expected_status": "PROSPECTIVE_CONSUMABLE", "expected_accrual": true, "expected_consumption": true}
+  ]
+}
