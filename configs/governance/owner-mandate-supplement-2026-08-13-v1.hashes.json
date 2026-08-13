@@ -1,0 +1,13 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "OWNER-MANDATE-2026-08-13-SUPPLEMENT-V1",
+  "implementation_status": "OWNER_DECISIONS_REGISTERED_IMPLEMENTATION_DETAILS_OR_EVIDENCE_BLOCKED",
+  "production_status": "NO_OPERATIONAL_CONTRACT_OR_PRODUCTION_EVIDENCE",
+  "artifacts": [
+    {"path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json", "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5"},
+    {"path": "docs/governance/OWNER_MANDATE_SUPPLEMENT_2026_08_13_V1.md", "sha256": "2a06a74b:88a9dabd:e8a89c0e:560aaee2:14499b2d:7ed39cdb:166bd282:a0e98e17"},
+    {"path": "qme/governance/owner_mandate_supplement.py", "sha256": "8d3b5af1:c78875f9:6e068457:edc553fc:4979f715:228c1166:2dd72786:8fcb3378"},
+    {"path": "schemas/governance/owner-mandate-supplement-2026-08-13-v1.schema.json", "sha256": "ba23bde7:0514384e:3bf5dbb7:d676ca70:42ce427d:43af2544:fe3e7c99:850fe4f5"},
+    {"path": "tests/governance/test_owner_mandate_supplement.py", "sha256": "b9e7e690:5d5e0714:0dafd4a6:55aa7635:afef3b44:a61e9c1e:a01e3c64:1b3dac27"}
+  ]
+}
