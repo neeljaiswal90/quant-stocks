@@ -1,0 +1,14 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2-SLICE",
+  "implementation_status": "HOLDOUT_V2_MATERIALIZED",
+  "production_status": "PRODUCTION_EVIDENCE_AND_FREEZE_RECEIPT_BLOCKED",
+  "artifacts": [
+    {"path": "configs/governance/sample-holdout-v2.json", "sha256": "c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f"},
+    {"path": "docs/governance/SAMPLE_HOLDOUT_V2.md", "sha256": "44ab9f60:fc2413ee:229365f8:edf6db19:dd9ec743:a258fd1b:1480c866:075b4d24"},
+    {"path": "qme/governance/sample_holdout_v2.py", "sha256": "7c8f5b7f:1879b101:fbe8cf3a:c43dea8e:c35bb942:a14c2fc4:32cd6261:e604bb13"},
+    {"path": "schemas/governance/sample-holdout-v2.schema.json", "sha256": "2b6b5f15:1fb2dabd:34ebcaff:f902858f:867747c8:aa58f3ff:e2e1f167:66eb89bc"},
+    {"path": "tests/fixtures/governance/sample-holdout-v2.cases.json", "sha256": "eaf5a57a:7d280357:b9ad7a05:8e125946:30b568b3:3885b5b2:4af123cc:f76f474a"},
+    {"path": "tests/governance/test_sample_holdout_v2.py", "sha256": "c172b90d:3f5b5917:c5f902c2:810378c6:50abec29:a7cc7fa8:f501559c:d9afd91a"}
+  ]
+}

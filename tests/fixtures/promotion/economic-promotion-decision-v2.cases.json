@@ -1,0 +1,195 @@
+{
+  "schema_version": "qme.economic_promotion_decision.v2.boundary_cases.v1",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "cases": [
+    {
+      "case_id": "all-strict-and-weak-boundaries-pass",
+      "input": {
+        "case_id": "all-strict-and-weak-boundaries-pass",
+        "economic_point_estimate": "0.0100000000000000000000000000000000000001",
+        "noninferiority_lcb": "-0.0199999999999999999999999999999999999999",
+        "annualized_one_way_turnover": "4.00",
+        "annualized_tax_drag": "0.02"
+      },
+      "expected": {
+        "overall_status": "ALL_SUPPLIED_BOUNDARIES_PASS_OTHER_REGISTERED_GATES_UNEVALUATED",
+        "criteria": {
+          "primary_economic": "PASS",
+          "primary_noninferiority_lcb": "PASS",
+          "turnover": "PASS",
+          "tax_drag": "PASS"
+        }
+      }
+    },
+    {
+      "case_id": "economic-equality-no-go",
+      "input": {
+        "case_id": "economic-equality-no-go",
+        "economic_point_estimate": "0.01",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "0",
+        "annualized_tax_drag": "0"
+      },
+      "expected": {
+        "overall_status": "NO_GO",
+        "criteria": {
+          "primary_economic": "NO_GO",
+          "primary_noninferiority_lcb": "PASS",
+          "turnover": "PASS",
+          "tax_drag": "PASS"
+        }
+      }
+    },
+    {
+      "case_id": "noninferiority-equality-no-go",
+      "input": {
+        "case_id": "noninferiority-equality-no-go",
+        "economic_point_estimate": "0.02",
+        "noninferiority_lcb": "-0.02",
+        "annualized_one_way_turnover": "1",
+        "annualized_tax_drag": "0.01"
+      },
+      "expected": {
+        "overall_status": "NO_GO",
+        "criteria": {
+          "primary_economic": "PASS",
+          "primary_noninferiority_lcb": "NO_GO",
+          "turnover": "PASS",
+          "tax_drag": "PASS"
+        }
+      }
+    },
+    {
+      "case_id": "turnover-strict-breach-escalates",
+      "input": {
+        "case_id": "turnover-strict-breach-escalates",
+        "economic_point_estimate": "0.02",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "4.0000000000000000000000000000000000000001",
+        "annualized_tax_drag": "0.02"
+      },
+      "expected": {
+        "overall_status": "NO_GO_PENDING_OWNER_REVIEW_NEW_VERSION_REQUIRED_NO_AUTOMATIC_CONTINUATION",
+        "criteria": {
+          "primary_economic": "PASS",
+          "primary_noninferiority_lcb": "PASS",
+          "turnover": "NO_GO_PENDING_OWNER_REVIEW_NEW_VERSION_REQUIRED_NO_AUTOMATIC_CONTINUATION",
+          "tax_drag": "PASS"
+        }
+      }
+    },
+    {
+      "case_id": "tax-drag-strict-breach-no-go",
+      "input": {
+        "case_id": "tax-drag-strict-breach-no-go",
+        "economic_point_estimate": "0.02",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "4.00",
+        "annualized_tax_drag": "0.0200000000000000000000000000000000000001"
+      },
+      "expected": {
+        "overall_status": "NO_GO",
+        "criteria": {
+          "primary_economic": "PASS",
+          "primary_noninferiority_lcb": "PASS",
+          "turnover": "PASS",
+          "tax_drag": "NO_GO"
+        }
+      }
+    },
+    {
+      "case_id": "tax-no-go-dominates-turnover-review",
+      "input": {
+        "case_id": "tax-no-go-dominates-turnover-review",
+        "economic_point_estimate": "0.02",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "5",
+        "annualized_tax_drag": "0.03"
+      },
+      "expected": {
+        "overall_status": "NO_GO",
+        "criteria": {
+          "primary_economic": "PASS",
+          "primary_noninferiority_lcb": "PASS",
+          "turnover": "NO_GO_PENDING_OWNER_REVIEW_NEW_VERSION_REQUIRED_NO_AUTOMATIC_CONTINUATION",
+          "tax_drag": "NO_GO"
+        }
+      }
+    },
+    {
+      "case_id": "arbitrary-precision-strict-economic-pass",
+      "input": {
+        "case_id": "arbitrary-precision-strict-economic-pass",
+        "economic_point_estimate": "0.010000000000000000000000000000000000000000000000000000000000000000000000000000001",
+        "noninferiority_lcb": "-0.019999999999999999999999999999999999999999999999999999999999999999999999999999999",
+        "annualized_one_way_turnover": "4.000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "annualized_tax_drag": "0.020000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "overall_status": "ALL_SUPPLIED_BOUNDARIES_PASS_OTHER_REGISTERED_GATES_UNEVALUATED",
+        "criteria": {
+          "primary_economic": "PASS",
+          "primary_noninferiority_lcb": "PASS",
+          "turnover": "PASS",
+          "tax_drag": "PASS"
+        }
+      }
+    },
+    {
+      "case_id": "invalid-exponent-fails-closed",
+      "input": {
+        "case_id": "invalid-exponent-fails-closed",
+        "economic_point_estimate": "2e-2",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "0",
+        "annualized_tax_drag": "0"
+      },
+      "expected": {
+        "overall_status": "NO_GO_FAIL_CLOSED",
+        "criteria": {
+          "primary_economic": "NO_GO_FAIL_CLOSED",
+          "primary_noninferiority_lcb": "NO_GO_FAIL_CLOSED",
+          "turnover": "NO_GO_FAIL_CLOSED",
+          "tax_drag": "NO_GO_FAIL_CLOSED"
+        }
+      }
+    },
+    {
+      "case_id": "invalid-unicode-digits-fail-closed",
+      "input": {
+        "case_id": "invalid-unicode-digits-fail-closed",
+        "economic_point_estimate": "０.０２",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "0",
+        "annualized_tax_drag": "0"
+      },
+      "expected": {
+        "overall_status": "NO_GO_FAIL_CLOSED",
+        "criteria": {
+          "primary_economic": "NO_GO_FAIL_CLOSED",
+          "primary_noninferiority_lcb": "NO_GO_FAIL_CLOSED",
+          "turnover": "NO_GO_FAIL_CLOSED",
+          "tax_drag": "NO_GO_FAIL_CLOSED"
+        }
+      }
+    },
+    {
+      "case_id": "missing-tax-drag-fails-closed",
+      "input": {
+        "case_id": "missing-tax-drag-fails-closed",
+        "economic_point_estimate": "0.02",
+        "noninferiority_lcb": "0",
+        "annualized_one_way_turnover": "0"
+      },
+      "expected": {
+        "overall_status": "NO_GO_FAIL_CLOSED",
+        "criteria": {
+          "primary_economic": "NO_GO_FAIL_CLOSED",
+          "primary_noninferiority_lcb": "NO_GO_FAIL_CLOSED",
+          "turnover": "NO_GO_FAIL_CLOSED",
+          "tax_drag": "NO_GO_FAIL_CLOSED"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,440 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/sample-holdout-v2.schema.json",
+  "title": "NEE-121 sample-holdout governance V2 exact frozen shape",
+  "description": "Exact materialization schema. Any structural or semantic mutation requires a new version.",
+  "const": {
+    "$schema": "../../schemas/governance/sample-holdout-v2.schema.json",
+    "schema_version": "qme.sample_holdout_governance.v2",
+    "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+    "contract_status": "REGISTERED_RULES_PRODUCTION_EVIDENCE_AND_FREEZE_RECEIPT_BLOCKED",
+    "semantic_sha256": "149eadf4:c1d7e240:d0088c5b:0748a072:d2f50e78:966615e2:d1f40ffd:e0070b54",
+    "authority": {
+      "ticket": "NEE-121",
+      "empirical_results_used": false,
+      "approval_assertion_status": "OWNER_APPROVED_PROTECTED_MAIN_REGISTRATION_NOT_CRYPTOGRAPHIC_SIGNATURE",
+      "materialization_crosswalk": {
+        "crosswalk_id": "NEE-172-S0A-2-CONTRACT-MATERIALIZATION-CROSSWALK-V3",
+        "path": "configs/governance/s0a-contract-materialization-crosswalk-v3.json",
+        "sha256": "b2d1a7f2:afb6ea18:62d87bed:2323dd35:863f55b1:e53ca99b:c5d1168d:018606b5",
+        "semantic_sha256": "e04c5ad8:41dc933c:a2ef5e47:73af4830:7a042260:6b2a1f24:d511db20:1185acc5",
+        "manifest_path": "configs/governance/s0a-contract-materialization-crosswalk-v3.hashes.json",
+        "manifest_sha256": "5d57b7bf:7e42f138:c27f4879:1311f1e0:66cf508b:64bede71:c58c5ff0:e45b59e5",
+        "protected_main_receipt": {
+          "commit_sha": "a08cca03:e5bc0491:761c64d1:d0aa8878:6259b3c6",
+          "tree_sha": "db9f605d:ae9b52b7:746363be:94ae80d9:8974791f",
+          "committer_timestamp": "2026-08-13T10:11:12-07:00",
+          "ci_run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31724435653",
+          "ci_job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31724435653/job/94529183884",
+          "ci_head_sha": "a08cca03:e5bc0491:761c64d1:d0aa8878:6259b3c6",
+          "ci_conclusion": "PASS",
+          "scope": "CROSSWALK_V3_PUBLICATION_ONLY_NOT_PROSPECTIVE_FREEZE_RECEIPT"
+        }
+      },
+      "owner_mandate_supplement": {
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193"
+      },
+      "unavailable_inputs": [
+        "production_xnas_calendar_artifact_and_hash",
+        "production_ordered_session_vector_artifact_and_hash",
+        "pinned_calendar_generator_and_tzdata_evidence",
+        "final_prospective_specification_freeze_anchor",
+        "verified_final_prospective_specification_freeze_receipt",
+        "prospective_reconciled_cycle_evidence"
+      ]
+    },
+    "lineage": {
+      "predecessor_schema_version": "qme.sample_holdout_governance.v1",
+      "predecessor_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+      "predecessor_path": "configs/governance/sample-holdout-v1.json",
+      "predecessor_sha256": "61d3c718:6ec3931a:1c053e33:e86aa63d:64065133:c2ebef6c:520c1a33:ade7c279",
+      "version_change_policy": "NEW_VERSION_NO_OVERWRITE",
+      "inherited_v1_semantics_status": "EXACT_DEEP_EQUAL_SNAPSHOT_NOT_AN_ACTIVE_SECOND_AUTHORITY"
+    },
+    "claims": {
+      "production_ready": false,
+      "m0_complete": false,
+      "alpha_proven": false,
+      "empirical_performance_available": false,
+      "pristine_2019_2021_holdout": false,
+      "production_calendar_available": false,
+      "ordered_session_vector_available": false,
+      "prospective_freeze_anchor_created": false,
+      "prospective_freeze_receipt_verified": false,
+      "prospective_observations_consumable": false,
+      "prospective_fidelity_threshold_satisfied": false
+    },
+    "active_blocker_codes": [
+      "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "NEE-116-ASYMMETRIC-COST-METHOD",
+      "NEE-116-CAPACITY-SOLVER",
+      "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "NEE-116-PRODUCTION-PIT-DATA",
+      "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "NEE-119-AV-PROXY-EVIDENCE",
+      "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+      "NEE-121-CALENDAR-SESSION-REGISTRATION",
+      "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+      "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+      "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"
+    ],
+    "nonclaims": [
+      "NO_PRODUCTION_CALENDAR_OR_ORDERED_SESSION_VECTOR_BYTES",
+      "NO_FINAL_PROSPECTIVE_FREEZE_ANCHOR_OR_RECEIPT",
+      "NO_CONSUMABLE_PROSPECTIVE_EVIDENCE",
+      "NO_EMPIRICAL_PERFORMANCE_OR_ALPHA_CLAIM",
+      "NO_PRODUCTION_READINESS_OR_M0_COMPLETION_CLAIM"
+    ],
+    "inherited_v1_semantics": {
+      "sample_windows": [
+        {
+          "classification": "DEVELOPMENT_2011_2018",
+          "formation_start": "2011-01-01",
+          "formation_end": "2018-12-31",
+          "evidence_role": "DEVELOPMENT_REUSABLE_FOR_TUNING"
+        },
+        {
+          "classification": "ONE_TIME_HISTORICAL_CONFIRMATION_2019_2021",
+          "formation_start": "2019-01-01",
+          "formation_end": "2021-12-31",
+          "evidence_role": "ONE_TIME_CONFIRMATION_ONLY",
+          "prior_access_provenance": "UNKNOWN_BLOCKED_NO_PREEXISTING_ACCESS_LEDGER",
+          "pristine_holdout_claim_allowed": false
+        },
+        {
+          "classification": "RETROSPECTIVE_EXTERNAL_STRESS_2022_PLUS",
+          "formation_start": "2022-01-01",
+          "formation_end": "FINAL_REGISTERED_FREEZE_TIMESTAMP",
+          "evidence_role": "RETROSPECTIVE_EXTERNAL_STRESS_NOT_PRISTINE_HOLDOUT",
+          "first_successful_read_marks_spent": true
+        },
+        {
+          "classification": "PROSPECTIVE_AFTER_FREEZE",
+          "formation_start": "STRICTLY_AFTER_FINAL_REGISTERED_FREEZE_TIMESTAMP",
+          "formation_end": null,
+          "evidence_role": "PROSPECTIVE_PAPER_OR_FORWARD_OBSERVATION",
+          "production_freeze_timestamp": null,
+          "production_freeze_timestamp_status": "UNREGISTERED_BLOCKING"
+        }
+      ],
+      "calendar_and_session_contract": {
+        "required_bindings": [
+          "calendar_id",
+          "calendar_sha256",
+          "ordered_session_vector_sha256",
+          "timezone_id",
+          "formation_window_start_exact_timestamp",
+          "formation_window_end_exact_timestamp",
+          "formation_window_start_session_id",
+          "formation_window_end_session_id",
+          "formation_session_phase",
+          "fold_end_session_id",
+          "fold_end_session_phase",
+          "fold_end_exact_timestamp"
+        ],
+        "ordered_session_vector_rule": "STRICT_ASCENDING_UNIQUE_EXCHANGE_SESSIONS",
+        "nearest_session_substitution_allowed": false,
+        "bare_calendar_date_is_production_authority": false,
+        "formation_session_phase": "CLOSE",
+        "label_endpoint_and_fold_comparator_phase": "OPEN",
+        "fold_end_session_phase": "OPEN"
+      },
+      "label_contract": {
+        "horizons": [
+          "1M",
+          "3M",
+          "6M"
+        ],
+        "purging_rule": "label_end <= fold_end",
+        "purging_applies_independently_per_horizon": true,
+        "exact_boundary": "RETAINED",
+        "after_boundary": "PURGED",
+        "tradable_coordinate": "TRADABLE_T_PLUS_1_OPEN_TO_T_PLUS_1_OPEN",
+        "tradable_label_start_rule": "label_start_session_ordinal = formation_session_ordinal + 1",
+        "diagnostic_coordinate": "DIAGNOSTIC_CLOSE_TO_CLOSE_NOT_AUTHORITY",
+        "endpoint_derivation": {
+          "1M": {
+            "method_id": null,
+            "method_sha256": null,
+            "status": "UNREGISTERED_BLOCKING"
+          },
+          "3M": {
+            "method_id": null,
+            "method_sha256": null,
+            "status": "UNREGISTERED_BLOCKING"
+          },
+          "6M": {
+            "method_id": null,
+            "method_sha256": null,
+            "status": "UNREGISTERED_BLOCKING"
+          }
+        },
+        "calendar_day_or_session_count_inference_allowed": false,
+        "embargo": {
+          "value": null,
+          "unit": null,
+          "status": "NOT_REGISTERED_NOT_ACTIVE",
+          "default_inference_allowed": false
+        }
+      },
+      "availability_contract": {
+        "rule": "available_at <= analysis_as_of",
+        "analysis_as_of_meaning": "HISTORICAL_DECISION_CUTOFF_NOT_RUN_NOW",
+        "available_at_formula": "max(published_at, vendor_available_at, local_accepted_at, revision_at)",
+        "required_coordinates": [
+          "effective_at",
+          "published_at",
+          "vendor_available_at",
+          "local_accepted_at",
+          "revision_at",
+          "observation_end_at",
+          "vintage_sha256",
+          "content_sha256"
+        ],
+        "source_specific_cutoffs": {
+          "DATA_VINTAGE": "data_vintage_at",
+          "MEMBERSHIP_SNAPSHOT": "membership_snapshot_as_of",
+          "FILING": "filing_accepted_at",
+          "REFLECTION_MEMORY": "reflection_created_at"
+        },
+        "pre_formation_feature_lookback_allowed": true,
+        "pre_formation_label_or_outcome_allowed": false
+      },
+      "sample_access_event_contract": {
+        "schema_version": "qme.sample_access_event.v1",
+        "append_only": true,
+        "hash_algorithm": "SHA-256",
+        "genesis_previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_types": [
+          "ACCESS_ATTEMPT",
+          "ACCESS_SUCCESS",
+          "ACCESS_DENIAL",
+          "ACCESS_RETRY"
+        ],
+        "required_causal_fields": [
+          "trial_id",
+          "run_id",
+          "query_id",
+          "analysis_as_of",
+          "data_vintage_at",
+          "data_vintage_sha256",
+          "request_content_sha256",
+          "parent_event_hash",
+          "previous_event_hash"
+        ],
+        "retry_overwrite_allowed": false,
+        "spent_window_trigger": "FIRST_ACCESS_SUCCESS"
+      },
+      "version_and_restart_contract": {
+        "non_restarting_changes": [
+          "DOCUMENTATION_ONLY_NO_SEMANTIC_CHANGE",
+          "INFRASTRUCTURE_ONLY_NO_DATA_OR_RESULT_CHANGE"
+        ],
+        "restart_required_changes": [
+          "SPECIFICATION_CHANGE",
+          "FEATURE_CHANGE",
+          "LABEL_CHANGE",
+          "PORTFOLIO_CHANGE",
+          "DATA_METHOD_CHANGE",
+          "THRESHOLD_REGISTRATION"
+        ],
+        "restart_rule": "NEW_VERSION_NEW_FREEZE_TIMESTAMP_PRIOR_OBSERVATIONS_NOT_INDEPENDENT",
+        "spent_window_can_be_reset_or_relabelled": false
+      },
+      "prospective_minimum_evidence_requirement": {
+        "minimum_duration": null,
+        "minimum_observations": null,
+        "minimum_information_threshold": null,
+        "status": "UNREGISTERED_BLOCKING",
+        "registration_must_precede_observations": true,
+        "go_no_go_state": "BLOCKED_PROSPECTIVE_EVIDENCE_REQUIREMENT_UNREGISTERED"
+      }
+    },
+    "contract_bindings": {
+      "prior_access_attestation": {
+        "artifact_id": "PRIOR_ACCESS_ATTESTATION",
+        "path": "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md",
+        "sha256": "dbe8afa5:81939a39:495db6e9:9878bdbe:6405bc4f:7d79c049:6bb139f7:24b8fb4f",
+        "status": "NO_PRIOR_SYSTEMATIC_ACCESS_ATTESTED_INFORMAL_EXPOSURE_DISCLOSED"
+      },
+      "label_endpoint_method": {
+        "method_id": "qme-label-endpoint-session-offset-v1",
+        "path": "configs/governance/label-endpoint-session-offset-v1.json",
+        "sha256": "9fe2988e:c7276ea7:0bc919b7:2c643409:b8caaf4c:8e383ae0:3d34728b:30aa5557",
+        "horizon_session_intervals": {
+          "1M": 21,
+          "3M": 63,
+          "6M": 126
+        }
+      }
+    },
+    "sample_and_holdout": {
+      "confirmation": {
+        "window": "2019-01-01/2021-12-31",
+        "classification": "ONE_TIME_CONFIRMATION_ONLY",
+        "pristine_claim": false,
+        "attestation_limitations": {
+          "no_prior_systematic_access_owner_attested": true,
+          "informal_market_exposure_disclosed": true,
+          "repository_scan_cannot_prove_no_external_work": true,
+          "reuse_tuning_or_winner_selection_authorized": false
+        }
+      },
+      "horizon_sessions": {
+        "1M": 21,
+        "3M": 63,
+        "6M": 126
+      },
+      "embargo_sessions": 0,
+      "evidence_minima": {
+        "calendar_months": 6,
+        "rebalance_cycles": 6,
+        "maximum_unresolved_reconciliation_breaks": 0
+      },
+      "return_reconstruction": {
+        "rms_threshold": "0.005",
+        "rms_method": {
+          "method_id": "QME-NEE121-LIVE-SIMULATED-SIMPLE-RETURN-RMS-V1",
+          "live_input": "SIMPLE_MONTHLY_NET_RETURN_FROM_RECONCILED_LIVE_LEDGER",
+          "simulated_input": "SIMPLE_MONTHLY_NET_RETURN_FROM_MATCHED_SIMULATED_LEDGER",
+          "alignment": "MATCHED_FORMATION_EXECUTION_RECONCILIATION_CYCLE",
+          "endpoint_rule": "IDENTICAL_REGISTERED_T_PLUS_1_OPEN_START_AND_END_ENDPOINTS",
+          "return_coordinate": "NET_COSTS_AND_FEES_PRE_CGT_SIMPLE_MONTHLY_NET_RETURN",
+          "cycle_weighting": "EQUAL_WEIGHT_NO_DEMEANING",
+          "difference": "live_simple_monthly_net_return - simulated_simple_monthly_net_return",
+          "mse_formula": "sum(squared_monthly_return_differences) / reconciled_cycle_count",
+          "mse_denominator": "n_RECONCILED_CYCLES",
+          "mse_maximum": "0.000025",
+          "rms_formula": "sqrt(mse)",
+          "rms_maximum": "0.005",
+          "minimum_reconciled_cycles": 6,
+          "minimum_calendar_months": 6,
+          "calendar_month_count_rule": "AT_LEAST_6_DISTINCT_REGISTERED_CALENDAR_MONTH_IDS",
+          "maximum_unresolved_reconciliation_breaks": 0,
+          "threshold_operator": "LESS_THAN_OR_EQUAL",
+          "history_rule": "ALL_COMPLETED_CYCLES_SINCE_FREEZE_NO_ROLLING_WINDOW",
+          "invalid_pair_retention_rule": "INVALID_PAIRS_RETAINED_AS_NOT_COMPUTABLE_NEVER_DROPPED",
+          "numeric_rule": {
+            "decimal_precision_digits": 50,
+            "display_scale": 18,
+            "display_rounding": "ROUND_HALF_EVEN",
+            "binary_float_forbidden": true
+          },
+          "not_computable_conditions": [
+            "MISSING_CYCLE",
+            "DUPLICATE_CYCLE",
+            "REVISED_CYCLE_WITHOUT_VERSIONED_LINEAGE",
+            "NONFINITE_VALUE",
+            "NONPOSITIVE_NAV",
+            "UNEXPLAINED_EXTERNAL_FLOW",
+            "ENDPOINT_OR_ARTIFACT_HASH_MISMATCH",
+            "UNRESOLVED_RECONCILIATION_BREAK"
+          ],
+          "invalid_pair_action": "PERMANENTLY_NO_PROSPECTIVE_STATUS_FOR_THIS_VERSION",
+          "claim_scope": "IMPLEMENTATION_FIDELITY_AND_OPERATIONAL_SAFETY_ONLY_NO_ALPHA_CLAIM",
+          "return_coordinate_separation": {
+            "amendment_id": "AMENDMENT-4-RETURN-COORDINATE-SEPARATION",
+            "text": "NEE-121 simple monthly net returns and NEE-120 log returns are intentionally different: simple returns measure cash-reconciliation fidelity, while log returns support log-additive inference."
+          }
+        }
+      },
+      "claim_scope": "IMPLEMENTATION_FIDELITY_AND_OPERATIONAL_SAFETY_ONLY",
+      "final_specification_freeze": {
+        "derivation_rule": {
+          "method_id": "QME-NEE121-TWO-PHASE-FREEZE-ANCHOR-RECEIPT-V1",
+          "anchor_phase": {
+            "trigger": "PROTECTED_MAIN_PRE_ACCEPTANCE_MERGE_AFTER_ALL_NON_FINAL_BLOCKERS_RESOLVE",
+            "anchor_timestamp_source": "COMMITTER_UTC_TIMESTAMP_OF_PROTECTED_MAIN_PRE_ACCEPTANCE_MERGE",
+            "exact_sha_ci_required": true,
+            "anchor_required_bindings": [
+              "PROTECTED_MAIN_MERGE_COMMIT_SHA",
+              "PROTECTED_MAIN_TREE_SHA",
+              "COMMITTER_UTC_TIMESTAMP",
+              "EXACT_SHA_CI_URL",
+              "EXACT_SHA_CI_CONCLUSION",
+              "FREEZE_EXPORT_SHA256"
+            ],
+            "anchor_status_before_commit": "PENDING_FINAL_ACCEPTANCE_MERGE",
+            "first_accrual_session_rule": "FIRST_REGISTERED_SESSION_OPEN_STRICTLY_AFTER_ANCHOR_TIMESTAMP"
+          },
+          "receipt_phase": {
+            "effect": "VERIFIED_RECEIPT_FLIPS_NEE110_ACCEPTANCE_TRUE",
+            "required_bindings": [
+              "ANCHOR_COMMIT_SHA",
+              "ANCHOR_TREE_SHA",
+              "ANCHOR_TIMESTAMP",
+              "EXACT_SHA_CI_URL",
+              "EXACT_SHA_CI_CONCLUSION",
+              "FREEZE_EXPORT_SHA256",
+              "ALL_OPERATIONAL_CONTRACT_HASHES",
+              "ALL_OPERATIONAL_CONFIG_HASHES",
+              "ALL_OPERATIONAL_SCHEMA_HASHES",
+              "ALL_OPERATIONAL_MANIFEST_HASHES",
+              "OWNER_APPROVAL_OWNER",
+              "OWNER_APPROVAL_DATE_OR_EFFECTIVE_TIMESTAMP",
+              "CALENDAR_ID",
+              "CALENDAR_SHA256",
+              "ORDERED_SESSION_VECTOR_SHA256",
+              "FIRST_ACCRUAL_SESSION_ID",
+              "FIRST_ACCRUAL_SESSION_OPEN_TIMESTAMP",
+              "RECEIPT_SHA256",
+              "NO_SEMANTIC_CHANGE_AT_RECEIPT_ASSERTION"
+            ],
+            "verification_rule": "RECEIPT_MUST_PROVE_FIRST_REGISTERED_SESSION_OPEN_STRICTLY_AFTER_BOUND_ANCHOR",
+            "receipt_failure_action": "ACCRUED_OBSERVATIONS_HAVE_NO_PROSPECTIVE_STATUS"
+          },
+          "pre_receipt_consumption_rule": "DENY_OUTCOME_DISPLAY_REPORT_TEST_GATE_AND_SAMPLE_ACCESS",
+          "receipt_deadline": null,
+          "receipt_deadline_status": "NOT_REGISTERED",
+          "failed_or_invalid_pair_rule": "PERMANENTLY_NO_PROSPECTIVE_STATUS_FOR_THIS_VERSION"
+        },
+        "value": null,
+        "receipt": null,
+        "status": "REGISTERED_RULE_ANCHOR_AND_RECEIPT_ABSENT_BLOCKING"
+      },
+      "calendar": {
+        "calendar_sha256": null,
+        "ordered_session_vector_sha256": null,
+        "registration": {
+          "method_id": "QME-XNAS-SESSION-CALENDAR-MATERIALIZATION-V1",
+          "calendar_id": "XNAS_2010-01-04_2027-12-31_v1",
+          "identity_status": "OWNER_RATIFIED",
+          "generator": "PINNED_PANDAS_MARKET_CALENDARS_ISOLATED_GENERATOR",
+          "generator_identity": "PANDAS_MARKET_CALENDARS_XNAS_SCHEDULE_MATERIALIZER_V1",
+          "generator_package": "pandas_market_calendars",
+          "generator_pinned_version": null,
+          "generator_wheel_sha256": null,
+          "generator_lockfile_path": null,
+          "generator_lockfile_sha256": null,
+          "tzdata_version": null,
+          "tzdata_artifact_sha256": null,
+          "generator_artifact_sha256": null,
+          "generator_evidence_status": "TYPED_METHOD_AND_EVIDENCE_BLOCKER",
+          "runtime_dependency_policy": "NON_SHIPPING_GENERATOR_NOT_PRODUCTION_RUNTIME_DEPENDENCY",
+          "future_schedule_policy": "FUTURE_PUBLISHED_SCHEDULES_ARE_NOT_OBSERVED_MARKET_AUTHORITY",
+          "calendar_sha256": null,
+          "ordered_session_vector_sha256": null,
+          "production_artifact_status": "BLOCKED_PENDING_IMMUTABLE_CALENDAR_AND_SESSION_VECTOR_BYTES"
+        }
+      }
+    },
+    "operational_gate": {
+      "state": "BLOCKED",
+      "accrual_allowed": false,
+      "consumption_allowed": false,
+      "reason_codes": [
+        "CALENDAR_ARTIFACT_ABSENT",
+        "ORDERED_SESSION_VECTOR_ABSENT",
+        "FINAL_FREEZE_ANCHOR_ABSENT",
+        "FINAL_FREEZE_RECEIPT_ABSENT",
+        "PROSPECTIVE_EVIDENCE_ABSENT"
+      ]
+    }
+  }
+}
