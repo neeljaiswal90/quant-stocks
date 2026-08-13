@@ -1,0 +1,21 @@
+{
+  "schema_version": "qme.effective_trials_point_evidence_manifest.v1",
+  "artifact_id": "NEE-175-EFFECTIVE-TRIALS-POINT-EVIDENCE-V1",
+  "status": "REVIEWED_SYNTHETIC_POINT_ONLY_BLOCKERS_RETAINED",
+  "artifacts": [
+    {"path": ".github/workflows/effective-trials-linux.yml", "sha256": "2dbaefcd:7b3191b9:7b8e0945:22fa3dee:4710ba5e:1f219c7d:1f514436:a36d7945"},
+    {"path": "configs/governance/effective-trials-point-kernel-v1.json", "sha256": "f007e903:5e9e9a7e:89357b68:90317cd7:64ea8ee4:dca423c5:10a57ece:5eb670e8"},
+    {"path": "docs/stats/EFFECTIVE_TRIALS_POINT_KERNEL_V1.md", "sha256": "f1c2fe01:14411afb:aebf2a9f:5ea41375:43f22b6a:6cfc1e68:6b10d80c:d0c82397"},
+    {"path": "qme/stats/effective_trials.py", "sha256": "f481dcf0:98229272:66a9593f:a446584d:1d0031da:84d499f8:b1d2fe25:ae235545"},
+    {"path": "schemas/governance/effective-trials-point-evidence-v1.schema.json", "sha256": "4cfaa912:2347c74e:4b051f06:0668f7db:2c504b40:7a179c5f:e7d2b368:7bd4b05b"},
+    {"path": "tests/fixtures/stats/effective-trials-v1-cases.json", "sha256": "c15aea7f:dcfd7652:94faf7a5:b4bdf914:e0718dce:3d6c5385:b6656812:83cad356"},
+    {"path": "tests/stats/test_effective_trials.py", "sha256": "c9ba62d9:e269d9c3:abfbf55d:9ee6bf74:6ff41a52:5a9e3f1a:7f1a0cf6:99c880dc"}
+  ],
+  "limitations": [
+    "POLITIS_WHITE_SELECTOR_NOT_IMPLEMENTED",
+    "STATIONARY_BOOTSTRAP_INTERVAL_NOT_IMPLEMENTED",
+    "N_EFF_USED_DSR_HOLM_NOT_COMPUTABLE",
+    "SYNTHETIC_CONFORMANCE_ONLY_NO_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "ALL_14_SPECIFICATION_FREEZE_V3_BLOCKERS_RETAINED"
+  ]
+}
