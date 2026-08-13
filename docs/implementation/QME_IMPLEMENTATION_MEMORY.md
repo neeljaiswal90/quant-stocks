@@ -2,7 +2,7 @@
 
 Document status: `ACTIVE`
 
-Last reconciled: 2026-08-10
+Last reconciled: 2026-08-13
 
 Canonical repository: `D:\Quant-Stocks`
 
@@ -98,6 +98,29 @@ Required drift handling:
   policy hashes -> not `RUNTIME_EVIDENCED`.
 - A generated branch name, project percentage, ticket description, or planning approval
   never establishes implementation.
+
+## 4A. NEE-172 bounded operational-contract closeout — 2026-08-13
+
+The atomic NEE-119/120/121 V2 selection bundle and the versioned specification-freeze
+policy V3/export V2 are `CI_VERIFIED` on protected `main` commit
+`c507e850629d394d2a22c44496969bfbee887542` (tree
+`0558146f1f71004ed0dccd8c6a0a65c76fa421b4`). PR #16 branch CI run
+`31732589771` and protected-main exact-SHA run `31732908899` both passed.
+
+The bundle manifest SHA-256 is
+`00d014d63f409378a1b4c7f995caf9b7cb81e7be48ba40f1a5c85f6a496d78df`;
+the specification-freeze V3 manifest SHA-256 is
+`5a492ded1fc4cc3b3d9756ddb816234a72009dc080e38f99f8a4011043d035d4`.
+Independent adversarial review returned `GO` with zero P0/P1 findings. Local acceptance
+evidence was 140 focused tests, 670 full tests, Ruff, strict mypy over 49 source files,
+four verified dependency locks, wheel build, compile, and zero secret findings.
+
+This closes only the NEE-172 contract-materialization package after its append-only
+receipt reaches protected main. It does not accept M0 or authorize the data spine.
+All 14 freeze blockers remain active; production data, the XNAS calendar/session bytes,
+inference implementation, capacity, effective-trials/DSR computation, the final freeze
+anchor/receipt, prospective consumption, alpha, production readiness, and live orders
+remain unavailable. The anomalous NEE-110 workflow state is not repaired by NEE-172.
 
 ## 5. Verified snapshot — 2026-08-11
 
