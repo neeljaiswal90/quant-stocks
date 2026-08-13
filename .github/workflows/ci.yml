@@ -23,10 +23,20 @@ jobs:
           cache-dependency-path: |
             requirements-dev.lock
             requirements-runtime.lock
+            requirements-xnas-calendar-generator.lock
       - name: Install fully hashed development toolchain
         run: python -m pip install --require-hashes -r requirements-dev.lock
       - name: Verify dependency locks
-        run: python scripts/verify_lock.py requirements-agent-build.lock requirements-runtime.lock requirements-dev.lock requirements-agents.lock
+        run: python scripts/verify_lock.py requirements-agent-build.lock requirements-runtime.lock requirements-dev.lock requirements-agents.lock requirements-xnas-calendar-generator.lock
+      - name: Verify isolated XNAS calendar candidate replay
+        shell: pwsh
+        run: |
+          python --version
+          python -m venv "$env:RUNNER_TEMP\qme-xnas-calendar"
+          & "$env:RUNNER_TEMP\qme-xnas-calendar\Scripts\python.exe" -m pip install --require-hashes --only-binary=:all: -r requirements-xnas-calendar-generator.lock
+          if ($LASTEXITCODE -ne 0) { throw "calendar generator dependency install failed" }
+          & "$env:RUNNER_TEMP\qme-xnas-calendar\Scripts\python.exe" scripts/materialize_xnas_calendar_v1.py --repository-root . --verify
+          if ($LASTEXITCODE -ne 0) { throw "calendar candidate replay failed" }
       - name: Build wheel without dependency resolution
         run: python -m build --wheel --no-isolation
       - name: Clean wheel and CLI smoke

@@ -1,0 +1,102 @@
+{
+  "$schema": "../../schemas/governance/xnas-session-calendar-evidence-v1.schema.json",
+  "schema_version": "qme.xnas_calendar_evidence.v1",
+  "evidence_id": "NEE-121-XNAS-SESSION-CALENDAR-EVIDENCE-V1",
+  "ticket_id": "NEE-174",
+  "parent_ticket_id": "NEE-121",
+  "evidence_status": "DETERMINISTIC_CANDIDATE_PROJECTION_BLOCKER_RETAINED",
+  "registered_authority": {
+    "method_id": "QME-XNAS-SESSION-CALENDAR-MATERIALIZATION-V1",
+    "calendar_id": "XNAS_2010-01-04_2027-12-31_v1",
+    "timezone": "America/New_York",
+    "sample_holdout_v2_path": "configs/governance/sample-holdout-v2.json",
+    "sample_holdout_v2_sha256": "c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f",
+    "crosswalk_v3_path": "configs/governance/s0a-contract-materialization-crosswalk-v3.json",
+    "crosswalk_v3_sha256": "b2d1a7f2:afb6ea18:62d87bed:2323dd35:863f55b1:e53ca99b:c5d1168d:018606b5",
+    "owner_supplement_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+    "owner_supplement_sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+    "source_protected_main_commit": "a017aed1:7408cd3c:840685bd:c47f699f:3747c7b1"
+  },
+  "isolated_generator": {
+    "identity": "PANDAS_MARKET_CALENDARS_XNAS_SCHEDULE_MATERIALIZER_V1",
+    "package": "pandas_market_calendars",
+    "version": "5.4.0",
+    "python_implementation": "cpython",
+    "python_version": "3.12.10",
+    "python_cache_tag": "cpython-312",
+    "generator_platform": "CPYTHON_3_12_WINDOWS_AMD64_ONLY",
+    "cross_platform_replay_status": "BLOCKED_NO_LINUX_HASH_LOCK_OR_REPLAY_EVIDENCE",
+    "wheel_sha256": "bb2b93b2:8d496cab:173b41c7:d120fd5c:d9d506b3:1f3bb0ad:3d1d9f2b:60d9d9e3",
+    "pmc_selector": "NASDAQ",
+    "pmc_xnas_selector_status": "REJECTED_NOT_REGISTERED_IN_PMC_5_4_0",
+    "pmc_resolved_calendar_class": "NYSEExchangeCalendar",
+    "pmc_resolved_calendar_name": "NYSE",
+    "transitive_alias_source_package": "exchange_calendars",
+    "transitive_alias_source_version": "4.13.2",
+    "transitive_alias_source_wheel_sha256": "fc5a2ad0:d61b5c3a:6539a306:1cd4cbb5:5c59f4a9:03455cec:7926e4b7:98919996",
+    "transitive_xnas_alias": "XNAS",
+    "transitive_xnas_canonical_alias": "XNYS",
+    "transitive_xnas_resolved_class": "XNYSExchangeCalendar",
+    "pmc_nasdaq_schedule_equals_transitive_xnas_schedule": true,
+    "tzdata_version": "2026.3",
+    "tzdata_wheel_sha256": "dc096730:c87af6ca:b1b171c9:d532be84:0741ff5d:459015e7:f6947bd7:d7e54931",
+    "timezone_source": "PINNED_TZDATA_PACKAGE_ONLY_SYSTEM_TZPATH_DISABLED",
+    "input_path": "requirements-xnas-calendar-generator.in",
+    "input_sha256": "6b4e0591:4b9c5a48:5dc4fcd7:a59aaef2:6c7c1b63:cf7a8232:81617b40:b7af8b7c",
+    "lockfile_path": "requirements-xnas-calendar-generator.lock",
+    "lockfile_sha256": "e040a582:49116e7a:7442e438:ffb6cd48:b745664a:3c034d96:6d75da6a:08588278",
+    "generator_path": "scripts/materialize_xnas_calendar_v1.py",
+    "generator_sha256": "79750595:76fd61ef:4b82be9b:4cdf2c83:cb0e4e83:349fbe13:f6d7cc64:4e5e37e5",
+    "runtime_dependency_policy": "NON_SHIPPING_GENERATOR_NOT_PRODUCTION_RUNTIME_DEPENDENCY"
+  },
+  "artifacts": {
+    "calendar": {
+      "path": "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json",
+      "sha256": "a414d89a:2d18a3e2:27c7cfab:05c271c8:209490e3:beb49bf0:bb1a00f1:9ecd2a5e"
+    },
+    "ordered_session_vector": {
+      "path": "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json",
+      "sha256": "97f0eebd:efa68f08:46dfc1dc:a6ad4de5:31a8c0db:066b908f:073f45d0:a9bb9b4e",
+      "session_ids_sha256": "dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8"
+    },
+    "official_case_fixture": {
+      "path": "tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json",
+      "sha256": "d9646f29:8439975d:f8a9ab77:45662b8b:b0b74625:591c1144:96570031:b684e2d8"
+    }
+  },
+  "coverage": {
+    "coverage_start": "2010-01-04",
+    "coverage_end": "2027-12-31",
+    "as_of_date": "2026-08-13",
+    "session_count": 4526,
+    "bounded_primary_source_case_count": 7,
+    "complete_official_history_coverage": false,
+    "complete_official_future_coverage": false,
+    "historical_status": "GENERATOR_OUTPUT_WITH_BOUNDED_OFFICIAL_CASE_CHECKS_NOT_COMPLETE_OFFICIAL_HISTORY",
+    "future_status": "GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY"
+  },
+  "claims": {
+    "xnas_identity_owner_ratified": true,
+    "deterministic_candidate_projection_available": true,
+    "generator_environment_hash_pinned": true,
+    "calendar_and_vector_bytes_hash_bound": true,
+    "bounded_official_cases_verified": true,
+    "full_interval_alias_schedule_equality_verified_on_pinned_windows_generator": true,
+    "linux_generator_hash_lock_available": false,
+    "windows_linux_byte_replay_verified": false,
+    "production_calendar_available": false,
+    "complete_official_history_verified": false,
+    "future_sessions_are_observed_market_authority": false,
+    "calendar_session_registration_blocker_resolved": false,
+    "sample_holdout_v2_modified": false,
+    "milestone_m0_complete": false,
+    "data_spine_start_authorized": false,
+    "production_ready": false
+  },
+  "retained_blocker": {
+    "blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+    "status": "ACTIVE",
+    "reason": "The deterministic candidate is not a complete immutable Nasdaq primary-source history through 2027; future rows are generated projections rather than observed or complete official authority, the PMC NASDAQ-to-NYSE implementation requires independent XNAS acceptance, and no Linux hash lock or Windows-Linux byte replay evidence exists."
+  },
+  "semantic_sha256": "1f6decbd:6290b6e6:4889c46e:91a941ea:bc42e452:016cf2d1:9c49516d:44ce3d1d"
+}
