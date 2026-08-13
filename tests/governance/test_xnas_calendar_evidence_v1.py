@@ -52,6 +52,7 @@ def _copy_verification_tree(destination: Path) -> None:
     config = _load(CONFIG_PATH)
     authority = config["registered_authority"]
     paths = {
+        Path(".gitattributes"),
         CONFIG_PATH,
         SCHEMA_PATH,
         Path(config["artifacts"]["calendar"]["path"]),
@@ -148,6 +149,16 @@ def test_generator_provenance_is_explicit_and_package_only() -> None:
     assert "get_calendar(REQUESTED_CALENDAR_ALIAS)" in script
     assert 'list(schedule["market_open"]) != list(alias_schedule["open"])' in script
     assert 'list(schedule["market_close"]) != list(alias_schedule["close"])' in script
+
+
+def test_generator_input_checkout_line_endings_are_pinned() -> None:
+    attributes_raw = (ROOT / ".gitattributes").read_bytes()
+    attributes = attributes_raw.decode("utf-8").splitlines()
+    assert ".gitattributes text eol=lf" in attributes
+    assert "*.in text eol=lf" in attributes
+    assert b"\r\n" not in attributes_raw
+    raw = (ROOT / "requirements-xnas-calendar-generator.in").read_bytes()
+    assert b"\r\n" not in raw
 
 
 def test_calendar_vector_and_official_cases_are_exact() -> None:

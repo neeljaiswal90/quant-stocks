@@ -5,17 +5,18 @@
   "parent_ticket_id": "NEE-121",
   "status": "DETERMINISTIC_CANDIDATE_PROJECTION_BLOCKER_RETAINED",
   "artifacts": [
+    {"path": ".gitattributes", "sha256": "85e14342:9acab8e4:dc901384:87e86070:5a21438c:f5155e9a:e270679e:cbba9356"},
     {"path": ".github/workflows/ci.yml", "sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"},
     {"path": "configs/governance/xnas-session-calendar-evidence-v1.json", "sha256": "348e67d9:92183c49:4f625f90:ada2bb58:e90165f5:3fd90419:3e6d8584:7eb0e290"},
     {"path": "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json", "sha256": "97f0eebd:efa68f08:46dfc1dc:a6ad4de5:31a8c0db:066b908f:073f45d0:a9bb9b4e"},
     {"path": "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json", "sha256": "a414d89a:2d18a3e2:27c7cfab:05c271c8:209490e3:beb49bf0:bb1a00f1:9ecd2a5e"},
-    {"path": "docs/governance/XNAS_SESSION_CALENDAR_EVIDENCE_V1.md", "sha256": "08ce51e6:cfeeb387:cb9e9bfa:5b5854c2:e265dc5f:082ef4b6:82b72dc3:ef9cf503"},
-    {"path": "qme/governance/xnas_calendar_evidence_v1.py", "sha256": "46b8789e:2b4cc316:7e1884ec:196542f9:4791f0a1:4616192a:1d218f76:e203db89"},
+    {"path": "docs/governance/XNAS_SESSION_CALENDAR_EVIDENCE_V1.md", "sha256": "6006c425:6b2a5346:730eda54:a6236ca0:ff0bd331:e47c5f07:e9463263:fe920c66"},
+    {"path": "qme/governance/xnas_calendar_evidence_v1.py", "sha256": "c70349fb:df114824:918a6bd9:8ab1f8d9:7a51faf1:ab806134:a58841e7:e9be64aa"},
     {"path": "requirements-xnas-calendar-generator.in", "sha256": "6b4e0591:4b9c5a48:5dc4fcd7:a59aaef2:6c7c1b63:cf7a8232:81617b40:b7af8b7c"},
     {"path": "requirements-xnas-calendar-generator.lock", "sha256": "e040a582:49116e7a:7442e438:ffb6cd48:b745664a:3c034d96:6d75da6a:08588278"},
     {"path": "schemas/governance/xnas-session-calendar-evidence-v1.schema.json", "sha256": "cc19e055:15434882:2260f6cf:f3763218:c487f751:50ab933f:9fb06155:e827c6f2"},
     {"path": "scripts/materialize_xnas_calendar_v1.py", "sha256": "79750595:76fd61ef:4b82be9b:4cdf2c83:cb0e4e83:349fbe13:f6d7cc64:4e5e37e5"},
     {"path": "tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json", "sha256": "d9646f29:8439975d:f8a9ab77:45662b8b:b0b74625:591c1144:96570031:b684e2d8"},
-    {"path": "tests/governance/test_xnas_calendar_evidence_v1.py", "sha256": "0012d622:a0b6a0c4:81a74a8e:c458c26e:ab4f325b:63cab2a5:5acde1d9:fe183c2a"}
+    {"path": "tests/governance/test_xnas_calendar_evidence_v1.py", "sha256": "8ce09033:276ea754:5903f93c:1fef236a:2483ac98:516eefba:2e4e1fbb:0adf1daa"}
   ]
 }

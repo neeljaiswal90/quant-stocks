@@ -16,10 +16,12 @@ from typing import Any, cast
 CONFIG_PATH = Path("configs/governance/xnas-session-calendar-evidence-v1.json")
 SCHEMA_PATH = Path("schemas/governance/xnas-session-calendar-evidence-v1.schema.json")
 MANIFEST_PATH = Path("configs/governance/xnas-session-calendar-evidence-v1.hashes.json")
+GITATTRIBUTES_PATH = Path(".gitattributes")
 
 EXPECTED_CONFIG_SHA256 = "348e67d9:92183c49:4f625f90:ada2bb58:e90165f5:3fd90419:3e6d8584:7eb0e290"
 EXPECTED_SCHEMA_SHA256 = "cc19e055:15434882:2260f6cf:f3763218:c487f751:50ab933f:9fb06155:e827c6f2"
 EXPECTED_SEMANTIC_SHA256 = "1f6decbd:6290b6e6:4889c46e:91a941ea:bc42e452:016cf2d1:9c49516d:44ce3d1d"
+EXPECTED_GITATTRIBUTES_SHA256 = "85e14342:9acab8e4:dc901384:87e86070:5a21438c:f5155e9a:e270679e:cbba9356"
 EXPECTED_OFFICIAL_CASE_FIXTURE_SHA256 = (
     "d9646f29:8439975d:f8a9ab77:45662b8b:b0b74625:591c1144:96570031:b684e2d8"
 )
@@ -234,6 +236,7 @@ REVIEWED_OFFICIAL_CASES = (
 MAX_ARTIFACT_BYTES = 2_000_000
 
 MANIFEST_ARTIFACT_PATHS = (
+    ".gitattributes",
     ".github/workflows/ci.yml",
     "configs/governance/xnas-session-calendar-evidence-v1.json",
     "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json",
@@ -728,6 +731,10 @@ def verify_xnas_calendar_evidence_v1(
     root = (repository_root or Path.cwd()).resolve(strict=True)
     if _sha256(path, root) != _normalize_sha(EXPECTED_CONFIG_SHA256, "EXPECTED_CONFIG_SHA256"):
         raise XnasCalendarEvidenceV1Error("reviewed XNAS evidence config bytes changed")
+    if _sha256(GITATTRIBUTES_PATH, root) != _normalize_sha(
+        EXPECTED_GITATTRIBUTES_SHA256, "EXPECTED_GITATTRIBUTES_SHA256"
+    ):
+        raise XnasCalendarEvidenceV1Error("reviewed checkout line-ending policy changed")
     if _sha256(SCHEMA_PATH, root) != _normalize_sha(
         EXPECTED_SCHEMA_SHA256, "EXPECTED_SCHEMA_SHA256"
     ):

@@ -14,6 +14,9 @@ direct inputs are declared in `requirements-xnas-calendar-generator.in`, and its
 complete CPython 3.12 Windows AMD64 dependency set is pinned by hashes in
 `requirements-xnas-calendar-generator.lock`. The standard-library verifier does
 not import pandas, `pandas_market_calendars`, or `exchange_calendars`.
+The outer manifest also binds `.gitattributes`, which requires LF checkout for
+`*.in`; this keeps the input provenance hash identical on Windows CI and local
+replay instead of allowing Git checkout policy to rewrite the registered bytes.
 
 The exact calendar resolution is explicit:
 
