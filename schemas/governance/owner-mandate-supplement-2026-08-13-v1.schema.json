@@ -1,0 +1,407 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/owner-mandate-supplement-2026-08-13-v1.schema.json",
+  "title": "QME owner mandate 2026-08-13 supplement v1",
+  "description": "Exact immutable owner-approved methods and amendments; no operational contract or production evidence.",
+  "type": "object",
+  "const": {
+    "$schema": "../../schemas/governance/owner-mandate-supplement-2026-08-13-v1.schema.json",
+    "schema_version": "qme.owner_mandate_supplement.v1",
+    "supplement_id": "OWNER-MANDATE-2026-08-13-SUPPLEMENT-V1",
+    "status": "OWNER_DECISIONS_REGISTERED_IMPLEMENTATION_DETAILS_OR_EVIDENCE_BLOCKED",
+    "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+    "authority": {
+      "approval_owner": "neeljaiswal90",
+      "approval_date": "2026-08-13",
+      "approved_at_status": "PERMANENTLY_UNAVAILABLE_NOT_INFERRED",
+      "approved_at": null,
+      "publication_effective_at": null,
+      "publication_effective_at_status": "PENDING_PROTECTED_MAIN_RECEIPT",
+      "source_type": "OWNER_MANDATE_2026-08-13_SUPPLEMENT_APPROVAL",
+      "approval_disposition": "APPROVE_WITH_AMENDMENTS",
+      "payload_representation": "NORMALIZED_SOURCE_FAITHFUL_MEANINGS_NOT_VERBATIM",
+      "empirical_results_used": false,
+      "effective_rule": "PUBLICATION_EFFECTIVE_AT_MUST_BE_RECORDED_FROM_PROTECTED_MAIN_RECEIPT_APPROVED_AT_REMAINS_NULL"
+    },
+    "lineage": {
+      "protected_main_at_authoring": "ece578ff:ac6f5b9f:8dbfd07c:5a09709f:21b5dbe4",
+      "m0_registration": {
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756"
+      },
+      "m0_registration_manifest": {
+        "path": "configs/governance/m0-registration-v1.hashes.json",
+        "sha256": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db"
+      },
+      "m0_proposal": {
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa"
+      },
+      "s0a_crosswalk_v2": {
+        "path": "configs/governance/s0a-contract-materialization-crosswalk-v2.json",
+        "sha256": "11f1de4d:51816cad:7d958fe9:2946e18f:e968d9de:7537006e:00f80577:c11942d1"
+      },
+      "s0a_crosswalk_v2_manifest": {
+        "path": "configs/governance/s0a-contract-materialization-crosswalk-v2.hashes.json",
+        "sha256": "46e4c77b:16fbe273:80c1b609:1b29ed19:fab61a94:b14a73ba:dd7face8:49bbc84e"
+      },
+      "nee120_v1": {
+        "identity": "NEE-120-QME-ECONOMIC-DECISION-V1",
+        "path": "configs/quant/economic-promotion-decision-v1.json",
+        "sha256": "4857af12:6f6a010c:d598030e:90d868da:e19235c4:4450bf60:058a3e2a:aa3dec2a"
+      },
+      "nee121_v1": {
+        "identity": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+        "path": "configs/governance/sample-holdout-v1.json",
+        "sha256": "61d3c718:6ec3931a:1c053e33:e86aa63d:64065133:c2ebef6c:520c1a33:ade7c279"
+      },
+      "accounting_specification": {
+        "path": "docs/quant/QME_ACCOUNTING_EXECUTION_METRICS_SPEC.md",
+        "sha256": "27e906a6:12eb61a2:f12947ff:3696cb90:7d56d883:e45c99a7:503011fe:13bb8840"
+      },
+      "label_endpoint_method": {
+        "path": "configs/governance/label-endpoint-session-offset-v1.json",
+        "sha256": "9fe2988e:c7276ea7:0bc919b7:2c643409:b8caaf4c:8e383ae0:3d34728b:30aa5557"
+      },
+      "prior_access_attestation": {
+        "path": "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md",
+        "sha256": "dbe8afa5:81939a39:495db6e9:9878bdbe:6405bc4f:7d79c049:6bb139f7:24b8fb4f"
+      },
+      "experiment_family_registration": {
+        "path": "configs/governance/experiment-family-registration-v1.json",
+        "sha256": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40"
+      },
+      "deterministic_stats_kernel_manifest": {
+        "path": "tests/fixtures/stats/deterministic-kernel-v1.manifest.json",
+        "sha256": "a7ecc4f5:91139853:d9142fc6:a7d03208:be73ff19:ea066f74:99ee7166:7b5cbf26"
+      },
+      "deterministic_stationary_bootstrap_code": {
+        "path": "qme/stats/bootstrap.py",
+        "sha256": "21f402c0:d0764c33:fb4120da:853434fa:98d3a127:2e3691ea:59f9b588:4110b6c6"
+      },
+      "deterministic_rng_code": {
+        "path": "qme/stats/rng.py",
+        "sha256": "9f8ad5df:c03dd183:f04e9c9a:496912df:b4c7616a:40747be2:476619cd:f1ba462d"
+      }
+    },
+    "approved_contract_identities": {
+      "nee120": "NEE-120-QME-ECONOMIC-DECISION-V2",
+      "nee121": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+      "identity_status": "OWNER_APPROVED_OPERATIONAL_ARTIFACTS_NOT_CREATED_BY_THIS_SUPPLEMENT"
+    },
+    "nee120_methods": {
+      "paired_monthly_primary_input": {
+        "method_id": "QME-NEE120-PAIRED-MONTHLY-NET-NAV-LOG-RETURN-V1",
+        "analysis_unit": "CALENDAR_MONTH_FORMATION_CYCLE",
+        "alignment": "SAME_MONTH_T_PLUS_1_OPEN_TO_T_PLUS_1_OPEN",
+        "strategy_input": "NET_TC_PRE_CGT_STRATEGY_NAV_LOG_RETURN",
+        "benchmark_input": "NET_TC_PRE_CGT_QQQ_SAME_LEDGER_NAV_LOG_RETURN",
+        "strategy_formula": "ln(strategy_nav_end_pre_cgt / strategy_nav_start_pre_cgt)",
+        "benchmark_formula": "ln(benchmark_nav_end_pre_cgt / benchmark_nav_start_pre_cgt)",
+        "paired_delta_formula": "strategy_monthly_log_return - benchmark_monthly_log_return",
+        "annualized_estimand": "12 * mean(valid_paired_monthly_log_return_deltas)",
+        "observation_weighting": "EQUAL_WEIGHT_PER_VALID_MONTH",
+        "eligible_population": "EVERY_SCHEDULED_CALENDAR_MONTH_FORMATION_CYCLE_IN_REGISTERED_WINDOW",
+        "post_hoc_month_deletion_allowed": false,
+        "validity_rule": "BOTH_STRATEGY_AND_BENCHMARK_LEDGER_MONTHS_VALID",
+        "either_invalid_action": "NO_GO_FAIL_CLOSED",
+        "primary_economic_threshold": "0.01",
+        "primary_economic_operator": "STRICT_GREATER_THAN",
+        "primary_economic_exact_boundary": "NO_GO",
+        "primary_noninferiority_margin": "0.02",
+        "primary_noninferiority_lcb_operator": "STRICT_GREATER_THAN_NEGATIVE_MARGIN",
+        "after_tax_co_primary_delta_formula": "12 * mean(after_tax_strategy_log_return - after_tax_benchmark_log_return)",
+        "after_tax_co_primary_operator": "GREATER_THAN_OR_EQUAL_ZERO",
+        "after_tax_co_primary_prerequisite": "IMPLEMENTED_AND_EVIDENCED_TAX_LEDGER"
+      },
+      "stationary_bootstrap_interval": {
+        "method_id": "QME-NEE120-UNCENTERED-PERCENTILE-STATIONARY-BOOTSTRAP-V1",
+        "series": "VALID_PAIRED_MONTHLY_LOG_RETURN_DELTAS_IN_REGISTERED_ORDER",
+        "bootstrap_method": "POLITIS_ROMANO_STATIONARY_BOOTSTRAP",
+        "block_selector_method_id": "QME-NEE120-CORRECTED-POLITIS-WHITE-BLOCK-SELECTOR-V1",
+        "block_selector": "CORRECTED_POLITIS_WHITE_AUTOMATIC_SELECTOR",
+        "block_selector_status": "REGISTERED_SELECTOR_VARIANT_EXACT_SOURCE_EQUATIONS_IMPLEMENTATION_ARTIFACT_PENDING",
+        "selector_rounding": "CEILING",
+        "minimum_block_length": 3,
+        "maximum_block_length_formula": "floor(n / 4)",
+        "minimum_series_length": 12,
+        "insufficient_or_selector_failure_action": "NO_GO_NO_FALLBACK",
+        "replicates": 10000,
+        "seed": 20260812,
+        "interval_construction": "UNCENTERED_PERCENTILE",
+        "bootstrap_statistic": "12 * mean(resampled_paired_monthly_log_return_deltas)",
+        "studentization": false,
+        "bias_correction": false,
+        "invalid_replicate_action": "NO_GO_FAIL_CLOSED",
+        "order_statistic_indexing": "ONE_BASED_ASCENDING_NO_INTERPOLATION",
+        "one_sided_95_lcb_order_statistic": 500,
+        "reported_two_sided_90_interval_order_statistics": [
+          500,
+          9500
+        ],
+        "replicate_draw_order": "REPLICATE_MAJOR_THEN_OBSERVATION_ORDER",
+        "point_estimate_rule": "REGISTERED_PRIMARY_ESTIMAND_ON_UNRESAMPLED_SERIES"
+      },
+      "newey_west_diagnostic": {
+        "method_id": "QME-NEE120-NEWEY-WEST-INTERCEPT-ONLY-DIAGNOSTIC-V1",
+        "role": "SECONDARY_DIAGNOSTIC_NOT_DECISION_AUTHORITY",
+        "regression": "INTERCEPT_ONLY_MONTHLY_PAIRED_LOG_RETURN_DELTA",
+        "lag_formula": "floor(4 * (n / 100)^(2 / 9))",
+        "lag_bound_formula": "q = min(n - 1, floor(4 * (n / 100)^(2 / 9)))",
+        "kernel": "BARTLETT",
+        "prewhitening": false,
+        "additional_small_sample_correction": false,
+        "decimal_precision_digits": 50,
+        "equations": {
+          "mean": "mu_hat = (1 / n) * sum(x_t)",
+          "autocovariance": "gamma_k = (1 / n) * sum_{t=k+1..n}((x_t - mu_hat) * (x_{t-k} - mu_hat))",
+          "long_run_variance": "Omega_hat = gamma_0 + 2 * sum_{k=1..q}((1 - k / (q + 1)) * gamma_k)",
+          "annualized_standard_error": "SE_annualized = 12 * sqrt(Omega_hat / n)",
+          "diagnostic_t_statistic": "t_NW = annualized_mean_delta / SE_annualized",
+          "diagnostic_null": null,
+          "diagnostic_null_status": "UNREGISTERED_BLOCKER",
+          "validity_bounds": "n >= 2 AND 0 <= q <= n - 1 AND Omega_hat finite and nonnegative"
+        },
+        "invalid_or_nonfinite_action": "DIAGNOSTIC_UNAVAILABLE_NO_PRIMARY_FALLBACK"
+      },
+      "one_way_turnover": {
+        "method_id": "QME-NEE120-ROLLING-ONE-WAY-TURNOVER-V1",
+        "per_cycle_formula": "GTN / (2 * NAV_before)",
+        "gtn_coordinate": "SUM_ABSOLUTE_TRADED_NOTIONAL_AT_COMMON_RAW_EXECUTION_MARK",
+        "nav_coordinate": "PRE_TRADE_NAV_BEFORE_CURRENT_CYCLE",
+        "complete_history_aggregation": "SUM_MOST_RECENT_12_COMPLETED_MONTHLY_CYCLE_ONE_WAY_TURNOVERS",
+        "provisional_history_aggregation": "12 * sum(completed_monthly_cycle_one_way_turnovers) / m",
+        "provisional_condition": "1 <= m < 12",
+        "no_completed_cycle_action": "UNAVAILABLE_NO_THRESHOLD_DECISION",
+        "threshold": "4.00",
+        "threshold_operator": "STRICT_GREATER_THAN_TRIGGERS_ESCALATION",
+        "exact_boundary": "PASS",
+        "breach_state": "NO_GO_PENDING_OWNER_REVIEW_NEW_VERSION_REQUIRED_NO_AUTOMATIC_CONTINUATION",
+        "breach_consequence": "NAMED_NONAUTOMATIC_ESCALATION_NO_AUTOMATIC_ABORT_OR_CONTINUATION"
+      },
+      "annual_tax_drag": {
+        "method_id": "QME-NEE120-STANDALONE-ANNUAL-TAX-DRAG-V1",
+        "pre_cgt_monthly_input": "VALID_PRE_CGT_NET_NAV_LOG_RETURN",
+        "after_tax_monthly_input": "VALID_AFTER_TAX_NET_NAV_LOG_RETURN",
+        "formula": "12 * mean(pre_cgt_monthly_log_return - after_tax_monthly_log_return)",
+        "month_alignment": "EQUAL_VALID_MONTHS_ONLY",
+        "window": "EXACT_REGISTERED_WINDOW_ALL_SCHEDULED_MONTHS_NO_POST_HOC_DELETION",
+        "included_tax_effects": [
+          "REALIZED_CASH_TAX",
+          "SUPPORTED_WITHHOLDING"
+        ],
+        "excluded_tax_effects": [
+          "UNREALIZED_DEFERRED_TAX"
+        ],
+        "invalid_month_action": "NO_GO_FAIL_CLOSED",
+        "threshold": "0.02",
+        "threshold_units": "ANNUALIZED_LOG_RETURN_DECIMAL",
+        "no_go_operator": "STRICT_GREATER_THAN",
+        "exact_boundary": "PASS",
+        "supersession": {
+          "superseded_rule": "tax drag > 2% AND negative after-tax delta",
+          "replacement_rule": "12 * mean(pre_cgt_monthly_log_return - after_tax_monthly_log_return) > 0.02 => NO_GO",
+          "reason": "OWNER_APPROVED_STANDALONE_TAX_DRAG_GATE_2026-08-13",
+          "after_tax_co_primary_remains_separate": true
+        }
+      }
+    },
+    "nee121_methods": {
+      "prospective_return_reconstruction": {
+        "method_id": "QME-NEE121-LIVE-SIMULATED-SIMPLE-RETURN-RMS-V1",
+        "live_input": "SIMPLE_MONTHLY_NET_RETURN_FROM_RECONCILED_LIVE_LEDGER",
+        "simulated_input": "SIMPLE_MONTHLY_NET_RETURN_FROM_MATCHED_SIMULATED_LEDGER",
+        "alignment": "MATCHED_FORMATION_EXECUTION_RECONCILIATION_CYCLE",
+        "endpoint_rule": "IDENTICAL_REGISTERED_T_PLUS_1_OPEN_START_AND_END_ENDPOINTS",
+        "return_coordinate": "NET_COSTS_AND_FEES_PRE_CGT_SIMPLE_MONTHLY_NET_RETURN",
+        "cycle_weighting": "EQUAL_WEIGHT_NO_DEMEANING",
+        "difference": "live_simple_monthly_net_return - simulated_simple_monthly_net_return",
+        "mse_formula": "sum(squared_monthly_return_differences) / reconciled_cycle_count",
+        "mse_denominator": "n_RECONCILED_CYCLES",
+        "mse_maximum": "0.000025",
+        "rms_formula": "sqrt(mse)",
+        "rms_maximum": "0.005",
+        "minimum_reconciled_cycles": 6,
+        "minimum_calendar_months": 6,
+        "calendar_month_count_rule": "AT_LEAST_6_DISTINCT_REGISTERED_CALENDAR_MONTH_IDS",
+        "maximum_unresolved_reconciliation_breaks": 0,
+        "threshold_operator": "LESS_THAN_OR_EQUAL",
+        "history_rule": "ALL_COMPLETED_CYCLES_SINCE_FREEZE_NO_ROLLING_WINDOW",
+        "invalid_pair_retention_rule": "INVALID_PAIRS_RETAINED_AS_NOT_COMPUTABLE_NEVER_DROPPED",
+        "numeric_rule": {
+          "decimal_precision_digits": 50,
+          "display_scale": 18,
+          "display_rounding": "ROUND_HALF_EVEN",
+          "binary_float_forbidden": true
+        },
+        "not_computable_conditions": [
+          "MISSING_CYCLE",
+          "DUPLICATE_CYCLE",
+          "REVISED_CYCLE_WITHOUT_VERSIONED_LINEAGE",
+          "NONFINITE_VALUE",
+          "NONPOSITIVE_NAV",
+          "UNEXPLAINED_EXTERNAL_FLOW",
+          "ENDPOINT_OR_ARTIFACT_HASH_MISMATCH",
+          "UNRESOLVED_RECONCILIATION_BREAK"
+        ],
+        "invalid_pair_action": "PERMANENTLY_NO_PROSPECTIVE_STATUS_FOR_THIS_VERSION",
+        "claim_scope": "IMPLEMENTATION_FIDELITY_AND_OPERATIONAL_SAFETY_ONLY_NO_ALPHA_CLAIM"
+      },
+      "prospective_freeze_two_phase": {
+        "method_id": "QME-NEE121-TWO-PHASE-FREEZE-ANCHOR-RECEIPT-V1",
+        "anchor_phase": {
+          "trigger": "PROTECTED_MAIN_PRE_ACCEPTANCE_MERGE_AFTER_ALL_NON_FINAL_BLOCKERS_RESOLVE",
+          "anchor_timestamp_source": "COMMITTER_UTC_TIMESTAMP_OF_PROTECTED_MAIN_PRE_ACCEPTANCE_MERGE",
+          "exact_sha_ci_required": true,
+          "anchor_required_bindings": [
+            "PROTECTED_MAIN_MERGE_COMMIT_SHA",
+            "PROTECTED_MAIN_TREE_SHA",
+            "COMMITTER_UTC_TIMESTAMP",
+            "EXACT_SHA_CI_URL",
+            "EXACT_SHA_CI_CONCLUSION",
+            "FREEZE_EXPORT_SHA256"
+          ],
+          "anchor_status_before_commit": "PENDING_FINAL_ACCEPTANCE_MERGE",
+          "first_accrual_session_rule": "FIRST_REGISTERED_SESSION_OPEN_STRICTLY_AFTER_ANCHOR_TIMESTAMP"
+        },
+        "receipt_phase": {
+          "effect": "VERIFIED_RECEIPT_FLIPS_NEE110_ACCEPTANCE_TRUE",
+          "required_bindings": [
+            "ANCHOR_COMMIT_SHA",
+            "ANCHOR_TREE_SHA",
+            "ANCHOR_TIMESTAMP",
+            "EXACT_SHA_CI_URL",
+            "EXACT_SHA_CI_CONCLUSION",
+            "FREEZE_EXPORT_SHA256",
+            "ALL_OPERATIONAL_CONTRACT_HASHES",
+            "ALL_OPERATIONAL_CONFIG_HASHES",
+            "ALL_OPERATIONAL_SCHEMA_HASHES",
+            "ALL_OPERATIONAL_MANIFEST_HASHES",
+            "OWNER_APPROVAL_OWNER",
+            "OWNER_APPROVAL_DATE_OR_EFFECTIVE_TIMESTAMP",
+            "CALENDAR_ID",
+            "CALENDAR_SHA256",
+            "ORDERED_SESSION_VECTOR_SHA256",
+            "FIRST_ACCRUAL_SESSION_ID",
+            "FIRST_ACCRUAL_SESSION_OPEN_TIMESTAMP",
+            "RECEIPT_SHA256",
+            "NO_SEMANTIC_CHANGE_AT_RECEIPT_ASSERTION"
+          ],
+          "verification_rule": "RECEIPT_MUST_PROVE_FIRST_REGISTERED_SESSION_OPEN_STRICTLY_AFTER_BOUND_ANCHOR",
+          "receipt_failure_action": "ACCRUED_OBSERVATIONS_HAVE_NO_PROSPECTIVE_STATUS"
+        },
+        "pre_receipt_consumption_rule": "DENY_OUTCOME_DISPLAY_REPORT_TEST_GATE_AND_SAMPLE_ACCESS",
+        "receipt_deadline": null,
+        "receipt_deadline_status": "NOT_REGISTERED",
+        "failed_or_invalid_pair_rule": "PERMANENTLY_NO_PROSPECTIVE_STATUS_FOR_THIS_VERSION"
+      }
+    },
+    "ratifications": {
+      "calendar": {
+        "method_id": "QME-XNAS-SESSION-CALENDAR-MATERIALIZATION-V1",
+        "calendar_id": "XNAS_2010-01-04_2027-12-31_v1",
+        "identity_status": "OWNER_RATIFIED",
+        "generator": "PINNED_PANDAS_MARKET_CALENDARS_ISOLATED_GENERATOR",
+        "generator_identity": "PANDAS_MARKET_CALENDARS_XNAS_SCHEDULE_MATERIALIZER_V1",
+        "generator_package": "pandas_market_calendars",
+        "generator_pinned_version": null,
+        "generator_wheel_sha256": null,
+        "generator_lockfile_path": null,
+        "generator_lockfile_sha256": null,
+        "tzdata_version": null,
+        "tzdata_artifact_sha256": null,
+        "generator_artifact_sha256": null,
+        "generator_evidence_status": "TYPED_METHOD_AND_EVIDENCE_BLOCKER",
+        "runtime_dependency_policy": "NON_SHIPPING_GENERATOR_NOT_PRODUCTION_RUNTIME_DEPENDENCY",
+        "future_schedule_policy": "FUTURE_PUBLISHED_SCHEDULES_ARE_NOT_OBSERVED_MARKET_AUTHORITY",
+        "calendar_sha256": null,
+        "ordered_session_vector_sha256": null,
+        "production_artifact_status": "BLOCKED_PENDING_IMMUTABLE_CALENDAR_AND_SESSION_VECTOR_BYTES"
+      },
+      "portfolio_capacity": {
+        "method_id": "QME-DISCRETE-CAPACITY-USD100-EXHAUSTIVE-V1",
+        "currency": "USD",
+        "capital_quantum": "100",
+        "search": "EXHAUSTIVE_OVER_CAPITAL_QUANTA",
+        "search_start": "REGISTERED_MINIMUM_CAPITAL_QUANTUM",
+        "upper_bound": {
+          "method": "OWNER_APPROVED_BASE_UPPER_BOUND_CANDIDATE",
+          "formula": "U = K * p_max * min_i(ADV20_i)",
+          "variables": {
+            "K": "SELECTED_HOLDING_COUNT",
+            "p_max": "REGISTERED_MAXIMUM_PARTICIPATION_OF_ADV20",
+            "ADV20_i": "CUTOFF_VALID_ADV20_FOR_SELECTED_SECURITY_i"
+          },
+          "proof_status": "BLOCKED_PENDING_CASH_BUFFER_AND_ALL_CONSTRAINT_DOMINATION_PROOF",
+          "sufficiency_claim_allowed": false,
+          "adjusted_formula": null,
+          "adjusted_formula_status": "REQUIRES_SEPARATE_REGISTRATION"
+        },
+        "minimum_capital": "100",
+        "grid": "EVERY_USD100_QUANTUM_AT_OR_BELOW_floor(U / 100) * 100",
+        "solver": "INDEPENDENT_EVALUATION_AT_EVERY_GRID_POINT_NO_MONOTONICITY_ASSUMPTION",
+        "enumeration_cutoff_authorized": false,
+        "capacity_solver_execution_authorized": false,
+        "enumeration_evidence": "FULL_FEASIBILITY_BITMAP_EVERY_USD100_QUANTUM_THROUGH_BOUND",
+        "result": "GREATEST_FEASIBLE_CAPITAL",
+        "feasibility": "ALL_REGISTERED_DISCRETE_ORDER_CASH_PARTICIPATION_AND_PORTFOLIO_CONSTRAINTS_PASS",
+        "no_feasible_quantum_action": "UNAVAILABLE",
+        "certificate": {
+          "greatest_feasible_capital_required": true,
+          "solved_portfolio_at_greatest_feasible_required": true,
+          "first_quantum_above_violation_required": true
+        },
+        "implementation_status": "REGISTERED_METHOD_PENDING_SOLVER_IMPLEMENTATION_AND_EVIDENCE",
+        "method_status": "BLOCKED_PENDING_UPPER_BOUND_PROOF_AND_SOLVER_EVIDENCE",
+        "portfolio_capacity_usd": null
+      }
+    },
+    "approved_amendments": [
+      {
+        "amendment_id": "AMENDMENT-1-STANDALONE-TAX-DRAG",
+        "text": "Tax drag is standalone: 12 * mean(pre-CGT log return - after-tax log return) > 0.02 is NO_GO; equality is allowed. This deliberately supersedes the prior compound rule 'drag > 2% AND negative after-tax delta'."
+      },
+      {
+        "amendment_id": "AMENDMENT-2-BOUNDARY-ASYMMETRY",
+        "text": "Boundary asymmetry is intentional: the primary economic exact boundary is NO_GO; the non-inferiority LCB exact boundary at -0.02 is NO_GO; turnover 4.00 passes and only strict greater-than triggers escalation; tax drag 0.02 passes."
+      },
+      {
+        "amendment_id": "AMENDMENT-3-FREEZE-ACCRUAL-AND-RECEIPT",
+        "text": "Prospective accrual begins at the first registered session open strictly after the anchor timestamp. No accrued observation may be consumed by a decision, report, or gate until the receipt verifies. A failed or invalid pair has no prospective status."
+      },
+      {
+        "amendment_id": "AMENDMENT-4-RETURN-COORDINATE-SEPARATION",
+        "text": "NEE-121 simple monthly net returns and NEE-120 log returns are intentionally different: simple returns measure cash-reconciliation fidelity, while log returns support log-additive inference."
+      }
+    ],
+    "claims": {
+      "owner_methods_registered": true,
+      "owner_methods_registration_meaning": "DECISIONS_REGISTERED_NOT_EXECUTABLE_IMPLEMENTATIONS",
+      "inference_implementation_available": false,
+      "operational_nee120_v2_created": false,
+      "operational_nee121_v2_created": false,
+      "methods_implemented": false,
+      "production_calendar_evidence_available": false,
+      "portfolio_capacity_available": false,
+      "prospective_receipt_verified": false,
+      "prospective_evidence_sufficient": false,
+      "empirical_performance_available": false,
+      "alpha_proven": false,
+      "production_ready": false,
+      "data_spine_start_authorized": false,
+      "milestone_m0_complete": false
+    },
+    "nonclaims": [
+      "NO_OPERATIONAL_NEE120_OR_NEE121_V2_CONTRACT_IS_CREATED",
+      "NO_EXISTING_V1_ARTIFACT_IS_MODIFIED_OR_SUPERSEDED_IN_PLACE",
+      "NO_METHOD_IMPLEMENTATION_OR_PRODUCTION_WIRING_IS_PROVIDED",
+      "NO_CALENDAR_OR_SESSION_VECTOR_HASH_IS_INFERRED",
+      "NO_PORTFOLIO_CAPACITY_VALUE_IS_COMPUTED",
+      "NO_FREEZE_ANCHOR_TIMESTAMP_OR_RECEIPT_IS_INFERRED",
+      "NO_PROSPECTIVE_OBSERVATION_IS_GRANTED_PROSPECTIVE_STATUS",
+      "NO_EMPIRICAL_PERFORMANCE_ALPHA_PRODUCTION_READINESS_OR_M0_COMPLETION_CLAIM",
+      "NO_DATA_SPINE_START_OR_LIVE_ORDER_AUTHORITY"
+    ]
+  }
+}
