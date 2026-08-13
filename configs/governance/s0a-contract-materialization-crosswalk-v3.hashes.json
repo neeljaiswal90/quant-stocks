@@ -1,0 +1,13 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-172-S0A-2-CONTRACT-MATERIALIZATION-CROSSWALK-V3",
+  "implementation_status": "CROSSWALK_ONLY",
+  "production_status": "BLOCKED_14_EVIDENCE_AND_ENGINEERING_ITEMS_REMAIN",
+  "artifacts": [
+    {"path": "configs/governance/s0a-contract-materialization-crosswalk-v3.json", "sha256": "b2d1a7f2:afb6ea18:62d87bed:2323dd35:863f55b1:e53ca99b:c5d1168d:018606b5"},
+    {"path": "docs/governance/S0A_CONTRACT_MATERIALIZATION_CROSSWALK_V3.md", "sha256": "22ba07a9:05b947da:faafa345:4c1daf68:4825e723:08c92207:a7702ce4:750a72ae"},
+    {"path": "qme/governance/materialization_crosswalk_v3.py", "sha256": "defae7f8:e9f830a6:53ca0a66:e05a2800:762bea87:23e3d9f5:400b0f5e:f2b02beb"},
+    {"path": "schemas/governance/s0a-contract-materialization-crosswalk-v3.schema.json", "sha256": "5389ff29:bb72dea0:554bc637:ef72bb6a:a1dd2404:3d65e793:96e36938:7e8def2e"},
+    {"path": "tests/governance/test_materialization_crosswalk_v3.py", "sha256": "8ddcd05b:a77cc4fc:5442dd8b:9b21d3ed:e1f62dab:c7f79b8f:1773b371:afabf4cf"}
+  ]
+}
