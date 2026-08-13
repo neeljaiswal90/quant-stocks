@@ -1,0 +1,55 @@
+name: Effective-trials Linux replay
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/effective-trials-linux.yml"
+      - "configs/governance/effective-trials-point-kernel-v1.json"
+      - "configs/governance/effective-trials-point-evidence-v1.hashes.json"
+      - "docs/stats/EFFECTIVE_TRIALS_POINT_KERNEL_V1.md"
+      - "qme/stats/effective_trials.py"
+      - "schemas/governance/effective-trials-point-evidence-v1.schema.json"
+      - "tests/fixtures/stats/effective-trials-v1-cases.json"
+      - "tests/stats/test_effective_trials.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/effective-trials-linux.yml"
+      - "configs/governance/effective-trials-point-kernel-v1.json"
+      - "configs/governance/effective-trials-point-evidence-v1.hashes.json"
+      - "docs/stats/EFFECTIVE_TRIALS_POINT_KERNEL_V1.md"
+      - "qme/stats/effective_trials.py"
+      - "schemas/governance/effective-trials-point-evidence-v1.schema.json"
+      - "tests/fixtures/stats/effective-trials-v1-cases.json"
+      - "tests/stats/test_effective_trials.py"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+      - name: Install pinned development environment
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Replay bounded point kernel and immutable manifest
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:3] == (3, 12, 10)"
+          python -m pytest -q tests/stats/test_effective_trials.py
+          python - <<'PY'
+          from pathlib import Path
+          from qme.stats.effective_trials import (
+              verify_effective_trials_point_evidence,
+              verify_effective_trials_point_manifest,
+          )
+          root = Path.cwd()
+          verify_effective_trials_point_evidence(root)
+          verify_effective_trials_point_manifest(root)
+          PY
