@@ -1,0 +1,2848 @@
+{
+  "$schema": "../../schemas/governance/s0a-contract-materialization-crosswalk-v3.schema.json",
+  "schema_version": "qme.s0a_contract_materialization_crosswalk.v3",
+  "crosswalk_id": "NEE-172-S0A-2-CONTRACT-MATERIALIZATION-CROSSWALK-V3",
+  "status": "OWNER_AMENDMENTS_REGISTERED_OPERATIONAL_V2_CONTRACTS_NOT_CREATED",
+  "semantic_sha256": "e04c5ad8:41dc933c:a2ef5e47:73af4830:7a042260:6b2a1f24:d511db20:1185acc5",
+  "authority": {
+    "approval_assertion_status": "OWNER_APPROVED_PROTECTED_MAIN_REGISTRATION_NOT_CRYPTOGRAPHIC_SIGNATURE",
+    "predecessor_crosswalk_v2": {
+      "id": "NEE-172-S0A-1-CONTRACT-MATERIALIZATION-CROSSWALK-V2",
+      "path": "configs/governance/s0a-contract-materialization-crosswalk-v2.json",
+      "sha256": "11f1de4d:51816cad:7d958fe9:2946e18f:e968d9de:7537006e:00f80577:c11942d1",
+      "semantic_sha256": "6ffb8e9c:05076941:68df0d5c:e5f94dbd:f8d49248:729319da:aa0efd23:91144f40",
+      "manifest_path": "configs/governance/s0a-contract-materialization-crosswalk-v2.hashes.json",
+      "manifest_sha256": "46e4c77b:16fbe273:80c1b609:1b29ed19:fab61a94:b14a73ba:dd7face8:49bbc84e",
+      "protected_main_commit": "ece578ff:ac6f5b9f:8dbfd07c:5a09709f:21b5dbe4"
+    },
+    "owner_mandate_supplement_a0": {
+      "id": "OWNER-MANDATE-2026-08-13-SUPPLEMENT-V1",
+      "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+      "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+      "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+      "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+      "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+      "approval_owner": "neeljaiswal90",
+      "approval_date": "2026-08-13",
+      "approved_at": null,
+      "approved_at_status": "PERMANENTLY_UNAVAILABLE_NOT_INFERRED",
+      "payload_representation": "NORMALIZED_SOURCE_FAITHFUL_MEANINGS_NOT_VERBATIM"
+    },
+    "protected_main_publication_receipt": {
+      "status": "VERIFIED_PROTECTED_MAIN_EXACT_SHA_CI_PASS",
+      "commit_sha": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+      "tree_sha": "ae1eb49f:5d0e8ad9:798c9905:bf980a86:3349db18",
+      "committer_timestamp": "2026-08-13T09:19:16-07:00",
+      "ci_run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31720071843",
+      "ci_run_id": 31720071843,
+      "ci_workflow": "qme-ci",
+      "ci_job_name": "foundation",
+      "ci_job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31720071843/job/94514536421",
+      "ci_head_sha": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+      "ci_provider_conclusion": "success",
+      "registered_conclusion": "PASS",
+      "scope": "OWNER_MANDATE_SUPPLEMENT_A0_PUBLICATION_ONLY"
+    }
+  },
+  "contract_targets": [
+    {
+      "ticket": "NEE-119",
+      "current_path": "configs/quant/qme-v0.1-contract.json",
+      "current_sha256": "47070e58:27292e74:567ae32a:eff58bcc:2c58e472:0edaa2d5:57435eb2:a5f472fa",
+      "proposed_v2_path": "configs/quant/qme-v0.1-contract-v2.json",
+      "identity_field": "contract_id",
+      "current_identity": "qme-long-only-momentum-v0.1",
+      "proposed_identity": "qme-long-only-momentum-v0.1",
+      "proposed_identity_status": "PRESERVE_STABLE_STRATEGY_ID"
+    },
+    {
+      "ticket": "NEE-120",
+      "current_path": "configs/quant/economic-promotion-decision-v1.json",
+      "current_sha256": "4857af12:6f6a010c:d598030e:90d868da:e19235c4:4450bf60:058a3e2a:aa3dec2a",
+      "proposed_v2_path": "configs/quant/economic-promotion-decision-v2.json",
+      "identity_field": "decision_spec_id",
+      "current_identity": "NEE-120-QME-ECONOMIC-DECISION-V1",
+      "proposed_identity": "NEE-120-QME-ECONOMIC-DECISION-V2",
+      "proposed_identity_status": "OWNER_APPROVED_OPERATIONAL_ARTIFACT_NOT_CREATED"
+    },
+    {
+      "ticket": "NEE-121",
+      "current_path": "configs/governance/sample-holdout-v1.json",
+      "current_sha256": "61d3c718:6ec3931a:1c053e33:e86aa63d:64065133:c2ebef6c:520c1a33:ade7c279",
+      "proposed_v2_path": "configs/governance/sample-holdout-v2.json",
+      "identity_field": "governance_contract_id",
+      "current_identity": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+      "proposed_identity": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+      "proposed_identity_status": "OWNER_APPROVED_OPERATIONAL_ARTIFACT_NOT_CREATED"
+    }
+  ],
+  "entries": [
+    {
+      "id": "S0A1-116-001",
+      "ticket": "NEE-116",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/reviewer_id"
+      },
+      "value": "neeljaiswal90",
+      "disposition": "OUT_OF_SCOPE_WITH_EXACT_REASON",
+      "status": "OUT_OF_SCOPE",
+      "destination_json_pointers": [],
+      "reason": "NEE-116 owns reviewer evidence; S0a-1 records but does not materialize self-review as independent review."
+    },
+    {
+      "id": "S0A1-116-002",
+      "ticket": "NEE-116",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/reviewer_role"
+      },
+      "value": "OWNER_SELF_REVIEW_NOT_INDEPENDENT",
+      "disposition": "OUT_OF_SCOPE_WITH_EXACT_REASON",
+      "status": "OUT_OF_SCOPE",
+      "destination_json_pointers": [],
+      "reason": "NEE-116 owns reviewer-role evidence; the registered owner self-review is preserved without upgrading it."
+    },
+    {
+      "id": "S0A1-116-003",
+      "ticket": "NEE-116",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/independent_human_review_claim_allowed"
+      },
+      "value": false,
+      "disposition": "OUT_OF_SCOPE_WITH_EXACT_REASON",
+      "status": "OUT_OF_SCOPE",
+      "destination_json_pointers": [],
+      "reason": "NEE-116 owns independent-review evidence; false is retained and no destination contract may imply otherwise."
+    },
+    {
+      "id": "S0A1-116-004",
+      "ticket": "NEE-116",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/official_open_fallback"
+      },
+      "value": "NONE_FAIL_CLOSED",
+      "disposition": "OUT_OF_SCOPE_WITH_EXACT_REASON",
+      "status": "OUT_OF_SCOPE",
+      "destination_json_pointers": [],
+      "reason": "NEE-116 owns official review disposition; S0a-1 cannot create a fallback approval channel."
+    },
+    {
+      "id": "S0A1-119-001",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/minimum_rank_eligible_breadth"
+      },
+      "value": 150,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/selection/minimum_rank_eligible_breadth/value"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-002",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/minimum_selected_holdings"
+      },
+      "value": 30,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/selection/minimum_selected_holdings"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-003",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/selection_formula"
+      },
+      "value": "min(50, floor(20 * N_t / 100))",
+      "disposition": "VALIDATE_EXISTING_EQUAL_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/selection/formula"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-004",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/breadth_boundary_proof"
+      },
+      "value": "floor(0.2 * 150) = 30",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/selection/minimum_rank_eligible_breadth/boundary_proof"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-005",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/universe_claim"
+      },
+      "value": "AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY",
+      "disposition": "VALIDATE_EXISTING_EQUAL_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/point_in_time_identity/universe_claim"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-006",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/membership_source"
+      },
+      "value": "ALPHA_VANTAGE_LISTING_STATUS_EXACT_SIGNAL_DATE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/point_in_time_identity/membership_and_identity_authority/membership_source"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-007",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/identity_cross_check"
+      },
+      "value": "SEC_CIK_FILING_AVAILABLE_BY_CUTOFF",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/point_in_time_identity/membership_and_identity_authority/identity_cross_check"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-008",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/quantitative_contract/nasdaq_100_profile_inherits_breadth"
+      },
+      "value": false,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/selection/minimum_rank_eligible_breadth/nasdaq_100_profile_inherits_breadth"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-101",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a71.1"
+      },
+      "value": [
+        125,
+        150,
+        200
+      ],
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/selection/minimum_rank_eligible_breadth/sensitivity_range"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-102",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "REGISTERED_ARTIFACT_POINTER",
+        "artifact_id": "SOURCE_FRESHNESS_POLICY",
+        "path": "configs/quant/source-freshness-policy-v1.json",
+        "sha256": "3dd94e35:0cc89023:e10efd2a:934e9a67:a502a1c8:4b5478db:82a98958:2ab71edc",
+        "locator": "ENTIRE_ARTIFACT"
+      },
+      "value": {
+        "policy_id": "qme-source-freshness-policy-v1",
+        "path": "configs/quant/source-freshness-policy-v1.json",
+        "sha256": "3dd94e35:0cc89023:e10efd2a:934e9a67:a502a1c8:4b5478db:82a98958:2ab71edc"
+      },
+      "disposition": "BIND_REGISTERED_ARTIFACT",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/contract_bindings/source_freshness_policy"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-103",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a71.3"
+      },
+      "value": [
+        "ALPHA_VANTAGE_LISTING_STATUS_ACTIVE_AND_DELISTED_EXACT_SIGNAL_DATE_MONTHLY_IMMUTABLE_RAW_CSV_SHA256",
+        "SEC_COMPANY_TICKERS_AND_SUBMISSIONS_CIK_CROSS_CHECK_NOT_MEMBERSHIP_AUTHORITY_FILING_AVAILABLE_BY_CUTOFF_OR_EXCLUDE",
+        "MANUAL_REVIEW_AMBIGUOUS_RENAMES_OR_REUSE_EXCLUDED_IN_V0_1"
+      ],
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/point_in_time_identity/membership_and_identity_authority/source_order"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-104",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a71.4"
+      },
+      "value": {
+        "source_set": [
+          "ALPHA_VANTAGE_TIME_SERIES_DAILY_RAW_OHLCV",
+          "ALPHA_VANTAGE_DIVIDENDS",
+          "ALPHA_VANTAGE_SPLITS"
+        ],
+        "raw_response_cache": "IMMUTABLE",
+        "total_return_construction": "SELF_COMPUTED_UNDER_QME_POINT_IN_TIME_TOTAL_RETURN_CLOSE_V1",
+        "acceptance_evidence": "PRODUCTION_CORPORATE_ACTION_FIXTURE_SET_REPRODUCED_FROM_SNAPSHOTS",
+        "production_receipts_available": false
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/signal/production_total_return_source_registration/source_rule"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-119-105",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a71.3"
+      },
+      "value": null,
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/point_in_time_identity/membership_and_identity_authority/production_snapshot_pair"
+      ],
+      "reason": "The first immutable membership-plus-identity snapshot pair and run-bound hashes do not exist."
+    },
+    {
+      "id": "S0A1-119-106",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a71.4"
+      },
+      "value": null,
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/signal/production_total_return_source_registration/production_receipts_and_fixture_evidence"
+      ],
+      "reason": "Production raw receipts and corporate-action acceptance fixtures remain unavailable."
+    },
+    {
+      "id": "S0A1-119-107",
+      "ticket": "NEE-119",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a71.3"
+      },
+      "value": "FIRST_IMMUTABLE_MEMBERSHIP_AND_IDENTITY_SNAPSHOT_PAIR_HASH_BOUND_IN_RUN",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/point_in_time_identity/membership_and_identity_authority/blocker_clear_condition"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-001",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/account/account_type"
+      },
+      "value": "TAXABLE_WEBULL_INDIVIDUAL",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/account/account_type"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-002",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/account/expected_aum_usd"
+      },
+      "value": "50000",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/account/expected_aum_usd"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-003",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/account/aum_sensitivity_usd/0"
+      },
+      "value": "25000",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/account/aum_sensitivity_usd/0"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-004",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/account/aum_sensitivity_usd/1"
+      },
+      "value": "100000",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/account/aum_sensitivity_usd/1"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-005",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/account/account_balance_evidence_status"
+      },
+      "value": "OWNER_MANDATE_NOT_ACCOUNT_REPORT_EVIDENCE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/account/account_balance_evidence_status"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-006",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/primary_metric_id"
+      },
+      "value": "NET_TC_PRE_CGT_LOG_CAGR_DELTA_VS_BENCHMARK",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/primary_metric_id"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-007",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/benchmark_id"
+      },
+      "value": "QQQ_TR_SAME_LEDGER",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/benchmark_id"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-008",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/estimand"
+      },
+      "value": "12 * mean(monthly_log_nav_return_strategy - monthly_log_nav_return_benchmark)",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/estimand"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-009",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/economic_effect_threshold_annual_log_return"
+      },
+      "value": "0.01",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/economic_threshold_annualized_log_delta"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-010",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/noninferiority_margin_annual_log_return"
+      },
+      "value": "0.02",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/non_inferiority_margin_annualized_log_delta"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-011",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/paired_monthly_primary_input/primary_economic_threshold",
+          "/nee120_methods/paired_monthly_primary_input/primary_economic_operator",
+          "/nee120_methods/paired_monthly_primary_input/primary_noninferiority_margin",
+          "/nee120_methods/paired_monthly_primary_input/primary_noninferiority_lcb_operator"
+        ],
+        "derivation": "Exact normalized decision string; both equalities are NO_GO."
+      },
+      "value": "POINT_ESTIMATE_GT_0_01_AND_ONE_SIDED_95_LCB_GT_NEGATIVE_0_02",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/decision_rule"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-012",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/superiority_or_alpha_claim_allowed"
+      },
+      "value": false,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/superiority_claim"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-013",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/promotion/after_tax_co_primary_status"
+      },
+      "value": "PLANNED_BLOCKED_PENDING_TAX_LOT_IMPLEMENTATION",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/primary_objective/after_tax_co_condition/status"
+      ],
+      "reason": "After-tax co-condition remains blocked pending tax-lot implementation evidence."
+    },
+    {
+      "id": "S0A1-120-014",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/risk_profile"
+      },
+      "value": "MODERATE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/risk_profile"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-015",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_issuer_weight"
+      },
+      "value": "0.10",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/issuer_weight_limit"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-016",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_sector_weight"
+      },
+      "value": "DIAGNOSTIC_ONLY_UNTIL_PIT_SECTOR_AUTHORITY",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/sector_limit_status"
+      ],
+      "reason": "Point-in-time sector authority is not registered."
+    },
+    {
+      "id": "S0A1-120-017",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_volatility"
+      },
+      "value": "NONE_DIAGNOSTIC_ONLY",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/volatility_target_status"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-018",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_absolute_drawdown"
+      },
+      "value": "0.40",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/absolute_drawdown_abort_threshold"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-019",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_one_way_turnover_per_year"
+      },
+      "value": "4.00",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/annualized_turnover_review_threshold"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-020",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_estimated_tax_drag_per_year"
+      },
+      "value": "0.02",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/annual_tax_drag_review_threshold"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-021",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/minimum_cash_buffer_weight"
+      },
+      "value": "0.01",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/cash_buffer"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-022",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/risk/maximum_participation_of_adv20"
+      },
+      "value": "0.01",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/participation_limit"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-023",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/ratifications/portfolio_capacity/method_status"
+      },
+      "value": "BLOCKED_PENDING_UPPER_BOUND_PROOF_AND_SOLVER_EVIDENCE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/capacity_status"
+      ],
+      "reason": "Capacity remains blocked pending an upper-bound proof and solver evidence; neither a cutoff nor solver execution is authorized."
+    },
+    {
+      "id": "S0A1-120-024",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/confidence_level"
+      },
+      "value": "0.95",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/confidence_level"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-025",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/primary_interval"
+      },
+      "value": "ONE_SIDED_STATIONARY_BLOCK_BOOTSTRAP",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/primary_interval"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-026",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/block_selection"
+      },
+      "value": "POLITIS_WHITE_AUTOMATIC_FLOOR_3_CAP_N_OVER_4",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/block_length_selection"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-027",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/bootstrap_seed"
+      },
+      "value": 20260812,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/bootstrap_seed"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-028",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/bootstrap_replicates"
+      },
+      "value": 10000,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/bootstrap_replicates"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-029",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/secondary_diagnostic"
+      },
+      "value": "NEWEY_WEST_HAC_T",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/diagnostic"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-030",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/confirmatory_family_size_m"
+      },
+      "value": 1,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/confirmatory_family_size"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-031",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/exploratory_structural_family_size_m"
+      },
+      "value": 96,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/exploratory_family_size"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-032",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/reported_output_count"
+      },
+      "value": 288,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/exploratory_output_count"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-033",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/primary_cost_bps_per_side"
+      },
+      "value": 10,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/primary_cost_scenario_bps"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-034",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/reporting_only_cost_bps_per_side/0"
+      },
+      "value": 5,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/reporting_cost_scenarios_bps/0"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-035",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/inference/reporting_only_cost_bps_per_side/1"
+      },
+      "value": 25,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/reporting_cost_scenarios_bps/1"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-036",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/metric_id"
+      },
+      "value": "CURRENT_DRAWDOWN_EXCESS_VS_BENCHMARK_POSITIVE_MAGNITUDE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/metric_id"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-037",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/metric_formula"
+      },
+      "value": "max(0, strategy_current_drawdown - benchmark_current_drawdown)",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/formula"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-038",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/threshold"
+      },
+      "value": "0.10",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/threshold"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-039",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/persistence_exchange_sessions"
+      },
+      "value": 5,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/persistence_sessions"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-040",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/absolute_current_drawdown_immediate_abort"
+      },
+      "value": "0.40",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/immediate_absolute_drawdown_threshold"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-041",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/abort_owner"
+      },
+      "value": "neeljaiswal90",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/owner"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-042",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/performance_restart_rule"
+      },
+      "value": "NEW_VERSION_NEW_FREEZE_TIMESTAMP",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/performance_abort_restart_policy"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-043",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/abort/infrastructure_resume_rule"
+      },
+      "value": "UNCHANGED_SPEC_VERIFIED_CHECKPOINT_ONLY",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/infrastructure_resume_policy"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-044",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/tax_lot_method"
+      },
+      "value": "HIFO_IF_ACCOUNT_ELECTION_VERIFIED_ELSE_FIFO",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/primary_objective/after_tax_co_condition/tax_lot_method"
+      ],
+      "reason": "Tax-lot implementation and account-election evidence are pending."
+    },
+    {
+      "id": "S0A1-120-045",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/tax_lot_implementation_status"
+      },
+      "value": "PENDING",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/primary_objective/after_tax_co_condition/tax_lot_status"
+      ],
+      "reason": "Tax-lot status is explicitly pending."
+    },
+    {
+      "id": "S0A1-120-046",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/wash_sale_scope"
+      },
+      "value": "STRATEGY_ACCOUNT_30_CALENDAR_DAYS_BEFORE_AND_AFTER_LOSS_SALE",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/primary_objective/after_tax_co_condition/wash_sale_scope"
+      ],
+      "reason": "Wash-sale implementation evidence is pending."
+    },
+    {
+      "id": "S0A1-120-047",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/cross_account_wash_sales"
+      },
+      "value": "OUT_OF_SCOPE_LABELED_UNDERSTATEMENT",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/after_tax_co_condition/cross_account_wash_sale_status"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-048",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/sell_side_fee_sources/0"
+      },
+      "value": "SEC_SECTION_31_DATED_RATE",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/sell_fee_sources/0"
+      ],
+      "reason": "Dated fee-rate receipts and implementation evidence are pending."
+    },
+    {
+      "id": "S0A1-120-049",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/review_and_accounting/sell_side_fee_sources/1"
+      },
+      "value": "FINRA_TAF_DATED_RATE",
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/sell_fee_sources/1"
+      ],
+      "reason": "Dated fee-rate receipts and implementation evidence are pending."
+    },
+    {
+      "id": "S0A1-120-101",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": "HIGHER_IS_BETTER",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/direction"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-102",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": "QQQ_BUY_AND_HOLD_IDENTICAL_NEE_118_LEDGER_COSTS_AND_TIMING",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/benchmark_implementation"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-103",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": "CALENDAR_MONTH_FORMATION_CYCLE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/analysis_unit"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-104",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": {
+        "population": "EVERY_SCHEDULED_CALENDAR_MONTH_FORMATION_CYCLE_IN_REGISTERED_WINDOW",
+        "validity_requirement": "BOTH_LEDGERS_VALID",
+        "post_hoc_month_deletion_allowed": false
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/eligible_population"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-105",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": "EQUAL_WEIGHT_PER_MONTH",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/observation_weighting"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-106",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": "SAME_MONTH_PAIRING_AT_T_PLUS_1_OPEN_ACCOUNTING_COORDINATE_ANNUALIZE_TIMES_12_LOG_ADDITIVE",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/date_alignment"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-107",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": "EITHER_SIDE_MISSING_MONTH_INVALID_ANY_INVALID_MONTH_NO_GO_FAIL_CLOSED_NO_GO",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/paired_missing_data_policy"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-108",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": [
+        "0.005",
+        "0.01",
+        "0.02"
+      ],
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/economic_threshold_sensitivity"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-109",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": [
+        "0.01",
+        "0.02",
+        "0.03"
+      ],
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/non_inferiority_margin_sensitivity"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-110",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.3"
+      },
+      "value": {
+        "alpha_one_sided": "0.05",
+        "reported_two_sided_interval_confidence": "0.90"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/inference_registration/alpha_and_reporting_interval"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-111",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "REGISTERED_ARTIFACT_POINTER",
+        "artifact_id": "EXPERIMENT_FAMILY_POLICY",
+        "path": "configs/governance/experiment-family-registration-v1.json",
+        "sha256": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40",
+        "locator": "ENTIRE_ARTIFACT"
+      },
+      "value": {
+        "artifact_id": "EXPERIMENT_FAMILY_POLICY",
+        "path": "configs/governance/experiment-family-registration-v1.json",
+        "sha256": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40"
+      },
+      "disposition": "BIND_REGISTERED_ARTIFACT",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/contract_bindings/experiment_family_policy"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-112",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.1"
+      },
+      "value": {
+        "classification": "PLANNED_CO_PRIMARY",
+        "minimum_estimated_after_tax_delta": "0",
+        "comparison": "GREATER_THAN_OR_EQUAL",
+        "scenario": "REGISTERED_ST_LT_SCENARIO",
+        "prerequisites": [
+          "REGISTERED_TAX_LOT_METHOD",
+          "IMPLEMENTED_TAX_ESTIMATOR"
+        ],
+        "registration_deadline": "BEFORE_UNBLINDING_ANY_WINDOW_FEEDING_GO"
+      },
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/primary_objective/after_tax_co_condition/threshold_and_gate"
+      ],
+      "reason": "After-tax co-condition cannot execute before tax-lot implementation evidence."
+    },
+    {
+      "id": "S0A1-120-113",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.4"
+      },
+      "value": "METRIC_GREATER_THAN_THRESHOLD_TRIGGERS_ABORT",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/threshold_operator"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-114",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.4"
+      },
+      "value": {
+        "coordinate": "CURRENT_DRAWDOWN_FROM_EACH_LEDGER_RUNNING_PEAK_OVER_FULL_PROSPECTIVE_WINDOW_FROM_PROSPECTIVE_INCEPTION",
+        "historical_maximum_drawdown_forbidden": true
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/drawdown_lookback"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-115",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.4"
+      },
+      "value": {
+        "absolute_strategy_current_drawdown": {
+          "operator": "GT",
+          "threshold": "0.40",
+          "persistence_sessions": 0
+        },
+        "fail_safe": {
+          "triggers": [
+            "RECONCILIATION_FAILURE",
+            "SCHEMA_INVALID_RUN",
+            "MISSING_MANDATORY_INPUT"
+          ],
+          "action": "FAIL_SAFE_ABORT"
+        }
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/co_abort_semantics"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-116",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.4"
+      },
+      "value": {
+        "resume_checkpoint_status": "RUNTIME_EVIDENCED",
+        "full_lineage_hash_revalidation_required": true,
+        "anything_less_action": "RESTART"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/checkpoint_and_restart_requirements"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-117",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/stationary_bootstrap_interval/block_selector_method_id",
+          "/nee120_methods/stationary_bootstrap_interval/block_selector",
+          "/nee120_methods/stationary_bootstrap_interval/block_selector_status",
+          "/nee120_methods/stationary_bootstrap_interval/selector_rounding",
+          "/nee120_methods/stationary_bootstrap_interval/minimum_block_length",
+          "/nee120_methods/stationary_bootstrap_interval/maximum_block_length_formula",
+          "/nee120_methods/stationary_bootstrap_interval/minimum_series_length",
+          "/nee120_methods/stationary_bootstrap_interval/insufficient_or_selector_failure_action"
+        ],
+        "derivation": "Exact field projection in listed order; no algorithm or fallback is inferred."
+      },
+      "value": {
+        "method_id": "QME-NEE120-CORRECTED-POLITIS-WHITE-BLOCK-SELECTOR-V1",
+        "selector": "CORRECTED_POLITIS_WHITE_AUTOMATIC_SELECTOR",
+        "implementation_status": "REGISTERED_SELECTOR_VARIANT_EXACT_SOURCE_EQUATIONS_IMPLEMENTATION_ARTIFACT_PENDING",
+        "rounding": "CEILING",
+        "minimum_block_length": 3,
+        "maximum_block_length_formula": "floor(n / 4)",
+        "minimum_series_length": 12,
+        "failure_action": "NO_GO_NO_FALLBACK"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/inference_registration/politis_white_implementation_variant"
+      ],
+      "reason": "Selector choice is registered; exact source equations and executable conformance evidence remain pending."
+    },
+    {
+      "id": "S0A1-120-118",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee120_methods/newey_west_diagnostic"
+      },
+      "value": {
+        "method_id": "QME-NEE120-NEWEY-WEST-INTERCEPT-ONLY-DIAGNOSTIC-V1",
+        "role": "SECONDARY_DIAGNOSTIC_NOT_DECISION_AUTHORITY",
+        "regression": "INTERCEPT_ONLY_MONTHLY_PAIRED_LOG_RETURN_DELTA",
+        "lag_formula": "floor(4 * (n / 100)^(2 / 9))",
+        "lag_bound_formula": "q = min(n - 1, floor(4 * (n / 100)^(2 / 9)))",
+        "kernel": "BARTLETT",
+        "prewhitening": false,
+        "additional_small_sample_correction": false,
+        "decimal_precision_digits": 50,
+        "equations": {
+          "mean": "mu_hat = (1 / n) * sum(x_t)",
+          "autocovariance": "gamma_k = (1 / n) * sum_{t=k+1..n}((x_t - mu_hat) * (x_{t-k} - mu_hat))",
+          "long_run_variance": "Omega_hat = gamma_0 + 2 * sum_{k=1..q}((1 - k / (q + 1)) * gamma_k)",
+          "annualized_standard_error": "SE_annualized = 12 * sqrt(Omega_hat / n)",
+          "diagnostic_t_statistic": "t_NW = annualized_mean_delta / SE_annualized",
+          "diagnostic_null": null,
+          "diagnostic_null_status": "UNREGISTERED_BLOCKER",
+          "validity_bounds": "n >= 2 AND 0 <= q <= n - 1 AND Omega_hat finite and nonnegative"
+        },
+        "invalid_or_nonfinite_action": "DIAGNOSTIC_UNAVAILABLE_NO_PRIMARY_FALLBACK"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/inference_registration/newey_west_implementation"
+      ],
+      "reason": "Diagnostic method is registered; executable conformance evidence and the diagnostic null remain pending."
+    },
+    {
+      "id": "S0A1-120-119",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/one_way_turnover/method_id",
+          "/nee120_methods/one_way_turnover/threshold",
+          "/nee120_methods/one_way_turnover/threshold_operator",
+          "/nee120_methods/one_way_turnover/exact_boundary",
+          "/nee120_methods/one_way_turnover/breach_state",
+          "/nee120_methods/one_way_turnover/breach_consequence"
+        ],
+        "derivation": "Exact breach-policy field projection; 4.00 passes and only strict greater-than escalates."
+      },
+      "value": {
+        "method_id": "QME-NEE120-ROLLING-ONE-WAY-TURNOVER-V1",
+        "threshold": "4.00",
+        "threshold_operator": "STRICT_GREATER_THAN_TRIGGERS_ESCALATION",
+        "exact_boundary": "PASS",
+        "breach_state": "NO_GO_PENDING_OWNER_REVIEW_NEW_VERSION_REQUIRED_NO_AUTOMATIC_CONTINUATION",
+        "breach_consequence": "NAMED_NONAUTOMATIC_ESCALATION_NO_AUTOMATIC_ABORT_OR_CONTINUATION"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/turnover_breach_consequence"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-120",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/paired_monthly_primary_input/method_id",
+          "/nee120_methods/paired_monthly_primary_input/analysis_unit",
+          "/nee120_methods/paired_monthly_primary_input/alignment",
+          "/nee120_methods/paired_monthly_primary_input/eligible_population",
+          "/nee120_methods/paired_monthly_primary_input/post_hoc_month_deletion_allowed",
+          "/nee120_methods/paired_monthly_primary_input/validity_rule",
+          "/nee120_methods/paired_monthly_primary_input/either_invalid_action",
+          "/nee120_methods/paired_monthly_primary_input/strategy_input",
+          "/nee120_methods/paired_monthly_primary_input/strategy_formula"
+        ],
+        "derivation": "Exact strategy-side field projection; no endpoint sub-coordinate is inferred."
+      },
+      "value": {
+        "method_id": "QME-NEE120-PAIRED-MONTHLY-NET-NAV-LOG-RETURN-V1",
+        "analysis_unit": "CALENDAR_MONTH_FORMATION_CYCLE",
+        "alignment": "SAME_MONTH_T_PLUS_1_OPEN_TO_T_PLUS_1_OPEN",
+        "eligible_population": "EVERY_SCHEDULED_CALENDAR_MONTH_FORMATION_CYCLE_IN_REGISTERED_WINDOW",
+        "post_hoc_month_deletion_allowed": false,
+        "validity_rule": "BOTH_STRATEGY_AND_BENCHMARK_LEDGER_MONTHS_VALID",
+        "either_invalid_action": "NO_GO_FAIL_CLOSED",
+        "input": "NET_TC_PRE_CGT_STRATEGY_NAV_LOG_RETURN",
+        "formula": "ln(strategy_nav_end_pre_cgt / strategy_nav_start_pre_cgt)"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/strategy_monthly_input_contract"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-121",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/paired_monthly_primary_input/method_id",
+          "/nee120_methods/paired_monthly_primary_input/analysis_unit",
+          "/nee120_methods/paired_monthly_primary_input/alignment",
+          "/nee120_methods/paired_monthly_primary_input/eligible_population",
+          "/nee120_methods/paired_monthly_primary_input/post_hoc_month_deletion_allowed",
+          "/nee120_methods/paired_monthly_primary_input/validity_rule",
+          "/nee120_methods/paired_monthly_primary_input/either_invalid_action",
+          "/nee120_methods/paired_monthly_primary_input/benchmark_input",
+          "/nee120_methods/paired_monthly_primary_input/benchmark_formula"
+        ],
+        "derivation": "Exact benchmark-side field projection; no endpoint sub-coordinate is inferred."
+      },
+      "value": {
+        "method_id": "QME-NEE120-PAIRED-MONTHLY-NET-NAV-LOG-RETURN-V1",
+        "analysis_unit": "CALENDAR_MONTH_FORMATION_CYCLE",
+        "alignment": "SAME_MONTH_T_PLUS_1_OPEN_TO_T_PLUS_1_OPEN",
+        "eligible_population": "EVERY_SCHEDULED_CALENDAR_MONTH_FORMATION_CYCLE_IN_REGISTERED_WINDOW",
+        "post_hoc_month_deletion_allowed": false,
+        "validity_rule": "BOTH_STRATEGY_AND_BENCHMARK_LEDGER_MONTHS_VALID",
+        "either_invalid_action": "NO_GO_FAIL_CLOSED",
+        "input": "NET_TC_PRE_CGT_QQQ_SAME_LEDGER_NAV_LOG_RETURN",
+        "formula": "ln(benchmark_nav_end_pre_cgt / benchmark_nav_start_pre_cgt)"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/benchmark_monthly_input_contract"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-120-122",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee120_methods/one_way_turnover"
+      },
+      "value": {
+        "method_id": "QME-NEE120-ROLLING-ONE-WAY-TURNOVER-V1",
+        "per_cycle_formula": "GTN / (2 * NAV_before)",
+        "gtn_coordinate": "SUM_ABSOLUTE_TRADED_NOTIONAL_AT_COMMON_RAW_EXECUTION_MARK",
+        "nav_coordinate": "PRE_TRADE_NAV_BEFORE_CURRENT_CYCLE",
+        "complete_history_aggregation": "SUM_MOST_RECENT_12_COMPLETED_MONTHLY_CYCLE_ONE_WAY_TURNOVERS",
+        "provisional_history_aggregation": "12 * sum(completed_monthly_cycle_one_way_turnovers) / m",
+        "provisional_condition": "1 <= m < 12",
+        "no_completed_cycle_action": "UNAVAILABLE_NO_THRESHOLD_DECISION",
+        "threshold": "4.00",
+        "threshold_operator": "STRICT_GREATER_THAN_TRIGGERS_ESCALATION",
+        "exact_boundary": "PASS",
+        "breach_state": "NO_GO_PENDING_OWNER_REVIEW_NEW_VERSION_REQUIRED_NO_AUTOMATIC_CONTINUATION",
+        "breach_consequence": "NAMED_NONAUTOMATIC_ESCALATION_NO_AUTOMATIC_ABORT_OR_CONTINUATION"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/one_way_turnover_aggregation"
+      ],
+      "reason": "Turnover math and boundary are registered; production implementation evidence remains pending."
+    },
+    {
+      "id": "S0A1-120-123",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee120_methods/annual_tax_drag"
+      },
+      "value": {
+        "method_id": "QME-NEE120-STANDALONE-ANNUAL-TAX-DRAG-V1",
+        "pre_cgt_monthly_input": "VALID_PRE_CGT_NET_NAV_LOG_RETURN",
+        "after_tax_monthly_input": "VALID_AFTER_TAX_NET_NAV_LOG_RETURN",
+        "formula": "12 * mean(pre_cgt_monthly_log_return - after_tax_monthly_log_return)",
+        "month_alignment": "EQUAL_VALID_MONTHS_ONLY",
+        "window": "EXACT_REGISTERED_WINDOW_ALL_SCHEDULED_MONTHS_NO_POST_HOC_DELETION",
+        "included_tax_effects": [
+          "REALIZED_CASH_TAX",
+          "SUPPORTED_WITHHOLDING"
+        ],
+        "excluded_tax_effects": [
+          "UNREALIZED_DEFERRED_TAX"
+        ],
+        "invalid_month_action": "NO_GO_FAIL_CLOSED",
+        "threshold": "0.02",
+        "threshold_units": "ANNUALIZED_LOG_RETURN_DECIMAL",
+        "no_go_operator": "STRICT_GREATER_THAN",
+        "exact_boundary": "PASS",
+        "supersession": {
+          "superseded_rule": "tax drag > 2% AND negative after-tax delta",
+          "replacement_rule": "12 * mean(pre_cgt_monthly_log_return - after_tax_monthly_log_return) > 0.02 => NO_GO",
+          "reason": "OWNER_APPROVED_STANDALONE_TAX_DRAG_GATE_2026-08-13",
+          "after_tax_co_primary_remains_separate": true
+        }
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/annual_tax_drag_formula"
+      ],
+      "reason": "Standalone tax-drag math is registered; tax-ledger implementation evidence remains pending."
+    },
+    {
+      "id": "S0A1-120-124",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee120_methods/stationary_bootstrap_interval"
+      },
+      "value": {
+        "method_id": "QME-NEE120-UNCENTERED-PERCENTILE-STATIONARY-BOOTSTRAP-V1",
+        "series": "VALID_PAIRED_MONTHLY_LOG_RETURN_DELTAS_IN_REGISTERED_ORDER",
+        "bootstrap_method": "POLITIS_ROMANO_STATIONARY_BOOTSTRAP",
+        "block_selector_method_id": "QME-NEE120-CORRECTED-POLITIS-WHITE-BLOCK-SELECTOR-V1",
+        "block_selector": "CORRECTED_POLITIS_WHITE_AUTOMATIC_SELECTOR",
+        "block_selector_status": "REGISTERED_SELECTOR_VARIANT_EXACT_SOURCE_EQUATIONS_IMPLEMENTATION_ARTIFACT_PENDING",
+        "selector_rounding": "CEILING",
+        "minimum_block_length": 3,
+        "maximum_block_length_formula": "floor(n / 4)",
+        "minimum_series_length": 12,
+        "insufficient_or_selector_failure_action": "NO_GO_NO_FALLBACK",
+        "replicates": 10000,
+        "seed": 20260812,
+        "interval_construction": "UNCENTERED_PERCENTILE",
+        "bootstrap_statistic": "12 * mean(resampled_paired_monthly_log_return_deltas)",
+        "studentization": false,
+        "bias_correction": false,
+        "invalid_replicate_action": "NO_GO_FAIL_CLOSED",
+        "order_statistic_indexing": "ONE_BASED_ASCENDING_NO_INTERPOLATION",
+        "one_sided_95_lcb_order_statistic": 500,
+        "reported_two_sided_90_interval_order_statistics": [
+          500,
+          9500
+        ],
+        "replicate_draw_order": "REPLICATE_MAJOR_THEN_OBSERVATION_ORDER",
+        "point_estimate_rule": "REGISTERED_PRIMARY_ESTIMAND_ON_UNRESAMPLED_SERIES"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/inference_registration/stationary_bootstrap_interval_construction"
+      ],
+      "reason": "Interval construction is registered; selector equations and executable inference evidence remain pending."
+    },
+    {
+      "id": "S0A1-120-125",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a72.4"
+      },
+      "value": {
+        "restart_authority": "neeljaiswal90",
+        "performance_abort": {
+          "action": "NEW_VERSION_NEW_FREEZE_TIMESTAMP",
+          "prospective_clock": "RESTART"
+        },
+        "infrastructure_only_outage": {
+          "unchanged_spec_required": true,
+          "verified_checkpoint_required": true,
+          "prospective_clock": "RESUME"
+        },
+        "abort_state": "STICKY_UNTIL_MATCHING_EXPLICIT_RESTART_APPROVAL"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/live_abort_registration/restart_authority_and_clock_policy"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-001",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/confirmation_window"
+      },
+      "value": "2019-01-01/2021-12-31",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/confirmation/window"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-002",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/confirmation_classification"
+      },
+      "value": "ONE_TIME_CONFIRMATION_ONLY",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/confirmation/classification"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-003",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/pristine_holdout_claim_allowed"
+      },
+      "value": false,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/confirmation/pristine_claim"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-004",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/label_horizon_session_intervals/1M"
+      },
+      "value": 21,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/horizon_sessions/1M"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-005",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/label_horizon_session_intervals/3M"
+      },
+      "value": 63,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/horizon_sessions/3M"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-006",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/label_horizon_session_intervals/6M"
+      },
+      "value": 126,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/horizon_sessions/6M"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-007",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/embargo_sessions"
+      },
+      "value": 0,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/embargo_sessions"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-008",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/prospective_minimum_calendar_months"
+      },
+      "value": 6,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/evidence_minima/calendar_months"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-009",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/prospective_minimum_reconciled_cycles"
+      },
+      "value": 6,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/evidence_minima/rebalance_cycles"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-010",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/live_simulated_monthly_return_rms_maximum"
+      },
+      "value": "0.005",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/return_reconstruction/rms_threshold"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-011",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "M0_REGISTRATION_POINTER",
+        "path": "configs/governance/m0-registration-v1.json",
+        "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756",
+        "json_pointer": "/mandates/holdout/prospective_claim_scope"
+      },
+      "value": "IMPLEMENTATION_FIDELITY_AND_OPERATIONAL_SAFETY_ONLY",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/claim_scope"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-101",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "REGISTERED_ARTIFACT_POINTER",
+        "artifact_id": "PRIOR_ACCESS_ATTESTATION",
+        "path": "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md",
+        "sha256": "dbe8afa5:81939a39:495db6e9:9878bdbe:6405bc4f:7d79c049:6bb139f7:24b8fb4f",
+        "locator": "ENTIRE_ARTIFACT"
+      },
+      "value": {
+        "artifact_id": "PRIOR_ACCESS_ATTESTATION",
+        "path": "docs/governance/PRIOR_ACCESS_ATTESTATION_2019_2021.md",
+        "sha256": "dbe8afa5:81939a39:495db6e9:9878bdbe:6405bc4f:7d79c049:6bb139f7:24b8fb4f",
+        "status": "NO_PRIOR_SYSTEMATIC_ACCESS_ATTESTED_INFORMAL_EXPOSURE_DISCLOSED"
+      },
+      "disposition": "BIND_REGISTERED_ARTIFACT",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/contract_bindings/prior_access_attestation"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-102",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "REGISTERED_ARTIFACT_POINTER",
+        "artifact_id": "LABEL_ENDPOINT_METHOD",
+        "path": "configs/governance/label-endpoint-session-offset-v1.json",
+        "sha256": "9fe2988e:c7276ea7:0bc919b7:2c643409:b8caaf4c:8e383ae0:3d34728b:30aa5557",
+        "locator": "ENTIRE_ARTIFACT"
+      },
+      "value": {
+        "method_id": "qme-label-endpoint-session-offset-v1",
+        "path": "configs/governance/label-endpoint-session-offset-v1.json",
+        "sha256": "9fe2988e:c7276ea7:0bc919b7:2c643409:b8caaf4c:8e383ae0:3d34728b:30aa5557",
+        "horizon_session_intervals": {
+          "1M": 21,
+          "3M": 63,
+          "6M": 126
+        }
+      },
+      "disposition": "BIND_REGISTERED_ARTIFACT",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/contract_bindings/label_endpoint_method"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-103",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee121_methods/prospective_freeze_two_phase"
+      },
+      "value": {
+        "method_id": "QME-NEE121-TWO-PHASE-FREEZE-ANCHOR-RECEIPT-V1",
+        "anchor_phase": {
+          "trigger": "PROTECTED_MAIN_PRE_ACCEPTANCE_MERGE_AFTER_ALL_NON_FINAL_BLOCKERS_RESOLVE",
+          "anchor_timestamp_source": "COMMITTER_UTC_TIMESTAMP_OF_PROTECTED_MAIN_PRE_ACCEPTANCE_MERGE",
+          "exact_sha_ci_required": true,
+          "anchor_required_bindings": [
+            "PROTECTED_MAIN_MERGE_COMMIT_SHA",
+            "PROTECTED_MAIN_TREE_SHA",
+            "COMMITTER_UTC_TIMESTAMP",
+            "EXACT_SHA_CI_URL",
+            "EXACT_SHA_CI_CONCLUSION",
+            "FREEZE_EXPORT_SHA256"
+          ],
+          "anchor_status_before_commit": "PENDING_FINAL_ACCEPTANCE_MERGE",
+          "first_accrual_session_rule": "FIRST_REGISTERED_SESSION_OPEN_STRICTLY_AFTER_ANCHOR_TIMESTAMP"
+        },
+        "receipt_phase": {
+          "effect": "VERIFIED_RECEIPT_FLIPS_NEE110_ACCEPTANCE_TRUE",
+          "required_bindings": [
+            "ANCHOR_COMMIT_SHA",
+            "ANCHOR_TREE_SHA",
+            "ANCHOR_TIMESTAMP",
+            "EXACT_SHA_CI_URL",
+            "EXACT_SHA_CI_CONCLUSION",
+            "FREEZE_EXPORT_SHA256",
+            "ALL_OPERATIONAL_CONTRACT_HASHES",
+            "ALL_OPERATIONAL_CONFIG_HASHES",
+            "ALL_OPERATIONAL_SCHEMA_HASHES",
+            "ALL_OPERATIONAL_MANIFEST_HASHES",
+            "OWNER_APPROVAL_OWNER",
+            "OWNER_APPROVAL_DATE_OR_EFFECTIVE_TIMESTAMP",
+            "CALENDAR_ID",
+            "CALENDAR_SHA256",
+            "ORDERED_SESSION_VECTOR_SHA256",
+            "FIRST_ACCRUAL_SESSION_ID",
+            "FIRST_ACCRUAL_SESSION_OPEN_TIMESTAMP",
+            "RECEIPT_SHA256",
+            "NO_SEMANTIC_CHANGE_AT_RECEIPT_ASSERTION"
+          ],
+          "verification_rule": "RECEIPT_MUST_PROVE_FIRST_REGISTERED_SESSION_OPEN_STRICTLY_AFTER_BOUND_ANCHOR",
+          "receipt_failure_action": "ACCRUED_OBSERVATIONS_HAVE_NO_PROSPECTIVE_STATUS"
+        },
+        "pre_receipt_consumption_rule": "DENY_OUTCOME_DISPLAY_REPORT_TEST_GATE_AND_SAMPLE_ACCESS",
+        "receipt_deadline": null,
+        "receipt_deadline_status": "NOT_REGISTERED",
+        "failed_or_invalid_pair_rule": "PERMANENTLY_NO_PROSPECTIVE_STATUS_FOR_THIS_VERSION"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/final_specification_freeze/derivation_rule"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A1-121-104",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a73.3"
+      },
+      "value": {
+        "calendar_id": "XNYS_2010-01-04_2027-12-31_v1",
+        "generator": "PANDAS_MARKET_CALENDARS_PINNED_VERSION",
+        "timezone": "America/New_York",
+        "materialization": "IMMUTABLE_JSON_SESSION_DATES_OPEN_CLOSE_TIMESTAMPS"
+      },
+      "disposition": "OUT_OF_SCOPE_WITH_EXACT_REASON",
+      "status": "OUT_OF_SCOPE",
+      "destination_json_pointers": [],
+      "reason": "The protected XNYS proposal is preserved as historical authority only; operational calendar identity remains deferred to a separately protected NEE-121 registration with accepted artifact hashes."
+    },
+    {
+      "id": "S0A1-121-105",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee121_methods/prospective_return_reconstruction",
+          "/approved_amendments/3"
+        ],
+        "derivation": "RMS method plus exact return-coordinate amendment; simple returns cannot substitute for NEE-120 log returns."
+      },
+      "value": {
+        "method_id": "QME-NEE121-LIVE-SIMULATED-SIMPLE-RETURN-RMS-V1",
+        "live_input": "SIMPLE_MONTHLY_NET_RETURN_FROM_RECONCILED_LIVE_LEDGER",
+        "simulated_input": "SIMPLE_MONTHLY_NET_RETURN_FROM_MATCHED_SIMULATED_LEDGER",
+        "alignment": "MATCHED_FORMATION_EXECUTION_RECONCILIATION_CYCLE",
+        "endpoint_rule": "IDENTICAL_REGISTERED_T_PLUS_1_OPEN_START_AND_END_ENDPOINTS",
+        "return_coordinate": "NET_COSTS_AND_FEES_PRE_CGT_SIMPLE_MONTHLY_NET_RETURN",
+        "cycle_weighting": "EQUAL_WEIGHT_NO_DEMEANING",
+        "difference": "live_simple_monthly_net_return - simulated_simple_monthly_net_return",
+        "mse_formula": "sum(squared_monthly_return_differences) / reconciled_cycle_count",
+        "mse_denominator": "n_RECONCILED_CYCLES",
+        "mse_maximum": "0.000025",
+        "rms_formula": "sqrt(mse)",
+        "rms_maximum": "0.005",
+        "minimum_reconciled_cycles": 6,
+        "minimum_calendar_months": 6,
+        "calendar_month_count_rule": "AT_LEAST_6_DISTINCT_REGISTERED_CALENDAR_MONTH_IDS",
+        "maximum_unresolved_reconciliation_breaks": 0,
+        "threshold_operator": "LESS_THAN_OR_EQUAL",
+        "history_rule": "ALL_COMPLETED_CYCLES_SINCE_FREEZE_NO_ROLLING_WINDOW",
+        "invalid_pair_retention_rule": "INVALID_PAIRS_RETAINED_AS_NOT_COMPUTABLE_NEVER_DROPPED",
+        "numeric_rule": {
+          "decimal_precision_digits": 50,
+          "display_scale": 18,
+          "display_rounding": "ROUND_HALF_EVEN",
+          "binary_float_forbidden": true
+        },
+        "not_computable_conditions": [
+          "MISSING_CYCLE",
+          "DUPLICATE_CYCLE",
+          "REVISED_CYCLE_WITHOUT_VERSIONED_LINEAGE",
+          "NONFINITE_VALUE",
+          "NONPOSITIVE_NAV",
+          "UNEXPLAINED_EXTERNAL_FLOW",
+          "ENDPOINT_OR_ARTIFACT_HASH_MISMATCH",
+          "UNRESOLVED_RECONCILIATION_BREAK"
+        ],
+        "invalid_pair_action": "PERMANENTLY_NO_PROSPECTIVE_STATUS_FOR_THIS_VERSION",
+        "claim_scope": "IMPLEMENTATION_FIDELITY_AND_OPERATIONAL_SAFETY_ONLY_NO_ALPHA_CLAIM",
+        "return_coordinate_separation": {
+          "amendment_id": "AMENDMENT-4-RETURN-COORDINATE-SEPARATION",
+          "text": "NEE-121 simple monthly net returns and NEE-120 log returns are intentionally different: simple returns measure cash-reconciliation fidelity, while log returns support log-additive inference."
+        }
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/return_reconstruction/rms_method"
+      ],
+      "reason": "RMS method and the deliberate simple-versus-log separation are registered; prospective reconciled-cycle evidence and executable conformance remain pending."
+    },
+    {
+      "id": "S0A1-121-106",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a73.4"
+      },
+      "value": null,
+      "disposition": "RETAIN_TYPED_BLOCKER",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/sample_and_holdout/final_specification_freeze/value"
+      ],
+      "reason": "The triggering protected-main acceptance merge and freeze export do not exist."
+    },
+    {
+      "id": "S0A1-121-107",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/ratifications/calendar/calendar_sha256"
+      },
+      "value": null,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/sample_and_holdout/calendar/calendar_sha256"
+      ],
+      "reason": "No accepted production calendar artifact bytes exist; A0 preserves the null."
+    },
+    {
+      "id": "S0A1-121-108",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/ratifications/calendar/ordered_session_vector_sha256"
+      },
+      "value": null,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "TYPED_BLOCKER",
+      "destination_json_pointers": [
+        "/sample_and_holdout/calendar/ordered_session_vector_sha256"
+      ],
+      "reason": "No accepted ordered production session-vector bytes exist; A0 preserves the null."
+    },
+    {
+      "id": "S0A1-121-109",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "HASH_BOUND_PROPOSAL_SECTION",
+        "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+        "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+        "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+        "section": "\u00a73.5"
+      },
+      "value": 0,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/evidence_minima/maximum_unresolved_reconciliation_breaks"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A3-120-126",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/approved_contract_identities/nee120"
+      },
+      "value": "NEE-120-QME-ECONOMIC-DECISION-V2",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/decision_spec_id"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A3-120-127",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/paired_monthly_primary_input/primary_economic_threshold",
+          "/nee120_methods/paired_monthly_primary_input/primary_economic_operator",
+          "/nee120_methods/paired_monthly_primary_input/primary_economic_exact_boundary",
+          "/nee120_methods/paired_monthly_primary_input/primary_noninferiority_margin",
+          "/nee120_methods/paired_monthly_primary_input/primary_noninferiority_lcb_operator",
+          "/approved_amendments/1/text",
+          "/nee120_methods/one_way_turnover/threshold",
+          "/nee120_methods/one_way_turnover/threshold_operator",
+          "/nee120_methods/one_way_turnover/exact_boundary",
+          "/nee120_methods/annual_tax_drag/threshold",
+          "/nee120_methods/annual_tax_drag/no_go_operator",
+          "/nee120_methods/annual_tax_drag/exact_boundary"
+        ],
+        "derivation": "Exact boundary table; the NI equality classification is sourced from amendment 2."
+      },
+      "value": {
+        "primary_economic": {
+          "threshold": "0.01",
+          "operator": "STRICT_GREATER_THAN",
+          "exact_boundary": "NO_GO"
+        },
+        "primary_noninferiority_lcb": {
+          "margin": "0.02",
+          "operator": "STRICT_GREATER_THAN_NEGATIVE_MARGIN",
+          "exact_boundary": "NO_GO"
+        },
+        "turnover": {
+          "threshold": "4.00",
+          "operator": "STRICT_GREATER_THAN_TRIGGERS_ESCALATION",
+          "exact_boundary": "PASS"
+        },
+        "tax_drag": {
+          "threshold": "0.02",
+          "operator": "STRICT_GREATER_THAN",
+          "exact_boundary": "PASS"
+        }
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/primary_objective/boundary_asymmetry"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A3-120-128",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee120_methods/annual_tax_drag/supersession"
+      },
+      "value": {
+        "superseded_rule": "tax drag > 2% AND negative after-tax delta",
+        "replacement_rule": "12 * mean(pre_cgt_monthly_log_return - after_tax_monthly_log_return) > 0.02 => NO_GO",
+        "reason": "OWNER_APPROVED_STANDALONE_TAX_DRAG_GATE_2026-08-13",
+        "after_tax_co_primary_remains_separate": true
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/tax_drag_policy_supersession"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A3-120-129",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/nee120_methods/stationary_bootstrap_interval/block_selector_status"
+      },
+      "value": null,
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/inference_registration/politis_white_source_equations"
+      ],
+      "reason": "A0 explicitly records exact source equations as pending; no equations or executable selector are inferred."
+    },
+    {
+      "id": "S0A3-120-130",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_DERIVATION",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointers": [
+          "/nee120_methods/newey_west_diagnostic/equations/diagnostic_null",
+          "/nee120_methods/newey_west_diagnostic/equations/diagnostic_null_status"
+        ],
+        "derivation": "Exact null plus its typed blocker status."
+      },
+      "value": {
+        "value": null,
+        "status": "UNREGISTERED_BLOCKER"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/inference_registration/newey_west_diagnostic_null"
+      ],
+      "reason": "The diagnostic null is unregistered and cannot be inferred."
+    },
+    {
+      "id": "S0A3-120-131",
+      "ticket": "NEE-120",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/ratifications/portfolio_capacity"
+      },
+      "value": {
+        "method_id": "QME-DISCRETE-CAPACITY-USD100-EXHAUSTIVE-V1",
+        "currency": "USD",
+        "capital_quantum": "100",
+        "search": "EXHAUSTIVE_OVER_CAPITAL_QUANTA",
+        "search_start": "REGISTERED_MINIMUM_CAPITAL_QUANTUM",
+        "upper_bound": {
+          "method": "OWNER_APPROVED_BASE_UPPER_BOUND_CANDIDATE",
+          "formula": "U = K * p_max * min_i(ADV20_i)",
+          "variables": {
+            "K": "SELECTED_HOLDING_COUNT",
+            "p_max": "REGISTERED_MAXIMUM_PARTICIPATION_OF_ADV20",
+            "ADV20_i": "CUTOFF_VALID_ADV20_FOR_SELECTED_SECURITY_i"
+          },
+          "proof_status": "BLOCKED_PENDING_CASH_BUFFER_AND_ALL_CONSTRAINT_DOMINATION_PROOF",
+          "sufficiency_claim_allowed": false,
+          "adjusted_formula": null,
+          "adjusted_formula_status": "REQUIRES_SEPARATE_REGISTRATION"
+        },
+        "minimum_capital": "100",
+        "grid": "EVERY_USD100_QUANTUM_AT_OR_BELOW_floor(U / 100) * 100",
+        "solver": "INDEPENDENT_EVALUATION_AT_EVERY_GRID_POINT_NO_MONOTONICITY_ASSUMPTION",
+        "enumeration_cutoff_authorized": false,
+        "capacity_solver_execution_authorized": false,
+        "enumeration_evidence": "FULL_FEASIBILITY_BITMAP_EVERY_USD100_QUANTUM_THROUGH_BOUND",
+        "result": "GREATEST_FEASIBLE_CAPITAL",
+        "feasibility": "ALL_REGISTERED_DISCRETE_ORDER_CASH_PARTICIPATION_AND_PORTFOLIO_CONSTRAINTS_PASS",
+        "no_feasible_quantum_action": "UNAVAILABLE",
+        "certificate": {
+          "greatest_feasible_capital_required": true,
+          "solved_portfolio_at_greatest_feasible_required": true,
+          "first_quantum_above_violation_required": true
+        },
+        "implementation_status": "REGISTERED_METHOD_PENDING_SOLVER_IMPLEMENTATION_AND_EVIDENCE",
+        "method_status": "BLOCKED_PENDING_UPPER_BOUND_PROOF_AND_SOLVER_EVIDENCE",
+        "portfolio_capacity_usd": null
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/risk_and_capacity_mandate/capacity_solver_registration"
+      ],
+      "reason": "Approved intent is preserved, but the base expression is only a candidate, the adjusted formula is null, sufficiency is false, and cutoff and solver execution remain unauthorized."
+    },
+    {
+      "id": "S0A3-121-110",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/approved_contract_identities/nee121"
+      },
+      "value": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED",
+      "destination_json_pointers": [
+        "/governance_contract_id"
+      ],
+      "reason": null
+    },
+    {
+      "id": "S0A3-121-111",
+      "ticket": "NEE-121",
+      "source": {
+        "type": "OWNER_MANDATE_SUPPLEMENT_POINTER",
+        "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+        "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+        "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+        "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+        "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193",
+        "commit": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f",
+        "json_pointer": "/ratifications/calendar"
+      },
+      "value": {
+        "method_id": "QME-XNAS-SESSION-CALENDAR-MATERIALIZATION-V1",
+        "calendar_id": "XNAS_2010-01-04_2027-12-31_v1",
+        "identity_status": "OWNER_RATIFIED",
+        "generator": "PINNED_PANDAS_MARKET_CALENDARS_ISOLATED_GENERATOR",
+        "generator_identity": "PANDAS_MARKET_CALENDARS_XNAS_SCHEDULE_MATERIALIZER_V1",
+        "generator_package": "pandas_market_calendars",
+        "generator_pinned_version": null,
+        "generator_wheel_sha256": null,
+        "generator_lockfile_path": null,
+        "generator_lockfile_sha256": null,
+        "tzdata_version": null,
+        "tzdata_artifact_sha256": null,
+        "generator_artifact_sha256": null,
+        "generator_evidence_status": "TYPED_METHOD_AND_EVIDENCE_BLOCKER",
+        "runtime_dependency_policy": "NON_SHIPPING_GENERATOR_NOT_PRODUCTION_RUNTIME_DEPENDENCY",
+        "future_schedule_policy": "FUTURE_PUBLISHED_SCHEDULES_ARE_NOT_OBSERVED_MARKET_AUTHORITY",
+        "calendar_sha256": null,
+        "ordered_session_vector_sha256": null,
+        "production_artifact_status": "BLOCKED_PENDING_IMMUTABLE_CALENDAR_AND_SESSION_VECTOR_BYTES"
+      },
+      "disposition": "MATERIALIZE_EXACT_VALUE",
+      "status": "REGISTERED_RULE_EVIDENCE_BLOCKED",
+      "destination_json_pointers": [
+        "/sample_and_holdout/calendar/registration"
+      ],
+      "reason": "XNAS identity and isolated-generator intent are registered; pinned generator, calendar bytes, and ordered session-vector evidence remain unavailable."
+    }
+  ],
+  "remaining_blocker_codes": [
+    "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+    "NEE-116-ASYMMETRIC-COST-METHOD",
+    "NEE-116-CAPACITY-SOLVER",
+    "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+    "NEE-116-PRODUCTION-PIT-DATA",
+    "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+    "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+    "NEE-119-AV-PROXY-EVIDENCE",
+    "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+    "NEE-121-CALENDAR-SESSION-REGISTRATION",
+    "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+    "NEE-122-CORRELATED-TRIAL-FIXTURE",
+    "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+    "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"
+  ],
+  "claims": {
+    "alpha_proven": false,
+    "data_spine_start_authorized": false,
+    "dsr_computable": false,
+    "effective_trials_computable": false,
+    "empirical_performance_available": false,
+    "milestone_m0_complete": false,
+    "operational_v2_contracts_created": false,
+    "owner_decisions_registered": true,
+    "portfolio_capacity_available": false,
+    "production_ready": false,
+    "cross_contract_semantic_approval_resolved": false,
+    "cross_contract_semantic_approval_resolution_scope": "NOT_RESOLVED_FINAL_CROSS_CONTRACT_ACCEPTANCE_REMAINS_REQUIRED"
+  },
+  "nonclaims": [
+    "NO_OPERATIONAL_V2_CONTRACT_EXISTS_FROM_THIS_SLICE",
+    "NO_EXISTING_V1_CONTRACT_IS_MODIFIED_OR_SUPERSEDED",
+    "NO_ACTIVE_BLOCKER_IS_RESOLVED_BY_THIS_CROSSWALK",
+    "NO_MILESTONE_M0_COMPLETION_OR_DATA_SPINE_START_AUTHORIZATION",
+    "NO_PRODUCTION_READINESS_OR_EMPIRICAL_PERFORMANCE_OR_ALPHA_CLAIM",
+    "NO_DSR_OR_EFFECTIVE_TRIALS_OR_PORTFOLIO_CAPACITY_CLAIM",
+    "NO_UNRESOLVED_METHOD_IS_PROMOTED_TO_AN_EXECUTABLE_RULE",
+    "NO_MISSING_PRODUCTION_EVIDENCE_IS_INFERRED",
+    "NO_CAPACITY_ENUMERATION_CUTOFF_BOUND_PROOF_SOLVER_EXECUTION_OR_CAPACITY_VALUE"
+  ],
+  "sha256_normalization": {
+    "stored_encoding": "EIGHT_LOWERCASE_HEX_GROUPS_OF_EIGHT_JOINED_BY_COLONS",
+    "normalization": "REMOVE_COLONS",
+    "normalized_encoding": "EXACTLY_64_LOWERCASE_HEX_CHARACTERS",
+    "comparison": "NORMALIZED_EXACT_EQUAL"
+  },
+  "resolved_blocker_codes": [],
+  "blocker_lineage": [
+    {
+      "code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-116-ASYMMETRIC-COST-METHOD",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-116-CAPACITY-SOLVER",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-116-PRODUCTION-PIT-DATA",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-119-AV-PROXY-EVIDENCE",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    },
+    {
+      "code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+      "predecessor_status": "ACTIVE",
+      "current_status": "ACTIVE",
+      "resolution": null
+    }
+  ]
+}

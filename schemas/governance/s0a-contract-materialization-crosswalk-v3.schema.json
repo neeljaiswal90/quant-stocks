@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/s0a-contract-materialization-crosswalk-v3.schema.json",
+  "title": "S0a contract materialization crosswalk v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "crosswalk_id",
+    "status",
+    "semantic_sha256",
+    "authority",
+    "contract_targets",
+    "entries",
+    "remaining_blocker_codes",
+    "claims",
+    "nonclaims",
+    "sha256_normalization",
+    "resolved_blocker_codes",
+    "blocker_lineage"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/s0a-contract-materialization-crosswalk-v3.schema.json"},
+    "schema_version": {"const": "qme.s0a_contract_materialization_crosswalk.v3"},
+    "crosswalk_id": {"const": "NEE-172-S0A-2-CONTRACT-MATERIALIZATION-CROSSWALK-V3"},
+    "status": {"const": "OWNER_AMENDMENTS_REGISTERED_OPERATIONAL_V2_CONTRACTS_NOT_CREATED"},
+    "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_assertion_status", "predecessor_crosswalk_v2", "owner_mandate_supplement_a0", "protected_main_publication_receipt"],
+      "properties": {
+        "approval_assertion_status": {"const": "OWNER_APPROVED_PROTECTED_MAIN_REGISTRATION_NOT_CRYPTOGRAPHIC_SIGNATURE"},
+        "predecessor_crosswalk_v2": {"$ref": "#/$defs/predecessor"},
+        "owner_mandate_supplement_a0": {"$ref": "#/$defs/a0Authority"},
+        "protected_main_publication_receipt": {"$ref": "#/$defs/receipt"}
+      }
+    },
+    "contract_targets": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/contractTarget"}
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 121,
+      "maxItems": 121,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "remaining_blocker_codes": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alpha_proven", "data_spine_start_authorized", "dsr_computable", "effective_trials_computable", "empirical_performance_available", "milestone_m0_complete", "operational_v2_contracts_created", "owner_decisions_registered", "portfolio_capacity_available", "production_ready", "cross_contract_semantic_approval_resolved", "cross_contract_semantic_approval_resolution_scope"],
+      "properties": {
+        "alpha_proven": {"const": false},
+        "data_spine_start_authorized": {"const": false},
+        "dsr_computable": {"const": false},
+        "effective_trials_computable": {"const": false},
+        "empirical_performance_available": {"const": false},
+        "milestone_m0_complete": {"const": false},
+        "operational_v2_contracts_created": {"const": false},
+        "owner_decisions_registered": {"const": true},
+        "portfolio_capacity_available": {"const": false},
+        "production_ready": {"const": false},
+        "cross_contract_semantic_approval_resolved": {"const": false},
+        "cross_contract_semantic_approval_resolution_scope": {"const": "NOT_RESOLVED_FINAL_CROSS_CONTRACT_ACCEPTANCE_REMAINS_REQUIRED"}
+      }
+    },
+    "nonclaims": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "sha256_normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stored_encoding", "normalization", "normalized_encoding", "comparison"],
+      "properties": {
+        "stored_encoding": {"const": "EIGHT_LOWERCASE_HEX_GROUPS_OF_EIGHT_JOINED_BY_COLONS"},
+        "normalization": {"const": "REMOVE_COLONS"},
+        "normalized_encoding": {"const": "EXACTLY_64_LOWERCASE_HEX_CHARACTERS"},
+        "comparison": {"const": "NORMALIZED_EXACT_EQUAL"}
+      }
+    },
+    "resolved_blocker_codes": {"const": []},
+    "blocker_lineage": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "predecessor_status", "current_status", "resolution"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "predecessor_status": {"const": "ACTIVE"},
+          "current_status": {"const": "ACTIVE"},
+          "resolution": {"type": "null"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "groupedSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"
+    },
+    "predecessor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "sha256", "semantic_sha256", "manifest_path", "manifest_sha256", "protected_main_commit"],
+      "properties": {
+        "id": {"const": "NEE-172-S0A-1-CONTRACT-MATERIALIZATION-CROSSWALK-V2"},
+        "path": {"const": "configs/governance/s0a-contract-materialization-crosswalk-v2.json"},
+        "sha256": {"$ref": "#/$defs/groupedSha256"},
+        "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "manifest_path": {"const": "configs/governance/s0a-contract-materialization-crosswalk-v2.hashes.json"},
+        "manifest_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "protected_main_commit": {"type": "string", "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){4}$"}
+      }
+    },
+    "a0Authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "sha256", "semantic_sha256", "manifest_path", "manifest_sha256", "approval_owner", "approval_date", "approved_at", "approved_at_status", "payload_representation"],
+      "properties": {
+        "id": {"const": "OWNER-MANDATE-2026-08-13-SUPPLEMENT-V1"},
+        "path": {"const": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json"},
+        "sha256": {"$ref": "#/$defs/groupedSha256"},
+        "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "manifest_path": {"const": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json"},
+        "manifest_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "approval_owner": {"const": "neeljaiswal90"},
+        "approval_date": {"const": "2026-08-13"},
+        "approved_at": {"type": "null"},
+        "approved_at_status": {"const": "PERMANENTLY_UNAVAILABLE_NOT_INFERRED"},
+        "payload_representation": {"const": "NORMALIZED_SOURCE_FAITHFUL_MEANINGS_NOT_VERBATIM"}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "commit_sha", "tree_sha", "committer_timestamp", "ci_run_url", "ci_run_id", "ci_workflow", "ci_job_name", "ci_job_url", "ci_head_sha", "ci_provider_conclusion", "registered_conclusion", "scope"],
+      "properties": {
+        "status": {"const": "VERIFIED_PROTECTED_MAIN_EXACT_SHA_CI_PASS"},
+        "commit_sha": {"const": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f"},
+        "tree_sha": {"const": "ae1eb49f:5d0e8ad9:798c9905:bf980a86:3349db18"},
+        "committer_timestamp": {"const": "2026-08-13T09:19:16-07:00"},
+        "ci_run_url": {"const": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31720071843"},
+        "ci_run_id": {"const": 31720071843},
+        "ci_workflow": {"const": "qme-ci"},
+        "ci_job_name": {"const": "foundation"},
+        "ci_job_url": {"const": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31720071843/job/94514536421"},
+        "ci_head_sha": {"const": "23dd90ed:ae0eef5d:54e72996:faea6d98:f91bff2f"},
+        "ci_provider_conclusion": {"const": "success"},
+        "registered_conclusion": {"const": "PASS"},
+        "scope": {"const": "OWNER_MANDATE_SUPPLEMENT_A0_PUBLICATION_ONLY"}
+      }
+    },
+    "contractTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ticket", "current_path", "current_sha256", "proposed_v2_path", "identity_field", "current_identity", "proposed_identity", "proposed_identity_status"],
+      "properties": {
+        "ticket": {"enum": ["NEE-119", "NEE-120", "NEE-121"]},
+        "current_path": {"type": "string", "minLength": 1},
+        "current_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "proposed_v2_path": {"type": "string", "minLength": 1},
+        "identity_field": {"type": "string", "minLength": 1},
+        "current_identity": {"type": "string", "minLength": 1},
+        "proposed_identity": {"type": "string", "minLength": 1},
+        "proposed_identity_status": {"enum": ["PRESERVE_STABLE_STRATEGY_ID", "OWNER_APPROVED_OPERATIONAL_ARTIFACT_NOT_CREATED"]}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "path", "sha256"],
+      "properties": {
+        "type": {"type": "string", "minLength": 1},
+        "artifact_id": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/groupedSha256"},
+        "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "manifest_path": {"type": "string", "minLength": 1},
+        "manifest_sha256": {"$ref": "#/$defs/groupedSha256"},
+        "commit": {"type": "string", "minLength": 1},
+        "json_pointer": {"type": "string", "pattern": "^/"},
+        "json_pointers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^/"}},
+        "derivation": {"type": ["string", "null"]},
+        "section": {"type": "string", "minLength": 1}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ticket", "source", "value", "disposition", "status", "destination_json_pointers", "reason"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^S0A[13]-(?:116|119|120|121)-[0-9]{3}$"},
+        "ticket": {"enum": ["NEE-116", "NEE-119", "NEE-120", "NEE-121"]},
+        "source": {"$ref": "#/$defs/source"},
+        "value": true,
+        "disposition": {"enum": ["BIND_REGISTERED_ARTIFACT", "MATERIALIZE_EXACT_VALUE", "OUT_OF_SCOPE_WITH_EXACT_REASON", "RETAIN_TYPED_BLOCKER", "VALIDATE_EXISTING_EQUAL_VALUE"]},
+        "status": {"enum": ["REGISTERED", "REGISTERED_RULE_EVIDENCE_BLOCKED", "OUT_OF_SCOPE", "TYPED_BLOCKER"]},
+        "destination_json_pointers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^/"}},
+        "reason": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
