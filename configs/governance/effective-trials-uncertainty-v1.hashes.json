@@ -1,0 +1,54 @@
+{
+  "schema_version": "qme.effective_trials_uncertainty_manifest.v1",
+  "artifact_id": "QME-EFFECTIVE-TRIALS-UNCERTAINTY-V1",
+  "status": "CANDIDATE_LINUX_ACCEPTANCE_PENDING",
+  "artifacts": [
+    {
+      "path": ".github/workflows/effective-trials-uncertainty-linux.yml",
+      "sha256": "89582c7c:d103a486:cc3da8a9:f135ca2b:10bdc05b:6d6c3d22:36b0111e:7f145284",
+      "role": "PINNED_LINUX_FULL_2000_REPLICATE_REPLAY",
+      "status": "CANDIDATE"
+    },
+    {
+      "path": "configs/governance/effective-trials-uncertainty-v1.json",
+      "sha256": "e3884ae8:6dd62bf5:a86abd6e:fb68b6d6:9febf45c:5c3c487b:2d5e3bf0:36d1391e",
+      "role": "OWNER_SELECTION_IMPLEMENTATION_AND_CANDIDATE_KAT_BINDING",
+      "status": "CANDIDATE"
+    },
+    {
+      "path": "docs/governance/EFFECTIVE_TRIALS_UNCERTAINTY_V1.md",
+      "sha256": "62ed3141:d8da83ce:d3604110:98c47deb:7c24c4f4:1bb11568:f6bf3127:2ff5c816",
+      "role": "METHOD_CROSSWALK_AND_FAIL_CLOSED_NONCLAIMS",
+      "status": "CANDIDATE"
+    },
+    {
+      "path": "qme/stats/effective_trials_uncertainty.py",
+      "sha256": "209a9289:0fdcb191:9eddb077:93ee75e6:258b10af:2f6c5042:31a55874:d33c9f7a",
+      "role": "DETERMINISTIC_PPW_SELECTOR_BOOTSTRAP_AND_EVIDENCE_RUNTIME",
+      "status": "CANDIDATE"
+    },
+    {
+      "path": "schemas/governance/effective-trials-uncertainty-v1.schema.json",
+      "sha256": "584cb459:85cc78a3:4027a8d6:661a1721:bb5eefd8:12ea4bd0:2ec9387c:ea2494bc",
+      "role": "STRICT_DRAFT_2020_12_CONFIG_CONTRACT",
+      "status": "CANDIDATE"
+    },
+    {
+      "path": "tests/fixtures/stats/effective-trials-uncertainty-v1.json",
+      "sha256": "711811ae:227d29df:baaa7f0a:fa643419:0d0a6f28:705a3e9d:41666ee4:ffcb8bfa",
+      "role": "WINDOWS_CANDIDATE_2000_REPLICATE_KNOWN_ANSWER",
+      "status": "CANDIDATE"
+    },
+    {
+      "path": "tests/stats/test_effective_trials_uncertainty.py",
+      "sha256": "d2f727d0:8c4ee9a3:1e9bf43b:f9967bb4:473241a2:a4f0aa0c:1ba2ef8c:ff8f2743",
+      "role": "ANALYTIC_ADVERSARIAL_AND_FULL_KAT_CONFORMANCE",
+      "status": "CANDIDATE"
+    }
+  ],
+  "limitations": [
+    "SELECTION_009_REMAINS_PENDING_INDEPENDENT_WINDOWS_LINUX_MATCH",
+    "ALL_13_FREEZE_V4_BLOCKERS_RETAINED_ZERO_RESOLVED",
+    "NO_DSR_HOLM_EMPIRICAL_PRODUCTION_PROMOTION_OR_LIVE_ORDER_CLAIM"
+  ]
+}

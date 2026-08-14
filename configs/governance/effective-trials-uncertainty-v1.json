@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schemas/governance/effective-trials-uncertainty-v1.schema.json",
+  "schema_version": "qme.effective_trials_uncertainty.v1",
+  "artifact_id": "QME-EFFECTIVE-TRIALS-UNCERTAINTY-V1",
+  "ticket_id": "NEE-204",
+  "status": "BOUNDED_EXECUTABLE_CONFORMANCE_CANDIDATE_WINDOWS_KAT_LINUX_ACCEPTANCE_PENDING",
+  "semantic_sha256": "75f15213:e9a5af95:81c45573:9253d461:9c750bc0:8151ca90:4739cea4:7c9d30d1",
+  "authority": {
+    "protected_main": {
+      "commit": "93af9d6e:e91366c7:2f44e472:9b33dafb:46b2eb9e",
+      "tree": "a5de7389:28b53fd3:5706804e:f8c6fb37:a0176acf"
+    },
+    "owner_selections": {
+      "path": "configs/governance/ppw-bootstrap-owner-selections-v1.json",
+      "sha256": "6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6",
+      "semantic_sha256": "7a51a7da:182354b0:5d96ad77:f08a7513:8a7d41ef:c918d11d:bf5f242e:9bb5f743",
+      "manifest_path": "configs/governance/ppw-bootstrap-owner-selections-v1.hashes.json",
+      "manifest_sha256": "e325adbc:2f4d8f8e:4e8034c0:f74ca022:d4f2e2cc:54ca0226:d9e31cdc:b38de58f",
+      "registered_selection_count": 8,
+      "remaining_selection_id": "PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT"
+    },
+    "point_kernel": {
+      "config_path": "configs/governance/effective-trials-point-kernel-v1.json",
+      "config_sha256": "f007e903:5e9e9a7e:89357b68:90317cd7:64ea8ee4:dca423c5:10a57ece:5eb670e8",
+      "manifest_path": "configs/governance/effective-trials-point-evidence-v1.hashes.json",
+      "manifest_sha256": "121db413:12c69c5a:30ac31ce:cb116c75:83e68636:afed78f7:91c34269:f995edd5",
+      "runtime_path": "qme/stats/effective_trials.py",
+      "runtime_sha256": "f481dcf0:98229272:66a9593f:a446584d:1d0031da:84d499f8:b1d2fe25:ae235545",
+      "fixture_path": "tests/fixtures/stats/effective-trials-v1-cases.json",
+      "fixture_sha256": "c15aea7f:dcfd7652:94faf7a5:b4bdf914:e0718dce:3d6c5385:b6656812:83cad356"
+    },
+    "deterministic_rng": {
+      "manifest_path": "tests/fixtures/stats/deterministic-kernel-v1.manifest.json",
+      "manifest_sha256": "a7ecc4f5:91139853:d9142fc6:a7d03208:be73ff19:ea066f74:99ee7166:7b5cbf26",
+      "runtime_path": "qme/stats/rng.py",
+      "runtime_sha256": "9f8ad5df:c03dd183:f04e9c9a:496912df:b4c7616a:40747be2:476619cd:f1ba462d"
+    },
+    "freeze_v4": {
+      "path": "configs/governance/specification-freeze-policy-v4.json",
+      "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458",
+      "semantic_sha256": "90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771",
+      "manifest_path": "configs/governance/specification-freeze-v4.hashes.json",
+      "manifest_sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42",
+      "active_blocker_count": 13
+    },
+    "empirical_or_production_results_used": false
+  },
+  "method": {
+    "matrix_domain": {
+      "rows": "n_common in [60, 2048]",
+      "columns": 96,
+      "input": "COMPLETE_COMMON_ALIGNED_CANONICAL_FINITE_DECIMAL_STRINGS"
+    },
+    "selector": {
+      "per_column": "CORRECTED_PPW_STATIONARY_SELECTOR_ALL_96_REQUIRED_VALID",
+      "centering": "ONE_FULL_SAMPLE_MEAN",
+      "autocovariance_denominator": "n",
+      "k_n": "max(5, ceil(sqrt(log10(n))))",
+      "m_max": "ceil(sqrt(n)) + K_N",
+      "threshold": "2 * sqrt(log10(n) / n)",
+      "m_hat": "SMALLEST_m_AT_LEAST_1_WITH_FULL_K_N_STRICTLY_INSIGNIFICANT_WINDOW",
+      "denominator": "D_hat_SB = 2 * g_hat_0^2",
+      "raw_block": "b_hat_SB_raw = cube_root(2 * G_hat^2 * n / D_hat_SB)",
+      "aggregation": "MEAN_OF_ASCENDING_ONE_BASED_POSITIONS_48_AND_49",
+      "integerization": "ONE_CEILING_THEN_FLOOR_3_THEN_CAP_floor(n_common/4)"
+    },
+    "bootstrap": {
+      "replicates": 2000,
+      "shared_index_vector": true,
+      "selector_timing": "ONCE_ON_ORIGINAL_MATRIX",
+      "rng_algorithm": "SPLITMIX64_TO_OFFICIAL_PCG32_XSH_RR",
+      "rng_domain_id": "QME_NEE122_STATIONARY_BOOTSTRAP_INDEX_STREAM_V1",
+      "rng_seed": 20260812,
+      "rng_initstate": "4007265125838523138",
+      "rng_initseq": "14898109804989224333",
+      "draw_order": "CONTINUOUS_STREAM_RESTART_DRAW_THEN_OPTIONAL_START_DRAW_PER_POSITION",
+      "refit": "FULL_PEARSON_LEDOIT_WOLF_REESTIMATED_PARTICIPATION_RATIO",
+      "invalid_distribution": "ANY_INVALID_REPLICATE_RETURNS_M96_WITH_DISTINCT_REASON"
+    },
+    "arithmetic_conformance": {
+      "decimal_precision": 80,
+      "rounding": "ROUND_HALF_EVEN",
+      "canonical_output_places": 36,
+      "ledoit_wolf_beta_identity": "sum_i_norm_y_i_fourth_minus_n_times_norm_S_squared",
+      "participation_ratio_identity": "trace(R)^2 / trace(R^2)",
+      "identity_role": "ALGEBRAICALLY_EXACT_OUTPUT_PRESERVING_OPTIMIZATION_OF_REGISTERED_JACOBI_PIPELINE",
+      "protected_decimal_jacobi_crosscheck": "BASE_MATRIX_AND_CANONICAL_REPLICATES_MUST_MATCH_SHRINKAGE_POINT_AND_CORRELATION_HASH_AT_36_PLACES"
+    },
+    "quantile": {
+      "sort": "ASCENDING_CANONICAL_DECIMAL_NUMERIC_TOTAL_ORDER",
+      "one_based_rank": 1950,
+      "interpolation": "NONE",
+      "n_eff_used": "min(96, ceil(order_statistic_1950))"
+    }
+  },
+  "candidate_kat": {
+    "fixture_path": "tests/fixtures/stats/effective-trials-uncertainty-v1.json",
+    "fixture_sha256": "711811ae:227d29df:baaa7f0a:fa643419:0d0a6f28:705a3e9d:41666ee4:ffcb8bfa",
+    "source_raw_matrix_sha256": "6a3ef3bf:04300e63:4eb3f901:3c6a076b:1f6cad5d:09963df4:e91cd0d3:2800f6b3",
+    "common_block_length": 3,
+    "index_stream_sha256": "e5f8ac97:7cbd6c5e:6de09048:c86b4d7d:c9351b89:8a2e6875:d9057860:f18a1640",
+    "bootstrap_distribution_sha256": "e90ba0e3:da74fa34:bbeaddab:01e0d8a1:137702a1:8fc8de73:61f48b01:faf95bcf",
+    "order_statistic_1950": "1.928085337475850467660159735112550709",
+    "n_eff_used": 2,
+    "windows_recomputation": "CANDIDATE_RECOMPUTED",
+    "linux_recomputation": "PENDING_PROTECTED_CI_RECOMPUTATION",
+    "selection_009_accepted": false
+  },
+  "active_freeze_v4_blockers": [
+    {"blocker_code":"NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL","ticket_id":"NEE-110","category":"GOVERNANCE","description":"Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."},
+    {"blocker_code":"NEE-116-ASYMMETRIC-COST-METHOD","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."},
+    {"blocker_code":"NEE-116-CAPACITY-SOLVER","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"The authoritative greatest-capital discrete cost-aware solver remains unavailable."},
+    {"blocker_code":"NEE-116-CORPORATE-ACTION-EDGE-CASES","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."},
+    {"blocker_code":"NEE-116-PRODUCTION-PIT-DATA","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Accepted point-in-time production data and receipts are unavailable."},
+    {"blocker_code":"NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."},
+    {"blocker_code":"NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-119-AV-PROXY-EVIDENCE","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-120","category":"ENGINEERING_EVIDENCE","description":"Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."},
+    {"blocker_code":"NEE-121-CALENDAR-SESSION-REGISTRATION","ticket_id":"NEE-121","category":"PRODUCTION_EVIDENCE","description":"XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."},
+    {"blocker_code":"NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP","ticket_id":"NEE-121","category":"FINAL_DERIVED_EVIDENCE","description":"The final freeze anchor and receipt remain unavailable until every other blocker is accepted."},
+    {"blocker_code":"NEE-122-CORRELATED-TRIAL-FIXTURE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."},
+    {"blocker_code":"NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"The registered estimator and bootstrap uncertainty procedure are not implemented."}
+  ],
+  "claims": {
+    "owner_selections_001_through_008_registered": true,
+    "ppw_selector_executable_candidate": true,
+    "bootstrap_distribution_candidate_available": true,
+    "windows_candidate_recomputation_available": true,
+    "linux_candidate_recomputation_available": false,
+    "selection_009_accepted": false,
+    "n_eff_used_accepted_for_inference": false,
+    "dsr_available": false,
+    "holm_available": false,
+    "freeze_blocker_changed": false,
+    "empirical_output_available": false,
+    "production_inference_available": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "alpha_proven": false,
+    "live_order_authority": false
+  },
+  "nonclaims": [
+    "NO_ACCEPTED_SELECTION_009_UNTIL_INDEPENDENT_WINDOWS_LINUX_HASH_MATCH",
+    "NO_FREEZE_BLOCKER_REDUCTION_IN_THIS_CANDIDATE",
+    "NO_DSR_HOLM_ALPHA_OR_PROMOTION_RESULT",
+    "NO_EMPIRICAL_OR_PRODUCTION_INFERENCE_EVIDENCE",
+    "NO_PROSPECTIVE_CONSUMPTION_OR_LIVE_ORDER_AUTHORITY",
+    "NO_M0_COMPLETION_OR_PRODUCTION_READINESS"
+  ]
+}

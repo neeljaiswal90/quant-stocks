@@ -1,0 +1,98 @@
+{
+  "schema_version": "qme.effective_trials_uncertainty_fixture.v1",
+  "artifact_id": "QME-EFFECTIVE-TRIALS-UNCERTAINTY-KAT-V1",
+  "status": "WINDOWS_CANDIDATE_REPLAY_LINUX_MATCH_PENDING",
+  "source_matrix": {
+    "fixture_path": "tests/fixtures/stats/effective-trials-v1-cases.json",
+    "fixture_case": "seeded_end_to_end",
+    "rows": 60,
+    "columns": 96,
+    "seed": 20260812,
+    "raw_return_matrix_sha256": "6a3ef3bf:04300e63:4eb3f901:3c6a076b:1f6cad5d:09963df4:e91cd0d3:2800f6b3",
+    "expected_point_estimate": "1.675413732484106918949060706958017786",
+    "expected_shrinkage": "0.025289306814929539924955023355870431"
+  },
+  "selector": {
+    "common_block_length": 3,
+    "aggregate_raw": "0.887151934265922644542086134678204136",
+    "column_raw_outputs_sha256": "a4b2800e:7b46e520:1e38a4b2:934900c8:79f1c594:96fb2301:0df52ef4:8234cede",
+    "column_m_hat_unique_values": [1]
+  },
+  "index_stream": {
+    "algorithm": "SPLITMIX64_TO_OFFICIAL_PCG32_XSH_RR",
+    "domain_id": "QME_NEE122_STATIONARY_BOOTSTRAP_INDEX_STREAM_V1",
+    "seed": 20260812,
+    "initstate": "4007265125838523138",
+    "initseq": "14898109804989224333",
+    "replicates": 2000,
+    "positions_per_replicate": 60,
+    "sha256": "e5f8ac97:7cbd6c5e:6de09048:c86b4d7d:c9351b89:8a2e6875:d9057860:f18a1640",
+    "first_replicate": [17,18,19,20,21,22,17,18,22,26,3,0,1,46,30,22,23,17,5,5,6,7,15,16,17,18,16,17,18,19,19,28,29,30,31,58,59,0,1,2,27,28,29,30,31,32,33,34,35,36,37,38,57,58,59,0,1,2,3,26],
+    "last_replicate": [40,41,42,43,50,51,52,56,55,46,47,48,49,50,51,52,16,11,11,12,13,14,15,16,17,1,2,16,17,18,19,20,32,33,34,12,13,14,28,29,20,17,10,11,12,13,14,17,18,19,51,32,56,57,58,19,11,12,24,25]
+  },
+  "first_replicate_refit": {
+    "resampled_matrix_sha256": "d19b7b90:e4d641bd:e98e21b8:330ecc98:c21963db:2cc2ff19:ae9976b8:e3a4df61",
+    "shrinkage": "0.035779773154421319371794384526675746",
+    "n_eff": "1.847623755846426047447705569965366819",
+    "protected_decimal_jacobi_match": true
+  },
+  "distribution": {
+    "replicates": 2000,
+    "ordered_by": "REPLICATE_NUMBER_CONTINUOUS_STREAM",
+    "sha256": "e90ba0e3:da74fa34:bbeaddab:01e0d8a1:137702a1:8fc8de73:61f48b01:faf95bcf",
+    "first_ten": [
+      "1.847623755846426047447705569965366819",
+      "1.719268789865992239399491081667917544",
+      "1.590738179812730105314941093696012890",
+      "1.710947857164072654754095250227758747",
+      "1.803344419860946331261555861077409274",
+      "1.521109246779978622015324564836572012",
+      "1.537289173361490451558235157591630722",
+      "1.655163291806642086846477559648824081",
+      "1.650204219621377777765063052612145666",
+      "1.648938223359814188672702219918834371"
+    ],
+    "last_ten": [
+      "1.454665894960081027460177526678872299",
+      "1.817012907815491449571222529201388072",
+      "1.854563523601017223521632598425307285",
+      "1.718878384747501753644232892937025759",
+      "1.549413799740265286445036107447906510",
+      "1.593507772436616126237795505214945202",
+      "1.717921248273112491114919980895602008",
+      "1.582133582376004879457291329753503375",
+      "1.633622265655022322472650629075058439",
+      "1.703534001754589420583360392226604877"
+    ],
+    "one_based_order_statistic_rank": 1950,
+    "order_statistic_1950": "1.928085337475850467660159735112550709",
+    "n_eff_used": 2,
+    "reason": "P97_5_ORDER_STATISTIC_1950"
+  },
+  "invalid_distribution_fixture": {
+    "construction": "ALL_96_COLUMNS_EQUAL_ONE_AT_ROW_ZERO_AND_ZERO_ELSEWHERE",
+    "first_invalid_replicate": 2,
+    "n_eff_used": 96,
+    "reason": "N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96"
+  },
+  "platform_receipts": {
+    "windows": {
+      "status": "CANDIDATE_RECOMPUTED",
+      "platform": "WINDOWS",
+      "elapsed_seconds": "227.38436870000442"
+    },
+    "linux": {
+      "status": "PENDING_PROTECTED_CI_RECOMPUTATION"
+    }
+  },
+  "claims": {
+    "candidate_distribution_available": true,
+    "cross_platform_match_available": false,
+    "selection_009_accepted": false,
+    "freeze_blocker_changed": false,
+    "dsr_available": false,
+    "holm_available": false,
+    "production_inference_available": false,
+    "milestone_m0_complete": false
+  }
+}
