@@ -1,0 +1,57 @@
+{
+  "schema_version": "qme.regulatory_fee_kernel_cases.v1",
+  "artifact_id": "NEE-205-REGULATORY-FEE-KERNEL-KAT-V1",
+  "method_id": "qme-bounded-raw-regulatory-assessment-v1",
+  "cases": [
+    {
+      "case_id": "FINRA_2025_12_31_OUTSIDE_REVIEWED_SCHEDULE",
+      "input": {"side":"SELL","charge_date":"2025-12-31","trade_date":"2025-12-31","covered_sale_notional":"100000","eligible_sold_shares":"100","execution_price_per_share":"1000","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-FINRA-2025-BLOCKED","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"BLOCKED","reason_code":"DATE_OUTSIDE_REVIEWED_SCHEDULE","sec31_raw":null,"finra_taf_raw":null,"total_raw":null,"finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "FINRA_2026_01_01_EFFECTIVE",
+      "input": {"side":"SELL","charge_date":"2026-01-01","trade_date":"2026-01-01","covered_sale_notional":"100000","eligible_sold_shares":"100","execution_price_per_share":"1000","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-FINRA-2026-ACTIVE","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"0","finra_taf_raw":"0.0195","total_raw":"0.0195","finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "BUY_COMPONENTS_EXACT_ZERO",
+      "input": {"side":"BUY","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"100000","eligible_sold_shares":"100","execution_price_per_share":"1000","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-BUY-1","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"0","finra_taf_raw":"0","total_raw":"0","finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "DAY_BEFORE_SEC_CHANGE",
+      "input": {"side":"SELL","charge_date":"2026-04-03","trade_date":"2026-04-03","covered_sale_notional":"100000","eligible_sold_shares":"100","execution_price_per_share":"1000","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-SELL-1","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"0","finra_taf_raw":"0.0195","total_raw":"0.0195","finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "DAY_OF_SEC_CHANGE",
+      "input": {"side":"SELL","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"100000","eligible_sold_shares":"100","execution_price_per_share":"1000","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-SELL-2","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"2.06","finra_taf_raw":"0.0195","total_raw":"2.0795","finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "FINRA_CAP_BELOW_FIRST_CAPPED_INTEGER",
+      "input": {"side":"SELL","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"1004100","eligible_sold_shares":"50205","execution_price_per_share":"20","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-CAP-BELOW","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"20.68446","finra_taf_raw":"9.789975","total_raw":"30.474435","finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "FINRA_CAP_FIRST_INTEGER_RAW_EXCEEDS_ASSESSED_EQUALS_CAP",
+      "input": {"side":"SELL","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"1004120","eligible_sold_shares":"50206","execution_price_per_share":"20","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-CAP-FIRST-CAPPED","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"20.684872","finra_taf_raw":"9.79","total_raw":"30.474872","finra_cap_applied":true,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "FINRA_CAP_ABOVE",
+      "input": {"side":"SELL","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"1200000","eligible_sold_shares":"60000","execution_price_per_share":"20","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-CAP-ABOVE","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"24.72","finra_taf_raw":"9.79","total_raw":"34.51","finra_cap_applied":true,"finra_low_price_exclusion_applied":false}
+    },
+    {
+      "case_id": "FINRA_LOW_PRICE_STRICTLY_BELOW_EXCLUDED",
+      "input": {"side":"SELL","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"0.000194","eligible_sold_shares":"1","execution_price_per_share":"0.000194","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-LOW-BELOW","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"0.0000000039964","finra_taf_raw":"0","total_raw":"0.0000000039964","finra_cap_applied":false,"finra_low_price_exclusion_applied":true}
+    },
+    {
+      "case_id": "FINRA_LOW_PRICE_EQUALITY_CHARGED",
+      "input": {"side":"SELL","charge_date":"2026-04-04","trade_date":"2026-04-04","covered_sale_notional":"0.000195","eligible_sold_shares":"1","execution_price_per_share":"0.000195","coverage_classification":"COVERED_EQUITY_ELIGIBLE_NO_EXEMPTION","regulatory_trade_id":"KAT-LOW-EQUAL","aggregation_status":"PRE_AGGREGATED_SINGLE_REGULATORY_TRADE","transaction_status":"FINAL_NOT_CANCELLED_OR_CORRECTED","pass_through_semantics":"NOT_APPLIED","rounding_semantics":"RAW_EXACT_DECIMAL_NO_ROUNDING"},
+      "expected": {"status":"CALCULATED_RAW_REGULATORY_ASSESSMENT_ONLY","reason_code":null,"sec31_raw":"0.000000004017","finra_taf_raw":"0.000195","total_raw":"0.000195004017","finra_cap_applied":false,"finra_low_price_exclusion_applied":false}
+    }
+  ]
+}

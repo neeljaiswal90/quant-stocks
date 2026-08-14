@@ -1,0 +1,49 @@
+{
+  "schema_version": "qme.regulatory_fee_kernel_manifest.v1",
+  "artifact_id": "NEE-205-REGULATORY-FEE-KERNEL-MANIFEST-V1",
+  "ticket_id": "NEE-205",
+  "status": "REVIEWED_BOUNDED_CANDIDATE_ZERO_BLOCKERS_RESOLVED",
+  "artifacts": [
+    {
+      "path": ".github/workflows/regulatory-fees-linux.yml",
+      "sha256": "baaccbfd:df3167a0:da12f918:255d9d52:78b88951:4d6eb97a:55273d64:95b2c54e"
+    },
+    {
+      "path": "configs/governance/regulatory-fee-kernel-v1.json",
+      "sha256": "aa3758b0:69066e22:109f7898:c5554cff:224a1c87:fa4a64ca:9e57e69f:9aa45402"
+    },
+    {
+      "path": "docs/quant/REGULATORY_FEE_KERNEL_V1.md",
+      "sha256": "af4a41c6:69acca1f:991f1dec:84d35928:3d6615f4:61c0fae2:cf89ae9c:0552a963"
+    },
+    {
+      "path": "qme/quant/regulatory_fees.py",
+      "sha256": "1327d3d6:ee4a901d:41942443:4322446b:8718b345:96066c0d:718f3aef:452680e6"
+    },
+    {
+      "path": "schemas/governance/regulatory-fee-kernel-v1.schema.json",
+      "sha256": "8e222dfc:321338bc:121022c7:cdd599b0:a4d168e6:04b9ed8a:3d10dd9d:be973344"
+    },
+    {
+      "path": "tests/fixtures/governance/regulatory-fee-reviewed-sources-v1.json",
+      "sha256": "6eddafd8:1e9bf654:1ccead90:bf351270:81a01123:37d008a5:bcf66fc1:f719b080"
+    },
+    {
+      "path": "tests/fixtures/quant/regulatory-fee-kernel-v1.cases.json",
+      "sha256": "c5100c58:5eb2a0c4:512bdc13:722de276:96115506:bc95bcd3:80247b92:59219242"
+    },
+    {
+      "path": "tests/quant/test_regulatory_fees.py",
+      "sha256": "f9830d98:cc8b67c3:c1bf0479:06c2a1f5:ae498495:338b6c03:7426ee14:bea5c69f"
+    }
+  ],
+  "limitations": [
+    "NO_BROKER_OR_CUSTOMER_PASS_THROUGH_OR_WEBULL_DEBIT_CLAIM",
+    "NO_REGULATOR_BROKER_OR_LEDGER_ROUNDING_CLAIM",
+    "NO_FILL_ORDER_DAY_OR_REGULATORY_TRADE_AGGREGATION_CLAIM",
+    "NO_CHARGE_DATE_INFERENCE_FROM_FILL_OR_TRADE_DATE",
+    "NO_COMPLETE_2010_PLUS_HISTORICAL_OR_FUTURE_SCHEDULE",
+    "NO_PRODUCTION_COST_CALIBRATION_EMPIRICAL_EVIDENCE_OR_BLOCKER_REMOVAL",
+    "NO_M0_PRODUCTION_READINESS_ALPHA_OR_LIVE_ORDER_CLAIM"
+  ]
+}

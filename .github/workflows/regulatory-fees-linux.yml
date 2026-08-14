@@ -1,0 +1,49 @@
+name: Regulatory-fees Linux replay
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/regulatory-fees-linux.yml"
+      - "configs/governance/regulatory-fee-kernel-v1.json"
+      - "configs/governance/regulatory-fee-kernel-v1.hashes.json"
+      - "docs/quant/REGULATORY_FEE_KERNEL_V1.md"
+      - "qme/quant/regulatory_fees.py"
+      - "schemas/governance/regulatory-fee-kernel-v1.schema.json"
+      - "tests/fixtures/governance/regulatory-fee-reviewed-sources-v1.json"
+      - "tests/fixtures/quant/regulatory-fee-kernel-v1.cases.json"
+      - "tests/quant/test_regulatory_fees.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/regulatory-fees-linux.yml"
+      - "configs/governance/regulatory-fee-kernel-v1.json"
+      - "configs/governance/regulatory-fee-kernel-v1.hashes.json"
+      - "docs/quant/REGULATORY_FEE_KERNEL_V1.md"
+      - "qme/quant/regulatory_fees.py"
+      - "schemas/governance/regulatory-fee-kernel-v1.schema.json"
+      - "tests/fixtures/governance/regulatory-fee-reviewed-sources-v1.json"
+      - "tests/fixtures/quant/regulatory-fee-kernel-v1.cases.json"
+      - "tests/quant/test_regulatory_fees.py"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-replay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+      - name: Assert frozen Python runtime
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:3] == (3, 12, 10)"
+      - name: Install pinned development environment
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Replay bounded regulatory-fee packet
+        run: |
+          python -m pytest -q -p no:cacheprovider tests/quant/test_regulatory_fees.py
+          python -c "from pathlib import Path; from qme.quant.regulatory_fees import verify_regulatory_fee_evidence; verify_regulatory_fee_evidence(Path('.'))"
