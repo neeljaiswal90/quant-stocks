@@ -1,0 +1,48 @@
+{
+  "schema_version": "qme.regulatory_fee_historical_schedule_manifest.v1",
+  "artifact_id": "NEE-205-REGULATORY-FEE-HISTORICAL-SCHEDULE-MANIFEST-V1",
+  "ticket_id": "NEE-205",
+  "status": "REVIEWED_COMPLETE_OFFICIAL_HISTORICAL_SCHEDULE_CANDIDATE_ZERO_BLOCKERS_RESOLVED",
+  "artifacts": [
+    {
+      "path": ".github/workflows/regulatory-fee-historical-linux.yml",
+      "sha256": "d7fc4fe8:138bd48e:12381905:58f62150:7a890e62:20095aec:d5d6c9f2:8164dd3a"
+    },
+    {
+      "path": "configs/governance/regulatory-fee-historical-schedule-v1.json",
+      "sha256": "4b5a6c39:ee9ec76c:032d3b5a:1e11eec4:dae2f4c9:6d237497:065103c9:8c95d2de"
+    },
+    {
+      "path": "docs/governance/REGULATORY_FEE_HISTORICAL_SCHEDULE_V1.md",
+      "sha256": "0b91db0d:cc638545:bac595d8:5a3239ca:60b84650:69de3cda:5fcad365:182ac962"
+    },
+    {
+      "path": "qme/quant/regulatory_fee_schedule.py",
+      "sha256": "bdec3584:e297e9cd:03be6185:8e4e3588:e5ed17ce:7fea17cc:f60b8c9f:a78889ec"
+    },
+    {
+      "path": "schemas/governance/regulatory-fee-historical-schedule-v1.schema.json",
+      "sha256": "0ae8bd62:27d4a3f7:2e62592e:579d80c9:022e2d52:cf442c9f:b9bfed90:0666496f"
+    },
+    {
+      "path": "tests/fixtures/governance/regulatory-fee-historical-official-sources-v1.json",
+      "sha256": "3358dfe1:f7c7cb4a:44d7bdf6:06c6eef9:59af2369:536ef8e4:92667c7d:753858c3"
+    },
+    {
+      "path": "tests/fixtures/quant/regulatory-fee-historical-schedule-v1.cases.json",
+      "sha256": "232e4fee:8f166c9c:75db83f0:f0679a4b:184e8f2f:66f5a676:f12b365e:c4f81682"
+    },
+    {
+      "path": "tests/quant/test_regulatory_fee_schedule.py",
+      "sha256": "8e7be2e4:416832f0:b359730d:7b04efe1:8c571eda:d9c78fa0:555799af:06f583d4"
+    }
+  ],
+  "limitations": [
+    "NO_RATE_CAP_OR_APPLICABILITY_EXTRAPOLATION_AFTER_REVIEW_CUTOFF",
+    "NO_CALLER_EXEMPTION_CLASSIFICATION_INFERENCE",
+    "NO_FEE_CALCULATION_ACCOUNTING_BROKER_PASS_THROUGH_ROUNDING_AGGREGATION_OR_LEDGER_CLAIM",
+    "NO_CAT_OPTIONS_FUTURES_OR_DEBT_COVERAGE_CLAIM",
+    "NO_BLOCKER_REMOVAL_CLAIM",
+    "NO_M0_PRODUCTION_READINESS_ALPHA_OR_LIVE_ORDER_CLAIM"
+  ]
+}

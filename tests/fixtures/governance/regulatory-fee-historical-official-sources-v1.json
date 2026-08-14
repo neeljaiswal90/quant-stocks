@@ -1,0 +1,627 @@
+{
+  "schema_version": "qme.regulatory_fee_historical_sources.v1",
+  "artifact_id": "NEE-205-REGULATORY-FEE-HISTORICAL-OFFICIAL-SOURCES-V1",
+  "ticket_id": "NEE-205",
+  "status": "COMPLETE_OFFICIAL_SOURCE_INVENTORY_REVIEWED",
+  "retrieval_receipt": {
+    "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+    "method": "SINGLE_BATCH_PRIMARY_SOURCE_RETRIEVAL",
+    "excerpt_encoding": "UNICODE_NFC_NBSP_TO_ASCII_SPACE_HTML_WHITESPACE_COLLAPSED_PARAGRAPHS_JOINED_LF_UTF8_NO_BOM_NO_TERMINAL_LF"
+  },
+  "supplemental_retrieval_receipts": [
+    {
+      "retrieved_at": "2026-08-14T11:18:01.4064255-07:00",
+      "method": "TARGETED_PRIMARY_SOURCE_GAP_REMEDIATION_FINRA_PDF_TEXT",
+      "source_ids": [
+        "FINRA-SR-2011-071-FILING",
+        "SEC-SR-FINRA-2012-023-NOTICE"
+      ],
+      "excerpt_encoding": "PDF_TEXT_UNICODE_NFC_SOFT_HYPHEN_REMOVED_WORD_BREAKS_REJOINED_WHITESPACE_COLLAPSED_PARAGRAPHS_JOINED_LF_UTF8_NO_BOM_NO_TERMINAL_LF"
+    }
+  ],
+  "hash_convention": "SHA256_GROUPED_8X8_LOWERCASE_HEX_OVER_EXACT_NORMALIZED_EXCERPT_UTF8_BYTES",
+  "source_date_refinements": [
+    {
+      "source_id": "SEC-S31-FRA-2024-2",
+      "publication_date": "2024-07-23",
+      "authority_announcement_date": "2024-04-17"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "SEC-RULE31-34-49928",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/files/rules/final/34-49928.htm",
+      "title": "Final Rule: Collection Practices under Section 31 of the Exchange Act; Release No. 34-49928; File No. S7-05-04; June 28, 2004",
+      "action_type": "SEC_FINAL_RULE",
+      "source_date": "2004-06-28",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Charge date means the date on which a covered sale or covered round turn transaction occurs for purposes of determining the liability of a covered SRO pursuant to section 31 of the Act (15 U.S.C. 78ee). The charge date is: (i) The settlement date, with respect to any covered sale (other than a covered sale resulting from the exercise of an option settled by physical delivery or from the maturation of a security future settled by physical delivery) or covered round turn transaction that a covered SRO is required to report to the Commission based on data that the covered SRO receives from a designated clearing agency; (ii) The exercise date, with respect to a covered sale resulting from the exercise of an option settled by physical delivery; (iii) The maturity date, with respect to a covered sale resulting from the maturation of a security future settled by physical delivery; and (iv) The trade date, with respect to all other covered sales and covered round turn transactions.",
+      "excerpt_byte_length": 988,
+      "excerpt_sha256": "9c8d84fb:df3f642d:a8c84cfa:b1c7af62:0181ca48:c4b3dc3c:f248c9ef:a0f554fe",
+      "registered_facts": [
+        "SEC_CHARGE_DATE_HAS_SETTLEMENT_EXERCISE_MATURITY_AND_TRADE_DATE_BRANCHES",
+        "CALLER_MUST_SUPPLY_CHARGE_DATE_NO_UNIVERSAL_TRADE_DATE_INFERENCE"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2009-270",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/news/press/2009/2009-270.htm",
+      "title": "Press Release: Fee Rate Advisory #4 for Fiscal Year 2010; 2009-270; Dec. 17, 2009",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2009-12-17",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "In addition, effective Jan. 15, 2010, the Section 31 fee rate applicable to securities transactions on the exchanges and over-the-counter markets will decrease to $12.70 per million dollars. Until that date, the current rate of $25.70 per million dollars will remain in effect. The Section 31 assessment on security futures transactions will remain unchanged at $0.0042 per round turn transaction. The Office of Interpretation and Guidance in the Commission's Division of Trading and Markets is available for questions regarding Section 31 and may be reached at (202) 551-5777 or by e-mail at tradingandmarkets@sec.gov .",
+      "excerpt_byte_length": 620,
+      "excerpt_sha256": "14536da2:5235c685:1b875164:f7462269:72ee9d4f:c74e5f3b:68794f94:01bbf902",
+      "registered_facts": [
+        "SEC31_25_70_UNTIL_2010_01_15",
+        "SEC31_12_70_EFFECTIVE_2010_01_15"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2010-29",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/news/press/2010/2010-29.htm",
+      "title": "Press Release: Fee Rate Advisory #5 for Fiscal Year 2010; 2010-29; March 1, 2010",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2010-03-01",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Washington, D.C., March 1, 2010 — Pursuant to Section 31 of the Securities Exchange Act of 1934, the Commission has determined that a mid-year adjustment to the Section 31 transaction fee rate is necessary. Effective on April 1, 2010, the Section 31 transaction fee rate will be set at $16.90 per million.",
+      "excerpt_byte_length": 307,
+      "excerpt_sha256": "8d482d7f:e6b1f23e:91e7658a:6ccd2915:d99ddd36:cceb120a:152b16ed:38b565a8",
+      "registered_facts": [
+        "SEC31_16_90_EFFECTIVE_2010_04_01"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2010-255",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/news/press/2010/2010-255.htm",
+      "title": "Fee Rate Advisory #5 for Fiscal Year 2011; 2010-255; Dec. 22, 2010",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2010-12-22",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "In addition, effective Jan. 21, 2011, the Section 31 fee rate applicable to securities transactions on exchanges and over-the-counter markets will increase from its current rate of $16.90 per million dollars in transactions to a new rate of $19.20 per million dollars in transactions. The Section 31 assessment on security futures transactions will remain unchanged at $0.0042 per round turn transaction. The Division of Trading and Markets' Office of Interpretation and Guidance is available for questions relating to Section 31, at (202) 551-5777 or at tradingandmarkets@sec.gov .",
+      "excerpt_byte_length": 582,
+      "excerpt_sha256": "c163b71e:af76b28c:11d244a2:6b87245c:9307ed4a:435d4768:ac81ee2c:af17a2bf",
+      "registered_facts": [
+        "SEC31_19_20_EFFECTIVE_2011_01_21"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2012-15",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/news/press/2012/2012-15.htm",
+      "title": "Fee Rate Advisory #5 for Fiscal Year 2012",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2012-01-20",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that on February 21, 2012 the fees rates applicable to most securities transactions will decrease from $19.20 per million dollars to $18.00 per million dollars. The assessment on security futures transactions will remain unchanged at $0.0042 for each round turn transaction.",
+      "excerpt_byte_length": 329,
+      "excerpt_sha256": "6cb28943:d99e6a24:d34fcdf7:071d99ca:d63f7bba:cba52e7f:b7032acd:527b7c8b",
+      "registered_facts": [
+        "SEC31_18_00_EFFECTIVE_2012_02_21"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2012-35",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/news/press/2012/2012-35.htm",
+      "title": "Fee Rate Advisory #6 for Fiscal Year 2012",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2012-03-01",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Pursuant to Section 31 of the Securities Exchange Act of 1934, the Commission has determined that a mid-year adjustment to the Section 31 transaction fee rate is necessary. Effective on April 1, 2012, the Section 31 transaction fee rate will be set at $22.40 per million.",
+      "excerpt_byte_length": 271,
+      "excerpt_sha256": "847afd55:5a11f86d:aff06a7d:8cda2aa7:5f653d97:32cde90a:1af3e512:8b829112",
+      "registered_facts": [
+        "SEC31_22_40_EFFECTIVE_2012_04_01"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2013-74",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/news/press/2013/2013-74.htm",
+      "title": "Fee Rate Advisory #3 for Fiscal Year 2013",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2013-04-25",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on May 25, 2013, the fee rates applicable to most securities transactions will decrease from $22.40 per million dollars to $17.40 per million dollars. The assessment on security futures transactions will remain unchanged at $0.0042 for each round turn transaction.",
+      "excerpt_byte_length": 333,
+      "excerpt_sha256": "2fda79ec:38c0d73b:b96219ce:03414dbb:dbdcb33b:d851c226:c639b08f:dd7a997a",
+      "registered_facts": [
+        "SEC31_17_40_EFFECTIVE_2013_05_25"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2014-30",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2014-30",
+      "title": "Fee Rate Advisory #3 for Fiscal Year 2014",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2014-02-12",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on March 18, 2014, the fee rates applicable to most securities transactions will be set at $22.10 per million dollars. The assessment on security futures transactions will remain unchanged at $0.0042 for each round turn transaction.",
+      "excerpt_byte_length": 301,
+      "excerpt_sha256": "98f1a676:df43809f:a700d2e1:6b65ca2e:b29dab41:f924ac14:a297ac7f:fea5e894",
+      "registered_facts": [
+        "SEC31_22_10_EFFECTIVE_2014_03_18"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2015-8",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2015-8",
+      "title": "Fee Rate Advisory #3 for Fiscal Year 2015",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2015-01-15",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on Feb. 14, 2015, the fee rates applicable to most securities transactions will be set at $18.40 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $22.10 per million for transactions occurring on charge dates through Feb. 13, 2015, and a rate of $18.40 per million for transactions occurring on charge dates on or after Feb. 14, 2015. (For more information on the term “charge date,” please refer to Rule 31(a)(3) and Exchange Act Release No. 49928 at http://www.sec.gov/rules/final/34-49928.htm .)",
+      "excerpt_byte_length": 611,
+      "excerpt_sha256": "c0dad281:4123a686:e0a382c0:27deef22:7ab60192:6d7846b8:c3978aa2:5441c0f5",
+      "registered_facts": [
+        "SEC31_22_10_THROUGH_CHARGE_DATE_2015_02_13",
+        "SEC31_18_40_FROM_CHARGE_DATE_2015_02_14"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2016-2",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2016-2",
+      "title": "Fee Rate Advisory #3 for Fiscal Year 2016",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2016-01-07",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on Feb. 16, 2016, the fee rates applicable to most securities transactions will be set at $21.80 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $18.40 per million for covered sales occurring on charge dates through Feb. 15, 2016, and a rate of $21.80 per million for covered sales occurring on charge dates on or after Feb. 16, 2016.",
+      "excerpt_byte_length": 445,
+      "excerpt_sha256": "bfc0bdeb:f6848488:45335034:8f6e121c:6ebb1e9c:b4dbc2b4:044809f1:7478e134",
+      "registered_facts": [
+        "SEC31_18_40_THROUGH_CHARGE_DATE_2016_02_15",
+        "SEC31_21_80_FROM_CHARGE_DATE_2016_02_16"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2017-111",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2017-111",
+      "title": "Fee Rate Advisory #3 for Fiscal Year 2017",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2017-05-31",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on July 4, 2017, the fee rates applicable to most securities transactions will be set at $23.10 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $21.80 per million for covered sales occurring on charge dates through July 3, 2017, and a rate of $23.10 per million for covered sales occurring on charge dates on or after July 4, 2017.",
+      "excerpt_byte_length": 442,
+      "excerpt_sha256": "4b7739bd:3d558b3c:1519546c:0a6cab83:2f04e23e:b90a5e6d:7f0b69b1:57891a52",
+      "registered_facts": [
+        "SEC31_21_80_THROUGH_CHARGE_DATE_2017_07_03",
+        "SEC31_23_10_FROM_CHARGE_DATE_2017_07_04"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2018-67",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2018-67",
+      "title": "Fee Rate Advisory #3 for Fiscal Year 2018",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2018-04-17",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on May 22, 2018, the fee rates applicable to most securities transactions will be set at $13.00 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $23.10 per million for covered sales occurring on charge dates through May 21, 2018, and a rate of $13.00 per million for covered sales occurring on charge dates on or after May 22, 2018.",
+      "excerpt_byte_length": 442,
+      "excerpt_sha256": "c208956f:f1b55a8e:049180d6:6f9b817e:7022e2bc:fe05a12b:a1e3b00c:c8b271ff",
+      "registered_facts": [
+        "SEC31_23_10_THROUGH_CHARGE_DATE_2018_05_21",
+        "SEC31_13_00_FROM_CHARGE_DATE_2018_05_22"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2019-30",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2019-30",
+      "title": "Fee Rate Advisory #2 for Fiscal Year 2019",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2019-03-12",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on April 16, 2019, the fee rates applicable to most securities transactions will be set at $20.70 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $13.00 per million for covered sales occurring on charge dates through April 15, 2019, and a rate of $20.70 per million for covered sales occurring on charge dates on or after April 16, 2019. The fee rate for fiscal year 2019 compares similarly to the fee rates in years prior to 2018. As noted in the last advisory, the lower rate in 2018 was in part the result of a substantially higher dollar amount of covered sales.",
+      "excerpt_byte_length": 677,
+      "excerpt_sha256": "e44116db:f4f31280:fbbcae85:42fa0687:523249e4:2424b761:7cd0f022:edd30ba5",
+      "registered_facts": [
+        "SEC31_13_00_THROUGH_CHARGE_DATE_2019_04_15",
+        "SEC31_20_70_FROM_CHARGE_DATE_2019_04_16"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2020-7",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2020-7",
+      "title": "Fee Rate Advisory #2 for Fiscal Year 2020",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2020-01-09",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission announced that starting on Feb. 18, 2020, the fee rates applicable to most securities transactions will be set at $22.10 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $20.70 per million for covered sales occurring on charge dates through Feb. 17, 2020, and a rate of $22.10 per million for covered sales occurring on charge dates on or after Feb. 18, 2020.",
+      "excerpt_byte_length": 439,
+      "excerpt_sha256": "4add5c69:78809923:b1897c15:ff8c6473:2b171818:c363b2bf:0cd9b5cd:f4f5b8a2",
+      "registered_facts": [
+        "SEC31_20_70_THROUGH_CHARGE_DATE_2020_02_17",
+        "SEC31_22_10_FROM_CHARGE_DATE_2020_02_18"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2021-8",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2021-8",
+      "title": "Fee Rate Advisory #2 for Fiscal Year 2021",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2021-01-15",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on February 25, 2021, the fee rates applicable to most securities transactions will be set at $5.10 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $22.10 per million for covered sales occurring on charge dates through February 24, 2021, and a rate of $5.10 per million for covered sales occurring on charge dates on or after February 25, 2021.",
+      "excerpt_byte_length": 455,
+      "excerpt_sha256": "2b7ee07d:c94a36fc:af59f036:5302089a:bc6b3dae:0d475e9f:deb53ad3:6e05ee4a",
+      "registered_facts": [
+        "SEC31_22_10_THROUGH_CHARGE_DATE_2021_02_24",
+        "SEC31_5_10_FROM_CHARGE_DATE_2021_02_25"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2022-60",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2022-60",
+      "title": "Fee Rate Advisory #2 for Fiscal Year 2022",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2022-04-08",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that starting on May 14, 2022, the fee rates applicable to most securities transactions will be set at $22.90 per $1 million.\nConsequently, each SRO will continue to pay the Commission a rate of $5.10 per million for covered sales occurring on charge dates through May 13, 2022, and a rate of $22.90 per million for covered sales occurring on charge dates on or after May 14, 2022.",
+      "excerpt_byte_length": 436,
+      "excerpt_sha256": "c5aaf3bc:a1ebdbd9:3bf839d8:2fe3eea3:99c371b6:542ac0e6:e6cf4499:db90c64e",
+      "registered_facts": [
+        "SEC31_5_10_THROUGH_CHARGE_DATE_2022_05_13",
+        "SEC31_22_90_FROM_CHARGE_DATE_2022_05_14"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2023-15",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/press-releases/2023-15",
+      "title": "Fee Rate Advisory #2 For Fiscal Year 2023",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2023-01-23",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "The Securities and Exchange Commission today announced that, starting on February 27, 2023, the fee rates applicable to most securities transactions will be set at $8.00 per million dollars.\nConsequently, each self-regulatory organization will continue to pay the Commission a rate of $22.90 per million dollars for covered sales occurring on charge dates through February 26, 2023, and a rate of $8.00 per million dollars for covered sales occurring on charge dates on or after February 27, 2023.",
+      "excerpt_byte_length": 497,
+      "excerpt_sha256": "ab5758b8:91a86ba9:08045f01:3be38041:d2f12170:e9e23413:485d2545:5b5a6fbc",
+      "registered_facts": [
+        "SEC31_22_90_THROUGH_CHARGE_DATE_2023_02_26",
+        "SEC31_8_00_FROM_CHARGE_DATE_2023_02_27"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2024-2",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/rules-regulations/fee-rate-advisories/2024-2",
+      "title": "Fee Rate Advisory #2 for Fiscal Year 2024",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2024-07-23",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "April 17, 2024 — The Securities and Exchange Commission today announced that, starting on May 22, 2024, the fee rates applicable to most securities transactions will be set at $27.80 per million dollars.\nConsequently, each self-regulatory organization will continue to pay the Commission a rate of $8 per million for covered sales occurring on charge dates through May 21, 2024, and a rate of $27.80 per million for covered sales occurring on charge dates on or after May 22, 2024.",
+      "excerpt_byte_length": 483,
+      "excerpt_sha256": "1bf5aaa0:1d93f045:5b02f17b:6ffdef3f:1a7464b3:883f235d:c6edf8e7:d75c28bd",
+      "registered_facts": [
+        "SEC31_8_00_THROUGH_CHARGE_DATE_2024_05_21",
+        "SEC31_27_80_FROM_CHARGE_DATE_2024_05_22"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2025-2",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/rules-regulations/fee-rate-advisories/2025-2",
+      "title": "Section 31 Transaction Fee Rate Advisory for Fiscal Year 2025",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2025-04-08",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Apr. 8, 2025 — The Securities and Exchange Commission today announced that starting on May 14, 2025, the fee rates applicable to most securities transactions will be set at $0.00 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $27.80 per million for covered sales occurring on charge dates through May 13, 2025, and a rate of $0.00 per million for covered sales occurring on charge dates on or after May 14, 2025.",
+      "excerpt_byte_length": 457,
+      "excerpt_sha256": "d359f172:5fdfc833:d6ce35f5:42b55304:54a43894:f343fe42:b3490771:451cbeca",
+      "registered_facts": [
+        "SEC31_27_80_THROUGH_CHARGE_DATE_2025_05_13",
+        "SEC31_ZERO_FROM_CHARGE_DATE_2025_05_14"
+      ]
+    },
+    {
+      "source_id": "SEC-S31-FRA-2026-2",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/rules-regulations/fee-rate-advisories/2026-2",
+      "title": "Section 31 Transaction Fee Rate Advisory for Fiscal Year 2026",
+      "action_type": "SEC_FEE_RATE_ADVISORY",
+      "source_date": "2026-02-27",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Feb. 27, 2026 — The Securities and Exchange Commission today announced that starting on April 4, 2026, the fee rates applicable to most securities transactions will be set at $20.60 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $0.00 per million for covered sales occurring on charge dates through April 3, 2026, and a rate of $20.60 per million for covered sales occurring on charge dates on or after April 4, 2026.",
+      "excerpt_byte_length": 462,
+      "excerpt_sha256": "82dd6fb1:0667538a:de602110:fed71dc7:bb3eba01:100c9469:38392bcc:7863dea6",
+      "registered_facts": [
+        "SEC31_ZERO_THROUGH_CHARGE_DATE_2026_04_03",
+        "SEC31_20_60_FROM_CHARGE_DATE_2026_04_04"
+      ]
+    },
+    {
+      "source_id": "FINRA-RN-04-84",
+      "publisher": "NASD (official FINRA archive)",
+      "url": "https://www.finra.org/rules-guidance/notices/04-84",
+      "title": "SEC Approves Adjustments to the Trading Activity Fee",
+      "action_type": "FINRA_REGULATORY_NOTICE",
+      "source_date": "2004-11-15",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "* Trading Activity Fee rates are as follows: Each member shall pay to NASD [$0.0001] $0.000075 per share for each sale of a covered equity security, with a maximum charge of [$10] $3.75 per trade; $0.002 per contract for each sale of an option; [and] $0.04 per contract for each round turn transaction of a security future ; and $.00075 per bond for each sale of a covered TRACE-eligible and/or municipal security, with a maximum charge of $0.75 per trade. In addition, if the execution price for a covered security is less than the Trading Activity Fee rate ([$0.0001] $0.000075 for covered equity securities, $0.002 for covered option contracts, or $0.04 for a security future) on a per share, per contract, or round turn transaction basis, then no fee will be assessed.",
+      "excerpt_byte_length": 772,
+      "excerpt_sha256": "a34dc45c:29f7ccea:a45b33bd:ced0e1e1:11b5e4ca:c6a352c6:890aeb50:3d2be4f7",
+      "registered_facts": [
+        "FINRA_TAF_0_000075_CAP_3_75",
+        "STRICT_LOW_PRICE_BELOW_RATE_EXCLUDED_EQUALITY_CHARGED"
+      ]
+    },
+    {
+      "source_id": "FINRA-RN-11-27",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/notices/11-27",
+      "title": "SEC Approves Increase in the TAF Rate for Sales of Covered Equity Securities",
+      "action_type": "FINRA_REGULATORY_NOTICE",
+      "source_date": "2011-06-08",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Effective July 1, 2011, the Trading Activity Fee (TAF) rate for sales of covered equity securities will increase from $0.000075 per share for each sale of a covered equity security to $0.000090 per share, with a corresponding increase to the per-transaction cap for covered equity securities from $3.75 to $4.50. 1 The new rate will apply to any sale of a covered equity security subject to the TAF occurring on or after July 1, 2011.",
+      "excerpt_byte_length": 434,
+      "excerpt_sha256": "f8c50886:c0551030:6115297b:040cfc12:83d0502e:0ba06434:a673e4ca:519cc050",
+      "registered_facts": [
+        "FINRA_TAF_0_000090_CAP_4_50_FROM_2011_07_01"
+      ]
+    },
+    {
+      "source_id": "FINRA-RN-12-06",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/notices/12-06",
+      "title": "SEC Approves Increase in the TAF Rate for Sales of Covered Equity Securities",
+      "action_type": "FINRA_REGULATORY_NOTICE",
+      "source_date": "2012-01-31",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Effective March 1, 2012, the Trading Activity Fee (TAF) rate for sales of covered equity securities will increase from $0.000090 per share for each sale of a covered equity security to $0.000095 per share, with a corresponding increase to the per-transaction cap for covered equity securities from $4.50 to $4.75. 1 The new rate applies to any sale of a covered equity security subject to the TAF occurring on or after March 1, 2012.",
+      "excerpt_byte_length": 433,
+      "excerpt_sha256": "87f6241a:d89e8ab0:310060a4:1d278bd0:61a1ec2c:ccd00be4:73dbb58d:6ac4faf9",
+      "registered_facts": [
+        "FINRA_TAF_0_000095_CAP_4_75_FROM_2012_03_01"
+      ]
+    },
+    {
+      "source_id": "FINRA-SR-2011-071-FILING",
+      "publisher": "Financial Industry Regulatory Authority",
+      "url": "https://www.finra.org/sites/default/files/RuleFiling/p125267.pdf",
+      "title": "Proposed Rule Change Relating to FINRA’s Trading Activity Fee Rate for Transactions in Covered Equity Securities",
+      "action_type": "FINRA_SRO_RULE_FILING",
+      "source_date": "2011-12-14",
+      "retrieved_at": "2026-08-14T11:18:01.4064255-07:00",
+      "excerpt_encoding": "NORMALIZED_PDF_TEXT_SUPPLEMENT_V1",
+      "excerpt_text": "The current TAF rate for covered equity securities is $0.000090 per share for each sale of a covered equity security, with a maximum charge of $4.50 per trade. This rate has been in place for trades occurring on or after July 1, 2011, and was based on estimated trading volumes for the remainder of 2011. In addition, if the execution price for a covered equity security is less than the TAF rate on a per share basis, then no TAF is assessed.\nTo stabilize revenue flows necessary to support FINRA’s regulatory mission in light of the decreased volume of trading in the equity markets, FINRA is proposing an increase to the TAF rate for covered equity securities from $0.000090 per share to $0.000095 per share, with a corresponding increase to the per-transaction cap for covered equity securities from $4.50 to $4.75.",
+      "excerpt_byte_length": 821,
+      "excerpt_sha256": "8ef9831a:89c68196:7451956f:24b226ed:a498b01d:d29add03:63233008:99a166a5",
+      "registered_facts": [
+        "FINRA_TAF_0_000090_CURRENT_RATE_AND_4_50_CAP",
+        "FINRA_LOW_PRICE_EXCLUSION_STRICTLY_BELOW_CURRENT_TAF_RATE_PER_SHARE",
+        "FINRA_TAF_0_000095_PROPOSED_RATE_AND_4_75_CAP"
+      ]
+    },
+    {
+      "source_id": "SEC-SR-FINRA-2012-023-NOTICE",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.finra.org/sites/default/files/RuleFiling/p126274.pdf",
+      "title": "Self-Regulatory Organizations; Financial Industry Regulatory Authority, Inc.; Notice of Filing of Proposed Rule Change Relating to FINRA’s Trading Activity Fee Rate for Transactions in Covered Equity Securities",
+      "action_type": "SEC_NOTICE_OF_FILING_OF_PROPOSED_RULE_CHANGE",
+      "source_date": "2012-05-04",
+      "retrieved_at": "2026-08-14T11:18:01.4064255-07:00",
+      "excerpt_encoding": "NORMALIZED_PDF_TEXT_SUPPLEMENT_V1",
+      "excerpt_text": "The current TAF rate for covered equity securities is $0.000095 per share for each sale of a covered equity security, with a maximum charge of $4.75 per trade. This rate has been in place for trades occurring on or after March 1, 2012, and was based on estimated trading volumes. If the execution price for a covered equity security is less than the TAF rate on a per share basis, then no TAF is assessed.\nTo stabilize revenue flows necessary to support FINRA’s regulatory mission in light of the decreased volume of trading in the equity markets, FINRA is proposing an increase to the TAF rate for covered equity securities from $0.000095 per share to $0.000119 per share, with a corresponding increase to the per-transaction cap for covered equity securities from $4.75 to $5.95.",
+      "excerpt_byte_length": 783,
+      "excerpt_sha256": "c8d9b057:8d6ad0f0:3e8f134d:d8ab8c8a:9d9cfc15:1a9ef483:10ac88d6:45905dc4",
+      "registered_facts": [
+        "FINRA_TAF_0_000095_CURRENT_RATE_AND_4_75_CAP",
+        "FINRA_LOW_PRICE_EXCLUSION_STRICTLY_BELOW_CURRENT_TAF_RATE_PER_SHARE",
+        "FINRA_TAF_0_000119_PROPOSED_RATE_AND_5_95_CAP"
+      ]
+    },
+    {
+      "source_id": "FINRA-RN-12-31",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/notices/12-31",
+      "title": "SEC Approves Increase in the TAF Rate for Sales of Covered Equity Securities",
+      "action_type": "FINRA_REGULATORY_NOTICE",
+      "source_date": "2012-06-25",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Effective July 1, 2012, the Trading Activity Fee (TAF) rate for sales of covered equity securities will increase from $0.000095 per share for each sale of a covered equity security to $0.000119 per share, with a corresponding increase to the per-transaction cap for covered equity securities from $4.75 to $5.95. 1 The new rate applies to any sale of a covered equity security subject to the TAF occurring on or after July 1, 2012.\n7. The TAF is calculated based on trade date, not settlement date. See TAF FAQ 100.8.",
+      "excerpt_byte_length": 517,
+      "excerpt_sha256": "c4a93847:e5bb6660:87c8dbea:195d04c7:19015b3d:6f755195:fa613cc3:f4b1d596",
+      "registered_facts": [
+        "FINRA_TAF_0_000119_CAP_5_95_FROM_2012_07_01",
+        "FINRA_TAF_COORDINATE_TRADE_DATE"
+      ]
+    },
+    {
+      "source_id": "FINRA-SR-2020-032",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/sites/default/files/2020-10/SR-FINRA-2020-032.pdf",
+      "title": "Proposed Rule Change to Adjust FINRA Fees to Provide Sustainable Funding for FINRA’s Regulatory Mission",
+      "action_type": "FINRA_SRO_RULE_FILING",
+      "source_date": "2020-10-02",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_PYPDF_TEXT_UTF8_RECEIPT_V1",
+      "excerpt_text": "FINRA has filed the proposed rule change for immediate effectiveness; however, implementation of the proposed rule change will not begin until January 1, 2022. Beginning in 2022, the fee increases that are the subject of this proposed rule change will be phased in gradually over a three-year period, with full implementation in 2024, to allow FINRA members sufficient time to plan for such fee increases.\nThe current TAF rates, which have not increased since 2012, are: (1) $0.000119 per share for each sale of a covered equity security, with a maximum charge of $5.95 per trade; (2) $0.002 per contract for each sale of an option; (3) $0.00008 per contract for each round turn transaction of a security future, provided there is a minimum charge of $0.01 per round turn transaction; (4) $0.00075 per bond for each sale of a covered TRACE-Eligible Security (other than an Asset-Backed Security) and/or municipal security, with a maximum charge of $0.75 per trade; and (5) $0.00000075 times the value, as reported to TRACE, of a sale of an Asset- Backed Security, with a maximum charge of $0.75 per trade. FINRA is proposing the following changes to its TAF rates between 2022 and 2024: TAF– Proposed Implementation Security Type 2020 (current) 2021 (no change) 2022 2023 2024 Covered Equity Security $0.000119 per share (up to $5.95 max per trade) $0.000119 per share (up to $5.95 max per trade) $0.000130 per share (up to $6.49 max per trade) $0.000145 per share (up to $7.27 max per trade) $0.000166 per share (up to $8.30 max per trade)\nBelow is the text of the proposed rule change to take effect on January 1, 2022.\n* Trading Activity Fee rates are as follows: Each member shall pay to FINRA: (1) [$0.000119] $0.000130 per share for each sale of a covered equity security, with a maximum charge of [$5.95] $6.49 per trade;\nIn addition, if the execution price for a covered security is less than the Trading Activity Fee rate ([$0.000119] $0.000130 for covered equity securities, [$0.002] $0.00218 for covered option contracts, or [$0.01] 0.011 for a security future) on a per share, per contract, or round turn transaction basis then no fee will be assessed.\nBelow is the text of the proposed rule change to take effect on January 1, 2023, with the proposed changes in Exhibit 5A shown as if adopted.\n* Trading Activity Fee rates are as follows: Each member shall pay to FINRA: (1) [$0.000130] $0.000145 per share for each sale of a covered equity security, with a maximum charge of [$6.49] $7.27 per trade;\nIn addition, if the execution price for a covered security is less than the Trading Activity Fee rate ([$0.000130] $0.000145 for covered equity securities, [$0.00218] $0.00244 for covered option contracts, or [$0.011] $0.012 for a security future) on a per share, per contract, or round turn transaction basis then no fee will be assessed.\nBelow is the text of the proposed rule change to take effect on January 1, 2024, with the proposed changes in Exhibits 5A and 5B shown as if adopted.\n* Trading Activity Fee rates are as follows: Each member shall pay to FINRA: (1) [$0.000145] $0.000166 per share for each sale of a covered equity security, with a maximum charge of [$7.27] $8.30 per trade;\nIn addition, if the execution price for a covered security is less than the Trading Activity Fee rate ([$0.000145] $0.000166 for covered equity securities, [$0.00244] $0.00279 for covered option contracts, or [$0.012] $0.014 for a security future) on a per share, per contract, or round turn transaction basis then no fee will be assessed.",
+      "excerpt_byte_length": 3552,
+      "excerpt_sha256": "6b95214c:63932d18:80b004cb:841af1a0:0a276864:3c5117c2:7a914d1b:1edf20d9",
+      "registered_facts": [
+        "FINRA_TAF_2022_2023_2024_PHASED_VALUES",
+        "STRICT_LOW_PRICE_THRESHOLD_EQUALS_CONTEMPORANEOUS_RATE"
+      ]
+    },
+    {
+      "source_id": "SEC-SR-FINRA-2020-032-ACTION",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/rules-regulations/self-regulatory-organization-rulemaking/sr-finra-2020-032",
+      "title": "Notice of Filing and Immediate Effectiveness of a Proposed Rule Change To Adjust FINRA Fees To Provide Sustainable Funding for FINRA's Regulatory Mission",
+      "action_type": "SEC_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS",
+      "source_date": "2020-10-14",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Notice of Filing and Immediate Effectiveness of a Proposed Rule Change To Adjust FINRA Fees To Provide Sustainable Funding for FINRA's Regulatory Mission",
+      "excerpt_byte_length": 153,
+      "excerpt_sha256": "a756e312:50efc0e6:a31230fb:6cc2aa51:9c7be7f3:676c6dda:b5ee852d:465fb4c4",
+      "registered_facts": [
+        "SEC_RELEASE_34_90176",
+        "ACTION_IS_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS_NOT_APPROVAL_ORDER"
+      ]
+    },
+    {
+      "source_id": "FINRA-RN-23-16",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/notices/23-16",
+      "title": "FINRA Adopts TAF Exemption for Proprietary Trading Firms",
+      "action_type": "FINRA_REGULATORY_NOTICE",
+      "source_date": "2023-10-18",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "FINRA has amended its By-Laws to exempt from the Trading Activity Fee (TAF) any transaction by a proprietary trading firm that occurs on an exchange of which the proprietary trading firm is a member.\nThe amendment to FINRA’s TAF will take effect on November 6, 2023.\nTransactions by a proprietary trading firm otherwise than on an exchange of which the firm is a member—whether on another exchange of which the firm is not a member, or off-exchange—will remain subject to the TAF, unless another exemption applies. Both proprietary trading firms newly joining FINRA as a result of the 15b9-1 Amendments and existing member proprietary trading firms that satisfy the conditions described above will be eligible for the TAF exemption.\nThe TAF exemption for proprietary trading firms will be effective November 6, 2023.",
+      "excerpt_byte_length": 822,
+      "excerpt_sha256": "9b935074:194b0051:f50d6f52:1bdecf9a:7cf64e2e:989c84ac:a9d4b347:7c13b50e",
+      "registered_facts": [
+        "PTF_MEMBER_EXCHANGE_EXEMPTION_EFFECTIVE_2023_11_06",
+        "CALLER_CLASSIFICATION_REQUIRED"
+      ]
+    },
+    {
+      "source_id": "FINRA-SR-2024-019",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/sites/default/files/2024-11/sr-finra-2024-019.pdf",
+      "title": "Proposed Rule Change to Adjust FINRA Fees to Provide Sustainable Funding for FINRA’s Regulatory Mission",
+      "action_type": "FINRA_SRO_RULE_FILING",
+      "source_date": null,
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_PYPDF_TEXT_UTF8_RECEIPT_V1",
+      "excerpt_text": "FINRA is proposing the following changes to its TAF rates between 2026 and 2029: TAF– Proposed Implementation Security Type 2024 (current) 2025 (no change) 2026 2027 2028 2029 Covered Equity Security $0.000166 per share (up to $8.30 max per trade) $0.000166 per share (up to $8.30 max per trade) $0.000195 per share (up to $9.79 max per trade) $0.000232 per share (up to $11.61 max per trade) $0.000240 per share (up to $12.05 max per trade) $0.000249 per share (up to $12.50 max per trade)\nThis proposed rule change would not change the scope of any current TAF exemptions.\nBelow is the text of the proposed rule change to take effect on January 1, 2026, with the proposed changes in Exhibits 5A and 5B shown as if adopted.\n* Trading Activity Fee rates are as follows: Each member shall pay to FINRA: (1) $0.000195[0.000166] per share for each sale of a covered equity security, with a maximum charge of $9.79[8.30] per trade;\nIn addition, if the execution price for a covered security is less than the Trading Activity Fee rate ($0.000195[0.000166] for covered equity securities, $0.00329[0.00279] for covered option contracts, or $0.016[0.014] for a security future) on a per share, per contract, or round turn transaction basis then no fee will be assessed.",
+      "excerpt_byte_length": 1263,
+      "excerpt_sha256": "72002318:b83f601b:0afc8746:b2e5f8e1:cd220d45:0ef61b1e:80f3fc79:ba12223b",
+      "registered_facts": [
+        "FINRA_TAF_2026_0_000195_CAP_9_79",
+        "NO_CHANGE_TO_CURRENT_EXEMPTION_SCOPE",
+        "STRICT_LOW_PRICE_THRESHOLD_EQUALS_2026_RATE"
+      ]
+    },
+    {
+      "source_id": "SEC-SR-FINRA-2024-019-ACTION",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/rules-regulations/self-regulatory-organization-rulemaking/sr-finra-2024-019",
+      "title": "Notice of Filing and Immediate Effectiveness of a Proposed Rule Change to Adjust FINRA Fees to Provide Sustainable Funding for FINRA’s Regulatory Mission",
+      "action_type": "SEC_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS",
+      "source_date": "2024-11-21",
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Notice of Filing and Immediate Effectiveness of a Proposed Rule Change to Adjust FINRA Fees to Provide Sustainable Funding for FINRA’s Regulatory Mission",
+      "excerpt_byte_length": 155,
+      "excerpt_sha256": "75386c22:01f48f94:9b52211a:ff99c112:6fb89b08:8fcd771c:35ffd8e0:8b041c6c",
+      "registered_facts": [
+        "SEC_RELEASE_34_101696",
+        "ACTION_IS_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS"
+      ]
+    },
+    {
+      "source_id": "FINRA-SR-2024-019-SCHEDULE",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/rule-filings/sr-finra-2024-019/fee-adjustment-schedule",
+      "title": "FINRA Fee Adjustment Schedule",
+      "action_type": "FINRA_FEE_ADJUSTMENT_SCHEDULE",
+      "source_date": null,
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "FINRA is implementing the proportional fee adjustment, as detailed in the November 21, 2024 rule filing with the SEC approved in January 2025, to sustainably fund its regulatory operations. FINRA remains committed to sound financial management and appropriately funding its mission .\nCovered Equity Security $0.000166 per share (up to $8.30 max per trade) $0.000166 per share (up to $8.30 max per trade) $0.000195 per share (up to $9.79 max per trade) $0.000232 per share (up to $11.61 max per trade) $0.000240 per share (up to $12.05 max per trade) $0.000249 per share (up to $12.50 max per trade)\n1 Unless specified otherwise, fee increases take effect on January 1 of the year stated.",
+      "excerpt_byte_length": 687,
+      "excerpt_sha256": "9b75e85a:f67ecea1:e0d1d5bf:f7e94d5c:b943135f:da88721d:be17ebfc:58aae8f9",
+      "registered_facts": [
+        "FINRA_TAF_2026_0_000195_CAP_9_79",
+        "UNLESS_SPECIFIED_OTHERWISE_INCREASES_EFFECTIVE_JANUARY_1"
+      ]
+    },
+    {
+      "source_id": "FINRA-RULEBOOK-SECTION-1-CURRENT",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/rulebooks/corporate-organization/section-1-member-regulatory-fees",
+      "title": "Section 1 — Member Regulatory Fees",
+      "action_type": "FINRA_CONSOLIDATED_CURRENT_RULEBOOK",
+      "source_date": null,
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "* Trading Activity Fee rates are as follows: Each member shall pay to FINRA: (1) $0.000166 per share for each sale of a covered equity security, with a maximum charge of $8.30 per trade; (2) $0.00279 per contract for each sale of an option; (3) $0.00011 per contract for each round turn transaction of a security future, provided there is a minimum charge of $0.014 per round turn transaction; (4) $0.00105 per bond for each sale of a covered TRACE-Eligible Security (other than an Asset-Backed Security) and/or municipal security, with a maximum charge of $1.05 per trade; and (5) $0.00000105 times the value, as reported to TRACE, of a sale of an Asset-Backed Security, with a maximum charge of $1.05 per trade. In addition, if the execution price for a covered security is less than the Trading Activity Fee rate ($0.000166 for covered equity securities, $0.00279 for covered option contracts, or $0.014 for a security future) on a per share, per contract, or round turn transaction basis then no fee will be assessed.",
+      "excerpt_byte_length": 1021,
+      "excerpt_sha256": "6e4b73b8:603984b2:8d3009a5:01f12efc:39b39f95:ea18a81d:0ac67fcf:b328f6ce",
+      "registered_facts": [
+        "CURRENT_RULEBOOK_PAGE_SHOWS_2024_2025_NUMERICS",
+        "NOT_2026_NUMERIC_AUTHORITY_WHEN_CONFLICTING_WITH_DATED_FILING_AND_SCHEDULE"
+      ]
+    },
+    {
+      "source_id": "FINRA-TAF-FAQ",
+      "publisher": "FINRA",
+      "url": "https://www.finra.org/rules-guidance/guidance/faqs/trading-activity-fee",
+      "title": "Trading Activity Fee Frequently Asked Questions",
+      "action_type": "FINRA_OFFICIAL_FAQ",
+      "source_date": null,
+      "retrieved_at": "2026-08-14T09:17:03.6347549-07:00",
+      "excerpt_encoding": "NORMALIZED_UTF8_RECEIPT_V1",
+      "excerpt_text": "Q100.7: Should the data be submitted on a trade by trade basis for the Trading Activity Fee? A100.7: Monthly aggregate data should be submitted to FINRA by the 10th business day following the end of the month. This should include aggregate number of shares for stocks, aggregate number of contracts for options and aggregate number of round turn transactions for security future products.\nQ100.8: Should the data be calculated from the trade date or the settlement date? A100.8: The data should be calculated from the trade date.\nQ100.9: How do you calculate the rate for the Trading Activity Fee? Does the fee have minimum and maximum rates? A100.9: The rate for the Trading Activity Fee is based on aggregate volumes. There is a separate rate for share volume for stocks, contract volume for options, round turn transaction volume for futures, and bond volume for debt. See the FINRA By-Laws, Schedule A, Section 1 for the Trading Activity Fee rates and the minimum and maximum fee rates.\nQ100.10: Do rounding rules apply for the Trading Activity Fee? A100.10: Rounding rules do not apply because the Trading Activity Fee is calculated and reported in aggregate.",
+      "excerpt_byte_length": 1164,
+      "excerpt_sha256": "27914541:6c6c3d8f:f0bd32fa:74dc4cbd:4f6adb63:de9e858a:8490c347:d9d14d96",
+      "registered_facts": [
+        "FINRA_TAF_TRADE_DATE_COORDINATE",
+        "MONTHLY_AGGREGATE_REPORTING",
+        "NO_FINRA_PER_TRADE_ROUNDING_RULE"
+      ]
+    }
+  ],
+  "source_inconsistencies": [
+    {
+      "code": "FINRA_2026_CONSOLIDATED_RULEBOOK_NUMERIC_CONFLICT",
+      "disposition": "DATED_SR_FINRA_2024_019_FILING_AND_FEE_SCHEDULE_CONTROL_2026_NUMERIC_FIELDS_CURRENT_RULEBOOK_RETAINED_AS_CONFLICT_RECEIPT"
+    },
+    {
+      "code": "SR_FINRA_2020_032_ACTION_LABEL_CONFLICT",
+      "disposition": "ORIGINAL_SEC_RECORD_ACTION_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS_CONTROLS_LATER_APPROVAL_WORDING_PRESERVED_ONLY_AS_INCONSISTENCY"
+    },
+    {
+      "code": "SR_FINRA_2024_019_SCHEDULE_APPROVAL_WORDING",
+      "disposition": "ORIGINAL_SEC_RECORD_ACTION_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS_CONTROLS"
+    }
+  ],
+  "limitations": [
+    "EXCERPTS_ARE_DETERMINISTIC_REVIEWED_SUBSETS_NOT_COMPLETE_WEB_PAGES_OR_PDFS",
+    "NO_BROKER_OR_CUSTOMER_PASS_THROUGH_AUTHORITY",
+    "NO_ACCOUNTING_LEDGER_ROUNDING_OR_CALLER_PREAGGREGATION_METHOD_AUTHORITY",
+    "NO_OPTIONS_FUTURES_DEBT_OR_CAT_COVERAGE",
+    "NO_EXTRAPOLATION_AFTER_2026_08_14"
+  ]
+}
