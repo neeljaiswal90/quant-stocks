@@ -1,0 +1,76 @@
+{
+  "schema_version": "qme.ppw_bootstrap_source_equations_fixture.v1",
+  "fixture_id": "QME-PPW-BOOTSTRAP-SOURCE-EQUATIONS-V1",
+  "status": "SYMBOLIC_AND_BOUNDARY_KATS_ONLY_NUMERIC_SELECTOR_UNRESOLVED",
+  "source_bindings": {
+    "correction_pdf_sha256": "d9e84ad9:762debea:9634192a:97fd37a9:5e49df1f:e2975e6f:c32cd983:af6d1d22",
+    "corrected_author_code_sha256": "55dea54a:42f8095c:7da4cd61:8fba651c:08677b7b:4fc5dfab:e9b08b77:30157ed0"
+  },
+  "symbolic_cases": [
+    {
+      "case_id": "CORRECTED_D_SB_SYMBOLIC",
+      "inputs": {"g_hat_0": "g"},
+      "expected": "D_hat_SB = 2 * (g ^ 2)",
+      "status": "EXACT_CORRECTED_SOURCE_EQUATION"
+    },
+    {
+      "case_id": "RAW_EXPECTED_BLOCK_LENGTH_SYMBOLIC",
+      "inputs": {"G_hat": "G", "D_hat_SB": "D", "n": "n"},
+      "expected": "b_hat_SB_raw = ((2 * (G ^ 2) * n / D) ^ (1 / 3))",
+      "status": "EXACT_CORRECTED_SOURCE_EQUATION"
+    }
+  ],
+  "flat_top_kernel_cases": [
+    {"u": "-1.25", "expected_lambda": "0"},
+    {"u": "-1", "expected_lambda": "0"},
+    {"u": "-0.5", "expected_lambda": "1"},
+    {"u": "0", "expected_lambda": "1"},
+    {"u": "0.5", "expected_lambda": "1"},
+    {"u": "0.75", "expected_lambda": "0.5"},
+    {"u": "1", "expected_lambda": "0"},
+    {"u": "1.25", "expected_lambda": "0"}
+  ],
+  "variant_conflict_cases": [
+    {
+      "case_id": "AUTHOR_CODE_COLUMNWISE_OUTPUT_CONFLICT",
+      "input_shape": "n_by_96",
+      "observed_source_behavior": "96_COLUMN_SPECIFIC_OUTPUTS",
+      "required_qme_behavior": "ONE_COMMON_BLOCK_LENGTH",
+      "expected_status": "OWNER_SELECTION_REQUIRED",
+      "selection_id": "PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION"
+    },
+    {
+      "case_id": "AUTHOR_CODE_STATIONARY_ROUNDING_CONFLICT",
+      "observed_source_behavior": "STATIONARY_EXPECTED_BLOCK_LENGTH_NEED_NOT_BE_INTEGER",
+      "protected_overlay": "CEILING",
+      "expected_status": "OVERLAY_REGISTERED_HANDOFF_DETAILS_UNRESOLVED",
+      "selection_id": "PPW-UNRESOLVED-006-RNG-AND-BLOCK-DRAW-CONSTRUCTION"
+    },
+    {
+      "case_id": "AUTHOR_CODE_BMAX_CONFLICT",
+      "observed_source_behavior": "ceil(min(3 * sqrt(n), n / 3))",
+      "protected_overlay": "floor(n / 4)",
+      "expected_status": "PROTECTED_OVERLAY_CONTROLS_AFTER_RAW_SOURCE_SELECTOR",
+      "selection_id": "PPW-UNRESOLVED-003-LAG_SELECTION-AND-FALLBACK"
+    }
+  ],
+  "future_numeric_cases": [
+    {"case_id":"CONSTANT_SERIES_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-004-DEGENERATE-INPUTS"},
+    {"case_id":"IID_SERIES_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-002-FINITE-SAMPLE-AUTOCOVARIANCE"},
+    {"case_id":"NEGATIVE_CORRELATION_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-002-FINITE-SAMPLE-AUTOCOVARIANCE"},
+    {"case_id":"SHORT_SERIES_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-004-DEGENERATE-INPUTS"},
+    {"case_id":"NINETY_SIX_COLUMN_AGGREGATION_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION"},
+    {"case_id":"INVALID_REPLICATE_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-008-INVALID-REPLICATE-AND-FALLBACK"},
+    {"case_id":"P97_5_QUANTILE_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-007-P97_5-QUANTILE"},
+    {"case_id":"PPW_RESELECTION_TIMING_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-006-RNG-AND-BLOCK-DRAW-CONSTRUCTION"},
+    {"case_id":"SEEDED_60_BY_96_INTERVAL_TYPED_UNRESOLVED","expected_status":"NO_EXECUTABLE_EXPECTATION_REGISTERED","selection_id":"PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT"}
+  ],
+  "forbidden_numeric_fields": [
+    "selected_block_length",
+    "bootstrap_distribution",
+    "bootstrap_interval",
+    "n_eff_used",
+    "dsr",
+    "holm_adjusted_p"
+  ]
+}
