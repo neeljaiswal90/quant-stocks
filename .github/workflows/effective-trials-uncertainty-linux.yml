@@ -1,0 +1,57 @@
+name: Effective-trials uncertainty Linux replay
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/effective-trials-uncertainty-linux.yml"
+      - "configs/governance/effective-trials-uncertainty-v1.json"
+      - "configs/governance/effective-trials-uncertainty-v1.hashes.json"
+      - "docs/governance/EFFECTIVE_TRIALS_UNCERTAINTY_V1.md"
+      - "qme/stats/effective_trials_uncertainty.py"
+      - "schemas/governance/effective-trials-uncertainty-v1.schema.json"
+      - "tests/fixtures/stats/effective-trials-uncertainty-v1.json"
+      - "tests/stats/test_effective_trials_uncertainty.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/effective-trials-uncertainty-linux.yml"
+      - "configs/governance/effective-trials-uncertainty-v1.json"
+      - "configs/governance/effective-trials-uncertainty-v1.hashes.json"
+      - "docs/governance/EFFECTIVE_TRIALS_UNCERTAINTY_V1.md"
+      - "qme/stats/effective_trials_uncertainty.py"
+      - "schemas/governance/effective-trials-uncertainty-v1.schema.json"
+      - "tests/fixtures/stats/effective-trials-uncertainty-v1.json"
+      - "tests/stats/test_effective_trials_uncertainty.py"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+      - name: Install pinned development environment
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Replay PPW selection and complete 2,000-replicate candidate KAT
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:3] == (3, 12, 10)"
+          python -m pytest -q tests/stats/test_effective_trials_uncertainty.py
+          python - <<'PY'
+          from pathlib import Path
+          from qme.stats.effective_trials_uncertainty import (
+              serialize_verified_uncertainty_evidence,
+              verify_effective_trials_uncertainty_evidence,
+          )
+          root = Path.cwd()
+          verified = verify_effective_trials_uncertainty_evidence(root)
+          projection = serialize_verified_uncertainty_evidence(verified, root)
+          assert projection["remaining_selection_id"] == "PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT"
+          assert len(projection["active_blocker_codes"]) == 13
+          PY

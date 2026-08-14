@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/effective-trials-uncertainty-v1.schema.json",
+  "title": "QME Effective Trials Uncertainty V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "artifact_id",
+    "ticket_id",
+    "status",
+    "semantic_sha256",
+    "authority",
+    "method",
+    "candidate_kat",
+    "active_freeze_v4_blockers",
+    "claims",
+    "nonclaims"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/effective-trials-uncertainty-v1.schema.json"},
+    "schema_version": {"const": "qme.effective_trials_uncertainty.v1"},
+    "artifact_id": {"const": "QME-EFFECTIVE-TRIALS-UNCERTAINTY-V1"},
+    "ticket_id": {"const": "NEE-204"},
+    "status": {"const": "BOUNDED_EXECUTABLE_CONFORMANCE_CANDIDATE_WINDOWS_KAT_LINUX_ACCEPTANCE_PENDING"},
+    "semantic_sha256": {"$ref": "#/$defs/grouped_sha256"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protected_main", "owner_selections", "point_kernel", "deterministic_rng", "freeze_v4", "empirical_or_production_results_used"],
+      "properties": {
+        "protected_main": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["commit", "tree"],
+          "properties": {
+            "commit": {"const": "93af9d6e:e91366c7:2f44e472:9b33dafb:46b2eb9e"},
+            "tree": {"const": "a5de7389:28b53fd3:5706804e:f8c6fb37:a0176acf"}
+          }
+        },
+        "owner_selections": {"$ref": "#/$defs/binding"},
+        "point_kernel": {"$ref": "#/$defs/open_binding"},
+        "deterministic_rng": {"$ref": "#/$defs/open_binding"},
+        "freeze_v4": {"$ref": "#/$defs/open_binding"},
+        "empirical_or_production_results_used": {"const": false}
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["matrix_domain", "selector", "bootstrap", "arithmetic_conformance", "quantile"],
+      "properties": {
+        "matrix_domain": {"type": "object"},
+        "selector": {"type": "object"},
+        "bootstrap": {"type": "object"},
+        "arithmetic_conformance": {"type": "object"},
+        "quantile": {"type": "object"}
+      }
+    },
+    "candidate_kat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_path", "fixture_sha256", "source_raw_matrix_sha256", "common_block_length", "index_stream_sha256", "bootstrap_distribution_sha256", "order_statistic_1950", "n_eff_used", "windows_recomputation", "linux_recomputation", "selection_009_accepted"],
+      "properties": {
+        "fixture_path": {"const": "tests/fixtures/stats/effective-trials-uncertainty-v1.json"},
+        "fixture_sha256": {"$ref": "#/$defs/grouped_sha256"},
+        "source_raw_matrix_sha256": {"$ref": "#/$defs/grouped_sha256"},
+        "common_block_length": {"const": 3},
+        "index_stream_sha256": {"$ref": "#/$defs/grouped_sha256"},
+        "bootstrap_distribution_sha256": {"$ref": "#/$defs/grouped_sha256"},
+        "order_statistic_1950": {"const": "1.928085337475850467660159735112550709"},
+        "n_eff_used": {"const": 2},
+        "windows_recomputation": {"const": "CANDIDATE_RECOMPUTED"},
+        "linux_recomputation": {"const": "PENDING_PROTECTED_CI_RECOMPUTATION"},
+        "selection_009_accepted": {"const": false}
+      }
+    },
+    "active_freeze_v4_blockers": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "items": {"$ref": "#/$defs/blocker"}
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner_selections_001_through_008_registered", "ppw_selector_executable_candidate", "bootstrap_distribution_candidate_available", "windows_candidate_recomputation_available", "linux_candidate_recomputation_available", "selection_009_accepted", "n_eff_used_accepted_for_inference", "dsr_available", "holm_available", "freeze_blocker_changed", "empirical_output_available", "production_inference_available", "milestone_m0_complete", "production_ready", "alpha_proven", "live_order_authority"],
+      "properties": {
+        "owner_selections_001_through_008_registered": {"const": true},
+        "ppw_selector_executable_candidate": {"const": true},
+        "bootstrap_distribution_candidate_available": {"const": true},
+        "windows_candidate_recomputation_available": {"const": true},
+        "linux_candidate_recomputation_available": {"const": false},
+        "selection_009_accepted": {"const": false},
+        "n_eff_used_accepted_for_inference": {"const": false},
+        "dsr_available": {"const": false},
+        "holm_available": {"const": false},
+        "freeze_blocker_changed": {"const": false},
+        "empirical_output_available": {"const": false},
+        "production_inference_available": {"const": false},
+        "milestone_m0_complete": {"const": false},
+        "production_ready": {"const": false},
+        "alpha_proven": {"const": false},
+        "live_order_authority": {"const": false}
+      }
+    },
+    "nonclaims": {
+      "const": [
+        "NO_ACCEPTED_SELECTION_009_UNTIL_INDEPENDENT_WINDOWS_LINUX_HASH_MATCH",
+        "NO_FREEZE_BLOCKER_REDUCTION_IN_THIS_CANDIDATE",
+        "NO_DSR_HOLM_ALPHA_OR_PROMOTION_RESULT",
+        "NO_EMPIRICAL_OR_PRODUCTION_INFERENCE_EVIDENCE",
+        "NO_PROSPECTIVE_CONSUMPTION_OR_LIVE_ORDER_AUTHORITY",
+        "NO_M0_COMPLETION_OR_PRODUCTION_READINESS"
+      ]
+    }
+  },
+  "$defs": {
+    "grouped_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"
+    },
+    "binding": {
+      "type": "object",
+      "required": ["path", "sha256", "semantic_sha256", "manifest_path", "manifest_sha256", "registered_selection_count", "remaining_selection_id"]
+    },
+    "open_binding": {
+      "type": "object",
+      "minProperties": 2
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocker_code", "ticket_id", "category", "description"],
+      "properties": {
+        "blocker_code": {"type": "string", "minLength": 1},
+        "ticket_id": {"type": "string", "pattern": "^NEE-[0-9]+$"},
+        "category": {"enum": ["GOVERNANCE", "ENGINEERING_EVIDENCE", "PRODUCTION_EVIDENCE", "FINAL_DERIVED_EVIDENCE"]},
+        "description": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
