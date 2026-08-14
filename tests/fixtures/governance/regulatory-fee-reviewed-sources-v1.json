@@ -1,0 +1,94 @@
+{
+  "schema_version": "qme.regulatory_fee_reviewed_sources.v1",
+  "artifact_id": "NEE-205-REGULATORY-FEE-REVIEWED-SOURCES-V1",
+  "ticket_id": "NEE-205",
+  "status": "IMMUTABLE_REVIEWED_PRIMARY_SOURCE_EXCERPTS_BOUNDED_TO_2026_08_14",
+  "retrieval_date": "2026-08-14",
+  "retrieved_at": null,
+  "retrieval_time_status": "EXACT_TIMESTAMP_UNAVAILABLE_NOT_INFERRED",
+  "reviewed_bytes_convention": "RENDERED_PRIMARY_SOURCE_TEXT_UTF8_NO_NORMALIZATION_NO_TRAILING_LF",
+  "receipts": [
+    {
+      "source_id": "SEC31_2026_RATE_ADVISORY",
+      "url": "https://www.sec.gov/rules-regulations/fee-rate-advisories/2026-2",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "reviewed_at_page_date": "2026-02-27",
+      "reviewed_excerpt_utf8": "Feb. 27, 2026 — The Securities and Exchange Commission today announced that starting on April 4, 2026, the fee rates applicable to most securities transactions will be set at $20.60 per million dollars.\nConsequently, each SRO will continue to pay the Commission a rate of $0.00 per million for covered sales occurring on charge dates through April 3, 2026, and a rate of $20.60 per million for covered sales occurring on charge dates on or after April 4, 2026.\nThis fee rate will remain in effect until 60 calendar days after legislation is enacted that sets the amount of the Commission’s fiscal year 2027 appropriation.",
+      "reviewed_excerpt_size_bytes": 625,
+      "reviewed_excerpt_sha256": "6a9af84b:f047d03b:faeaebac:8dfaf5ff:77924db4:821ad02c:348e1130:45f10169",
+      "registered_facts": [
+        "SEC31_RATE_0_USD_PER_MILLION_THROUGH_CHARGE_DATE_2026_04_03",
+        "SEC31_RATE_20_60_USD_PER_MILLION_FROM_CHARGE_DATE_2026_04_04_UNTIL_SUPERSEDED"
+      ]
+    },
+    {
+      "source_id": "FINRA_2026_FEE_ADJUSTMENT_SCHEDULE",
+      "url": "https://www.finra.org/rules-guidance/rule-filings/sr-finra-2024-019/fee-adjustment-schedule",
+      "publisher": "Financial Industry Regulatory Authority",
+      "reviewed_at_page_date": null,
+      "reviewed_excerpt_utf8": "Unless specified otherwise, fee increases take effect on January 1 of the year stated.\nCovered Equity Security\n$0.000195 per share (up to $9.79 max per trade)\n2026",
+      "reviewed_excerpt_size_bytes": 163,
+      "reviewed_excerpt_sha256": "1e2113e1:63bb73aa:bc5423d1:94f67630:4af4590e:965706c9:9d1ff9bc:266b34d1",
+      "registered_facts": [
+        "FINRA_UNLESS_SPECIFIED_OTHERWISE_FEE_INCREASES_EFFECTIVE_JANUARY_1_OF_STATED_YEAR",
+        "FINRA_2026_COVERED_EQUITY_RATE_0_000195_USD_PER_SHARE",
+        "FINRA_2026_COVERED_EQUITY_CAP_9_79_USD_PER_REGULATORY_TRADE"
+      ]
+    },
+    {
+      "source_id": "FINRA_MEMBER_REGULATORY_FEE_RULE",
+      "url": "https://www.finra.org/rules-guidance/rulebooks/corporate-organization/section-1-member-regulatory-fees",
+      "publisher": "Financial Industry Regulatory Authority",
+      "reviewed_at_page_date": null,
+      "reviewed_excerpt_utf8": "Each member shall be assessed a Trading Activity Fee for the sale of covered securities.\nEach member shall pay to FINRA a fee per share for each sale of a covered equity security.\nMembers shall report to FINRA the aggregate share, bond, contract, and/or round turn volume of sales of covered securities in a manner as prescribed by FINRA from time to time.\nIn addition, if the execution price for a covered security is less than the Trading Activity Fee rate ($0.000166 for covered equity securities, $0.00279 for covered option contracts, or $0.014 for a security future) on a per share, per contract, or round turn transaction basis then no fee will be assessed.",
+      "reviewed_excerpt_size_bytes": 664,
+      "reviewed_excerpt_sha256": "0e23e205:e6436d05:129001fb:dc52b3df:7ea74205:6f70d04f:9963a0d4:0497c2d9",
+      "registered_facts": [
+        "TAF_APPLIES_TO_MEMBER_SALES_OF_COVERED_SECURITIES",
+        "COVERED_EQUITY_TAF_IS_PER_SHARE",
+        "REPORTING_IS_AGGREGATE",
+        "STRICTLY_BELOW_APPLICABLE_PER_UNIT_RATE_IS_EXCLUDED_EQUALITY_IS_NOT_EXCLUDED"
+      ]
+    },
+    {
+      "source_id": "FINRA_TAF_FAQ",
+      "url": "https://www.finra.org/rules-guidance/guidance/faqs/trading-activity-fee",
+      "publisher": "Financial Industry Regulatory Authority",
+      "reviewed_at_page_date": null,
+      "reviewed_excerpt_utf8": "The data should be calculated from the trade date.\nRounding rules do not apply because the Trading Activity Fee is calculated and reported in aggregate.\nFor a trade that is cancelled and later corrected, the TAF would apply to the corrected trade. If a cancelled trade, however, is not later corrected and re-billed, the TAF would not be assessed.",
+      "reviewed_excerpt_size_bytes": 347,
+      "reviewed_excerpt_sha256": "343fa4a1:3bce8571:d7f9c2f3:da5e1bf1:bb72d13f:9ed3b35b:0c35907c:9a4e9ffd",
+      "registered_facts": [
+        "TAF_DATE_COORDINATE_IS_TRADE_DATE",
+        "TAF_HAS_NO_PER_TRADE_ROUNDING_RULE_BECAUSE_REPORTING_IS_AGGREGATE",
+        "CANCELLED_UNREPLACED_EXCLUDED_CORRECTED_INCLUDED"
+      ]
+    },
+    {
+      "source_id": "SEC31_PASS_THROUGH_EXPLANATION",
+      "url": "https://www.sec.gov/rules-regulations/fee-rate-advisories/section-31-transaction-fees-basic-information-firms",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "reviewed_at_page_date": "2026-03-02",
+      "reviewed_excerpt_utf8": "Section 31 imposes no obligations on broker-dealers or their customers.\nBroker-dealers, in turn, generally charge their customers per-transaction charges.\nA customer who has questions about how his or her fees are calculated should contact the broker-dealer.",
+      "reviewed_excerpt_size_bytes": 258,
+      "reviewed_excerpt_sha256": "750a0c7d:41a1a55f:1d5099dc:0d42596c:c5b3d6f7:c46dea9a:45c6720b:7f8eba7a",
+      "registered_facts": [
+        "SECTION31_DOES_NOT_DEFINE_BROKER_OR_CUSTOMER_PASS_THROUGH",
+        "BROKER_CUSTOMER_CHARGE_SEMANTICS_REMAIN_UNREGISTERED"
+      ]
+    }
+  ],
+  "limitations": [
+    "EXCERPTS_NOT_COMPLETE_WEB_PAGES",
+    "URL_CONTENT_MAY_CHANGE_AFTER_RETRIEVAL_DATE",
+    "NO_BROKER_OR_CUSTOMER_PASS_THROUGH_AUTHORITY",
+    "NO_BROKER_LEDGER_ROUNDING_OR_CALLER_PREAGGREGATION_METHOD_AUTHORITY",
+    "NO_COMPLETE_HISTORICAL_OR_FUTURE_SCHEDULE"
+  ],
+  "source_hierarchy": {
+    "rate_and_cap_for_2026": "FINRA_2026_FEE_ADJUSTMENT_SCHEDULE",
+    "coverage_exemptions_and_strict_low_price_operator": "FINRA_MEMBER_REGULATORY_FEE_RULE",
+    "trade_date_cancellation_aggregation_and_no_rounding_context": "FINRA_TAF_FAQ",
+    "stale_rulebook_numeric_rates_are_not_used": true
+  }
+}
