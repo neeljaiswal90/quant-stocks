@@ -9,8 +9,8 @@ import stat
 from pathlib import Path
 from typing import Any, Final, cast
 
-from jsonschema import Draft202012Validator
-from jsonschema.exceptions import SchemaError
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped, unused-ignore]
+from jsonschema.exceptions import SchemaError  # type: ignore[import-untyped, unused-ignore]
 
 CONFIG_PATH: Final = Path("configs/governance/ppw-bootstrap-uncertainty-authority-v1.json")
 SCHEMA_PATH: Final = Path("schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json")
