@@ -48,7 +48,12 @@
         "sha256": "dba251da:59362a2f:c44c9660:58a3f067:f0e810a3:9551a929:e5e603e5:6f014785",
         "registry_id": "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1",
         "event_schema_version": "qme.experiment_registry_event.v1",
-        "replay_api": "qme.experiments.registry.replay_registry"
+        "replay_api": "qme.experiments.registry.replay_registry",
+        "canonicalizer_dependency": {
+          "path": "qme/foundation/lineage.py",
+          "sha256": "edb64ebb:1edcdb31:c4e4620c:c90dca99:489e98d3:1f224872:81754cce:05439de6",
+          "binding_rule": "EXACT_SOURCE_HASH_PRIVATE_FROZEN_EQUIVALENT_NO_AMBIENT_IMPORT"
+        }
       },
       "nee121_holdout_manifest_binding": {
         "artifact_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
@@ -90,6 +95,16 @@
     "versioned_registry_adapter_rule": "CONTENT_ADDRESSED_COMPACT_V2_SOURCE_REGISTRY_WITH_INDEPENDENT_V2_SEQUENCE_PREVIOUS_HASH_AND_EVENT_HASH_VALIDATION_EXTERNAL_ACCESS_EXPORT_RESOLUTION_IN_MEMORY_V1_SHADOW_TRANSLATION_PROTECTED_REPLAY_AND_EXACT_BUSINESS_STATE_PARITY_NO_CALLER_AUTHORED_CONTEXT_OR_EMBEDDED_ACCESS_EVENT_CHAIN",
     "versioned_registry_payload_schema_rule": "ALL_NINE_ALLOWED_EVENT_TYPES_HAVE_EXACT_PER_TYPE_PAYLOAD_AND_TRIAL_ID_CONDITIONALS_ALIGNED_TO_PROTECTED_V1_OR_COMPACT_V2_RUNTIME_VALIDATION",
     "versioned_registry_timestamp_constructor_rule": "EXACT_DATETIME_TYPE_OFFSET_REQUIRED_NO_NAIVE_AMBIENT_TIMEZONE_CANONICALIZE_AWARE_INPUT_TO_UTC_Z",
+    "protected_registry_private_loader": {
+      "source_path": "qme/experiments/registry.py",
+      "source_sha256": "dba251da:59362a2f:c44c9660:58a3f067:f0e810a3:9551a929:e5e603e5:6f014785",
+      "private_module_name": "_qme_nee176_protected_experiment_registry_v1",
+      "execution_rule": "STRICT_UTF8_VERIFIED_CAPTURED_BYTES_COMPILE_DONT_INHERIT_OPTIMIZE_ZERO_DIRECT_PRIVATE_MODULE_EXEC_NO_SPEC_LOADER_PATH_REOPEN_OR_PYC_POST_EXEC_SOURCE_RECHECK_TAMPER_DETECTION_ONLY",
+      "required_api_names": ["REGISTRY_ID", "EVENT_SCHEMA_VERSION", "GENESIS_EVENT_HASH", "CostSelectionRole", "EventType", "ExperimentEvent", "PolicyMode", "RegistryError", "RegistryPolicy", "canonical_json_bytes", "deterministic_export", "make_next_event", "replay_registry", "validate_nee121_sample_access_binding", "validation_report_binding", "_parse_timestamp", "_validate_nee121_event"],
+      "cache_rule": "IMMUTABLE_CAPTURED_FACADE_EXACT_REQUIRED_API_OBJECT_KIND_MODULE_AND_IDENTITY_REVALIDATED_ON_EVERY_ACCESS_UNUSED_EXTRA_MODULE_ATTRIBUTES_HAVE_NO_AUTHORITY",
+      "package_import_rule": "QME_EXPERIMENTS_PARENT_STORE_AND_MSVCRT_MUST_REMAIN_UNIMPORTED",
+      "canonicalizer_rule": "HASH_BOUND_LINEAGE_ALGORITHM_JSON_DUMPS_ENSURE_ASCII_FALSE_ALLOW_NAN_FALSE_SORT_KEYS_TRUE_COMPACT_SEPARATORS_UTF8_PLUS_LF_FROZEN_DUMPS_AND_GUARDED_EXACT_IMPORT_NO_AMBIENT_LINEAGE_MODULE_OR_META_PATH"
+    },
     "experiment_registry_prefix_commitment_fields": ["CONTENT_ADDRESSED_DERIVED_PATH", "RAW_SHA256", "EVENT_COUNT", "HEAD_HASH", "SHADOW_V1_STATE_SHA256", "BUSINESS_PROJECTION_SHA256", "EXPORT_HASH"],
     "experiment_registry_prefix_required_events": ["POLICY_REGISTERED", "TRIAL_REGISTERED", "TRIAL_STARTED", "SAMPLE_ACCESS_BOUND_COMPACT", "OUTCOME_RECORDED"],
     "versioned_registry_source_event_rule": "LEGACY_V1_BUSINESS_EVENTS_REENCODED_IN_V2_HASH_CHAIN_PLUS_COMPACT_SAMPLE_ACCESS_RECEIPT_ONLY_FULL_ACCESS_CHAIN_RESOLVED_EXTERNALLY_AND_NEVER_SERIALIZED_IN_V2_INPUT_OR_EXPORT",
@@ -144,5 +159,5 @@
     "alpha_proven": false,
     "blocker_cleared": false
   },
-  "semantic_sha256": "12890e29:81846aec:f51950a3:48857860:639cd9a7:5a281529:61bbc3c7:9cf14e23"
+  "semantic_sha256": "32926f47:94ac0650:b625eadc:80caea5d:7fedcd16:3ac32955:a366233d:d2aa2c70"
 }

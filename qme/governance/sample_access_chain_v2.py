@@ -2,16 +2,18 @@
 
 from __future__ import annotations
 
+import builtins
 import hashlib
 import json
 import os
 import re
 import stat as stat_module
+import sys
 import unicodedata
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from types import MappingProxyType
+from types import FunctionType, MappingProxyType, ModuleType
 from typing import Any, Final, NamedTuple, cast
 
 STATUS: Final = "BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE"
@@ -63,6 +65,27 @@ CAUSAL_EQUAL_FIELDS: Final = (
 _HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 _GROUPED_HASH_RE = re.compile(r"^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$")
 _DATE_RE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+_PRIVATE_REGISTRY_MODULE_NAME: Final = "_qme_nee176_protected_experiment_registry_v1"
+_PRIVATE_REGISTRY_SOURCE_PATH: Final = "qme/experiments/registry.py"
+_PRIVATE_REGISTRY_SOURCE_SHA256: Final = (
+    "dba251da:59362a2f:c44c9660:58a3f067:f0e810a3:9551a929:e5e603e5:6f014785"
+)
+_PRIVATE_LINEAGE_SOURCE_PATH: Final = "qme/foundation/lineage.py"
+_PRIVATE_LINEAGE_SOURCE_SHA256: Final = (
+    "edb64ebb:1edcdb31:c4e4620c:c90dca99:489e98d3:1f224872:81754cce:05439de6"
+)
+_PRIVATE_REGISTRY_CACHE: ModuleType | None = None
+_PRIVATE_REGISTRY_EXEC_BUILTINS: Mapping[str, Any] | None = None
+_COMPILE_VERIFIED_SOURCE: Final = compile
+_EXEC_VERIFIED_CODE: Final = exec
+_PRIVATE_MODULE_TYPE: Final = ModuleType
+_TRUSTED_BUILTIN_IMPORT: Final = builtins.__import__
+_VERIFIED_EXECUTION_PRIMITIVES: Final = (
+    _COMPILE_VERIFIED_SOURCE,
+    _EXEC_VERIFIED_CODE,
+    _PRIVATE_MODULE_TYPE,
+    _TRUSTED_BUILTIN_IMPORT,
+)
 _EXPECTED_AUTHORITY: Final = {
     "protected_main_commit": "e2fc6953:48f1f29d:3352fb94:f862c70b:71430e53",
     "sample_holdout_v2": {
@@ -107,6 +130,13 @@ _EXPECTED_AUTHORITY: Final = {
             "registry_id": "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1",
             "event_schema_version": "qme.experiment_registry_event.v1",
             "replay_api": "qme.experiments.registry.replay_registry",
+            "canonicalizer_dependency": {
+                "path": "qme/foundation/lineage.py",
+                "sha256": "edb64ebb:1edcdb31:c4e4620c:c90dca99:489e98d3:1f224872:81754cce:05439de6",
+                "binding_rule": (
+                    "EXACT_SOURCE_HASH_PRIVATE_FROZEN_EQUIVALENT_NO_AMBIENT_IMPORT"
+                ),
+            },
         },
         "nee121_holdout_manifest_binding": {
             "artifact_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
@@ -147,6 +177,297 @@ _REGISTERED_POLICY_NEE121_BINDING: Final = {
 
 class SampleAccessChainV2Error(ValueError):
     """Fail-closed V2 contract error."""
+
+
+_TRUSTED_JSON_MODULE: Final = json
+_TRUSTED_JSON_DUMPS: Final = json.dumps
+
+
+def _frozen_registry_canonical_json_bytes(document: Mapping[str, Any]) -> bytes:
+    """Exact private equivalent of the hash-bound foundation canonicalizer."""
+
+    if (
+        json is not _TRUSTED_JSON_MODULE
+        or _TRUSTED_JSON_MODULE.dumps is not _TRUSTED_JSON_DUMPS
+    ):
+        raise SampleAccessChainV2Error("frozen JSON canonicalizer primitive changed")
+    return (
+        _TRUSTED_JSON_DUMPS(
+            document,
+            ensure_ascii=False,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        + b"\n"
+    )
+
+
+_VERIFIED_REGISTRY_CANONICAL_JSON_BYTES: Final = _frozen_registry_canonical_json_bytes
+_VERIFIED_CANONICALIZER_PRIMITIVES: Final = (
+    _TRUSTED_JSON_MODULE,
+    _TRUSTED_JSON_DUMPS,
+    _TRUSTED_BUILTIN_IMPORT,
+    _VERIFIED_REGISTRY_CANONICAL_JSON_BYTES,
+)
+
+
+def _validate_frozen_canonicalizer_primitives() -> None:
+    if (
+        json is not _VERIFIED_CANONICALIZER_PRIMITIVES[0]
+        or _TRUSTED_JSON_MODULE is not _VERIFIED_CANONICALIZER_PRIMITIVES[0]
+        or _TRUSTED_JSON_DUMPS is not _VERIFIED_CANONICALIZER_PRIMITIVES[1]
+        or _TRUSTED_JSON_MODULE.dumps is not _VERIFIED_CANONICALIZER_PRIMITIVES[1]
+        or _TRUSTED_BUILTIN_IMPORT is not _VERIFIED_CANONICALIZER_PRIMITIVES[2]
+        or _VERIFIED_REGISTRY_CANONICAL_JSON_BYTES
+        is not _VERIFIED_CANONICALIZER_PRIMITIVES[3]
+        or _frozen_registry_canonical_json_bytes
+        is not _VERIFIED_CANONICALIZER_PRIMITIVES[3]
+    ):
+        raise SampleAccessChainV2Error("frozen canonicalizer identity changed")
+
+
+def _guarded_registry_import(
+    name: str,
+    globals: Mapping[str, Any] | None = None,
+    locals: Mapping[str, Any] | None = None,
+    fromlist: Sequence[str] = (),
+    level: int = 0,
+) -> Any:
+    """Intercept only the protected canonicalizer import during private exec."""
+
+    if name == "qme.foundation.lineage":
+        if level != 0 or tuple(fromlist) != ("canonical_json_bytes",):
+            raise ImportError("protected lineage import shape changed")
+        facade = ModuleType("_qme_nee176_private_foundation_lineage_canonicalizer")
+        cast(Any, facade).canonical_json_bytes = _VERIFIED_CANONICALIZER_PRIMITIVES[3]
+        return facade
+    return _VERIFIED_CANONICALIZER_PRIMITIVES[2](
+        name, globals, locals, fromlist, level
+    )
+
+
+_VERIFIED_GUARDED_REGISTRY_IMPORT: Final = _guarded_registry_import
+
+
+class _ProtectedRegistryApi(NamedTuple):
+    module: ModuleType
+    REGISTRY_ID: str
+    EVENT_SCHEMA_VERSION: str
+    GENESIS_EVENT_HASH: str
+    CostSelectionRole: Any
+    EventType: Any
+    ExperimentEvent: Any
+    PolicyMode: Any
+    RegistryError: Any
+    RegistryPolicy: Any
+    canonical_json_bytes: Any
+    deterministic_export: Any
+    make_next_event: Any
+    replay_registry: Any
+    validate_nee121_sample_access_binding: Any
+    validation_report_binding: Any
+    parse_timestamp: Any
+    validate_nee121_event: Any
+
+
+_PRIVATE_REGISTRY_API_NAMES: Final = tuple(_ProtectedRegistryApi._fields[1:])
+_PRIVATE_REGISTRY_API_SOURCE_NAMES: Final = {
+    **{name: name for name in _PRIVATE_REGISTRY_API_NAMES},
+    "parse_timestamp": "_parse_timestamp",
+    "validate_nee121_event": "_validate_nee121_event",
+}
+_PRIVATE_REGISTRY_API_SNAPSHOT: Mapping[str, Any] | None = None
+_PRIVATE_REGISTRY_FACADE: _ProtectedRegistryApi | None = None
+
+
+def _capture_protected_registry_api(module: ModuleType) -> _ProtectedRegistryApi:
+    """Capture the exact protected API once, before the module enters the cache."""
+
+    global _PRIVATE_REGISTRY_API_SNAPSHOT, _PRIVATE_REGISTRY_FACADE
+    if _PRIVATE_REGISTRY_API_SNAPSHOT is not None or _PRIVATE_REGISTRY_FACADE is not None:
+        raise SampleAccessChainV2Error("protected registry API cache was pre-populated")
+    values: dict[str, Any] = {
+        name: getattr(module, _PRIVATE_REGISTRY_API_SOURCE_NAMES[name], None)
+        for name in _PRIVATE_REGISTRY_API_NAMES
+    }
+    class_names = {
+        "CostSelectionRole", "EventType", "ExperimentEvent", "PolicyMode",
+        "RegistryError", "RegistryPolicy",
+    }
+    function_names = set(_PRIVATE_REGISTRY_API_NAMES) - class_names - {
+        "REGISTRY_ID", "EVENT_SCHEMA_VERSION", "GENESIS_EVENT_HASH",
+    }
+    owned_function_names = function_names - {"canonical_json_bytes"}
+    if (
+        values["REGISTRY_ID"] != "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1"
+        or values["EVENT_SCHEMA_VERSION"] != "qme.experiment_registry_event.v1"
+        or values["GENESIS_EVENT_HASH"] != GENESIS_HASH
+        or any(not isinstance(values[name], type) for name in class_names)
+        or not issubclass(cast(type[Any], values["RegistryError"]), Exception)
+        or any(type(values[name]) is not FunctionType for name in function_names)
+        or values["canonical_json_bytes"]
+        is not _VERIFIED_CANONICALIZER_PRIMITIVES[3]
+        or any(
+            values[name].__module__ != _PRIVATE_REGISTRY_MODULE_NAME
+            for name in class_names | owned_function_names
+        )
+    ):
+        raise SampleAccessChainV2Error("protected registry required API changed")
+    snapshot: Mapping[str, Any] = MappingProxyType(values)
+    facade = cast(
+        _ProtectedRegistryApi,
+        cast(Any, _ProtectedRegistryApi)(module=module, **values),
+    )
+    _PRIVATE_REGISTRY_API_SNAPSHOT = snapshot
+    _PRIVATE_REGISTRY_FACADE = facade
+    return facade
+
+
+def _required_registry_exec_builtins(
+    value: Mapping[str, Any] | None,
+) -> Mapping[str, Any]:
+    if value is None:
+        raise SampleAccessChainV2Error("protected registry builtins cache identity changed")
+    return value
+
+
+def _validate_protected_registry_api(module: ModuleType) -> _ProtectedRegistryApi:
+    """Revalidate the captured facade and every authoritative module attribute."""
+
+    snapshot = _PRIVATE_REGISTRY_API_SNAPSHOT
+    facade = _PRIVATE_REGISTRY_FACADE
+    exec_builtins = _required_registry_exec_builtins(
+        _PRIVATE_REGISTRY_EXEC_BUILTINS
+    )
+    if snapshot is None or facade is None or facade.module is not module:
+        raise SampleAccessChainV2Error("protected registry API cache identity changed")
+    if (
+        module.__dict__.get("__builtins__") is not exec_builtins
+        or exec_builtins.get("__import__") is not _VERIFIED_GUARDED_REGISTRY_IMPORT
+        or _guarded_registry_import is not _VERIFIED_GUARDED_REGISTRY_IMPORT
+    ):
+        raise SampleAccessChainV2Error("protected registry builtins cache identity changed")
+    _validate_frozen_canonicalizer_primitives()
+    if any(
+        getattr(module, _PRIVATE_REGISTRY_API_SOURCE_NAMES[name], None)
+        is not snapshot[name]
+        for name in snapshot
+    ):
+        raise SampleAccessChainV2Error("protected registry cached API identity changed")
+    if any(getattr(facade, name) is not snapshot[name] for name in snapshot):
+        raise SampleAccessChainV2Error("protected registry facade identity changed")
+    return facade
+
+
+def _load_protected_registry_module() -> ModuleType:
+    """Execute only exact protected source bytes without importing its package."""
+
+    global _PRIVATE_REGISTRY_CACHE, _PRIVATE_REGISTRY_EXEC_BUILTINS
+    if (
+        _COMPILE_VERIFIED_SOURCE is not _VERIFIED_EXECUTION_PRIMITIVES[0]
+        or _EXEC_VERIFIED_CODE is not _VERIFIED_EXECUTION_PRIMITIVES[1]
+        or _PRIVATE_MODULE_TYPE is not _VERIFIED_EXECUTION_PRIMITIVES[2]
+        or _TRUSTED_BUILTIN_IMPORT is not _VERIFIED_EXECUTION_PRIMITIVES[3]
+        or builtins.compile is not _VERIFIED_EXECUTION_PRIMITIVES[0]
+        or builtins.exec is not _VERIFIED_EXECUTION_PRIMITIVES[1]
+        or ModuleType is not _VERIFIED_EXECUTION_PRIMITIVES[2]
+        or builtins.__import__ is not _VERIFIED_EXECUTION_PRIMITIVES[3]
+    ):
+        raise SampleAccessChainV2Error("verified-source execution primitives changed")
+    _validate_frozen_canonicalizer_primitives()
+    package_parent = Path(__file__).parent.parent.parent
+    raw = _confined_file(
+        package_parent, _PRIVATE_REGISTRY_SOURCE_PATH, 2 * 1024 * 1024
+    )
+    if _sha(raw) != _ungroup(_PRIVATE_REGISTRY_SOURCE_SHA256):
+        raise SampleAccessChainV2Error("protected registry source hash changed")
+    lineage_raw = _confined_file(
+        package_parent, _PRIVATE_LINEAGE_SOURCE_PATH, 2 * 1024 * 1024
+    )
+    if _sha(lineage_raw) != _ungroup(_PRIVATE_LINEAGE_SOURCE_SHA256):
+        raise SampleAccessChainV2Error("protected lineage source hash changed")
+    source_path = package_parent.resolve(strict=True).joinpath(
+        *_PRIVATE_REGISTRY_SOURCE_PATH.split("/")
+    )
+    cached = _PRIVATE_REGISTRY_CACHE
+    if cached is not None:
+        if (
+            type(cached) is not ModuleType
+            or sys.modules.get(_PRIVATE_REGISTRY_MODULE_NAME) is not cached
+            or cached.__name__ != _PRIVATE_REGISTRY_MODULE_NAME
+            or cached.__file__ != str(source_path)
+            or cached.__package__ != ""
+            or cached.__loader__ is not None
+            or cached.__spec__ is not None
+            or getattr(cached, "__cached__", None) is not None
+        ):
+            raise SampleAccessChainV2Error("private protected-registry cache identity changed")
+        _validate_protected_registry_api(cached)
+        return cached
+    if _PRIVATE_REGISTRY_MODULE_NAME in sys.modules:
+        raise SampleAccessChainV2Error("private protected-registry module name is occupied")
+    try:
+        source = raw.decode("utf-8", errors="strict")
+        code = _COMPILE_VERIFIED_SOURCE(
+            source,
+            str(source_path),
+            "exec",
+            flags=0,
+            dont_inherit=True,
+            optimize=0,
+        )
+    except (SyntaxError, UnicodeDecodeError, ValueError) as error:
+        raise SampleAccessChainV2Error(
+            "protected registry verified source cannot be compiled"
+        ) from error
+    module = _PRIVATE_MODULE_TYPE(_PRIVATE_REGISTRY_MODULE_NAME)
+    module.__file__ = str(source_path)
+    module.__package__ = ""
+    module.__loader__ = None
+    module.__spec__ = None
+    cast(Any, module).__cached__ = None
+    exec_builtins: Mapping[str, Any] = MappingProxyType(
+        {**vars(builtins), "__import__": _VERIFIED_GUARDED_REGISTRY_IMPORT}
+    )
+    module.__dict__["__builtins__"] = exec_builtins
+    sys.modules[_PRIVATE_REGISTRY_MODULE_NAME] = module
+    try:
+        _EXEC_VERIFIED_CODE(code, module.__dict__, module.__dict__)
+    except Exception as error:
+        sys.modules.pop(_PRIVATE_REGISTRY_MODULE_NAME, None)
+        raise SampleAccessChainV2Error("protected registry private import failed") from error
+    if (
+        type(module) is not ModuleType
+        or sys.modules.get(_PRIVATE_REGISTRY_MODULE_NAME) is not module
+        or module.__name__ != _PRIVATE_REGISTRY_MODULE_NAME
+        or module.__file__ != str(source_path)
+        or module.__package__ != ""
+        or module.__loader__ is not None
+        or module.__spec__ is not None
+        or getattr(module, "__cached__", None) is not None
+        or _confined_file(
+            package_parent, _PRIVATE_REGISTRY_SOURCE_PATH, 2 * 1024 * 1024
+        )
+        != raw
+    ):
+        sys.modules.pop(_PRIVATE_REGISTRY_MODULE_NAME, None)
+        raise SampleAccessChainV2Error("protected registry private import identity changed")
+    try:
+        _capture_protected_registry_api(module)
+    except Exception:
+        sys.modules.pop(_PRIVATE_REGISTRY_MODULE_NAME, None)
+        raise
+    _PRIVATE_REGISTRY_EXEC_BUILTINS = exec_builtins
+    _PRIVATE_REGISTRY_CACHE = module
+    return module
+
+
+def _protected_registry_api() -> _ProtectedRegistryApi:
+    """Return captured protected API refs after source and identity revalidation."""
+
+    module = _load_protected_registry_module()
+    return _validate_protected_registry_api(module)
 
 
 def _reject_constant(value: str) -> None:
@@ -957,7 +1278,9 @@ class _EmbeddedExperimentRegistryPrefixResolver:
 
     @staticmethod
     def _replay_exact(raw: bytes) -> Any:
-        from qme.experiments.registry import RegistryError, replay_registry
+        protected_registry = _protected_registry_api()
+        RegistryError = protected_registry.RegistryError
+        replay_registry = protected_registry.replay_registry
 
         document = strict_json_bytes(raw, maximum=MAX_EXPORT_BYTES)
         item = _exact_dict(
@@ -1047,9 +1370,10 @@ def _apply_versioned_registry_binding_v2(
 
     context, _, _ = _derive_registry_context(resolver, registry_prefix)
 
-    from qme.experiments.registry import (  # Linux-safe: does not import the store module
-        RegistryError,
-        validate_nee121_sample_access_binding,
+    protected_registry = _protected_registry_api()
+    RegistryError = protected_registry.RegistryError
+    validate_nee121_sample_access_binding = (
+        protected_registry.validate_nee121_sample_access_binding
     )
 
     if type(resolver) is not SampleAccessChainResolver:
@@ -1625,7 +1949,10 @@ def _normalize_versioned_payload(
         raise SampleAccessChainV2Error(
             "embedded V1 SAMPLE_ACCESS_BOUND is forbidden in the V2 source registry"
         )
-    from qme.experiments.registry import EventType, ExperimentEvent, RegistryError
+    protected_registry = _protected_registry_api()
+    EventType = protected_registry.EventType
+    ExperimentEvent = protected_registry.ExperimentEvent
+    RegistryError = protected_registry.RegistryError
 
     try:
         protected_type = EventType(event_type)
@@ -1799,12 +2126,11 @@ def _replay_versioned_registry_material(
     used_resolvers: dict[str, SampleAccessChainResolver] = {}
     event_ids: set[str] = set()
     shadow_registration_hashes: dict[str, str] = {}
-    from qme.experiments.registry import (
-        EventType,
-        ExperimentEvent,
-        RegistryError,
-        replay_registry,
-    )
+    protected_registry = _protected_registry_api()
+    EventType = protected_registry.EventType
+    ExperimentEvent = protected_registry.ExperimentEvent
+    RegistryError = protected_registry.RegistryError
+    replay_registry = protected_registry.replay_registry
 
     for raw in values:
         if type(raw) is not dict:
@@ -2347,7 +2673,10 @@ def generate_known_answer_events(count: int = MIN_KNOWN_ANSWER_EVENTS) -> list[d
 
 
 def _kat_registry_policy_and_registration() -> tuple[Any, dict[str, Any], str, str]:
-    from qme.experiments.registry import CostSelectionRole, PolicyMode, RegistryPolicy
+    protected_registry = _protected_registry_api()
+    CostSelectionRole = protected_registry.CostSelectionRole
+    PolicyMode = protected_registry.PolicyMode
+    RegistryPolicy = protected_registry.RegistryPolicy
 
     def binding(artifact_id: str) -> dict[str, str]:
         return {
@@ -2539,7 +2868,7 @@ def _known_answer_versioned_registry() -> dict[str, Any]:
         if type(cached) is not dict:
             raise SampleAccessChainV2Error("versioned KAT cache root changed")
         return cached
-    from qme.experiments.registry import validation_report_binding
+    validation_report_binding = _protected_registry_api().validation_report_binding
 
     policy, registration, data_hash, universe_hash = _kat_registry_policy_and_registration()
     registry_events: list[dict[str, Any]] = []
@@ -2914,14 +3243,15 @@ def _replay_manifest(root: Path, path: str, grouped_digest: str) -> None:
             raise SampleAccessChainV2Error(f"transitive manifest leaf changed: {member_path}")
 
 
-EXPECTED_CONFIG_SHA256: Final = "a9323152:0601a8a9:223d37c1:88b3aa03:b09af0fb:a3b40fe4:3396f7f7:c5845a2e"
-EXPECTED_SCHEMA_SHA256: Final = "6611a793:25ed2a39:fe9faa74:abf53ec0:840d0cac:1797c9c2:0bae7c66:692a7aba"
+EXPECTED_CONFIG_SHA256: Final = "cbd198f1:46daf12d:1edbdb3d:238a06a2:954e6d13:32df45f9:de9c0fb2:3ca849c7"
+EXPECTED_SCHEMA_SHA256: Final = "e66aae44:520ceee9:05888604:afe6200d:62c1b005:800eb0b6:46d45c6c:a4898a84"
 EXPECTED_REGISTRY_SCHEMA_SHA256: Final = "7f1b7c4f:90fc5214:583d7e2e:4a1d6532:ae9ce9ba:20001d91:e823e729:58cb41ef"
 EXPECTED_FIXTURE_SHA256: Final = "2cd2cb4a:a850e8d2:013fa5be:9b93d562:58acce14:1dc9366d:70c094cc:f86b9669"
 OWN_MANIFEST_PATHS: Final = (
     ".github/workflows/sample-access-chain-linux.yml",
     "configs/governance/sample-access-chain-v2-evidence.json",
     "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md",
+    "qme/foundation/lineage.py",
     "qme/governance/sample_access_chain_v2.py",
     "scripts/generate_sample_access_chain_v2_fixture.py",
     "schemas/governance/compact-experiment-registry-v2.schema.json",
@@ -2961,6 +3291,52 @@ def verify_sample_access_chain_v2(root: Path) -> Mapping[str, Any]:
     semantic_observed = _ungroup(semantic_payload.pop("semantic_sha256", None))
     if _sha(canonical_json_bytes(semantic_payload)) != semantic_observed:
         raise SampleAccessChainV2Error("evidence semantic hash mismatch")
+    implementation = config.get("implementation_contract")
+    if type(implementation) is not dict:
+        raise SampleAccessChainV2Error("implementation contract must be an exact object")
+    loader_binding = _exact_dict(
+        implementation.get("protected_registry_private_loader"),
+        {
+            "source_path",
+            "source_sha256",
+            "private_module_name",
+            "execution_rule",
+            "required_api_names",
+            "cache_rule",
+            "package_import_rule",
+            "canonicalizer_rule",
+        },
+        "protected registry private-loader binding",
+    )
+    if loader_binding != {
+        "source_path": _PRIVATE_REGISTRY_SOURCE_PATH,
+        "source_sha256": _PRIVATE_REGISTRY_SOURCE_SHA256,
+        "private_module_name": _PRIVATE_REGISTRY_MODULE_NAME,
+        "execution_rule": (
+            "STRICT_UTF8_VERIFIED_CAPTURED_BYTES_COMPILE_DONT_INHERIT_OPTIMIZE_"
+            "ZERO_DIRECT_PRIVATE_MODULE_EXEC_NO_SPEC_LOADER_PATH_REOPEN_OR_PYC_"
+            "POST_EXEC_SOURCE_RECHECK_TAMPER_DETECTION_ONLY"
+        ),
+        "required_api_names": [
+            _PRIVATE_REGISTRY_API_SOURCE_NAMES[name]
+            for name in _PRIVATE_REGISTRY_API_NAMES
+        ],
+        "cache_rule": (
+            "IMMUTABLE_CAPTURED_FACADE_EXACT_REQUIRED_API_OBJECT_KIND_MODULE_AND_"
+            "IDENTITY_REVALIDATED_ON_EVERY_ACCESS_UNUSED_EXTRA_MODULE_ATTRIBUTES_"
+            "HAVE_NO_AUTHORITY"
+        ),
+        "package_import_rule": (
+            "QME_EXPERIMENTS_PARENT_STORE_AND_MSVCRT_MUST_REMAIN_UNIMPORTED"
+        ),
+        "canonicalizer_rule": (
+            "HASH_BOUND_LINEAGE_ALGORITHM_JSON_DUMPS_ENSURE_ASCII_FALSE_ALLOW_"
+            "NAN_FALSE_SORT_KEYS_TRUE_COMPACT_SEPARATORS_UTF8_PLUS_LF_FROZEN_"
+            "DUMPS_AND_GUARDED_EXACT_IMPORT_NO_AMBIENT_LINEAGE_MODULE_OR_META_PATH"
+        ),
+    }:
+        raise SampleAccessChainV2Error("protected registry private-loader binding changed")
+    _protected_registry_api()
     authority = config.get("authority")
     if authority != _EXPECTED_AUTHORITY:
         raise SampleAccessChainV2Error("authority projection changed")

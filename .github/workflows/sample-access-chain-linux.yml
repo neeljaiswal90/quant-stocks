@@ -7,6 +7,7 @@ on:
       - "configs/governance/sample-access-chain-v2-evidence.json"
       - "configs/governance/sample-access-chain-v2.hashes.json"
       - "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md"
+      - "qme/foundation/lineage.py"
       - "qme/governance/sample_access_chain_v2.py"
       - "schemas/governance/compact-experiment-registry-v2.schema.json"
       - "schemas/governance/sample-access-chain-v2-compact-registry.schema.json"
@@ -23,6 +24,7 @@ on:
       - "configs/governance/sample-access-chain-v2-evidence.json"
       - "configs/governance/sample-access-chain-v2.hashes.json"
       - "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md"
+      - "qme/foundation/lineage.py"
       - "qme/governance/sample_access_chain_v2.py"
       - "schemas/governance/compact-experiment-registry-v2.schema.json"
       - "schemas/governance/sample-access-chain-v2-compact-registry.schema.json"
@@ -52,6 +54,7 @@ jobs:
         run: |
           python --version
           python -c "import sys; assert sys.version_info[:3] == (3, 12, 10)"
+          python -m pytest -q tests/governance/test_sample_access_chain_v2.py -k private_loader_is_linux_safe
           python -m pytest -q tests/governance/test_sample_access_chain_v2.py
           python - <<'PY'
           from pathlib import Path

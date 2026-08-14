@@ -8,7 +8,8 @@ registry consumer for the existing NEE-121 V1 access-event format. It preserves
 V1 bytes and V1 event-hash semantics. NEE-121 V2 remains the active governance
 authority; the proposal, M0 registration, experiment-family registration,
 Specification Freeze V3, and experiment-registry V1 artifacts are provenance
-inputs bound through their reviewed manifests.
+inputs bound through their reviewed manifests. Every V1 file, including the
+manifest-bound `qme/experiments/__init__.py`, remains byte-exact and unmodified.
 
 The status is `BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE`. This synthetic
 engineering evidence makes no production, prospective, alpha, M0-completion, or blocker-clear claim.
@@ -97,6 +98,35 @@ recomputed V1 shadow hash, never the different V2 event hash. The complete
 shadow is passed to protected `qme.experiments.registry.replay_registry`, whose
 exact source hash is bound as the business-rule version. No shadow event or
 full access chain is serialized back into the V2 input or export.
+
+Linux replay does not use the normal `qme.experiments` package import because
+that protected V1 initializer intentionally imports the Windows-only durable
+store. The NEE-176 runtime instead confines and reads the sibling
+`qme/experiments/registry.py` through one regular, non-link handle, requires its
+exact protected SHA-256, decodes those captured bytes as strict UTF-8, compiles
+them with `dont_inherit=True` and `optimize=0`, and directly executes that code
+in an exact private `ModuleType` named
+`_qme_nee176_protected_experiment_registry_v1`. No import specification,
+`SourceFileLoader`, source-path reopen, or bytecode cache supplies executable
+content. The module is inserted in `sys.modules` before execution as required
+by its dataclasses; a second confined source read after execution is tamper
+detection only. On every cache access, the runtime rechecks source bytes,
+private-module identity, and the exact captured objects, kinds, and module names
+of every required protected API through an immutable facade. Unused additional
+module attributes carry no authority. The protected source imports only
+`canonical_json_bytes` from `qme.foundation.lineage`. That dependency is now an
+explicit NEE-176 manifest leaf at protected SHA-256
+`edb64ebb:1edcdb31:c4e4620c:c90dca99:489e98d3:1f224872:81754cce:05439de6`.
+The private execution boundary intercepts only that exact import and supplies a
+frozen equivalent of the protected algorithm: `json.dumps` with
+`ensure_ascii=False`, `allow_nan=False`, `sort_keys=True`, compact separators,
+UTF-8 encoding, and one trailing LF. It captures the original standard-library
+`json.dumps` and import callable and revalidates them, the private builtins map,
+and the registry module's captured canonicalizer on every access. It never
+consults ambient `qme.foundation.lineage`, its `sys.modules` entry, or a meta
+path finder. Neither `qme.experiments`, its store, nor `msvcrt` is imported. The
+protected V1 manifest therefore continues to replay all of its leaves exactly,
+with no supersession exception.
 
 The returned commitment binds a SHA-derived non-ambient path, raw SHA-256, V2
 event count and causal head, V1 shadow-state hash, V2 business-projection hash,

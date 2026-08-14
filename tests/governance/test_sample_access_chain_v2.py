@@ -1,30 +1,50 @@
 from __future__ import annotations
 
+import builtins
 import copy
 import dataclasses
 import hashlib
+import importlib.machinery
+import importlib.util
 import json
+import subprocess
+import sys
 from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
 import qme.governance.sample_access_chain_v2 as subject
-from qme.experiments.registry import (
-    CostSelectionRole,
-    EventType,
-    ExperimentEvent,
-    PolicyMode,
-    RegistryPolicy,
-    make_next_event,
-    replay_registry,
-    validation_report_binding,
+from qme.foundation.lineage import (
+    canonical_json_bytes as protected_foundation_canonical_json_bytes,
 )
+
+if TYPE_CHECKING:
+    from qme.experiments.registry import (
+        CostSelectionRole,
+        EventType,
+        ExperimentEvent,
+        PolicyMode,
+        RegistryPolicy,
+        make_next_event,
+        replay_registry,
+        validation_report_binding,
+    )
+else:
+    _PROTECTED_REGISTRY = subject._protected_registry_api()
+    CostSelectionRole = _PROTECTED_REGISTRY.CostSelectionRole
+    EventType = _PROTECTED_REGISTRY.EventType
+    ExperimentEvent = _PROTECTED_REGISTRY.ExperimentEvent
+    PolicyMode = _PROTECTED_REGISTRY.PolicyMode
+    RegistryPolicy = _PROTECTED_REGISTRY.RegistryPolicy
+    make_next_event = _PROTECTED_REGISTRY.make_next_event
+    replay_registry = _PROTECTED_REGISTRY.replay_registry
+    validation_report_binding = _PROTECTED_REGISTRY.validation_report_binding
 from qme.governance.sample_access_chain_v2 import (
     MAX_COMPACT_REGISTRY_BYTES,
     MAX_EVENT_BYTES,
@@ -826,8 +846,358 @@ def test_versioned_registry_constructor_requires_exact_aware_datetime(
             construct(invalid)
 
 
+def test_private_loader_is_linux_safe_in_fresh_process() -> None:
+    script = r'''
+import importlib
+import sys
+from datetime import UTC, datetime
+
+class RejectProtectedPackage:
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == "msvcrt" or fullname == "qme.experiments" or fullname.startswith("qme.experiments."):
+            raise RuntimeError(f"forbidden eager import: {fullname}")
+        return None
+
+sys.modules.pop("msvcrt", None)
+sys.meta_path.insert(0, RejectProtectedPackage())
+subject = importlib.import_module("qme.governance.sample_access_chain_v2")
+registry = subject._protected_registry_api()
+module = sys.modules["_qme_nee176_protected_experiment_registry_v1"]
+assert module.__name__ == "_qme_nee176_protected_experiment_registry_v1"
+assert subject._protected_registry_api() is registry
+policy, registration, _, _ = subject._kat_registry_policy_and_registration()
+events = [
+    subject.make_next_versioned_registry_event_v2(
+        [], event_id="PORTABLE-POLICY", occurred_at=datetime(2026, 1, 1, tzinfo=UTC),
+        actor_id="NEE-176-PORTABLE", event_type="POLICY_REGISTERED", trial_id=None,
+        payload={"policy": policy.to_document()},
+    )
+]
+events.append(
+    subject.make_next_versioned_registry_event_v2(
+        events, event_id="PORTABLE-TRIAL", occurred_at=datetime(2026, 1, 1, 1, tzinfo=UTC),
+        actor_id="NEE-176-PORTABLE", event_type="TRIAL_REGISTERED", trial_id="PORTABLE-TRIAL",
+        payload=registration,
+    )
+)
+export = subject.deterministic_versioned_registry_export_v2(events, ())
+material = subject._replay_versioned_registry_material(events, ())
+assert export["event_count"] == 2
+assert export["shadow_v1_head_hash"] == material.protected_replay.head_hash
+assert "qme.experiments" not in sys.modules
+assert not any(name.startswith("qme.experiments.") for name in sys.modules)
+assert "msvcrt" not in sys.modules
+'''
+    subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_private_registry_loader_rejects_source_or_cache_identity_repin(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = subject._load_protected_registry_module()
+    monkeypatch.setattr(
+        subject,
+        "_PRIVATE_REGISTRY_SOURCE_SHA256",
+        "00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+    )
+    with pytest.raises(SampleAccessChainV2Error, match="source hash changed"):
+        subject._load_protected_registry_module()
+    monkeypatch.undo()
+    monkeypatch.setitem(
+        sys.modules,
+        subject._PRIVATE_REGISTRY_MODULE_NAME,
+        type(sys)(subject._PRIVATE_REGISTRY_MODULE_NAME),
+    )
+    with pytest.raises(SampleAccessChainV2Error, match="cache identity changed"):
+        subject._load_protected_registry_module()
+    assert module.__name__ == subject._PRIVATE_REGISTRY_MODULE_NAME
+
+
+def _reset_private_registry_loader(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(subject, "_PRIVATE_REGISTRY_CACHE", None)
+    monkeypatch.setattr(subject, "_PRIVATE_REGISTRY_EXEC_BUILTINS", None)
+    monkeypatch.setattr(subject, "_PRIVATE_REGISTRY_API_SNAPSHOT", None)
+    monkeypatch.setattr(subject, "_PRIVATE_REGISTRY_FACADE", None)
+    monkeypatch.delitem(sys.modules, subject._PRIVATE_REGISTRY_MODULE_NAME, raising=False)
+
+
+def test_private_registry_executes_verified_bytes_not_loader_or_pyc(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake_module_path = tmp_path / "qme/governance/sample_access_chain_v2.py"
+    fake_source_path = tmp_path / "qme/experiments/registry.py"
+    fake_lineage_path = tmp_path / "qme/foundation/lineage.py"
+    fake_module_path.parent.mkdir(parents=True)
+    fake_source_path.parent.mkdir(parents=True)
+    fake_lineage_path.parent.mkdir(parents=True)
+    fake_module_path.write_text("# loader anchor\n", encoding="utf-8")
+    fake_source_path.write_bytes((ROOT / "qme/experiments/registry.py").read_bytes())
+    fake_lineage_path.write_bytes((ROOT / "qme/foundation/lineage.py").read_bytes())
+    pycache = fake_source_path.parent / "__pycache__"
+    pycache.mkdir()
+    (pycache / f"registry.{sys.implementation.cache_tag}.pyc").write_bytes(
+        b"MALICIOUS-PYC-MUST-NOT-BE-READ"
+    )
+    calls = {"spec": 0, "loader": 0}
+
+    def evil_spec(*args: object, **kwargs: object) -> None:
+        del args, kwargs
+        calls["spec"] += 1
+        raise AssertionError("spec_from_file_location must not execute")
+
+    def evil_loader(*args: object, **kwargs: object) -> None:
+        del args, kwargs
+        calls["loader"] += 1
+        raise AssertionError("SourceFileLoader must not execute")
+
+    _reset_private_registry_loader(monkeypatch)
+    monkeypatch.setattr(subject, "__file__", str(fake_module_path))
+    monkeypatch.setattr(importlib.util, "spec_from_file_location", evil_spec)
+    monkeypatch.setattr(importlib.machinery.SourceFileLoader, "exec_module", evil_loader)
+    api = subject._protected_registry_api()
+    module = sys.modules[subject._PRIVATE_REGISTRY_MODULE_NAME]
+    assert api.REGISTRY_ID == "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1"
+    assert module.__file__ == str(fake_source_path)
+    assert module.__loader__ is None and module.__spec__ is None
+    assert calls == {"spec": 0, "loader": 0}
+
+
+def test_private_registry_compile_and_global_primitive_attacks_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def evil_primitive(*args: object, **kwargs: object) -> None:
+        del args, kwargs
+        raise AssertionError("unverified execution primitive ran")
+
+    with monkeypatch.context() as context:
+        _reset_private_registry_loader(context)
+        context.setattr(builtins, "compile", evil_primitive)
+        with pytest.raises(SampleAccessChainV2Error, match="execution primitives changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        _reset_private_registry_loader(context)
+        context.setattr(builtins, "exec", evil_primitive)
+        with pytest.raises(SampleAccessChainV2Error, match="execution primitives changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        _reset_private_registry_loader(context)
+        context.setitem(
+            subject._load_protected_registry_module.__globals__,
+            "_COMPILE_VERIFIED_SOURCE",
+            evil_primitive,
+        )
+        with pytest.raises(SampleAccessChainV2Error, match="execution primitives changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        _reset_private_registry_loader(context)
+        context.setitem(
+            subject._load_protected_registry_module.__globals__,
+            "_EXEC_VERIFIED_CODE",
+            evil_primitive,
+        )
+        with pytest.raises(SampleAccessChainV2Error, match="execution primitives changed"):
+            subject._protected_registry_api()
+    assert subject._load_protected_registry_module.__defaults__ is None
+
+
+def test_private_registry_path_swap_is_detected_without_executing_swapped_bytes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_confined_file = subject._confined_file
+    calls = 0
+    malicious = b"import builtins\nbuiltins.NEE176_SWAPPED_SOURCE_EXECUTED = True\n"
+
+    def swapping_confined_file(root: Path, relative: str, maximum: int) -> bytes:
+        nonlocal calls
+        raw = original_confined_file(root, relative, maximum)
+        if relative == subject._PRIVATE_REGISTRY_SOURCE_PATH:
+            calls += 1
+            if calls > 1:
+                return malicious
+        return raw
+
+    _reset_private_registry_loader(monkeypatch)
+    monkeypatch.setattr(subject, "_confined_file", swapping_confined_file)
+    with pytest.raises(SampleAccessChainV2Error, match="private import identity changed"):
+        subject._protected_registry_api()
+    assert calls == 2
+    assert not hasattr(builtins, "NEE176_SWAPPED_SOURCE_EXECUTED")
+
+
+def test_private_registry_api_mutation_deletion_and_wrong_type_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    api = subject._protected_registry_api()
+    module = sys.modules[subject._PRIVATE_REGISTRY_MODULE_NAME]
+    with monkeypatch.context() as context:
+        context.setattr(module, "replay_registry", lambda events: events)
+        with pytest.raises(SampleAccessChainV2Error, match="cached API identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.delattr(module, "EventType")
+        with pytest.raises(SampleAccessChainV2Error, match="cached API identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setattr(module, "RegistryPolicy", "wrong-type")
+        with pytest.raises(SampleAccessChainV2Error, match="cached API identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setattr(
+            subject,
+            "_PRIVATE_REGISTRY_FACADE",
+            api._replace(replay_registry=lambda events: events),
+        )
+        with pytest.raises(SampleAccessChainV2Error, match="facade identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setattr(module, "UNUSED_NEE176_EXTRA", object(), raising=False)
+        assert subject._protected_registry_api() is api
+    with monkeypatch.context() as context:
+        replacement = type(sys)(subject._PRIVATE_REGISTRY_MODULE_NAME)
+        replacement.__file__ = module.__file__
+        replacement.__package__ = ""
+        replacement.__loader__ = None
+        replacement.__spec__ = None
+        cast(Any, replacement).__cached__ = None
+        for public_name in subject._PRIVATE_REGISTRY_API_NAMES:
+            source_name = subject._PRIVATE_REGISTRY_API_SOURCE_NAMES[public_name]
+            setattr(replacement, source_name, getattr(module, source_name))
+        context.setattr(subject, "_PRIVATE_REGISTRY_CACHE", replacement)
+        context.setitem(sys.modules, subject._PRIVATE_REGISTRY_MODULE_NAME, replacement)
+        with pytest.raises(SampleAccessChainV2Error, match="API cache identity changed"):
+            subject._protected_registry_api()
+
+
+def test_private_registry_canonicalizer_matches_hash_bound_foundation_corpus() -> None:
+    corpus: tuple[Mapping[str, Any], ...] = (
+        {},
+        {"z": 0, "a": 1},
+        {"unicode": "café 東京 😀", "escaped": "line\n\t\u0000"},
+        {
+            "nested": {"b": [None, True, False, -7, 1.25], "a": {"x": "é"}},
+            "integer": 10**80,
+        },
+    )
+    api = subject._protected_registry_api()
+    assert (
+        api.canonical_json_bytes
+        is subject._VERIFIED_REGISTRY_CANONICAL_JSON_BYTES
+    )
+    for document in corpus:
+        expected = protected_foundation_canonical_json_bytes(document)
+        observed = subject._VERIFIED_REGISTRY_CANONICAL_JSON_BYTES(document)
+        assert observed == expected
+        assert observed.endswith(b"\n")
+    invalid: tuple[Mapping[str, Any], ...] = (
+        {"nan": float("nan")},
+        {"infinity": float("inf")},
+        {"bytes": b"not-json"},
+        cast(Mapping[str, Any], MappingProxyType({"proxy": {"ordered": [3, 2, 1]}})),
+        cast(Mapping[str, Any], {1: "integer", "1": "string"}),
+    )
+    for document in invalid:
+        with pytest.raises((TypeError, ValueError)) as protected_error:
+            protected_foundation_canonical_json_bytes(document)
+        with pytest.raises(type(protected_error.value)):
+            subject._VERIFIED_REGISTRY_CANONICAL_JSON_BYTES(document)
+
+
+def test_private_registry_canonicalizer_ignores_ambient_lineage_and_meta_path(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class RejectAmbientLineage:
+        def find_spec(
+            self, fullname: str, path: object = None, target: object = None
+        ) -> None:
+            del path, target
+            if fullname == "qme.foundation.lineage":
+                raise AssertionError("ambient lineage finder must not execute")
+            return None
+
+    fake_lineage = type(sys)("qme.foundation.lineage")
+    fake_lineage.canonical_json_bytes = lambda document: b"POISON"  # type: ignore[attr-defined]
+    _reset_private_registry_loader(monkeypatch)
+    monkeypatch.setitem(sys.modules, "qme.foundation.lineage", fake_lineage)
+    monkeypatch.setattr(sys, "meta_path", [RejectAmbientLineage(), *sys.meta_path])
+    api = subject._protected_registry_api()
+    assert api.canonical_json_bytes({"b": 2, "a": 1}) == b'{"a":1,"b":2}\n'
+    assert api.canonical_json_bytes is subject._VERIFIED_REGISTRY_CANONICAL_JSON_BYTES
+
+
+def test_private_registry_canonicalizer_poisoning_fails_closed_or_is_ignored(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def poison(*args: object, **kwargs: object) -> str:
+        del args, kwargs
+        return "POISON"
+
+    with monkeypatch.context() as context:
+        _reset_private_registry_loader(context)
+        context.setattr(builtins, "__import__", poison)
+        with pytest.raises(SampleAccessChainV2Error, match="execution primitives changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        fake_json = type(sys)("json")
+        fake_json.dumps = poison  # type: ignore[attr-defined]
+        context.setitem(sys.modules, "json", fake_json)
+        assert subject._VERIFIED_REGISTRY_CANONICAL_JSON_BYTES({"a": 1}) == b'{"a":1}\n'
+    with monkeypatch.context() as context:
+        context.setattr(subject._TRUSTED_JSON_MODULE, "dumps", poison)
+        with pytest.raises(SampleAccessChainV2Error, match="canonicalizer primitive changed"):
+            subject._VERIFIED_REGISTRY_CANONICAL_JSON_BYTES({"a": 1})
+        with pytest.raises(SampleAccessChainV2Error, match="canonicalizer identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setattr(subject, "_TRUSTED_JSON_DUMPS", poison)
+        with pytest.raises(SampleAccessChainV2Error, match="canonicalizer identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setattr(
+            subject,
+            "_VERIFIED_REGISTRY_CANONICAL_JSON_BYTES",
+            poison,
+        )
+        with pytest.raises(SampleAccessChainV2Error, match="canonicalizer identity changed"):
+            subject._protected_registry_api()
+    api = subject._protected_registry_api()
+    module = api.module
+    with monkeypatch.context() as context:
+        context.setattr(module, "canonical_json_bytes", poison)
+        with pytest.raises(SampleAccessChainV2Error, match="cached API identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setattr(subject, "_guarded_registry_import", poison)
+        with pytest.raises(SampleAccessChainV2Error, match="builtins cache identity changed"):
+            subject._protected_registry_api()
+    with monkeypatch.context() as context:
+        context.setitem(module.__dict__, "__builtins__", MappingProxyType({}))
+        with pytest.raises(SampleAccessChainV2Error, match="builtins cache identity changed"):
+            subject._protected_registry_api()
+
+
+def test_private_registry_lineage_source_binding_rejects_repin(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        subject,
+        "_PRIVATE_LINEAGE_SOURCE_SHA256",
+        "00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+    )
+    with pytest.raises(SampleAccessChainV2Error, match="lineage source hash changed"):
+        subject._protected_registry_api()
+
+
 def test_generated_events_pass_protected_v1_validator(events: list[dict[str, Any]]) -> None:
-    from qme.experiments.registry import validate_nee121_sample_access_binding
+    protected_registry = subject._protected_registry_api()
+    validate_nee121_sample_access_binding = (
+        protected_registry.validate_nee121_sample_access_binding
+    )
 
     normalized = validate_nee121_sample_access_binding(
         {"access_contract_binding": {"artifact_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1", "source_id": "TEST", "sha256": "a" * 64}, "access_event_chain": events, "sample_access_log_head_hash": events[-1]["event_hash"], "trial_registration_event_hash": "b" * 64},
@@ -897,7 +1267,7 @@ def test_adapter_retains_same_trial_prior_run_successes_and_exposures() -> None:
 def test_latest_success_uses_protected_utc_instant_and_first_equal_tie(
     timestamps: list[str], expected_success_index: int
 ) -> None:
-    from qme.experiments.registry import _parse_timestamp
+    _parse_timestamp = subject._protected_registry_api().parse_timestamp
 
     events, _, resolver, registry, prefix = _build_one_trial_registry_candidate(
         run_windows=[
@@ -943,7 +1313,9 @@ def test_latest_success_uses_protected_utc_instant_and_first_equal_tie(
 def test_candidate_event_validator_matches_protected_adversarial_corpus(
     events: list[dict[str, Any]], field: str, value: object, accepted: bool
 ) -> None:
-    from qme.experiments.registry import RegistryError, _validate_nee121_event
+    protected_registry = subject._protected_registry_api()
+    RegistryError = protected_registry.RegistryError
+    _validate_nee121_event = protected_registry.validate_nee121_event
 
     event = copy.deepcopy(events[0])
     event[field] = value
@@ -1361,6 +1733,7 @@ def test_frozen_repository_verifier_and_manifest() -> None:
         ".github/workflows/sample-access-chain-linux.yml",
         "configs/governance/sample-access-chain-v2-evidence.json",
         "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md",
+        "qme/foundation/lineage.py",
         "qme/governance/sample_access_chain_v2.py",
         "scripts/generate_sample_access_chain_v2_fixture.py",
         "schemas/governance/compact-experiment-registry-v2.schema.json",
