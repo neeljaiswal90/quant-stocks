@@ -1,0 +1,21 @@
+{
+  "schema_version": "qme.ppw_bootstrap_uncertainty_authority_manifest.v1",
+  "artifact_id": "QME-PPW-BOOTSTRAP-UNCERTAINTY-AUTHORITY-V1",
+  "status": "REVIEWED_SOURCE_EQUATIONS_OWNER_SELECTIONS_UNRESOLVED",
+  "artifacts": [
+    {"path":"configs/governance/ppw-bootstrap-uncertainty-authority-v1.json","sha256":"71b22f95:fdf223ba:4ebb0e9e:ee047fd2:61bcb866:0692d8f3:b179ca48:cb8f09d1"},
+    {"path":"schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json","sha256":"144d3622:0cd93394:283282f4:b04f41ca:605ad83e:35927e6b:9f6b65eb:90db5c66"},
+    {"path":"qme/governance/ppw_bootstrap_uncertainty_authority.py","sha256":"59113bfd:2fa2a4bf:7fe7e92d:1a2fb5ff:af9dc571:0a77dcb5:793c6785:10c025ef"},
+    {"path":"tests/fixtures/governance/ppw-bootstrap-source-equations-v1.json","sha256":"2ef0e4c9:a760cb2c:c1627c99:b3887068:a3c15aa3:555f2b0a:c4a3c477:87853820"},
+    {"path":"tests/governance/test_ppw_bootstrap_uncertainty_authority.py","sha256":"e5632c9c:18485bbd:3ac9c5f0:026795b0:e80a8d3f:9b03b57b:f6525e22:34e3a00b"},
+    {"path":"docs/governance/PPW_BOOTSTRAP_UNCERTAINTY_AUTHORITY_V1.md","sha256":"ba6f7b00:52604399:8119db74:37ac175f:49c23237:c7f8294c:d0c8fbde:aaf1d36a"}
+  ],
+  "limitations": [
+    "NO_EXECUTABLE_PPW_SELECTOR",
+    "NO_BOOTSTRAP_INTERVAL_OR_N_EFF_USED",
+    "NO_DSR_OR_HOLM_MULTIPLICITY_OUTPUT",
+    "NO_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "NO_FREEZE_V4_BLOCKER_REMOVAL",
+    "NO_ALPHA_PRODUCTION_READINESS_M0_OR_LIVE_ORDER_CLAIM"
+  ]
+}

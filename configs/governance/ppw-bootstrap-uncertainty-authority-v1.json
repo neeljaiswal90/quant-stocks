@@ -1,0 +1,276 @@
+{
+  "$schema": "../../schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json",
+  "schema_version": "qme.ppw_bootstrap_uncertainty_authority.v1",
+  "artifact_id": "QME-PPW-BOOTSTRAP-UNCERTAINTY-AUTHORITY-V1",
+  "ticket_id": "NEE-204",
+  "status": "SOURCE_EQUATIONS_REGISTERED_OWNER_SELECTIONS_UNRESOLVED_NO_EXECUTION",
+  "semantic_sha256": "cc6dd002:b5c44722:75e953a3:b364a0b0:638a2b96:342cd6d9:8dc18162:63ca798c",
+  "authority": {
+    "protected_main": {
+      "commit": "02797c7d:f663c8d9:5cabc172:4fd65072:39c6b18a",
+      "tree": "b38efeb7:6ba2fb3e:adb6cd20:28bfa65a:374a6a1d"
+    },
+    "proposal": {
+      "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+      "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+      "commit": "6a0042a3:3b4bcf1d:5f5bc3ab:0bf45777:ab50deaa",
+      "sections": ["4.2", "4.3"]
+    },
+    "experiment_family": {
+      "path": "configs/governance/experiment-family-registration-v1.json",
+      "sha256": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40",
+      "family_id": "QME-065-PRECOMMITTED-MOMENTUM-GRID-V1"
+    },
+    "owner_supplement_a0": {
+      "path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.json",
+      "sha256": "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5",
+      "semantic_sha256": "7756a720:fced47a4:4e4c5dfe:5f273c10:0d1bfc93:ac08b42b:590c03a0:f13e5c4a",
+      "manifest_path": "configs/governance/owner-mandate-supplement-2026-08-13-v1.hashes.json",
+      "manifest_sha256": "e5a7214d:1f686f7a:3966b487:30883a49:b7667e75:dc20a592:aa5d1f8d:c4861193"
+    },
+    "economic_promotion_v2": {
+      "path": "configs/quant/economic-promotion-decision-v2.json",
+      "sha256": "02d055b0:26d9352e:aa0979cd:c158d9df:26ed6aad:06259567:291970c9:0a9359a8",
+      "semantic_sha256": "3b35015f:fa528926:3a9b125d:913fd99f:25027c1f:c7ebea82:7c962654:e1406ff4",
+      "manifest_path": "configs/quant/economic-promotion-decision-v2.hashes.json",
+      "manifest_sha256": "793caa4e:5a5b29ce:e746c050:96f25c98:f93aaf26:a2cce442:4de1c6a0:98f0ed87"
+    },
+    "effective_trials_point_kernel_v1": {
+      "path": "configs/governance/effective-trials-point-kernel-v1.json",
+      "sha256": "f007e903:5e9e9a7e:89357b68:90317cd7:64ea8ee4:dca423c5:10a57ece:5eb670e8",
+      "semantic_sha256": "c3da0552:b68d473c:13bb7c60:135a5eba:50e71c07:68a2ce4f:5a7a23f1:51c8ef9d",
+      "manifest_path": "configs/governance/effective-trials-point-evidence-v1.hashes.json",
+      "manifest_sha256": "121db413:12c69c5a:30ac31ce:cb116c75:83e68636:afed78f7:91c34269:f995edd5"
+    },
+    "deterministic_stats_kernel": {
+      "manifest_path": "tests/fixtures/stats/deterministic-kernel-v1.manifest.json",
+      "manifest_sha256": "a7ecc4f5:91139853:d9142fc6:a7d03208:be73ff19:ea066f74:99ee7166:7b5cbf26",
+      "implementation_status": "BOUNDED_KERNEL_BLOCK_SELECTOR_UNAVAILABLE"
+    },
+    "freeze_v4": {
+      "path": "configs/governance/specification-freeze-policy-v4.json",
+      "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458",
+      "semantic_sha256": "90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771",
+      "manifest_path": "configs/governance/specification-freeze-v4.hashes.json",
+      "manifest_sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42",
+      "active_blocker_count": 13
+    },
+    "empirical_results_used": false
+  },
+  "primary_sources": {
+    "original_method_paper": {
+      "citation": "Politis and White (2004), Automatic Block-Length Selection for the Dependent Bootstrap, Econometric Reviews 23(1), 53-70",
+      "doi": "10.1081/ETC-120028836",
+      "doi_url": "https://doi.org/10.1081/ETC-120028836",
+      "author_pdf_url": "https://www.math.ucsd.edu/~politis/SBblock-revER.pdf",
+      "author_pdf_sha256": "4147841b:f492f8fc:d5cebc92:281681ef:68e06814:52e68b46:a0330a98:0b3fc7cb",
+      "author_pdf_size_bytes": 215078,
+      "role": "PRIMARY_METHOD_SOURCE_NOT_OWNER_SELECTION"
+    },
+    "published_correction": {
+      "citation": "Patton, Politis, and White (2009), Correction to Automatic Block-Length Selection for the Dependent Bootstrap, Econometric Reviews 28(4), 372-375",
+      "doi": "10.1080/07474930802459016",
+      "doi_url": "https://doi.org/10.1080/07474930802459016",
+      "author_pdf_url": "https://public.econ.duke.edu/~ap172/SBblockCORRECTION_jan08.pdf",
+      "author_pdf_sha256": "d9e84ad9:762debea:9634192a:97fd37a9:5e49df1f:e2975e6f:c32cd983:af6d1d22",
+      "author_pdf_size_bytes": 68653,
+      "role": "PRIMARY_CORRECTION_SOURCE_NOT_OWNER_SELECTION"
+    },
+    "corrected_author_code": {
+      "url": "https://public.econ.duke.edu/~ap172/opt_block_length_REV_dec07.txt",
+      "sha256": "55dea54a:42f8095c:7da4cd61:8fba651c:08677b7b:4fc5dfab:e9b08b77:30157ed0",
+      "size_bytes": 4796,
+      "revision_label": "DECEMBER_2007_CORRECTED",
+      "role": "OFFICIAL_AUTHOR_CODE_IMPLEMENTATION_EVIDENCE_NOT_GOVERNANCE_AUTHORITY"
+    },
+    "corrected_author_code_dependency": {
+      "url": "https://public.econ.duke.edu/~ap172/mlag.m.txt",
+      "sha256": "503d61f4:68f318b0:5fa3c1cc:fea8acf6:ebf97762:fb83913b:63a08bd2:7df2185e",
+      "size_bytes": 1333,
+      "role": "OFFICIAL_AUTHOR_CODE_TRANSITIVE_DEPENDENCY"
+    },
+    "author_code_index": {
+      "url": "https://public.econ.duke.edu/~ap172/code.html",
+      "sha256": "825f6621:796d372e:07a96091:416f9bb5:d6565dd2:fe01901c:25d97705:84faf30d",
+      "size_bytes": 75460,
+      "role": "AUTHOR_PUBLICATION_AND_REVISION_PROVENANCE"
+    },
+    "network_retrieval_rule": "HASH_AND_SIZE_IDENTIFY_REVIEWED_BYTES_RUNTIME_VERIFIER_IS_NETWORK_FREE"
+  },
+  "corrected_common_equations": {
+    "scope": "COMMON_CORRECTED_STATIONARY_BOOTSTRAP_OBJECTIVE_EQUATIONS_ONLY",
+    "flat_top_kernel": "lambda(u) = 1 for abs(u) <= 1/2; 2 * (1 - abs(u)) for 1/2 < abs(u) <= 1; 0 otherwise",
+    "weighted_lag_moment": "G_hat = sum_{k=-M..M}(lambda(k / M) * abs(k) * gamma_hat(k))",
+    "spectral_density_at_zero_estimate": "g_hat_0 = sum_{k=-M..M}(lambda(k / M) * gamma_hat(k))",
+    "corrected_stationary_bootstrap_denominator": "D_hat_SB = 2 * (g_hat_0 ^ 2)",
+    "raw_stationary_expected_block_length": "b_hat_SB_raw = ((2 * (G_hat ^ 2) / D_hat_SB) ^ (1 / 3)) * (n ^ (1 / 3))",
+    "equivalent_raw_formula": "b_hat_SB_raw = ((2 * (G_hat ^ 2) * n / D_hat_SB) ^ (1 / 3))",
+    "correction_supersession": "THE_PUBLISHED_CORRECTION_REPLACES_THE_ORIGINAL_STATIONARY_BOOTSTRAP_D_SB_EXPRESSION",
+    "division_or_nonfinite_rule": "NO_NUMERIC_OUTPUT_IS_AUTHORIZED_WHEN_D_hat_SB_IS_ZERO_NONFINITE_OR_UNDEFINED",
+    "implementation_status": "SYMBOLIC_SOURCE_EQUATIONS_ONLY_NOT_EXECUTABLE"
+  },
+  "official_author_code_observations": {
+    "input_shape": "n_by_k_matrix_processed_one_column_at_a_time",
+    "kn_formula": "K_N = max(5, sqrt(log10(n)))",
+    "mmax_formula": "m_max = ceil(sqrt(n)) + K_N",
+    "author_code_bmax_formula": "B_max = ceil(min(3 * sqrt(n), n / 3))",
+    "significance_formula": "2 * sqrt(log10(n) / n)",
+    "lag_window_rule": "M = min(2 * m_hat, m_max)",
+    "covariance_implementation": "MATLAB_cov_on_common_truncated_window",
+    "stationary_output_rounding_note": "AUTHOR_CODE_COMMENT_SAYS_STATIONARY_EXPECTED_BLOCK_LENGTH_NEED_NOT_BE_INTEGER",
+    "circular_output_rounding_note": "AUTHOR_CODE_COMMENT_SAYS_CIRCULAR_BLOCK_LENGTH_SHOULD_BE_ROUNDED_UP",
+    "status": "OBSERVED_VARIANT_NOT_SELECTED_FOR_QME"
+  },
+  "protected_registered_overlays": {
+    "nee120": {
+      "method_id": "QME-NEE120-CORRECTED-POLITIS-WHITE-BLOCK-SELECTOR-V1",
+      "rounding": "CEILING",
+      "minimum_block_length": 3,
+      "maximum_block_length_formula": "floor(n / 4)",
+      "minimum_series_length": 12,
+      "failure_action": "NO_GO_NO_FALLBACK",
+      "bootstrap_method_id": "QME-NEE120-UNCENTERED-PERCENTILE-STATIONARY-BOOTSTRAP-V1",
+      "replicates": 10000,
+      "seed": 20260812,
+      "order_statistic_indexing": "ONE_BASED_ASCENDING_NO_INTERPOLATION",
+      "one_sided_95_lcb_order_statistic": 500,
+      "reported_two_sided_90_interval_order_statistics": [500, 9500],
+      "invalid_replicate_action": "NO_GO_FAIL_CLOSED",
+      "scope": "PAIRED_MONTHLY_LOG_RETURN_DELTA_INFERENCE_NOT_N_EFF"
+    },
+    "nee122": {
+      "method_id": "qme-ledoit-wolf-participation-ratio-v1",
+      "matrix_shape_columns": 96,
+      "minimum_common_months": 60,
+      "bootstrap_method": "STATIONARY_BLOCK_BOOTSTRAP_OVER_COMMON_MONTHS_REFIT_FULL_ESTIMATOR",
+      "replicates": 2000,
+      "seed": 20260812,
+      "bootstrap_quantile_percent": "97.5",
+      "n_eff_used_rule": "MIN_96_CEILING_P97_5",
+      "point_failure_fallback_m": 96,
+      "scope": "N_EFF_UNCERTAINTY_FOR_DSR_EXPECTED_MAXIMUM_NOT_HOLM_M"
+    },
+    "method_separation": "NEE120_B10000_INTERVAL_SEMANTICS_MUST_NOT_BE_SUBSTITUTED_FOR_NEE122_B2000_N_EFF_UNCERTAINTY",
+    "holm_m_separation": "HOLM_FAMILY_SIZE_M_IS_NOT_DSR_N_EFF_AND_IS_NOT_ESTIMATED_BY_THIS_METHOD"
+  },
+  "unresolved_owner_selections": [
+    {
+      "selection_id": "PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "How one common block length is derived from 96 column-specific corrected selector outputs.",
+      "forbidden_inference": "NO_MAXIMUM_MEDIAN_MEAN_QUANTILE_OR_FIRST_COLUMN_AGGREGATION_MAY_BE_ASSUMED",
+      "clear_condition": "VERSIONED_OWNER_REGISTRATION_WITH_EXACT_AGGREGATION_EQUATION_AND_FIXTURES"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-002-FINITE-SAMPLE-AUTOCOVARIANCE",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Exact centering denominator lag window covariance denominator log base integer coercions and finite-sample conventions.",
+      "forbidden_inference": "NO_SILENT_PARITY_WITH_MATLAB_cov_OR_PAPER_NOTATION",
+      "clear_condition": "VERSIONED_NUMERIC_CONVENTION_REGISTER_WITH_PRIMARY_SOURCE_CROSSWALK"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-003-LAG_SELECTION-AND-FALLBACK",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Exact K_N coercion m_max boundary first all-insignificant run behavior and no-significant-lag behavior.",
+      "forbidden_inference": "NO_EMPTY_FIND_ZERO_LAG_OR_AUTHOR_CODE_B_MAX_FALLBACK_MAY_BE_ASSUMED",
+      "clear_condition": "VERSIONED_FAIL_CLOSED_LAG_SELECTION_RULE_WITH_BOUNDARY_FIXTURES"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-004-DEGENERATE-INPUTS",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Exact action for constant nearly constant nonfinite too-short zero-D_hat_SB and nonpositive raw block length inputs.",
+      "forbidden_inference": "NO_NUMERIC_ONE_BLOCK_OR_POINT_FALLBACK_MAY_BE_EMITTED",
+      "clear_condition": "VERSIONED_TYPED_FAILURE_TAXONOMY_AND_ADVERSARIAL_FIXTURES"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-005-SHARED-ROW-INDEX-AND-REFIT",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Whether every replicate uses one shared stationary-bootstrap month-index vector across all 96 columns and refits the entire estimator.",
+      "forbidden_inference": "NO_INDEPENDENT_PER_COLUMN_INDEX_STREAM_OR_FIXED_CORRELATION_BOOTSTRAP",
+      "clear_condition": "VERSIONED_SHARED_INDEX_AND_FULL_REFIT_REGISTRATION_WITH_MATRIX_KAT"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-006-RNG-AND-BLOCK-DRAW-CONSTRUCTION",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Whether PPW is selected once on the original aligned matrix or reselected inside every bootstrap replicate plus exact selector-to-kernel integer block rule RNG stream restart threshold draw order and replicate boundaries.",
+      "forbidden_inference": "NO_ONCE_ONLY_OR_PER_REPLICATE_PPW_RESELECTION_OR_KERNEL_HANDOFF_IS_IMPLIED",
+      "clear_condition": "VERSIONED_RESELECTION_AND_HANDOFF_RULE_WITH_CROSS_PLATFORM_REPLICATE_HASH_FIXTURE"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-007-P97_5-QUANTILE",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Exact order-statistic index or interpolation rule for P97.5 of 2000 N_eff bootstrap values including ties.",
+      "forbidden_inference": "NO_NEAREST_RANK_LINEAR_INTERPOLATION_OR_NEE120_ORDER_STATISTIC_SUBSTITUTION",
+      "clear_condition": "VERSIONED_QUANTILE_DEFINITION_WITH_TIE_AND_BOUNDARY_KATS"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-008-INVALID-REPLICATE-AND-FALLBACK",
+      "status": "OWNER_SELECTION_REQUIRED",
+      "question": "Whether any invalid N_eff replicate invalidates the distribution and how that relates to the registered point-failure fallback m equals 96.",
+      "forbidden_inference": "NO_REPLICATE_DELETION_RETRY_MINIMUM_VALID_COUNT_OR_AUTOMATIC_M96_SUBSTITUTION",
+      "clear_condition": "VERSIONED_INVALID_REPLICATE_POLICY_DISTINCT_FROM_POINT_FAILURE_POLICY"
+    },
+    {
+      "selection_id": "PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT",
+      "status": "EVIDENCE_BLOCKED_BY_OWNER_SELECTIONS",
+      "question": "Expected bootstrap distribution hash interval and N_eff_used for the registered seeded 60 by 96 raw-return fixture.",
+      "forbidden_inference": "NO_EXPECTED_INTERVAL_OR_N_EFF_USED_VALUE_MAY_BE_FROZEN_BEFORE_001_THROUGH_008_CLEAR",
+      "clear_condition": "INDEPENDENTLY_RECOMPUTED_WINDOWS_AND_LINUX_KAT_AFTER_VERSIONED_METHOD_REGISTRATION"
+    }
+  ],
+  "source_equation_fixture_contract": {
+    "path": "tests/fixtures/governance/ppw-bootstrap-source-equations-v1.json",
+    "cases": [
+      "CORRECTED_D_SB_SYMBOLIC",
+      "FLAT_TOP_KERNEL_BOUNDARIES",
+      "AUTHOR_CODE_COLUMNWISE_OUTPUT_CONFLICT",
+      "CONSTANT_SERIES_TYPED_UNRESOLVED",
+      "IID_SERIES_TYPED_UNRESOLVED",
+      "NEGATIVE_CORRELATION_TYPED_UNRESOLVED",
+      "SHORT_SERIES_TYPED_UNRESOLVED",
+      "NINETY_SIX_COLUMN_AGGREGATION_TYPED_UNRESOLVED",
+      "INVALID_REPLICATE_TYPED_UNRESOLVED",
+      "P97_5_QUANTILE_TYPED_UNRESOLVED",
+      "PPW_RESELECTION_TIMING_TYPED_UNRESOLVED"
+    ],
+    "numeric_selector_outputs_available": false,
+    "bootstrap_distribution_available": false
+  },
+  "active_freeze_v4_blockers": [
+    {"blocker_code":"NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL","ticket_id":"NEE-110","category":"GOVERNANCE","description":"Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."},
+    {"blocker_code":"NEE-116-ASYMMETRIC-COST-METHOD","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."},
+    {"blocker_code":"NEE-116-CAPACITY-SOLVER","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"The authoritative greatest-capital discrete cost-aware solver remains unavailable."},
+    {"blocker_code":"NEE-116-CORPORATE-ACTION-EDGE-CASES","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."},
+    {"blocker_code":"NEE-116-PRODUCTION-PIT-DATA","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Accepted point-in-time production data and receipts are unavailable."},
+    {"blocker_code":"NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."},
+    {"blocker_code":"NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-119-AV-PROXY-EVIDENCE","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-120","category":"ENGINEERING_EVIDENCE","description":"Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."},
+    {"blocker_code":"NEE-121-CALENDAR-SESSION-REGISTRATION","ticket_id":"NEE-121","category":"PRODUCTION_EVIDENCE","description":"XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."},
+    {"blocker_code":"NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP","ticket_id":"NEE-121","category":"FINAL_DERIVED_EVIDENCE","description":"The final freeze anchor and receipt remain unavailable until every other blocker is accepted."},
+    {"blocker_code":"NEE-122-CORRELATED-TRIAL-FIXTURE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."},
+    {"blocker_code":"NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"The registered estimator and bootstrap uncertainty procedure are not implemented."}
+  ],
+  "claims": {
+    "ppw_selector_executable": false,
+    "bootstrap_interval_available": false,
+    "n_eff_used_available": false,
+    "dsr_available": false,
+    "holm_available": false,
+    "empirical_output_available": false,
+    "production_inference_available": false,
+    "freeze_blocker_changed": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "alpha_proven": false,
+    "live_order_authority": false
+  },
+  "nonclaims": [
+    "NO_EXECUTABLE_PPW_SELECTOR",
+    "NO_BOOTSTRAP_INTERVAL_OR_N_EFF_USED",
+    "NO_DSR_OR_HOLM_MULTIPLICITY_OUTPUT",
+    "NO_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "NO_FREEZE_V4_BLOCKER_REMOVAL",
+    "NO_ALPHA_PRODUCTION_READINESS_M0_OR_LIVE_ORDER_CLAIM"
+  ]
+}

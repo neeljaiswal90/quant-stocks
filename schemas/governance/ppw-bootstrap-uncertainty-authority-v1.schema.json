@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json",
+  "title": "QME PPW Bootstrap Uncertainty Authority V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema", "schema_version", "artifact_id", "ticket_id", "status", "semantic_sha256",
+    "authority", "primary_sources", "corrected_common_equations", "official_author_code_observations",
+    "protected_registered_overlays", "unresolved_owner_selections", "source_equation_fixture_contract",
+    "active_freeze_v4_blockers", "claims", "nonclaims"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json"},
+    "schema_version": {"const": "qme.ppw_bootstrap_uncertainty_authority.v1"},
+    "artifact_id": {"const": "QME-PPW-BOOTSTRAP-UNCERTAINTY-AUTHORITY-V1"},
+    "ticket_id": {"const": "NEE-204"},
+    "status": {"const": "SOURCE_EQUATIONS_REGISTERED_OWNER_SELECTIONS_UNRESOLVED_NO_EXECUTION"},
+    "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protected_main", "proposal", "experiment_family", "owner_supplement_a0", "economic_promotion_v2", "effective_trials_point_kernel_v1", "deterministic_stats_kernel", "freeze_v4", "empirical_results_used"],
+      "properties": {
+        "protected_main": {"$ref": "#/$defs/commitTree"},
+        "proposal": {
+          "type": "object", "additionalProperties": false,
+          "required": ["path", "sha256", "commit", "sections"],
+          "properties": {
+            "path": {"const": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md"},
+            "sha256": {"$ref": "#/$defs/groupedSha256"},
+            "commit": {"$ref": "#/$defs/groupedSha1"},
+            "sections": {"const": ["4.2", "4.3"]}
+          }
+        },
+        "experiment_family": {"$ref": "#/$defs/pathShaIdentity"},
+        "owner_supplement_a0": {"$ref": "#/$defs/pathSemanticManifest"},
+        "economic_promotion_v2": {"$ref": "#/$defs/pathSemanticManifest"},
+        "effective_trials_point_kernel_v1": {"$ref": "#/$defs/pathSemanticManifest"},
+        "deterministic_stats_kernel": {
+          "type": "object", "additionalProperties": false,
+          "required": ["manifest_path", "manifest_sha256", "implementation_status"],
+          "properties": {
+            "manifest_path": {"const": "tests/fixtures/stats/deterministic-kernel-v1.manifest.json"},
+            "manifest_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "implementation_status": {"const": "BOUNDED_KERNEL_BLOCK_SELECTOR_UNAVAILABLE"}
+          }
+        },
+        "freeze_v4": {
+          "allOf": [
+            {"$ref": "#/$defs/pathSemanticManifest"},
+            {"type": "object", "required": ["active_blocker_count"], "properties": {"active_blocker_count": {"const": 13}}}
+          ]
+        },
+        "empirical_results_used": {"const": false}
+      }
+    },
+    "primary_sources": {
+      "type": "object", "additionalProperties": false,
+      "required": ["original_method_paper", "published_correction", "corrected_author_code", "corrected_author_code_dependency", "author_code_index", "network_retrieval_rule"],
+      "properties": {
+        "original_method_paper": {"$ref": "#/$defs/paperSource"},
+        "published_correction": {"$ref": "#/$defs/paperSource"},
+        "corrected_author_code": {"$ref": "#/$defs/codeSource"},
+        "corrected_author_code_dependency": {"$ref": "#/$defs/codeDependency"},
+        "author_code_index": {"$ref": "#/$defs/codeDependency"},
+        "network_retrieval_rule": {"const": "HASH_AND_SIZE_IDENTIFY_REVIEWED_BYTES_RUNTIME_VERIFIER_IS_NETWORK_FREE"}
+      }
+    },
+    "corrected_common_equations": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scope", "flat_top_kernel", "weighted_lag_moment", "spectral_density_at_zero_estimate", "corrected_stationary_bootstrap_denominator", "raw_stationary_expected_block_length", "equivalent_raw_formula", "correction_supersession", "division_or_nonfinite_rule", "implementation_status"],
+      "properties": {
+        "scope": {"const": "COMMON_CORRECTED_STATIONARY_BOOTSTRAP_OBJECTIVE_EQUATIONS_ONLY"},
+        "flat_top_kernel": {"type": "string", "minLength": 40},
+        "weighted_lag_moment": {"type": "string", "minLength": 30},
+        "spectral_density_at_zero_estimate": {"type": "string", "minLength": 30},
+        "corrected_stationary_bootstrap_denominator": {"const": "D_hat_SB = 2 * (g_hat_0 ^ 2)"},
+        "raw_stationary_expected_block_length": {"type": "string", "minLength": 40},
+        "equivalent_raw_formula": {"type": "string", "minLength": 40},
+        "correction_supersession": {"const": "THE_PUBLISHED_CORRECTION_REPLACES_THE_ORIGINAL_STATIONARY_BOOTSTRAP_D_SB_EXPRESSION"},
+        "division_or_nonfinite_rule": {"const": "NO_NUMERIC_OUTPUT_IS_AUTHORIZED_WHEN_D_hat_SB_IS_ZERO_NONFINITE_OR_UNDEFINED"},
+        "implementation_status": {"const": "SYMBOLIC_SOURCE_EQUATIONS_ONLY_NOT_EXECUTABLE"}
+      }
+    },
+    "official_author_code_observations": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_shape", "kn_formula", "mmax_formula", "author_code_bmax_formula", "significance_formula", "lag_window_rule", "covariance_implementation", "stationary_output_rounding_note", "circular_output_rounding_note", "status"],
+      "properties": {
+        "input_shape": {"const": "n_by_k_matrix_processed_one_column_at_a_time"},
+        "kn_formula": {"const": "K_N = max(5, sqrt(log10(n)))"},
+        "mmax_formula": {"const": "m_max = ceil(sqrt(n)) + K_N"},
+        "author_code_bmax_formula": {"const": "B_max = ceil(min(3 * sqrt(n), n / 3))"},
+        "significance_formula": {"const": "2 * sqrt(log10(n) / n)"},
+        "lag_window_rule": {"const": "M = min(2 * m_hat, m_max)"},
+        "covariance_implementation": {"const": "MATLAB_cov_on_common_truncated_window"},
+        "stationary_output_rounding_note": {"const": "AUTHOR_CODE_COMMENT_SAYS_STATIONARY_EXPECTED_BLOCK_LENGTH_NEED_NOT_BE_INTEGER"},
+        "circular_output_rounding_note": {"const": "AUTHOR_CODE_COMMENT_SAYS_CIRCULAR_BLOCK_LENGTH_SHOULD_BE_ROUNDED_UP"},
+        "status": {"const": "OBSERVED_VARIANT_NOT_SELECTED_FOR_QME"}
+      }
+    },
+    "protected_registered_overlays": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nee120", "nee122", "method_separation", "holm_m_separation"],
+      "properties": {
+        "nee120": {"type": "object", "minProperties": 14, "additionalProperties": false, "required": ["method_id", "rounding", "minimum_block_length", "maximum_block_length_formula", "minimum_series_length", "failure_action", "bootstrap_method_id", "replicates", "seed", "order_statistic_indexing", "one_sided_95_lcb_order_statistic", "reported_two_sided_90_interval_order_statistics", "invalid_replicate_action", "scope"], "properties": {"method_id":{"const":"QME-NEE120-CORRECTED-POLITIS-WHITE-BLOCK-SELECTOR-V1"},"rounding":{"const":"CEILING"},"minimum_block_length":{"const":3},"maximum_block_length_formula":{"const":"floor(n / 4)"},"minimum_series_length":{"const":12},"failure_action":{"const":"NO_GO_NO_FALLBACK"},"bootstrap_method_id":{"const":"QME-NEE120-UNCENTERED-PERCENTILE-STATIONARY-BOOTSTRAP-V1"},"replicates":{"const":10000},"seed":{"const":20260812},"order_statistic_indexing":{"const":"ONE_BASED_ASCENDING_NO_INTERPOLATION"},"one_sided_95_lcb_order_statistic":{"const":500},"reported_two_sided_90_interval_order_statistics":{"const":[500,9500]},"invalid_replicate_action":{"const":"NO_GO_FAIL_CLOSED"},"scope":{"const":"PAIRED_MONTHLY_LOG_RETURN_DELTA_INFERENCE_NOT_N_EFF"}}},
+        "nee122": {"type": "object", "minProperties": 10, "additionalProperties": false, "required": ["method_id", "matrix_shape_columns", "minimum_common_months", "bootstrap_method", "replicates", "seed", "bootstrap_quantile_percent", "n_eff_used_rule", "point_failure_fallback_m", "scope"], "properties": {"method_id":{"const":"qme-ledoit-wolf-participation-ratio-v1"},"matrix_shape_columns":{"const":96},"minimum_common_months":{"const":60},"bootstrap_method":{"const":"STATIONARY_BLOCK_BOOTSTRAP_OVER_COMMON_MONTHS_REFIT_FULL_ESTIMATOR"},"replicates":{"const":2000},"seed":{"const":20260812},"bootstrap_quantile_percent":{"const":"97.5"},"n_eff_used_rule":{"const":"MIN_96_CEILING_P97_5"},"point_failure_fallback_m":{"const":96},"scope":{"const":"N_EFF_UNCERTAINTY_FOR_DSR_EXPECTED_MAXIMUM_NOT_HOLM_M"}}},
+        "method_separation": {"const": "NEE120_B10000_INTERVAL_SEMANTICS_MUST_NOT_BE_SUBSTITUTED_FOR_NEE122_B2000_N_EFF_UNCERTAINTY"},
+        "holm_m_separation": {"const": "HOLM_FAMILY_SIZE_M_IS_NOT_DSR_N_EFF_AND_IS_NOT_ESTIMATED_BY_THIS_METHOD"}
+      }
+    },
+    "unresolved_owner_selections": {
+      "type": "array", "minItems": 9, "maxItems": 9,
+      "prefixItems": [
+        {"$ref": "#/$defs/selection001"}, {"$ref": "#/$defs/selection002"}, {"$ref": "#/$defs/selection003"},
+        {"$ref": "#/$defs/selection004"}, {"$ref": "#/$defs/selection005"}, {"$ref": "#/$defs/selection006"},
+        {"$ref": "#/$defs/selection007"}, {"$ref": "#/$defs/selection008"}, {"$ref": "#/$defs/selection009"}
+      ],
+      "items": false
+    },
+    "source_equation_fixture_contract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "cases", "numeric_selector_outputs_available", "bootstrap_distribution_available"],
+      "properties": {
+        "path": {"const": "tests/fixtures/governance/ppw-bootstrap-source-equations-v1.json"},
+        "cases": {"type": "array", "minItems": 11, "maxItems": 11, "uniqueItems": true, "items": {"type": "string"}},
+        "numeric_selector_outputs_available": {"const": false},
+        "bootstrap_distribution_available": {"const": false}
+      }
+    },
+    "active_freeze_v4_blockers": {"type": "array", "minItems": 13, "maxItems": 13, "items": {"$ref": "#/$defs/blocker"}},
+    "claims": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ppw_selector_executable", "bootstrap_interval_available", "n_eff_used_available", "dsr_available", "holm_available", "empirical_output_available", "production_inference_available", "freeze_blocker_changed", "milestone_m0_complete", "production_ready", "alpha_proven", "live_order_authority"],
+      "properties": {
+        "ppw_selector_executable":{"const":false},"bootstrap_interval_available":{"const":false},"n_eff_used_available":{"const":false},"dsr_available":{"const":false},"holm_available":{"const":false},"empirical_output_available":{"const":false},"production_inference_available":{"const":false},"freeze_blocker_changed":{"const":false},"milestone_m0_complete":{"const":false},"production_ready":{"const":false},"alpha_proven":{"const":false},"live_order_authority":{"const":false}
+      }
+    },
+    "nonclaims": {"const": ["NO_EXECUTABLE_PPW_SELECTOR","NO_BOOTSTRAP_INTERVAL_OR_N_EFF_USED","NO_DSR_OR_HOLM_MULTIPLICITY_OUTPUT","NO_EMPIRICAL_OR_PRODUCTION_OUTPUT","NO_FREEZE_V4_BLOCKER_REMOVAL","NO_ALPHA_PRODUCTION_READINESS_M0_OR_LIVE_ORDER_CLAIM"]}
+  },
+  "$defs": {
+    "groupedSha256": {"type": "string", "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"},
+    "groupedSha1": {"type": "string", "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){4}$"},
+    "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"},
+    "commitTree": {"type":"object","additionalProperties":false,"required":["commit","tree"],"properties":{"commit":{"$ref":"#/$defs/groupedSha1"},"tree":{"$ref":"#/$defs/groupedSha1"}}},
+    "pathShaIdentity": {"type":"object","additionalProperties":false,"required":["path","sha256","family_id"],"properties":{"path":{"$ref":"#/$defs/path"},"sha256":{"$ref":"#/$defs/groupedSha256"},"family_id":{"const":"QME-065-PRECOMMITTED-MOMENTUM-GRID-V1"}}},
+    "pathSemanticManifest": {"type":"object","additionalProperties":false,"required":["path","sha256","semantic_sha256","manifest_path","manifest_sha256"],"properties":{"path":{"$ref":"#/$defs/path"},"sha256":{"$ref":"#/$defs/groupedSha256"},"semantic_sha256":{"$ref":"#/$defs/groupedSha256"},"manifest_path":{"$ref":"#/$defs/path"},"manifest_sha256":{"$ref":"#/$defs/groupedSha256"},"active_blocker_count":{"type":"integer"}}},
+    "paperSource": {"type":"object","additionalProperties":false,"required":["citation","doi","doi_url","author_pdf_url","author_pdf_sha256","author_pdf_size_bytes","role"],"properties":{"citation":{"type":"string","minLength":40},"doi":{"type":"string","pattern":"^10\\."},"doi_url":{"type":"string","pattern":"^https://doi\\.org/10\\."},"author_pdf_url":{"type":"string","pattern":"^https://"},"author_pdf_sha256":{"$ref":"#/$defs/groupedSha256"},"author_pdf_size_bytes":{"type":"integer","minimum":1},"role":{"type":"string","pattern":"PRIMARY_"}}},
+    "codeSource": {"type":"object","additionalProperties":false,"required":["url","sha256","size_bytes","revision_label","role"],"properties":{"url":{"type":"string","pattern":"^https://"},"sha256":{"$ref":"#/$defs/groupedSha256"},"size_bytes":{"type":"integer","minimum":1},"revision_label":{"const":"DECEMBER_2007_CORRECTED"},"role":{"const":"OFFICIAL_AUTHOR_CODE_IMPLEMENTATION_EVIDENCE_NOT_GOVERNANCE_AUTHORITY"}}},
+    "codeDependency": {"type":"object","additionalProperties":false,"required":["url","sha256","size_bytes","role"],"properties":{"url":{"type":"string","pattern":"^https://"},"sha256":{"$ref":"#/$defs/groupedSha256"},"size_bytes":{"type":"integer","minimum":1},"role":{"type":"string","minLength":20}}},
+    "selectionBase": {"type":"object","additionalProperties":false,"required":["selection_id","status","question","forbidden_inference","clear_condition"],"properties":{"selection_id":{"type":"string"},"status":{"enum":["OWNER_SELECTION_REQUIRED","EVIDENCE_BLOCKED_BY_OWNER_SELECTIONS"]},"question":{"type":"string","minLength":30},"forbidden_inference":{"type":"string","pattern":"^NO_"},"clear_condition":{"type":"string","minLength":30}}},
+    "selection001": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection002": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-002-FINITE-SAMPLE-AUTOCOVARIANCE"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection003": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-003-LAG_SELECTION-AND-FALLBACK"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection004": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-004-DEGENERATE-INPUTS"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection005": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-005-SHARED-ROW-INDEX-AND-REFIT"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection006": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-006-RNG-AND-BLOCK-DRAW-CONSTRUCTION"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection007": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-007-P97_5-QUANTILE"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection008": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-008-INVALID-REPLICATE-AND-FALLBACK"},"status":{"const":"OWNER_SELECTION_REQUIRED"}}}]},
+    "selection009": {"allOf":[{"$ref":"#/$defs/selectionBase"},{"properties":{"selection_id":{"const":"PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT"},"status":{"const":"EVIDENCE_BLOCKED_BY_OWNER_SELECTIONS"}}}]},
+    "blocker": {"type":"object","additionalProperties":false,"required":["blocker_code","ticket_id","category","description"],"properties":{"blocker_code":{"type":"string","pattern":"^NEE-[0-9]+-"},"ticket_id":{"type":"string","pattern":"^NEE-[0-9]+$"},"category":{"enum":["GOVERNANCE","ENGINEERING_EVIDENCE","PRODUCTION_EVIDENCE","FINAL_DERIVED_EVIDENCE"]},"description":{"type":"string","minLength":30}}}
+  }
+}
