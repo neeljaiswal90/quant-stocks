@@ -1,0 +1,236 @@
+{
+  "$schema": "../../schemas/governance/ppw-bootstrap-owner-selections-v1.schema.json",
+  "schema_version": "qme.ppw_bootstrap_owner_selections.v1",
+  "artifact_id": "QME-PPW-BOOTSTRAP-OWNER-SELECTIONS-V1",
+  "ticket_id": "NEE-204",
+  "status": "OWNER_SELECTIONS_001_THROUGH_008_REGISTERED_IMPLEMENTATION_AUTHORIZED_KAT_009_PENDING",
+  "semantic_sha256": "7a51a7da:182354b0:5d96ad77:f08a7513:8a7d41ef:c918d11d:bf5f242e:9bb5f743",
+  "authority": {
+    "protected_main": {
+      "commit": "464fa7f8:323568b8:5f210908:d59d783e:e5c1048e",
+      "tree": "ef525225:53029e11:287a73b2:9f647282:943eb7b6"
+    },
+    "predecessor": {
+      "config_path": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.json",
+      "config_sha256": "71b22f95:fdf223ba:4ebb0e9e:ee047fd2:61bcb866:0692d8f3:b179ca48:cb8f09d1",
+      "semantic_sha256": "cc6dd002:b5c44722:75e953a3:b364a0b0:638a2b96:342cd6d9:8dc18162:63ca798c",
+      "schema_path": "schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json",
+      "schema_sha256": "144d3622:0cd93394:283282f4:b04f41ca:605ad83e:35927e6b:9f6b65eb:90db5c66",
+      "runtime_path": "qme/governance/ppw_bootstrap_uncertainty_authority.py",
+      "runtime_sha256": "59113bfd:2fa2a4bf:7fe7e92d:1a2fb5ff:af9dc571:0a77dcb5:793c6785:10c025ef",
+      "manifest_path": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.hashes.json",
+      "manifest_sha256": "464066ca:0595defa:64036b7b:53047d25:fce6ab1c:ee2a30fb:c6c5742f:45c7d12b",
+      "status": "SOURCE_EQUATIONS_REGISTERED_OWNER_SELECTIONS_UNRESOLVED_NO_EXECUTION"
+    },
+    "owner_decision": {
+      "system": "LINEAR",
+      "issue_id": "NEE-204",
+      "comment_id": "a22d017e-816e-4ba5-9a05-5c05fdb5b709",
+      "author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+      "author_name": "Neel Jaiswal",
+      "created_at": "2026-08-14T18:17:10.834Z",
+      "updated_at": "2026-08-14T18:22:07.616Z",
+      "body_utf8_bytes": 4503,
+      "body_sha256": "8fcb9c9d:5b3614ac:76f13cce:95c9b650:59128b5e:19a8c2fb:7bbab55e:af539396",
+      "approved_draft_snapshot": {
+        "display_path": "docs/governance/PPW_UNRESOLVED_DISPOSITIONS_PROPOSAL_2026-08-14.md",
+        "role": "OWNER_DECISION_EVIDENCE_NOT_REPOSITORY_AUTHORITY",
+        "utf8_bytes": 10120,
+        "sha256": "9ea16f1c:ffa66c78:2a8e29b4:f8d9dae9:c407813c:27826aaa:556de9d2:c5d1d202"
+      }
+    },
+    "freeze_v4": {
+      "path": "configs/governance/specification-freeze-policy-v4.json",
+      "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458",
+      "semantic_sha256": "90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771",
+      "manifest_path": "configs/governance/specification-freeze-v4.hashes.json",
+      "manifest_sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42",
+      "active_blocker_count": 13
+    },
+    "deterministic_stats_kernel": {
+      "manifest_path": "tests/fixtures/stats/deterministic-kernel-v1.manifest.json",
+      "manifest_sha256": "a7ecc4f5:91139853:d9142fc6:a7d03208:be73ff19:ea066f74:99ee7166:7b5cbf26",
+      "rng_path": "qme/stats/rng.py",
+      "rng_sha256": "9f8ad5df:c03dd183:f04e9c9a:496912df:b4c7616a:40747be2:476619cd:f1ba462d",
+      "seed_mapping": "SPLITMIX64_FIRST_TWO_OUTPUTS_TO_PCG32_INITSTATE_INITSEQ"
+    },
+    "empirical_results_used": false
+  },
+  "registered_owner_selections": [
+    {
+      "selection_id": "PPW-REGISTERED-001-96-COLUMN-MEDIAN-AGGREGATION",
+      "supersedes_selection_id": "PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION",
+      "status": "REGISTERED",
+      "scope": "EXACTLY_96_COMPLETE_COMMON_ALIGNED_COLUMNS",
+      "per_column_rule": "RUN_CORRECTED_SELECTOR_INDEPENDENTLY_ON_EACH_COLUMN_KEEP_RAW_REAL_OUTPUT",
+      "validity_rule": "ALL_96_RAW_OUTPUTS_MUST_BE_VALID_OTHERWISE_WHOLE_SELECTION_TYPED_FAILURE",
+      "aggregate": "ARITHMETIC_MEAN_OF_ASCENDING_ONE_BASED_ORDER_STATISTICS_48_AND_49",
+      "integerization": "APPLY_CEILING_EXACTLY_ONCE_AFTER_AGGREGATION",
+      "common_block_formula": "min(floor(n_common / 4), max(3, ceil(b_agg_raw)))",
+      "rejected_alternative": "MAXIMUM_AGGREGATION"
+    },
+    {
+      "selection_id": "PPW-REGISTERED-002-FINITE-SAMPLE-AUTOCOVARIANCE",
+      "supersedes_selection_id": "PPW-UNRESOLVED-002-FINITE-SAMPLE-AUTOCOVARIANCE",
+      "status": "REGISTERED",
+      "centering": "ONE_FULL_SAMPLE_MEAN_PER_COLUMN",
+      "autocovariance": "gamma_hat(k) = (1 / n) * sum_{t=1..n-k}((x_t - x_bar) * (x_{t+k} - x_bar))",
+      "autocovariance_denominator": "n",
+      "autocorrelation": "rho_hat(k) = gamma_hat(k) / gamma_hat(0)",
+      "k_n_formula": "max(5, ceil(sqrt(log10(n))))",
+      "m_max_formula": "ceil(sqrt(n)) + K_N",
+      "threshold_formula": "2 * sqrt(log10(n) / n)",
+      "threshold_application": "STRICT_GREATER_OR_EQUAL_IS_SIGNIFICANT_COMPARE_ABS_RHO",
+      "lag_window_formula": "M = min(2 * m_hat, m_max)",
+      "source_crosswalk": "DELIBERATE_DIVERGENCE_FROM_MATLAB_cov_TRUNCATED_WINDOW_CENTERING_AND_DENOMINATOR"
+    },
+    {
+      "selection_id": "PPW-REGISTERED-003-LAG-SELECTION-AND-FAILURE",
+      "supersedes_selection_id": "PPW-UNRESOLVED-003-LAG_SELECTION-AND-FALLBACK",
+      "status": "REGISTERED",
+      "candidate_domain": "m IN [1, m_max - K_N + 1]",
+      "selection_rule": "SMALLEST_m_WITH_ALL_abs_rho_j_STRICTLY_BELOW_THRESHOLD_FOR_j_IN_[m,m+K_N-1]",
+      "minimum_selected_lag": 1,
+      "window_rule": "FULL_K_N_INSIGNIFICANCE_WINDOW_MUST_FIT_WITHIN_[1,m_max]",
+      "failure": "PPW_NO_INSIGNIFICANT_RUN",
+      "author_code_b_max_fallback_allowed": false
+    },
+    {
+      "selection_id": "PPW-REGISTERED-004-DEGENERATE-INPUT-TAXONOMY",
+      "supersedes_selection_id": "PPW-UNRESOLVED-004-DEGENERATE-INPUTS",
+      "status": "REGISTERED",
+      "typed_failures": [
+        {"code": "PPW_NONFINITE_INPUT", "condition": "ANY_INPUT_VALUE_NONFINITE"},
+        {"code": "PPW_SERIES_TOO_SHORT", "condition": "n_common < 60"},
+        {"code": "PPW_CONSTANT_COLUMN", "condition": "gamma_hat(0) = 0 EXACTLY"},
+        {"code": "PPW_DEGENERATE_DENOMINATOR", "condition": "D_hat_SB ZERO NONFINITE OR UNDEFINED"},
+        {"code": "PPW_NONPOSITIVE_BLOCK_LENGTH", "condition": "b_hat_SB_raw NONPOSITIVE OR NONFINITE"}
+      ],
+      "nearly_constant_epsilon": null,
+      "other_finite_inputs": "PROCEED_OR_FAIL_ONLY_THROUGH_A_REGISTERED_DOWNSTREAM_TYPED_CHECK"
+    },
+    {
+      "selection_id": "PPW-REGISTERED-005-SHARED-INDEX-FULL-REFIT",
+      "supersedes_selection_id": "PPW-UNRESOLVED-005-SHARED-ROW-INDEX-AND-REFIT",
+      "status": "REGISTERED",
+      "index_rule": "ONE_SHARED_MONTH_INDEX_VECTOR_APPLIED_TO_ALL_96_COLUMNS_PER_REPLICATE",
+      "refit_pipeline": [
+        "PEARSON_CORRELATION_FROM_RESAMPLED_MATRIX",
+        "LEDOIT_WOLF_SHRINKAGE_WITH_INTENSITY_REESTIMATED",
+        "JACOBI_EIGENVALUES",
+        "PARTICIPATION_RATIO",
+        "N_EFF_REPLICATE"
+      ],
+      "rejected_alternatives": [
+        "INDEPENDENT_PER_COLUMN_INDEX_STREAMS",
+        "FROZEN_CORRELATION_OR_SHRINKAGE_INTENSITY"
+      ]
+    },
+    {
+      "selection_id": "PPW-REGISTERED-006-ONCE-ONLY-PCG32-INDEX-STREAM",
+      "supersedes_selection_id": "PPW-UNRESOLVED-006-RNG-AND-BLOCK-DRAW-CONSTRUCTION",
+      "status": "REGISTERED",
+      "selector_timing": "RUN_ONCE_ON_ORIGINAL_COMMON_ALIGNED_MATRIX",
+      "reselect_inside_replicate": false,
+      "rng": {
+        "algorithm": "SPLITMIX64_TO_OFFICIAL_PCG32_XSH_RR",
+        "domain_id": "QME_NEE122_STATIONARY_BOOTSTRAP_INDEX_STREAM_V1",
+        "seed": 20260812,
+        "initstate": "4007265125838523138",
+        "initseq": "14898109804989224333",
+        "stream_start": "FRESH_STREAM_NO_DISCARDED_DRAWS",
+        "replicate_boundary": "ONE_CONTINUOUS_STREAM_NO_RESEED_OR_RESTART"
+      },
+      "draw_order": {
+        "t_equals_1": "DRAW_START_UINT32_THEN_INDEX_EQUALS_FLOOR(DRAW_TIMES_n_DIV_2_POW_32)",
+        "t_greater_than_1": "DRAW_RESTART_UINT32_FIRST; IF_DRAW_TIMES_b_common_LT_2_POW_32_DRAW_START_UINT32_ELSE_CONTINUE_MOD_n",
+        "draws_per_position": "ONE_OR_TWO_EXACTLY_NO_BUFFER_BATCH_OR_PARALLEL_GENERATION"
+      },
+      "evidence_obligation": "FREEZE_FULL_2000_REPLICATE_INDEX_STREAM_HASH_IDENTICALLY_ON_WINDOWS_AND_LINUX"
+    },
+    {
+      "selection_id": "PPW-REGISTERED-007-P97_5-ORDER-STATISTIC",
+      "supersedes_selection_id": "PPW-UNRESOLVED-007-P97_5-QUANTILE",
+      "status": "REGISTERED",
+      "replicates": 2000,
+      "sort_order": "REGISTERED_EXACT_TOTAL_ORDER_ASCENDING",
+      "one_based_rank": 1950,
+      "interpolation": "NONE",
+      "ties": "PRESERVE_SORTED_MULTISET_VALUE_AT_RANK_1950",
+      "cross_method_convention": "EXPLICIT_k_EQUALS_alpha_TIMES_B_CONVENTION_SHARED_WITH_NEE120_NOT_LIBRARY_PERCENTILE_SUBSTITUTION",
+      "n_eff_used_formula": "min(96, ceil(order_statistic_1950))"
+    },
+    {
+      "selection_id": "PPW-REGISTERED-008-INVALID-DISTRIBUTION-CONSERVATIVE-M96",
+      "supersedes_selection_id": "PPW-UNRESOLVED-008-INVALID-REPLICATE-AND-FALLBACK",
+      "status": "REGISTERED",
+      "replicate_validity": "FULL_REFIT_SUCCEEDS_MATRIX_FINITE_LW_INTENSITY_IN_[0,1]_JACOBI_CONVERGED_PR_FINITE_POSITIVE",
+      "distribution_rule": "ANY_ONE_INVALID_REPLICATE_INVALIDATES_ENTIRE_DISTRIBUTION",
+      "deletion_retry_or_minimum_valid_count_allowed": false,
+      "fallback_n_eff_used": 96,
+      "fallback_reason": "N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96",
+      "point_failure_fallback_separation": "DISTINCT_REASON_AND_LEDGER_FIELD_FROM_POINT_ESTIMATOR_FAILURE_M96",
+      "monotonicity": "DSR_MAY_ONLY_HARDEN_AS_N_EFF_INCREASES",
+      "rejected_alternative": "HARD_FAIL_ENTIRE_PROMOTION_PATH"
+    }
+  ],
+  "remaining_evidence_selection": {
+    "selection_id": "PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT",
+    "status": "EVIDENCE_REQUIRED_AFTER_REGISTRATION_AND_IMPLEMENTATION",
+    "required_fixture": "REGISTERED_SEEDED_60_BY_96_RAW_RETURN_MATRIX",
+    "required_outputs": [
+      "FULL_2000_REPLICATE_BOOTSTRAP_DISTRIBUTION_HASH",
+      "ONE_BASED_ORDER_STATISTIC_1950_VALUE",
+      "N_EFF_USED",
+      "WINDOWS_RECOMPUTATION_RECEIPT",
+      "LINUX_RECOMPUTATION_RECEIPT"
+    ],
+    "accepted_values_available": false
+  },
+  "implementation_authorization": {
+    "selector_and_bootstrap_conformance_code_authorized": true,
+    "candidate_kat_generation_authorized": true,
+    "production_or_promotion_consumption_authorized": false,
+    "blocker_retirement_authorized": false,
+    "required_next_stage": "EXECUTABLE_IMPLEMENTATION_AND_INDEPENDENT_SELECTION_009_WINDOWS_LINUX_KAT"
+  },
+  "active_freeze_v4_blockers": [
+    {"blocker_code":"NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL","ticket_id":"NEE-110","category":"GOVERNANCE","description":"Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."},
+    {"blocker_code":"NEE-116-ASYMMETRIC-COST-METHOD","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."},
+    {"blocker_code":"NEE-116-CAPACITY-SOLVER","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"The authoritative greatest-capital discrete cost-aware solver remains unavailable."},
+    {"blocker_code":"NEE-116-CORPORATE-ACTION-EDGE-CASES","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."},
+    {"blocker_code":"NEE-116-PRODUCTION-PIT-DATA","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Accepted point-in-time production data and receipts are unavailable."},
+    {"blocker_code":"NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."},
+    {"blocker_code":"NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-119-AV-PROXY-EVIDENCE","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-120","category":"ENGINEERING_EVIDENCE","description":"Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."},
+    {"blocker_code":"NEE-121-CALENDAR-SESSION-REGISTRATION","ticket_id":"NEE-121","category":"PRODUCTION_EVIDENCE","description":"XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."},
+    {"blocker_code":"NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP","ticket_id":"NEE-121","category":"FINAL_DERIVED_EVIDENCE","description":"The final freeze anchor and receipt remain unavailable until every other blocker is accepted."},
+    {"blocker_code":"NEE-122-CORRELATED-TRIAL-FIXTURE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."},
+    {"blocker_code":"NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"The registered estimator and bootstrap uncertainty procedure are not implemented."}
+  ],
+  "claims": {
+    "owner_selections_001_through_008_registered": true,
+    "conformance_implementation_authorized": true,
+    "ppw_selector_executable": false,
+    "bootstrap_distribution_available": false,
+    "n_eff_used_available": false,
+    "dsr_available": false,
+    "holm_available": false,
+    "empirical_output_available": false,
+    "production_inference_available": false,
+    "freeze_blocker_changed": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "alpha_proven": false,
+    "live_order_authority": false
+  },
+  "nonclaims": [
+    "NO_EXECUTABLE_PPW_SELECTOR_IN_THIS_ARTIFACT",
+    "NO_ACCEPTED_BOOTSTRAP_DISTRIBUTION_INTERVAL_OR_N_EFF_USED",
+    "NO_DSR_OR_HOLM_MULTIPLICITY_OUTPUT",
+    "NO_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "NO_FREEZE_V4_BLOCKER_REMOVAL",
+    "NO_FINAL_FREEZE_ALPHA_PRODUCTION_READINESS_M0_OR_LIVE_ORDER_CLAIM"
+  ]
+}

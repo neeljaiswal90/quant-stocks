@@ -1,0 +1,32 @@
+{
+  "schema_version": "qme.ppw_bootstrap_owner_decision_receipt.v1",
+  "artifact_id": "QME-PPW-BOOTSTRAP-OWNER-DECISION-RECEIPT-V1",
+  "ticket_id": "NEE-204",
+  "decision": "APPROVE_SELECTIONS_001_THROUGH_008",
+  "selected_alternatives": {
+    "PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION": "MEDIAN_ORDER_STATISTICS_48_49_MEAN",
+    "PPW-UNRESOLVED-008-INVALID-REPLICATE-AND-FALLBACK": "INVALID_DISTRIBUTION_CONSERVATIVE_M96"
+  },
+  "linear_receipt": {
+    "comment_id": "a22d017e-816e-4ba5-9a05-5c05fdb5b709",
+    "author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+    "author_name": "Neel Jaiswal",
+    "created_at": "2026-08-14T18:17:10.834Z",
+    "updated_at": "2026-08-14T18:22:07.616Z",
+    "body_utf8_bytes": 4503,
+    "body_sha256": "8fcb9c9d:5b3614ac:76f13cce:95c9b650:59128b5e:19a8c2fb:7bbab55e:af539396"
+  },
+  "approved_draft_snapshot": {
+    "display_path": "docs/governance/PPW_UNRESOLVED_DISPOSITIONS_PROPOSAL_2026-08-14.md",
+    "utf8_bytes": 10120,
+    "sha256": "9ea16f1c:ffa66c78:2a8e29b4:f8d9dae9:c407813c:27826aaa:556de9d2:c5d1d202",
+    "repository_authority": false
+  },
+  "registration_boundary": {
+    "registered_selection_count": 8,
+    "selection_009_status": "EVIDENCE_REQUIRED_AFTER_REGISTRATION_AND_IMPLEMENTATION",
+    "active_freeze_v4_blocker_count": 13,
+    "resolved_blocker_count": 0,
+    "executable_output_available": false
+  }
+}
