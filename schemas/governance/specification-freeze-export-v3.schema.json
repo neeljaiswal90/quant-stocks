@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/specification-freeze-export-v3.schema.json",
+  "title": "QME specification freeze export V3",
+  "description": "Exact deterministic blocked export for specification freeze policy V4.",
+  "const": {
+    "$schema": "../../schemas/governance/specification-freeze-export-v3.schema.json",
+    "schema_version": "qme.specification_freeze_export.v3",
+    "export_id": "NEE-110-SPECIFICATION-FREEZE-EXPORT-V3",
+    "export_status": "HASH_VERIFIED_BLOCKED_13_ACTIVE",
+    "policy": {
+      "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V4",
+      "path": "configs/governance/specification-freeze-policy-v4.json",
+      "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458",
+      "semantic_sha256": "90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771"
+    },
+    "bundle": {
+      "bundle_id": "NEE-172-OPERATIONAL-V2-BUNDLE-V1",
+      "path": "configs/governance/nee-172-operational-v2-bundle-v1.json",
+      "sha256": "b133cb3d:a54fe242:816c77ec:93f7903b:f8672bb8:013c6504:b6ddb305:6646da1e",
+      "manifest_path": "configs/governance/nee-172-operational-v2-bundle-v1.hashes.json",
+      "manifest_sha256": "00d014d6:3f409378:a1b4c7f9:95caf9b7:cb81e7be:48ba40f1:a5c85f6a:496d78df"
+    },
+    "accepted_access_chain_evidence": {
+      "evidence_id": "NEE-176-SAMPLE-ACCESS-CHAIN-V2-EVIDENCE",
+      "config_path": "configs/governance/sample-access-chain-v2-evidence.json",
+      "config_sha256": "cbd198f1:46daf12d:1edbdb3d:238a06a2:954e6d13:32df45f9:de9c0fb2:3ca849c7",
+      "semantic_sha256": "32926f47:94ac0650:b625eadc:80caea5d:7fedcd16:3ac32955:a366233d:d2aa2c70",
+      "manifest_path": "configs/governance/sample-access-chain-v2.hashes.json",
+      "manifest_sha256": "b505a253:439a701b:e21de17c:982db041:6cbe338b:52246a03:b0843df3:9e11520b",
+      "protected_main_commit": "5f060fe3:86317849:6b3ba669:df35bd9c:20f25f7f",
+      "decision_comment_id": "930f091d-b21f-4ea1-b308-15aec70c16b3",
+      "decision_comment_body_sha256": "85af795b:4eccdd7e:6aa5f0ad:bd5fbec2:705ee7b4:e6832174:150bc0dd:3d7eb3ff",
+      "disposition": "PRODUCTION_SCALE_IMPLEMENTATION_EVIDENCE_ONLY_SYNTHETIC_KAT",
+      "resolved_blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+      "original_v3_blocker_row": {
+        "blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "A production-scale content-addressed access-chain export and inclusion proof remain unavailable."
+      },
+      "scope": "BOUNDED_ENGINEERING_EVIDENCE_ONLY_NO_PRODUCTION_DATA_CLAIM"
+    },
+    "contract_projections": [
+      {
+        "ticket_id": "NEE-119",
+        "identity": "qme-long-only-momentum-v0.1",
+        "version": 2,
+        "config_sha256": "d71086f6:9176c1dc:ba82dcc8:dfd018b5:703ff059:f3fd526a:6a92f5c0:3370b285",
+        "semantic_sha256": "8375890d:bcc1b0c6:ae75058f:a5cfd966:43d8eb3b:06c686b7:90a5de6d:a5789263",
+        "status": "REGISTERED_DECISIONS_PRODUCTION_EVIDENCE_BLOCKED"
+      },
+      {
+        "ticket_id": "NEE-120",
+        "identity": "NEE-120-QME-ECONOMIC-DECISION-V2",
+        "version": 2,
+        "config_sha256": "02d055b0:26d9352e:aa0979cd:c158d9df:26ed6aad:06259567:291970c9:0a9359a8",
+        "semantic_sha256": "3b35015f:fa528926:3a9b125d:913fd99f:25027c1f:c7ebea82:7c962654:e1406ff4",
+        "status": "OWNER_REGISTERED_OPERATIONAL_CONTRACT_IMPLEMENTATION_AND_EVIDENCE_BLOCKED"
+      },
+      {
+        "ticket_id": "NEE-121",
+        "identity": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+        "version": 2,
+        "config_sha256": "c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f",
+        "semantic_sha256": "149eadf4:c1d7e240:d0088c5b:0748a072:d2f50e78:966615e2:d1f40ffd:e0070b54",
+        "status": "REGISTERED_RULES_PRODUCTION_EVIDENCE_AND_FREEZE_RECEIPT_BLOCKED"
+      }
+    ],
+    "verification_checks": [
+      {
+        "check_id": "PREDECESSOR_FREEZE_V3",
+        "status": "PASS"
+      },
+      {
+        "check_id": "NATIVE_CONTRACT_VERIFIERS",
+        "status": "PASS"
+      },
+      {
+        "check_id": "CHILD_MANIFEST_LEAVES",
+        "status": "PASS"
+      },
+      {
+        "check_id": "SCHEMA_CONFIG_PARITY",
+        "status": "PASS"
+      },
+      {
+        "check_id": "NEE120_NEE121_HASH_POINTER_COORDINATE_BINDING",
+        "status": "PASS"
+      },
+      {
+        "check_id": "SAMPLE_ACCESS_CHAIN_V2_NATIVE_VERIFIER",
+        "status": "PASS"
+      },
+      {
+        "check_id": "SAMPLE_ACCESS_CHAIN_V2_MANIFEST_LEAVES",
+        "status": "PASS"
+      },
+      {
+        "check_id": "PROTECTED_MAIN_PR_A_RECEIPT",
+        "status": "PASS"
+      },
+      {
+        "check_id": "BOUNDED_ACCESS_CHAIN_ACCEPTANCE_DECISION",
+        "status": "PASS"
+      },
+      {
+        "check_id": "EXACT_ONE_BLOCKER_RESOLUTION_DELTA",
+        "status": "PASS"
+      },
+      {
+        "check_id": "ACTIVE_BLOCKER_EXACT_EQUALITY",
+        "status": "PASS"
+      },
+      {
+        "check_id": "PRODUCTION_SAMPLE_ACCESS_EVIDENCE",
+        "status": "BLOCKED"
+      },
+      {
+        "check_id": "CROSS_CONTRACT_SEMANTIC_APPROVAL",
+        "status": "BLOCKED"
+      },
+      {
+        "check_id": "FINAL_FREEZE_ANCHOR_AND_RECEIPT",
+        "status": "BLOCKED"
+      }
+    ],
+    "active_blocker_codes": [
+      "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "NEE-116-ASYMMETRIC-COST-METHOD",
+      "NEE-116-CAPACITY-SOLVER",
+      "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "NEE-116-PRODUCTION-PIT-DATA",
+      "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "NEE-119-AV-PROXY-EVIDENCE",
+      "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+      "NEE-121-CALENDAR-SESSION-REGISTRATION",
+      "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+      "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"
+    ],
+    "closure": {
+      "integrity_state": "HASH_VERIFIED",
+      "overall_state": "BLOCKED_13_ACTIVE",
+      "accepted": false,
+      "milestone_m0_complete": false,
+      "downstream_start_authorized": false,
+      "production_ready": false,
+      "production_access_event_corpus_available": false,
+      "production_sample_access_evidence_available": false,
+      "final_freeze_receipt_verified": false,
+      "prospective_observations_consumable": false
+    },
+    "derived_evidence_sha256": "397a6f05:ae72523e:ac068ffd:6ed76fdf:1d2d6bc6:84fa9689:1f1ad144:7814ff9b"
+  }
+}
