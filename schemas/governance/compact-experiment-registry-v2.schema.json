@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/compact-experiment-registry-v2.schema.json",
+  "title": "NEE-176 compact experiment registry V2 event and deterministic export",
+  "oneOf": [
+    {"$ref": "#/$defs/event"},
+    {"$ref": "#/$defs/export"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!\\s)(?!.*\\s$)(?!.*\\u0000).+$"
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "source_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/text"},
+        "source_id": {"$ref": "#/$defs/text"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "predecessor": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "prior_export_sha256", "prior_merkle_root", "prior_event_count", "prior_head_event_hash"],
+          "properties": {
+            "kind": {"const": "GENESIS"},
+            "prior_export_sha256": {"type": "null"},
+            "prior_merkle_root": {"type": "null"},
+            "prior_event_count": {"const": 0},
+            "prior_head_event_hash": {"const": "0000000000000000000000000000000000000000000000000000000000000000"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "prior_export_sha256", "prior_merkle_root", "prior_event_count", "prior_head_event_hash"],
+          "properties": {
+            "kind": {"const": "PRIOR_EXPORT"},
+            "prior_export_sha256": {"$ref": "#/$defs/sha256"},
+            "prior_merkle_root": {"$ref": "#/$defs/sha256"},
+            "prior_event_count": {"type": "integer", "minimum": 1},
+            "prior_head_event_hash": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      ]
+    },
+    "accessCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "export_id", "chain_id", "genesis_event_hash", "predecessor", "event_count", "head_event_hash", "ordered_index_sha256", "merkle_root", "export_sha256"],
+      "properties": {
+        "schema_version": {"const": "qme.sample_access_chain_export_commitment.v2"},
+        "export_id": {"$ref": "#/$defs/text"},
+        "chain_id": {"$ref": "#/$defs/text"},
+        "genesis_event_hash": {"const": "0000000000000000000000000000000000000000000000000000000000000000"},
+        "predecessor": {"$ref": "#/$defs/predecessor"},
+        "event_count": {"type": "integer", "minimum": 1},
+        "head_event_hash": {"$ref": "#/$defs/sha256"},
+        "ordered_index_sha256": {"$ref": "#/$defs/sha256"},
+        "merkle_root": {"$ref": "#/$defs/sha256"},
+        "export_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "compactPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["access_contract_binding", "access_export_commitment", "access_export_content_path", "compact_registry_sha256", "current_run_id", "trial_registration_shadow_v1_event_hash"],
+      "properties": {
+        "access_contract_binding": {"$ref": "#/$defs/binding"},
+        "access_export_commitment": {"$ref": "#/$defs/accessCommitment"},
+        "access_export_content_path": {
+          "type": "string",
+          "pattern": "^content-addressed/sha256/[0-9a-f]{64}\\.sample-access-chain-export-v2\\.json$"
+        },
+        "compact_registry_sha256": {"$ref": "#/$defs/sha256"},
+        "current_run_id": {"$ref": "#/$defs/text"},
+        "trial_registration_shadow_v1_event_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "registry_id", "event_id", "sequence", "previous_event_hash", "occurred_at", "actor_id", "event_type", "trial_id", "payload", "event_hash"],
+      "properties": {
+        "schema_version": {"const": "qme.compact_experiment_registry_event.v2"},
+        "registry_id": {"const": "NEE-176-COMPACT-EXPERIMENT-REGISTRY-V2"},
+        "event_id": {"$ref": "#/$defs/text"},
+        "sequence": {"type": "integer", "minimum": 1},
+        "previous_event_hash": {"$ref": "#/$defs/sha256"},
+        "occurred_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "actor_id": {"$ref": "#/$defs/text"},
+        "event_type": {"enum": ["POLICY_REGISTERED", "TRIAL_REGISTERED", "TRIAL_STARTED", "SAMPLE_ACCESS_BOUND_COMPACT", "OUTCOME_RECORDED", "TRIAL_COMPLETED", "TRIAL_FAILED", "TRIAL_SKIPPED", "TRIAL_ABANDONED"]},
+        "trial_id": {"oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+        "payload": {"type": "object"},
+        "event_hash": {"$ref": "#/$defs/sha256"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"event_type": {"const": "SAMPLE_ACCESS_BOUND_COMPACT"}}, "required": ["event_type"]},
+          "then": {"properties": {"trial_id": {"$ref": "#/$defs/text"}, "payload": {"$ref": "#/$defs/compactPayload"}}}
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "POLICY_REGISTERED"}}, "required": ["event_type"]},
+          "then": {"properties": {"trial_id": {"type": "null"}, "payload": {"type": "object", "additionalProperties": false, "required": ["policy"], "properties": {"policy": {"$ref": "https://qme.local/schemas/governance/experiment-registry-event-v1.schema.json#/$defs/runtimePolicy"}}}}}
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "TRIAL_REGISTERED"}}, "required": ["event_type"]},
+          "then": {"properties": {"trial_id": {"$ref": "#/$defs/text"}, "payload": {"$ref": "https://qme.local/schemas/governance/experiment-registry-event-v1.schema.json#/$defs/trialRegistration"}}}
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "TRIAL_STARTED"}}, "required": ["event_type"]},
+          "then": {"properties": {"trial_id": {"$ref": "#/$defs/text"}, "payload": {"type": "object", "additionalProperties": false, "required": ["run_id", "retry_reason"], "properties": {"run_id": {"$ref": "#/$defs/text"}, "retry_reason": {"oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]}}}}}
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "OUTCOME_RECORDED"}}, "required": ["event_type"]},
+          "then": {"properties": {"trial_id": {"$ref": "#/$defs/text"}, "payload": {"$ref": "https://qme.local/schemas/governance/experiment-registry-event-v1.schema.json#/$defs/outcome"}}}
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "TRIAL_COMPLETED"}}, "required": ["event_type"]},
+          "then": {
+            "properties": {
+              "trial_id": {"$ref": "#/$defs/text"},
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["reason"],
+                "properties": {"reason": {"type": "null"}}
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "TRIAL_FAILED"}}, "required": ["event_type"]},
+          "then": {
+            "properties": {
+              "trial_id": {"$ref": "#/$defs/text"},
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["reason"],
+                "properties": {"reason": {"$ref": "#/$defs/text"}}
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "TRIAL_SKIPPED"}}, "required": ["event_type"]},
+          "then": {
+            "properties": {
+              "trial_id": {"$ref": "#/$defs/text"},
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["reason"],
+                "properties": {"reason": {"$ref": "#/$defs/text"}}
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"event_type": {"const": "TRIAL_ABANDONED"}}, "required": ["event_type"]},
+          "then": {
+            "properties": {
+              "trial_id": {"$ref": "#/$defs/text"},
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["reason"],
+                "properties": {"reason": {"$ref": "#/$defs/text"}}
+              }
+            }
+          }
+        }
+      ]
+    },
+    "businessRuleBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_id", "event_schema_version", "replay_api", "source_path", "source_sha256"],
+      "properties": {
+        "registry_id": {"const": "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1"},
+        "event_schema_version": {"const": "qme.experiment_registry_event.v1"},
+        "replay_api": {"const": "qme.experiments.registry.replay_registry"},
+        "source_path": {"const": "qme/experiments/registry.py"},
+        "source_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "export": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "registry_id", "status", "business_rule_binding", "event_count", "head_hash", "source_events_sha256", "shadow_v1_head_hash", "shadow_v1_state_sha256", "business_projection_sha256", "events", "business_projection", "export_hash"],
+      "properties": {
+        "schema_version": {"const": "qme.compact_experiment_registry_export.v2"},
+        "registry_id": {"const": "NEE-176-COMPACT-EXPERIMENT-REGISTRY-V2"},
+        "status": {"const": "BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE"},
+        "business_rule_binding": {"$ref": "#/$defs/businessRuleBinding"},
+        "event_count": {"type": "integer", "minimum": 1},
+        "head_hash": {"$ref": "#/$defs/sha256"},
+        "source_events_sha256": {"$ref": "#/$defs/sha256"},
+        "shadow_v1_head_hash": {"$ref": "#/$defs/sha256"},
+        "shadow_v1_state_sha256": {"$ref": "#/$defs/sha256"},
+        "business_projection_sha256": {"$ref": "#/$defs/sha256"},
+        "events": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/event"}},
+        "business_projection": {"type": "object"},
+        "export_hash": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

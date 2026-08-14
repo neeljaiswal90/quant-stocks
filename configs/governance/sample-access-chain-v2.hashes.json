@@ -1,0 +1,20 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-176-SAMPLE-ACCESS-CHAIN-V2-SLICE",
+  "status": "BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE",
+  "production_status": "BLOCKED_NO_PRODUCTION_ACCESS_EXPORT_OR_PROTECTED_ACCEPTANCE",
+  "artifacts": [
+    {"path": ".github/workflows/sample-access-chain-linux.yml", "sha256": "4efa9365:66a2da38:33a21659:218f9b20:d776555c:c0d26613:e7618dc7:4c03206a"},
+    {"path": "configs/governance/sample-access-chain-v2-evidence.json", "sha256": "a9323152:0601a8a9:223d37c1:88b3aa03:b09af0fb:a3b40fe4:3396f7f7:c5845a2e"},
+    {"path": "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md", "sha256": "df39935c:b4fb4663:12f72ae6:eeabf370:3755307a:088938c2:c56c8641:b92a7c66"},
+    {"path": "qme/governance/sample_access_chain_v2.py", "sha256": "5167ddff:3de8bfd3:3764ee70:12ed9a28:9325aa95:902f1068:fef9bee3:73f6f420"},
+    {"path": "scripts/generate_sample_access_chain_v2_fixture.py", "sha256": "734f2930:2f584ff8:8b61b82e:45738015:efa669af:bedc96f9:4d9fc5c7:ced54957"},
+    {"path": "schemas/governance/compact-experiment-registry-v2.schema.json", "sha256": "7f1b7c4f:90fc5214:583d7e2e:4a1d6532:ae9ce9ba:20001d91:e823e729:58cb41ef"},
+    {"path": "schemas/governance/sample-access-chain-v2-compact-registry.schema.json", "sha256": "969cde07:785da0be:020236e9:606059ea:93d95d88:85f36595:1b3a2b34:83d431bf"},
+    {"path": "schemas/governance/sample-access-chain-v2-evidence.schema.json", "sha256": "6611a793:25ed2a39:fe9faa74:abf53ec0:840d0cac:1797c9c2:0bae7c66:692a7aba"},
+    {"path": "schemas/governance/sample-access-chain-v2-export.schema.json", "sha256": "4f2bd34f:924c7170:bb0c2fba:f5f71980:54550d67:02369162:1032fe46:adf00cbd"},
+    {"path": "schemas/governance/sample-access-chain-v2-proof.schema.json", "sha256": "222be295:5b080984:1f291f74:4db59681:abc07d3b:37a5e15e:aceb8ba3:48547d4d"},
+    {"path": "tests/fixtures/governance/sample-access-chain-v2-known-answer.json", "sha256": "2cd2cb4a:a850e8d2:013fa5be:9b93d562:58acce14:1dc9366d:70c094cc:f86b9669"},
+    {"path": "tests/governance/test_sample_access_chain_v2.py", "sha256": "8522ff97:4c942e37:a63e92b0:3459d24a:1256d5eb:dc9e5621:23443829:e504d8d4"}
+  ]
+}

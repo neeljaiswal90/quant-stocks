@@ -1,0 +1,148 @@
+{
+  "$schema": "../../schemas/governance/sample-access-chain-v2-evidence.schema.json",
+  "schema_version": "qme.sample_access_chain_evidence.v2",
+  "evidence_id": "NEE-176-SAMPLE-ACCESS-CHAIN-V2-EVIDENCE",
+  "ticket_id": "NEE-176",
+  "status": "BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE",
+  "canonicalization": "UTF8_JSON_SORT_KEYS_COMPACT_NO_NAN",
+  "authority": {
+    "protected_main_commit": "e2fc6953:48f1f29d:3352fb94:f862c70b:71430e53",
+    "sample_holdout_v2": {
+      "path": "configs/governance/sample-holdout-v2.json",
+      "sha256": "c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f",
+      "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+      "status": "ACTIVE_GOVERNANCE_AUTHORITY_BLOCKERS_REMAIN"
+    },
+    "inherited_event_schema": {
+      "path": "schemas/governance/sample-access-event-v1.schema.json",
+      "sha256": "2c01f376:636c2aae:8cda666e:77f8aff5:17f5072b:729b21cf:2eed8eb4:52a786cb",
+      "schema_version": "qme.sample_access_event.v1",
+      "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+      "lineage_rule": "PRESERVE_V1_EVENT_BYTES_AND_HASH_SEMANTICS_NO_REWRITE"
+    },
+    "proposal": {
+      "path": "docs/governance/M0_REGISTRATION_PROPOSALS_2026-08-12.md",
+      "sha256": "5869d313:e179e442:e305704e:7cff5031:786d7452:73c0f864:bc910784:8685847c",
+      "role": "REGISTERED_PROPOSAL_PROVENANCE_NOT_PRODUCTION_EVIDENCE"
+    },
+    "m0_registration": {
+      "path": "configs/governance/m0-registration-v1.json",
+      "sha256": "fc61bb24:5e99c5a7:ac8de1ad:f909b785:2f3a651c:7925d0fb:63037db7:45946756"
+    },
+    "experiment_family_registration": {
+      "path": "configs/governance/experiment-family-registration-v1.json",
+      "sha256": "016ac219:ea2dd117:58ebbb3d:c32b89b0:41d951e5:878812c1:0fbc396f:a4f09b40"
+    },
+    "freeze_v3": {
+      "path": "configs/governance/specification-freeze-policy-v3.json",
+      "sha256": "a8af9098:52e71ec1:b91a5c23:30290bec:967e443b:d616997b:4020a599:0af0ec53",
+      "semantic_sha256": "9c3f240e:c22f3716:b5576d84:630e34da:e9c50e2a:fbdd8486:2baa9134:037b799a",
+      "active_blocker_count": 14
+    },
+    "registry_v1": {
+      "path": "configs/governance/experiment-registry-v1.json",
+      "sha256": "16cc38d2:ae3b6e1d:261691b5:6f0e6960:554f5926:420e9527:d8880c8b:5e1d53be",
+      "role": "VERSIONED_CONSUMER_LINEAGE_NOT_MODIFIED",
+      "protected_business_runtime": {
+        "path": "qme/experiments/registry.py",
+        "sha256": "dba251da:59362a2f:c44c9660:58a3f067:f0e810a3:9551a929:e5e603e5:6f014785",
+        "registry_id": "NEE-122-GLOBAL-EXPERIMENT-REGISTRY-V1",
+        "event_schema_version": "qme.experiment_registry_event.v1",
+        "replay_api": "qme.experiments.registry.replay_registry"
+      },
+      "nee121_holdout_manifest_binding": {
+        "artifact_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+        "source_id": "configs/governance/sample-holdout-v1.hashes.json",
+        "sha256": "e28864a8:067f8e23:3ea880f0:08229991:6d986ed6:8614a678:2616aa93:f96f91a2"
+      }
+    },
+    "transitive_manifests": [
+      {"path": "configs/governance/sample-holdout-v2.hashes.json", "sha256": "675902c9:c355604f:365811a5:6f2b1c98:658ffacf:59af56c8:b7f30b2b:5c6b5e83"},
+      {"path": "configs/governance/m0-registration-v1.hashes.json", "sha256": "b1375860:485bf393:df34d588:545bf1a2:738f5efd:c703825c:62c3430c:b427c6db"},
+      {"path": "configs/governance/specification-freeze-v3.hashes.json", "sha256": "5a492ded:1fc4cc3b:3d9756dd:b816234a:72009dc0:80e38f99:f8a40110:43d035d4"},
+      {"path": "configs/governance/experiment-registry-v1.hashes.json", "sha256": "aebdca44:dc207f9d:87b5349b:0c9fe19a:f5ac77ab:fcfdc53d:0662a9a1:98dd728f"}
+    ]
+  },
+  "implementation_contract": {
+    "full_chain_validation_before_root": true,
+    "chain_identity_rule": "STABLE_CHAIN_ID_AND_FIXED_ZERO_GENESIS_HASH",
+    "predecessor_rule": "GENESIS_SENTINEL_OR_EXACT_PRIOR_EXPORT_SHA_ROOT_COUNT_AND_HEAD",
+    "extension_rule": "NEW_EXPORT_MUST_PROVE_BYTE_EXACT_ORDERED_PREFIX_EQUALITY_TO_PRIOR_EXPORT_INDEX_AND_OBJECTS",
+    "content_address_rule": "SHA256(OBJECT_DOMAIN || CANONICAL_FULL_EVENT_BYTES)",
+    "ordered_index_rule": "ONE_CONTIGUOUS_ROW_PER_EVENT_SEQUENCE_IN_FULL_GLOBAL_CHAIN",
+    "leaf_rule": "SHA256(LEAF_DOMAIN || UINT64_BE_SEQUENCE || OBJECT_DIGEST)",
+    "node_rule": "SHA256(NODE_DOMAIN || LEFT_DIGEST || RIGHT_DIGEST)",
+    "root_rule": "SHA256(ROOT_DOMAIN || CANONICAL_CHAIN_LINEAGE || EVENT_TREE_ROOT)",
+    "odd_node_rule": "DUPLICATE_LAST_DIGEST_AT_EACH_LEVEL",
+    "proof_rule": "ORDERED_LEAF_TO_ROOT_SIBLING_PATH_WITH_EXPLICIT_LEFT_OR_RIGHT_SIDE",
+    "proof_trust_rule": "REQUIRE_EXACT_TRUSTED_EXPORT_ID_CHAIN_ID_GENESIS_COUNT_HEAD_INDEX_ROOT_AND_EXPORT_COMMITMENT",
+    "object_domain_utf8": "qme.sample_access_chain.v2.object\\u0000",
+    "leaf_domain_utf8": "qme.sample_access_chain.v2.leaf\\u0000",
+    "node_domain_utf8": "qme.sample_access_chain.v2.node\\u0000",
+    "root_domain_utf8": "qme.sample_access_chain.v2.root\\u0000",
+    "compact_event_max_bytes_exclusive": 2097152,
+    "export_max_bytes_exclusive": 67108864,
+    "compact_registry_max_bytes_exclusive": 2097152,
+    "known_answer_event_count": 10000,
+    "determinism_targets": ["WINDOWS_PYTHON_3_12_10", "LINUX_PYTHON_3_12_10"],
+    "resolver_rule": "IMMUTABLE_VERIFIED_EXPORT_RESOLVER_WITH_EXACT_PRIOR_RESOLVER_REQUIRED_FOR_PRIOR_EXPORT_LINEAGE",
+    "result_serialization_rule": "NO_IN_PROCESS_CAPABILITY_AUTHORITY_REVALIDATE_EXPORT_LINEAGE_RESOLVER_AND_COMPACT_REGISTRY_THEN_EXACT_COMPARE_ALL_RESULT_FIELDS",
+    "versioned_registry_adapter_rule": "CONTENT_ADDRESSED_COMPACT_V2_SOURCE_REGISTRY_WITH_INDEPENDENT_V2_SEQUENCE_PREVIOUS_HASH_AND_EVENT_HASH_VALIDATION_EXTERNAL_ACCESS_EXPORT_RESOLUTION_IN_MEMORY_V1_SHADOW_TRANSLATION_PROTECTED_REPLAY_AND_EXACT_BUSINESS_STATE_PARITY_NO_CALLER_AUTHORED_CONTEXT_OR_EMBEDDED_ACCESS_EVENT_CHAIN",
+    "versioned_registry_payload_schema_rule": "ALL_NINE_ALLOWED_EVENT_TYPES_HAVE_EXACT_PER_TYPE_PAYLOAD_AND_TRIAL_ID_CONDITIONALS_ALIGNED_TO_PROTECTED_V1_OR_COMPACT_V2_RUNTIME_VALIDATION",
+    "versioned_registry_timestamp_constructor_rule": "EXACT_DATETIME_TYPE_OFFSET_REQUIRED_NO_NAIVE_AMBIENT_TIMEZONE_CANONICALIZE_AWARE_INPUT_TO_UTC_Z",
+    "experiment_registry_prefix_commitment_fields": ["CONTENT_ADDRESSED_DERIVED_PATH", "RAW_SHA256", "EVENT_COUNT", "HEAD_HASH", "SHADOW_V1_STATE_SHA256", "BUSINESS_PROJECTION_SHA256", "EXPORT_HASH"],
+    "experiment_registry_prefix_required_events": ["POLICY_REGISTERED", "TRIAL_REGISTERED", "TRIAL_STARTED", "SAMPLE_ACCESS_BOUND_COMPACT", "OUTCOME_RECORDED"],
+    "versioned_registry_source_event_rule": "LEGACY_V1_BUSINESS_EVENTS_REENCODED_IN_V2_HASH_CHAIN_PLUS_COMPACT_SAMPLE_ACCESS_RECEIPT_ONLY_FULL_ACCESS_CHAIN_RESOLVED_EXTERNALLY_AND_NEVER_SERIALIZED_IN_V2_INPUT_OR_EXPORT",
+    "versioned_registry_translation_rule": "RECOMPUTE_COMPLETE_IN_MEMORY_V1_SHADOW_EVENT_CHAIN_BECAUSE_COMPACT_V2_AND_SHADOW_V1_EVENT_HASHES_DIFFER_SUBSEQUENT_EVENTS_TRANSLATE_TO_SHADOW_PREVIOUS_HASHES_PROTECTED_REPLAY_IS_BUSINESS_SEMANTICS_ORACLE",
+    "versioned_registry_schema_path": "schemas/governance/compact-experiment-registry-v2.schema.json",
+    "versioned_registry_outcome_scope": "EXACTLY_ONE_REPLAYED_OUTCOME_FOR_THE_MATCHED_RUNNING_TRIAL_OTHERWISE_FAIL_CLOSED",
+    "latest_success_rule": "MAX_PARSED_UTC_INSTANT_RETURN_ORIGINAL_TEXT_FIRST_EVENT_WINS_EQUAL_INSTANT_TIE",
+    "event_schema_parity_rule": "EXPORT_AND_PROOF_SHARE_EXACT_STRUCTURAL_EVENT_DEFS_WITH_TRIMMED_TEXT_ISO_DATE_AND_OFFSET_DATETIME_FORMATS_NFC_AND_CROSS_FIELD_SEMANTICS_RUNTIME_ONLY",
+    "registry_outcome_projection": [
+      "ALL_ACCESS_SUCCESS_EVENT_HASHES",
+      "CURRENT_RUN_ACCESS_SUCCESS_EVENT_HASHES",
+      "LATEST_SUCCESS_ACCESSED_AT",
+      "GLOBAL_EXPOSED_SEVEN_FIELD_WINDOW_IDENTITIES_NOT_REGISTERED_CITATION_IDS",
+      "ALL_SAME_TRIAL_PRIOR_AND_CURRENT_RUN_SUCCESS_AND_EXPOSURE_IDENTIFIERS"
+    ]
+  },
+  "known_answer_scope": {
+    "synthetic_only": true,
+    "causal_pattern": "ATTEMPT_DENIAL_RETRY_SUCCESS_REPEAT",
+    "contains_denial_retry_and_prior_success_history": true,
+    "contains_multi_binding_extension_case": true,
+    "extension_prefix_event_count": 9000,
+    "extension_suffix_current_run_event_count": 1000,
+    "extension_evidence_rule": "SECOND_EXPORT_BINDS_EXACT_9000_EVENT_PREDECESSOR_AND_PRESERVES_INDEX_AND_OBJECT_PREFIX",
+    "versioned_registry_known_answer_rule": "ACTUAL_10000_EVENT_EXTERNAL_CHAIN_TWO_SUCCESSIVE_COMPACT_BINDINGS_NO_EMBEDDED_ACCESS_CHAIN_V2_SOURCE_EVENTS_AND_PROTECTED_V1_SHADOW_BUSINESS_REPLAY",
+    "production_scale_claim": false
+  },
+  "active_blockers": [
+    {"blocker_code":"NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL","ticket_id":"NEE-110","category":"GOVERNANCE","description":"Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."},
+    {"blocker_code":"NEE-116-ASYMMETRIC-COST-METHOD","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."},
+    {"blocker_code":"NEE-116-CAPACITY-SOLVER","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"The authoritative greatest-capital discrete cost-aware solver remains unavailable."},
+    {"blocker_code":"NEE-116-CORPORATE-ACTION-EDGE-CASES","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."},
+    {"blocker_code":"NEE-116-PRODUCTION-PIT-DATA","ticket_id":"NEE-116","category":"PRODUCTION_EVIDENCE","description":"Accepted point-in-time production data and receipts are unavailable."},
+    {"blocker_code":"NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-116","category":"ENGINEERING_EVIDENCE","description":"Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."},
+    {"blocker_code":"NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-119-AV-PROXY-EVIDENCE","ticket_id":"NEE-119","category":"PRODUCTION_EVIDENCE","description":"No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."},
+    {"blocker_code":"NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-120","category":"ENGINEERING_EVIDENCE","description":"Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."},
+    {"blocker_code":"NEE-121-CALENDAR-SESSION-REGISTRATION","ticket_id":"NEE-121","category":"PRODUCTION_EVIDENCE","description":"XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."},
+    {"blocker_code":"NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP","ticket_id":"NEE-121","category":"FINAL_DERIVED_EVIDENCE","description":"The final freeze anchor and receipt remain unavailable until every other blocker is accepted."},
+    {"blocker_code":"NEE-122-CORRELATED-TRIAL-FIXTURE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."},
+    {"blocker_code":"NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"The registered estimator and bootstrap uncertainty procedure are not implemented."},
+    {"blocker_code":"NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION","ticket_id":"NEE-122","category":"ENGINEERING_EVIDENCE","description":"A production-scale content-addressed access-chain export and inclusion proof remain unavailable."}
+  ],
+  "claims": {
+    "production_access_chain_inclusion_available": false,
+    "production_sample_access_evidence_available": false,
+    "prospective_observations_consumable": false,
+    "production_specification_accepted": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "empirical_performance_available": false,
+    "alpha_proven": false,
+    "blocker_cleared": false
+  },
+  "semantic_sha256": "12890e29:81846aec:f51950a3:48857860:639cd9a7:5a281529:61bbc3c7:9cf14e23"
+}
