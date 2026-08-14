@@ -122,6 +122,63 @@ inference implementation, capacity, effective-trials/DSR computation, the final 
 anchor/receipt, prospective consumption, alpha, production readiness, and live orders
 remain unavailable. The anomalous NEE-110 workflow state is not repaired by NEE-172.
 
+## 4B. NEE-176 bounded access-chain engineering acceptance — 2026-08-14
+
+Specification Freeze V4 is `CI_VERIFIED_BOUNDED_ACCESS_CHAIN_ENGINEERING_ACCEPTANCE`
+on protected `main` commit `23d1dc81c668764819e675da34577111908adfb7`
+(tree `f4858986d3b7d95f1fa8acb41bbf0c50152d173b`; committed
+`2026-08-13T23:09:14-07:00` / `2026-08-14T06:09:14Z`). PR #21 branch
+commit `5c78e70dc1ff097fa1bffb1238ed4cf8e246e90f` passed run
+`31774493328` / job `94687021090`; the protected merge passed run
+`31775324508` / job `94689467233`. This receipt was observed after protected
+CI completed, at exactly `2026-08-14T06:36:08.1833305Z`.
+
+The V4 policy raw/semantic SHA-256 values are
+`adf2288b32532669cdd7fa9d4876132b222916d2c754f0066003a6cd1a4fb458` and
+`90acc8865efb56e639bab29b0efd13bcc1f8124991dca9c95179c3be1c528771`.
+The V4 export V3 raw/derived values are
+`e1591734256318edd82c69696eef1b9dde418f2b7f26b41f684c4038c6a86f41` and
+`397a6f05ae72523eac068ffd6ed76fdf1d2d6bc684fa96891f1ad1447814ff9b`;
+the V4 outer manifest is
+`a2c3bbfad15e7bd3769142ad69c291e7885cd14d6ca2d93999c39df25360ea42`.
+The policy schema, export schema, and runtime hashes are respectively
+`374a729fc6277ae901fb2b0da1a28172e966e669cb48874bd7a772afcd48d3ee`,
+`eb09c59127003dad45c84b1b25ed07e9cc0943640157da88d310aec9b79b06ac`,
+and `575d85c3d90ebd3920ec1d9acc98efa80ad5acfcec289cf942453ea01f33ff6e`.
+The immutable predecessor remains Specification Freeze V3 policy
+`a8af909852e71ec1b91a5c2330290bec967e443bd616997b4020a5990af0ec53`,
+export `899f222de69a63b10653dd6310a98329d496a06b772cfcd5de16e0b27bd9fcab`,
+and manifest `5a492ded1fc4cc3b3d9756ddb816234a72009dc080e38f99f8a4011043d035d4`.
+
+Linear comment `930f091d-b21f-4ea1-b308-15aec70c16b3` on NEE-176 is the bounded
+acceptance authority. It records disposition
+`PRODUCTION_SCALE_IMPLEMENTATION_EVIDENCE_ONLY_SYNTHETIC_KAT`. Independent
+review by `repo_readiness_redteam` returned `GO`, P0=0 and P1=0; local evidence
+was 840 passing tests, followed by successful branch and protected-main CI.
+
+The blocker transition is exactly 14 to 13 and resolves only
+`NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION`. The active blocker codes are:
+
+- `NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL`
+- `NEE-116-ASYMMETRIC-COST-METHOD`
+- `NEE-116-CAPACITY-SOLVER`
+- `NEE-116-CORPORATE-ACTION-EDGE-CASES`
+- `NEE-116-PRODUCTION-PIT-DATA`
+- `NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE`
+- `NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP`
+- `NEE-119-AV-PROXY-EVIDENCE`
+- `NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE`
+- `NEE-121-CALENDAR-SESSION-REGISTRATION`
+- `NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP`
+- `NEE-122-CORRELATED-TRIAL-FIXTURE`
+- `NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE`
+
+This receipt does not establish production sample observations, M0 completion,
+the final freeze receipt, prospective consumption, inference implementation,
+alpha, a production calendar, portfolio capacity, or live-order authority. The
+next gate is to publish this receipt PR and verify its exact protected-main CI,
+then close only NEE-176 while NEE-122 remains `In Progress`.
+
 ## 5. Verified snapshot — 2026-08-11
 
 ### Repository and validation
