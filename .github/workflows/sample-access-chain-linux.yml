@@ -1,0 +1,68 @@
+name: Sample-access-chain Linux replay
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/sample-access-chain-linux.yml"
+      - "configs/governance/sample-access-chain-v2-evidence.json"
+      - "configs/governance/sample-access-chain-v2.hashes.json"
+      - "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md"
+      - "qme/foundation/lineage.py"
+      - "qme/governance/sample_access_chain_v2.py"
+      - "schemas/governance/compact-experiment-registry-v2.schema.json"
+      - "schemas/governance/sample-access-chain-v2-compact-registry.schema.json"
+      - "schemas/governance/sample-access-chain-v2-evidence.schema.json"
+      - "schemas/governance/sample-access-chain-v2-export.schema.json"
+      - "schemas/governance/sample-access-chain-v2-proof.schema.json"
+      - "tests/fixtures/governance/sample-access-chain-v2-known-answer.json"
+      - "tests/governance/test_sample_access_chain_v2.py"
+      - "scripts/generate_sample_access_chain_v2_fixture.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/sample-access-chain-linux.yml"
+      - "configs/governance/sample-access-chain-v2-evidence.json"
+      - "configs/governance/sample-access-chain-v2.hashes.json"
+      - "docs/governance/SAMPLE_ACCESS_CHAIN_V2.md"
+      - "qme/foundation/lineage.py"
+      - "qme/governance/sample_access_chain_v2.py"
+      - "schemas/governance/compact-experiment-registry-v2.schema.json"
+      - "schemas/governance/sample-access-chain-v2-compact-registry.schema.json"
+      - "schemas/governance/sample-access-chain-v2-evidence.schema.json"
+      - "schemas/governance/sample-access-chain-v2-export.schema.json"
+      - "schemas/governance/sample-access-chain-v2-proof.schema.json"
+      - "tests/fixtures/governance/sample-access-chain-v2-known-answer.json"
+      - "tests/governance/test_sample_access_chain_v2.py"
+      - "scripts/generate_sample_access_chain_v2_fixture.py"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+      - name: Install pinned development environment
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Replay bounded access chain without Windows registry store
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:3] == (3, 12, 10)"
+          python -m pytest -q tests/governance/test_sample_access_chain_v2.py -k private_loader_is_linux_safe
+          python -m pytest -q tests/governance/test_sample_access_chain_v2.py
+          python - <<'PY'
+          from pathlib import Path
+          from qme.governance.sample_access_chain_v2 import (
+              verify_sample_access_chain_v2,
+              verify_sample_access_chain_v2_manifest,
+          )
+          root = Path.cwd()
+          verify_sample_access_chain_v2(root)
+          verify_sample_access_chain_v2_manifest(root)
+          PY

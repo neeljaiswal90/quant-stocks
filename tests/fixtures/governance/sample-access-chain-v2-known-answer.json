@@ -1,0 +1,175 @@
+{
+  "schema_version": "qme.sample_access_chain_known_answer.v1",
+  "generator": {
+    "event_count": 10000,
+    "pattern": "ATTEMPT_DENIAL_RETRY_SUCCESS_REPEAT",
+    "timestamp_rule": "BASE_2026_01_01_PLUS_SEQUENCE_MINUS_ONE_SECONDS_UTC"
+  },
+  "first_event_hash": "f8bb6114:e1d00f32:4c6eda73:338083fd:7bf64984:8d4b7433:b1cc3e7e:11e92d8c",
+  "last_event_hash": "727a94a7:2408b585:8153bc0d:09a34ace:4115d0d0:8cf3c0a5:d0927f54:cc5f580e",
+  "export_sha256": "219ce5fa:ce6b6482:ac7637c0:ad94af32:7519b101:74b05542:761528e1:9938319e",
+  "ordered_index_sha256": "a7eab06d:cfa743d3:3bb4ac66:47a93fb8:175a3319:6b84a301:7bd1eb1e:74865b3c",
+  "merkle_root": "1d12b993:a4f2abd5:f6c04dd2:ed1985e9:d0b5592d:85e81e66:51c0ea33:104f6e77",
+  "compact_registry_summary": {
+    "schema_version": "qme.sample_access_chain_compact_registry.v2",
+    "registry_id": "NEE-176-SAMPLE-ACCESS-CHAIN-COMPACT-REGISTRY-V2",
+    "status": "BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE",
+    "export_id": "NEE-176-DETERMINISTIC-10000-EVENT-KAT",
+    "chain_id": "NEE-121-GLOBAL-SAMPLE-ACCESS-CHAIN",
+    "genesis_event_hash": "00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+    "predecessor": {
+      "kind": "PRIOR_EXPORT",
+      "prior_export_sha256": "dd9df207:bca4ae02:3a4ec012:ad897598:d3689bb2:bbdd46a9:5fdd2954:8485fe2f",
+      "prior_merkle_root": "a2b8bbc2:37cafaa0:d2c0f5ea:480817d1:b761bc93:781828b6:7afbfb3d:dcd33eea",
+      "prior_event_count": 9000,
+      "prior_head_event_hash": "4a1ccab8:d2b0ec9b:f496d0af:14cc2018:8ab75826:e86dc07e:f88f009b:a19ec4cc"
+    },
+    "event_count": 10000,
+    "head_event_hash": "727a94a7:2408b585:8153bc0d:09a34ace:4115d0d0:8cf3c0a5:d0927f54:cc5f580e",
+    "ordered_index_sha256": "a7eab06d:cfa743d3:3bb4ac66:47a93fb8:175a3319:6b84a301:7bd1eb1e:74865b3c",
+    "merkle_root": "1d12b993:a4f2abd5:f6c04dd2:ed1985e9:d0b5592d:85e81e66:51c0ea33:104f6e77",
+    "export_sha256": "219ce5fa:ce6b6482:ac7637c0:ad94af32:7519b101:74b05542:761528e1:9938319e",
+    "current_run_id": "nee-176-kat-run",
+    "outcome_projection_sha256": "95a3117e:697331fe:9a2ac09d:9ba08c58:3d122864:5ea95866:2747a3c1:aabd42b7",
+    "all_success_count": 2500,
+    "current_run_success_count": 250,
+    "latest_success_accessed_at": "2026-01-01T02:46:39Z",
+    "global_exposed_window_identity_count": 2500
+  },
+  "extension_summary": {
+    "prior_export_id": "NEE-176-DETERMINISTIC-9000-EVENT-PREFIX-KAT",
+    "prior_event_count": 9000,
+    "prior_head_event_hash": "4a1ccab8:d2b0ec9b:f496d0af:14cc2018:8ab75826:e86dc07e:f88f009b:a19ec4cc",
+    "prior_merkle_root": "a2b8bbc2:37cafaa0:d2c0f5ea:480817d1:b761bc93:781828b6:7afbfb3d:dcd33eea",
+    "prior_export_sha256": "dd9df207:bca4ae02:3a4ec012:ad897598:d3689bb2:bbdd46a9:5fdd2954:8485fe2f",
+    "extension_event_count": 10000,
+    "extension_suffix_count": 1000,
+    "extension_current_run_id": "nee-176-kat-run",
+    "prefix_index_sha256": "40425887:0112964e:ea3b8461:63a4d776:c42cf258:11faa97a:02f51069:c0c2ec6c",
+    "prefix_objects_sha256": "a68edc2c:761c39fc:efb9433a:8d27d603:6a81d9e0:7b6eadcf:3b6d9c02:03f244b6"
+  },
+  "versioned_registry_consumer": {
+    "caller_authored_context_allowed": false,
+    "authority_source": "CONTENT_ADDRESSED_COMPACT_V2_REGISTRY_WITH_IN_MEMORY_PROTECTED_V1_SHADOW_REPLAY",
+    "commitment_fields": [
+      "CONTENT_ADDRESSED_DERIVED_PATH",
+      "RAW_SHA256",
+      "EVENT_COUNT",
+      "HEAD_HASH",
+      "SHADOW_V1_STATE_SHA256",
+      "BUSINESS_PROJECTION_SHA256",
+      "EXPORT_HASH"
+    ],
+    "required_event_types": [
+      "POLICY_REGISTERED",
+      "TRIAL_REGISTERED",
+      "TRIAL_STARTED",
+      "SAMPLE_ACCESS_BOUND_COMPACT",
+      "OUTCOME_RECORDED"
+    ]
+  },
+  "versioned_registry_known_answer": {
+    "external_event_count": 10000,
+    "external_export_sha256": "20526199:f2e75b03:0fb69c06:524f4a0c:1c44e995:4c219c46:a4ebd14f:5fc6d271",
+    "external_merkle_root": "c6c69705:d493f1ed:24423ba7:ed78e85f:fe771e51:2054bd12:667c81af:ada1fc09",
+    "external_head_event_hash": "b56fbf4d:688d204d:f8413b1d:4e2720a5:a9c4c349:890b34eb:cda04593:9fab9348",
+    "registry_event_count": 7,
+    "compact_binding_count": 2,
+    "registry_export_sha256": "55e0f237:92a18fe6:566d31b7:1e0af9e0:137c069d:0d39cbee:929d2406:6d2f207b",
+    "registry_head_hash": "e6ac2f59:5a5229b6:1088692c:b54ee2ca:4a767454:d3c57082:19dcd761:423f136f",
+    "shadow_v1_head_hash": "d84e034b:10a5b32b:16522b36:2e285df4:9b042f86:5cc6ffb5:2dffddb7:f6adf362",
+    "shadow_v1_state_sha256": "f243de38:9945d3d8:6c537373:b1ec3d1b:28b9af43:b32c28b1:01ff872e:1d79fee3",
+    "business_projection_sha256": "84e511c0:4f514f65:c59417a8:bf7b736f:35844d09:9b3b8244:be1c478a:ee742889",
+    "registry_serialized_bytes": 58519,
+    "maximum_registry_event_bytes": 17867,
+    "compact_binding_event_bytes": [1921, 2055],
+    "maximum_compact_binding_growth_bytes": 134,
+    "contains_access_event_chain_key": false,
+    "current_state_sha256": "e611dd75:19a3b101:51fd89e1:281bbefa:b3e01496:381ecf8f:d2db8518:24abf07c"
+  },
+  "proof_sequences": [
+    1,
+    2,
+    3,
+    5000,
+    9999,
+    10000
+  ],
+  "proofs_sha256": "7cf82bd7:5bf85a67:785b31da:eac24fa4:10e82f2f:095720b2:4641397e:6475ff94",
+  "terminal_proof": {
+    "schema_version": "qme.sample_access_chain_proof.v2",
+    "export_id": "NEE-176-DETERMINISTIC-10000-EVENT-KAT",
+    "sequence": 10000,
+    "chain_id": "NEE-121-GLOBAL-SAMPLE-ACCESS-CHAIN",
+    "genesis_event_hash": "00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000",
+    "predecessor": {
+      "kind": "PRIOR_EXPORT",
+      "prior_event_count": 9000,
+      "prior_export_sha256": "dd9df207:bca4ae02:3a4ec012:ad897598:d3689bb2:bbdd46a9:5fdd2954:8485fe2f",
+      "prior_head_event_hash": "4a1ccab8:d2b0ec9b:f496d0af:14cc2018:8ab75826:e86dc07e:f88f009b:a19ec4cc",
+      "prior_merkle_root": "a2b8bbc2:37cafaa0:d2c0f5ea:480817d1:b761bc93:781828b6:7afbfb3d:dcd33eea"
+    },
+    "head_event_hash": "727a94a7:2408b585:8153bc0d:09a34ace:4115d0d0:8cf3c0a5:d0927f54:cc5f580e",
+    "ordered_index_sha256": "a7eab06d:cfa743d3:3bb4ac66:47a93fb8:175a3319:6b84a301:7bd1eb1e:74865b3c",
+    "export_sha256": "219ce5fa:ce6b6482:ac7637c0:ad94af32:7519b101:74b05542:761528e1:9938319e",
+    "leaf_count": 10000,
+    "event": {
+      "access_mode": "READ",
+      "accessed_at": "2026-01-01T02:46:39Z",
+      "actor_id": "nee-176-deterministic-generator",
+      "analysis_as_of": "2026-01-31T00:00:00Z",
+      "artifact_bindings": [
+        {
+          "artifact_id": "SYNTHETIC-KAT",
+          "artifact_sha256": "b2e82de2:f203fc75:1d399f53:c475b15d:7f3a7a4d:92dc659a:823b6c17:b3f17d06"
+        },
+        {
+          "artifact_id": "TRIAL-REGISTRATION",
+          "artifact_sha256": "d9621085:162287a2:2ef1fad7:4d0c6b21:fb4b2b03:7f7c0463:3ef7d429:eb4c4929"
+        }
+      ],
+      "contract_version": "v1",
+      "data_vintage_at": "2026-01-01T00:00:00Z",
+      "data_vintage_sha256": "6ab54cec:b0e84240:4aec8667:ce99184c:da6493c5:d3c8a395:6daf2e6b:605d0f2f",
+      "event_hash": "727a94a7:2408b585:8153bc0d:09a34ace:4115d0d0:8cf3c0a5:d0927f54:cc5f580e",
+      "event_id": "nee-176-kat-10000",
+      "event_type": "ACCESS_SUCCESS",
+      "governance_contract_id": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V1",
+      "parent_event_hash": "1b61229e:1d065bad:a31bb79a:e7752b15:790bd2b4:e1e65dd2:7f5dc061:af7538eb",
+      "previous_event_hash": "1b61229e:1d065bad:a31bb79a:e7752b15:790bd2b4:e1e65dd2:7f5dc061:af7538eb",
+      "purpose": "BOUNDED_SYNTHETIC_KNOWN_ANSWER",
+      "query_id": "query-02499",
+      "request_content_sha256": "ff2a281e:c0ef72dc:e55479ee:dbf5fd66:924e86c9:4c06267e:9d406bf4:f3580206",
+      "requested_end": "2025-12-31",
+      "requested_start": "2022-01-01",
+      "run_id": "nee-176-kat-run",
+      "sample_classification": "RETROSPECTIVE_EXTERNAL_STRESS_2022_PLUS",
+      "schema_version": "qme.sample_access_event.v1",
+      "sequence": 10000,
+      "trial_id": "trial-02499"
+    },
+    "event_hash": "727a94a7:2408b585:8153bc0d:09a34ace:4115d0d0:8cf3c0a5:d0927f54:cc5f580e",
+    "content_sha256": "c8f1d510:2ef34a59:a91c5642:1b838e4d:ab11f11d:7e191100:924dc6db:0852ece3",
+    "leaf_sha256": "15ad82e1:25166ce3:04eb5a20:3fa832e8:2e0d1bc7:fc63d667:8fe9ecaa:7928979a",
+    "merkle_root": "1d12b993:a4f2abd5:f6c04dd2:ed1985e9:d0b5592d:85e81e66:51c0ea33:104f6e77",
+    "odd_node_rule": "DUPLICATE_LAST_DIGEST_AT_EACH_LEVEL",
+    "steps": [
+      {"side": "LEFT", "sibling_sha256": "60cbe028:57468eea:c26c6fca:44363690:2a194414:402891ea:7819a01a:7f1f672c"},
+      {"side": "LEFT", "sibling_sha256": "e40b71d4:beb64290:1dd2eeb1:dc0342c3:08d7addc:1326236d:bba95741:15c5ebf6"},
+      {"side": "LEFT", "sibling_sha256": "3e63bd40:48ea6179:ea23b9f3:44201403:1c839caa:2fe1708e:1ce19db3:dce036c6"},
+      {"side": "LEFT", "sibling_sha256": "3acb3480:fba048af:265fb7ce:a19ab266:2df75868:4e8b480f:381680ea:1354fe5b"},
+      {"side": "RIGHT", "sibling_sha256": "6a3c87c4:cfbc01fd:40290743:479226b7:390f51df:9ab5f5cc:c723a0c6:3acde7dc"},
+      {"side": "RIGHT", "sibling_sha256": "e7e82e06:57a9b924:ba82fe58:88e85ee6:dd50a639:a95cf2c3:51d93f60:5ecc9ee3"},
+      {"side": "RIGHT", "sibling_sha256": "09a8143b:e08befa6:69698280:1aa08ebb:7ec61a30:69278497:f0906032:3ff60ee3"},
+      {"side": "RIGHT", "sibling_sha256": "3d21b374:d9e36d05:440b3791:1fb45279:e902cbad:76c79265:9af30fca:5313951f"},
+      {"side": "LEFT", "sibling_sha256": "75eb5e15:9ddcaabe:66e3d087:5b6fe03b:167a3737:88acca33:7688f572:e0342805"},
+      {"side": "LEFT", "sibling_sha256": "d7538026:e57b1ee4:0488c732:8d05c4b0:bfdee730:b0be5708:2e7574e1:7e4b2fb1"},
+      {"side": "LEFT", "sibling_sha256": "42cb8ef9:e55b062f:65ea3893:1ebb9ac6:591dc1e4:28e9004c:b19d9d37:6a8b9bb2"},
+      {"side": "RIGHT", "sibling_sha256": "c9358651:524b13e6:e04bbc7c:22272d98:e59d1844:e945f493:68496bbd:d61a35b0"},
+      {"side": "RIGHT", "sibling_sha256": "cc003bbb:ee722e9b:37327194:94152eda:cc1e7ea9:c2b2f062:f9b487e0:077ae23e"},
+      {"side": "LEFT", "sibling_sha256": "a777bb90:87972d7a:3cd8fa2c:abda7c30:c3a9099c:4714708d:6a80d3c0:004841d6"}
+    ]
+  },
+  "serialized_export_bytes": 16989691,
+  "maximum_serialized_event_bytes": 1342
+}
