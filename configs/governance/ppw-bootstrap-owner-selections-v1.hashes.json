@@ -1,0 +1,39 @@
+{
+  "schema_version": "qme.ppw_bootstrap_owner_selections_manifest.v1",
+  "artifact_id": "QME-PPW-BOOTSTRAP-OWNER-SELECTIONS-V1",
+  "ticket_id": "NEE-204",
+  "status": "OWNER_SELECTIONS_REGISTERED_IMPLEMENTATION_AUTHORIZED_KAT_PENDING_ZERO_BLOCKERS_RESOLVED",
+  "artifacts": [
+    {
+      "path": "configs/governance/ppw-bootstrap-owner-selections-v1.json",
+      "sha256": "6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6"
+    },
+    {
+      "path": "docs/governance/PPW_BOOTSTRAP_OWNER_SELECTIONS_V1.md",
+      "sha256": "576a18e9:337ec16a:d714735f:5a84169d:41c7cb4d:39be43b2:f918a620:4ca3b8b9"
+    },
+    {
+      "path": "qme/governance/ppw_bootstrap_owner_selections.py",
+      "sha256": "0654f3c7:de853ddd:d9a0959f:f1806973:67f05632:91a6c333:7d87bba2:421d1d61"
+    },
+    {
+      "path": "schemas/governance/ppw-bootstrap-owner-selections-v1.schema.json",
+      "sha256": "7f2aa29c:2a836e2b:08012759:9c6a14ce:ce693f34:cbaf7374:29acaf34:4709f9dc"
+    },
+    {
+      "path": "tests/fixtures/governance/ppw-bootstrap-owner-decision-receipt-v1.json",
+      "sha256": "0bee5d6c:e2166e54:841ef5f7:43b83433:85c14cbe:f01151f8:50dc7d68:531bd039"
+    },
+    {
+      "path": "tests/governance/test_ppw_bootstrap_owner_selections.py",
+      "sha256": "156e4cfb:86e0e043:a9fd7009:607439d9:aac4fd2e:7c744d2b:c9186d68:608e4b62"
+    }
+  ],
+  "limitations": [
+    "NO_EXECUTABLE_PPW_SELECTOR_IN_THIS_ARTIFACT",
+    "NO_ACCEPTED_SELECTION_009_KAT_OR_N_EFF_USED",
+    "NO_DSR_HOLM_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "NO_FREEZE_V4_BLOCKER_REMOVAL",
+    "NO_FINAL_FREEZE_M0_ALPHA_READINESS_OR_LIVE_ORDER_AUTHORITY"
+  ]
+}

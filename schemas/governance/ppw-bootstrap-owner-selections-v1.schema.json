@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/ppw-bootstrap-owner-selections-v1.schema.json",
+  "title": "QME PPW Bootstrap Owner Selections V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "artifact_id",
+    "ticket_id",
+    "status",
+    "semantic_sha256",
+    "authority",
+    "registered_owner_selections",
+    "remaining_evidence_selection",
+    "implementation_authorization",
+    "active_freeze_v4_blockers",
+    "claims",
+    "nonclaims"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/ppw-bootstrap-owner-selections-v1.schema.json"},
+    "schema_version": {"const": "qme.ppw_bootstrap_owner_selections.v1"},
+    "artifact_id": {"const": "QME-PPW-BOOTSTRAP-OWNER-SELECTIONS-V1"},
+    "ticket_id": {"const": "NEE-204"},
+    "status": {"const": "OWNER_SELECTIONS_001_THROUGH_008_REGISTERED_IMPLEMENTATION_AUTHORIZED_KAT_009_PENDING"},
+    "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protected_main", "predecessor", "owner_decision", "freeze_v4", "deterministic_stats_kernel", "empirical_results_used"],
+      "properties": {
+        "protected_main": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["commit", "tree"],
+          "properties": {
+            "commit": {"$ref": "#/$defs/groupedSha1"},
+            "tree": {"$ref": "#/$defs/groupedSha1"}
+          }
+        },
+        "predecessor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["config_path", "config_sha256", "semantic_sha256", "schema_path", "schema_sha256", "runtime_path", "runtime_sha256", "manifest_path", "manifest_sha256", "status"],
+          "properties": {
+            "config_path": {"const": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.json"},
+            "config_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "schema_path": {"const": "schemas/governance/ppw-bootstrap-uncertainty-authority-v1.schema.json"},
+            "schema_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "runtime_path": {"const": "qme/governance/ppw_bootstrap_uncertainty_authority.py"},
+            "runtime_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "manifest_path": {"const": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.hashes.json"},
+            "manifest_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "status": {"const": "SOURCE_EQUATIONS_REGISTERED_OWNER_SELECTIONS_UNRESOLVED_NO_EXECUTION"}
+          }
+        },
+        "owner_decision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["system", "issue_id", "comment_id", "author_id", "author_name", "created_at", "updated_at", "body_utf8_bytes", "body_sha256", "approved_draft_snapshot"],
+          "properties": {
+            "system": {"const": "LINEAR"},
+            "issue_id": {"const": "NEE-204"},
+            "comment_id": {"const": "a22d017e-816e-4ba5-9a05-5c05fdb5b709"},
+            "author_id": {"const": "a2f77320-3e15-4fe3-acea-a276546a8274"},
+            "author_name": {"const": "Neel Jaiswal"},
+            "created_at": {"const": "2026-08-14T18:17:10.834Z"},
+            "updated_at": {"const": "2026-08-14T18:22:07.616Z"},
+            "body_utf8_bytes": {"const": 4503},
+            "body_sha256": {"const": "8fcb9c9d:5b3614ac:76f13cce:95c9b650:59128b5e:19a8c2fb:7bbab55e:af539396"},
+            "approved_draft_snapshot": {
+              "const": {
+                "display_path": "docs/governance/PPW_UNRESOLVED_DISPOSITIONS_PROPOSAL_2026-08-14.md",
+                "role": "OWNER_DECISION_EVIDENCE_NOT_REPOSITORY_AUTHORITY",
+                "utf8_bytes": 10120,
+                "sha256": "9ea16f1c:ffa66c78:2a8e29b4:f8d9dae9:c407813c:27826aaa:556de9d2:c5d1d202"
+              }
+            }
+          }
+        },
+        "freeze_v4": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256", "semantic_sha256", "manifest_path", "manifest_sha256", "active_blocker_count"],
+          "properties": {
+            "path": {"const": "configs/governance/specification-freeze-policy-v4.json"},
+            "sha256": {"$ref": "#/$defs/groupedSha256"},
+            "semantic_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "manifest_path": {"const": "configs/governance/specification-freeze-v4.hashes.json"},
+            "manifest_sha256": {"$ref": "#/$defs/groupedSha256"},
+            "active_blocker_count": {"const": 13}
+          }
+        },
+        "deterministic_stats_kernel": {
+          "const": {
+            "manifest_path": "tests/fixtures/stats/deterministic-kernel-v1.manifest.json",
+            "manifest_sha256": "a7ecc4f5:91139853:d9142fc6:a7d03208:be73ff19:ea066f74:99ee7166:7b5cbf26",
+            "rng_path": "qme/stats/rng.py",
+            "rng_sha256": "9f8ad5df:c03dd183:f04e9c9a:496912df:b4c7616a:40747be2:476619cd:f1ba462d",
+            "seed_mapping": "SPLITMIX64_FIRST_TWO_OUTPUTS_TO_PCG32_INITSTATE_INITSEQ"
+          }
+        },
+        "empirical_results_used": {"const": false}
+      }
+    },
+    "registered_owner_selections": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "prefixItems": [
+        {"$ref": "#/$defs/selection001"},
+        {"$ref": "#/$defs/selection002"},
+        {"$ref": "#/$defs/selection003"},
+        {"$ref": "#/$defs/selection004"},
+        {"$ref": "#/$defs/selection005"},
+        {"$ref": "#/$defs/selection006"},
+        {"$ref": "#/$defs/selection007"},
+        {"$ref": "#/$defs/selection008"}
+      ],
+      "items": false
+    },
+    "remaining_evidence_selection": {
+      "const": {
+        "selection_id": "PPW-UNRESOLVED-009-END-TO-END-INTERVAL-KAT",
+        "status": "EVIDENCE_REQUIRED_AFTER_REGISTRATION_AND_IMPLEMENTATION",
+        "required_fixture": "REGISTERED_SEEDED_60_BY_96_RAW_RETURN_MATRIX",
+        "required_outputs": [
+          "FULL_2000_REPLICATE_BOOTSTRAP_DISTRIBUTION_HASH",
+          "ONE_BASED_ORDER_STATISTIC_1950_VALUE",
+          "N_EFF_USED",
+          "WINDOWS_RECOMPUTATION_RECEIPT",
+          "LINUX_RECOMPUTATION_RECEIPT"
+        ],
+        "accepted_values_available": false
+      }
+    },
+    "implementation_authorization": {
+      "const": {
+        "selector_and_bootstrap_conformance_code_authorized": true,
+        "candidate_kat_generation_authorized": true,
+        "production_or_promotion_consumption_authorized": false,
+        "blocker_retirement_authorized": false,
+        "required_next_stage": "EXECUTABLE_IMPLEMENTATION_AND_INDEPENDENT_SELECTION_009_WINDOWS_LINUX_KAT"
+      }
+    },
+    "active_freeze_v4_blockers": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["blocker_code", "ticket_id", "category", "description"],
+        "properties": {
+          "blocker_code": {"type": "string", "minLength": 10},
+          "ticket_id": {"pattern": "^NEE-[0-9]+$"},
+          "category": {"enum": ["GOVERNANCE", "ENGINEERING_EVIDENCE", "PRODUCTION_EVIDENCE", "FINAL_DERIVED_EVIDENCE"]},
+          "description": {"type": "string", "minLength": 20}
+        }
+      }
+    },
+    "claims": {
+      "const": {
+        "owner_selections_001_through_008_registered": true,
+        "conformance_implementation_authorized": true,
+        "ppw_selector_executable": false,
+        "bootstrap_distribution_available": false,
+        "n_eff_used_available": false,
+        "dsr_available": false,
+        "holm_available": false,
+        "empirical_output_available": false,
+        "production_inference_available": false,
+        "freeze_blocker_changed": false,
+        "milestone_m0_complete": false,
+        "production_ready": false,
+        "alpha_proven": false,
+        "live_order_authority": false
+      }
+    },
+    "nonclaims": {
+      "const": [
+        "NO_EXECUTABLE_PPW_SELECTOR_IN_THIS_ARTIFACT",
+        "NO_ACCEPTED_BOOTSTRAP_DISTRIBUTION_INTERVAL_OR_N_EFF_USED",
+        "NO_DSR_OR_HOLM_MULTIPLICITY_OUTPUT",
+        "NO_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+        "NO_FREEZE_V4_BLOCKER_REMOVAL",
+        "NO_FINAL_FREEZE_ALPHA_PRODUCTION_READINESS_M0_OR_LIVE_ORDER_CLAIM"
+      ]
+    }
+  },
+  "$defs": {
+    "groupedSha256": {"pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"},
+    "groupedSha1": {"pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){4}$"},
+    "selectionBase": {
+      "type": "object",
+      "required": ["selection_id", "supersedes_selection_id", "status"],
+      "properties": {"status": {"const": "REGISTERED"}}
+    },
+    "selection001": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-001-96-COLUMN-MEDIAN-AGGREGATION"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-001-96-COLUMN-AGGREGATION"}, "aggregate": {"const": "ARITHMETIC_MEAN_OF_ASCENDING_ONE_BASED_ORDER_STATISTICS_48_AND_49"}, "common_block_formula": {"const": "min(floor(n_common / 4), max(3, ceil(b_agg_raw)))"}, "rejected_alternative": {"const": "MAXIMUM_AGGREGATION"}}}]},
+    "selection002": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-002-FINITE-SAMPLE-AUTOCOVARIANCE"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-002-FINITE-SAMPLE-AUTOCOVARIANCE"}, "autocovariance_denominator": {"const": "n"}, "k_n_formula": {"const": "max(5, ceil(sqrt(log10(n))))"}, "m_max_formula": {"const": "ceil(sqrt(n)) + K_N"}}}]},
+    "selection003": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-003-LAG-SELECTION-AND-FAILURE"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-003-LAG_SELECTION-AND-FALLBACK"}, "minimum_selected_lag": {"const": 1}, "failure": {"const": "PPW_NO_INSIGNIFICANT_RUN"}, "author_code_b_max_fallback_allowed": {"const": false}}}]},
+    "selection004": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-004-DEGENERATE-INPUT-TAXONOMY"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-004-DEGENERATE-INPUTS"}, "nearly_constant_epsilon": {"type": "null"}, "typed_failures": {"type": "array", "minItems": 5, "maxItems": 5}}}]},
+    "selection005": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-005-SHARED-INDEX-FULL-REFIT"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-005-SHARED-ROW-INDEX-AND-REFIT"}}}]},
+    "selection006": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-006-ONCE-ONLY-PCG32-INDEX-STREAM"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-006-RNG-AND-BLOCK-DRAW-CONSTRUCTION"}, "reselect_inside_replicate": {"const": false}}}]},
+    "selection007": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-007-P97_5-ORDER-STATISTIC"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-007-P97_5-QUANTILE"}, "replicates": {"const": 2000}, "one_based_rank": {"const": 1950}, "interpolation": {"const": "NONE"}}}]},
+    "selection008": {"allOf": [{"$ref": "#/$defs/selectionBase"}, {"properties": {"selection_id": {"const": "PPW-REGISTERED-008-INVALID-DISTRIBUTION-CONSERVATIVE-M96"}, "supersedes_selection_id": {"const": "PPW-UNRESOLVED-008-INVALID-REPLICATE-AND-FALLBACK"}, "fallback_n_eff_used": {"const": 96}, "fallback_reason": {"const": "N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96"}, "rejected_alternative": {"const": "HARD_FAIL_ENTIRE_PROMOTION_PATH"}}}]}
+  }
+}
