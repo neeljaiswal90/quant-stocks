@@ -1,0 +1,55 @@
+{
+  "schema_version": "qme.regulatory_fee_historical_schedule_cases.v1",
+  "artifact_id": "NEE-205-REGULATORY-FEE-HISTORICAL-SCHEDULE-CASES-V1",
+  "ticket_id": "NEE-205",
+  "status": "COMPLETE_INDEPENDENT_BOUNDARY_ORACLE",
+  "coverage": {
+    "start_inclusive": "2010-01-04",
+    "end_inclusive": "2026-08-14",
+    "calendar_date_count": 6067
+  },
+  "sec_oracle": [
+    ["2010-01-04","2010-01-15","25.70"],
+    ["2010-01-15","2010-04-01","12.70"],
+    ["2010-04-01","2011-01-21","16.90"],
+    ["2011-01-21","2012-02-21","19.20"],
+    ["2012-02-21","2012-04-01","18.00"],
+    ["2012-04-01","2013-05-25","22.40"],
+    ["2013-05-25","2014-03-18","17.40"],
+    ["2014-03-18","2015-02-14","22.10"],
+    ["2015-02-14","2016-02-16","18.40"],
+    ["2016-02-16","2017-07-04","21.80"],
+    ["2017-07-04","2018-05-22","23.10"],
+    ["2018-05-22","2019-04-16","13.00"],
+    ["2019-04-16","2020-02-18","20.70"],
+    ["2020-02-18","2021-02-25","22.10"],
+    ["2021-02-25","2022-05-14","5.10"],
+    ["2022-05-14","2023-02-27","22.90"],
+    ["2023-02-27","2024-05-22","8.00"],
+    ["2024-05-22","2025-05-14","27.80"],
+    ["2025-05-14","2026-04-04","0"],
+    ["2026-04-04","2026-08-15","20.60"]
+  ],
+  "finra_oracle": [
+    ["2010-01-04","2011-07-01",".000075","3.75","BASE_COVERED_EQUITY"],
+    ["2011-07-01","2012-03-01",".000090","4.50","BASE_COVERED_EQUITY"],
+    ["2012-03-01","2012-07-01",".000095","4.75","BASE_COVERED_EQUITY"],
+    ["2012-07-01","2022-01-01",".000119","5.95","BASE_COVERED_EQUITY"],
+    ["2022-01-01","2023-01-01",".000130","6.49","BASE_COVERED_EQUITY"],
+    ["2023-01-01","2023-11-06",".000145","7.27","PRE_PTF_MEMBER_EXCHANGE_EXEMPTION"],
+    ["2023-11-06","2024-01-01",".000145","7.27","PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED"],
+    ["2024-01-01","2026-01-01",".000166","8.30","PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED"],
+    ["2026-01-01","2026-08-15",".000195","9.79","PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED"]
+  ],
+  "boundary_rule": "FOR_EVERY_TRANSITION_ASSERT_DAY_BEFORE_PREVIOUS_ROW_DAY_AT_AND_DAY_AFTER_CURRENT_ROW",
+  "typed_failures": [
+    {"authority":"SEC_SECTION_31","effective_date":"2010-01-03","reason":"PRE_COVERAGE_DATE"},
+    {"authority":"FINRA_TAF","effective_date":"2026-08-15","reason":"POST_REVIEW_CUTOFF_DATE"},
+    {"authority":"FINRA_TAF","effective_date":"2026-02-30","reason":"INVALID_EFFECTIVE_DATE"}
+  ],
+  "limitations": [
+    "ORACLE_VALIDATES_SCHEDULE_LOOKUP_ONLY_NOT_FEE_CALCULATION_OR_LEDGER_BOOKING",
+    "NO_CALLER_EXEMPTION_CLASSIFICATION_INFERENCE",
+    "NO_EXTRAPOLATION_AFTER_2026_08_14"
+  ]
+}

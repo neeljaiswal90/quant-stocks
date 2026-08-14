@@ -1,0 +1,542 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qme.regulatory_fee_historical_schedule.v1",
+  "title": "Exact NEE-205 official historical SEC Section 31 and FINRA TAF schedule candidate",
+  "const": {
+    "$schema": "../../schemas/governance/regulatory-fee-historical-schedule-v1.schema.json",
+    "schema_version": "qme.regulatory_fee_historical_schedule.v1",
+    "artifact_id": "NEE-205-REGULATORY-FEE-HISTORICAL-SCHEDULE-V1",
+    "ticket_id": "NEE-205",
+    "status": "COMPLETE_OFFICIAL_HISTORICAL_SCHEDULE_CANDIDATE_13_BLOCKERS_RETAINED",
+    "semantic_sha256": "11fa503d:3ff77131:3f2deff9:76b19ded:c5c8ffb5:ec135886:f5a784d0:e3e466e0",
+    "authority": {
+      "protected_main_commit": "fc8dd05b:9212bab2:53538c4a:fedbdf44:249373e5",
+      "protected_main_tree": "2808d21a:7da110c9:525cac4a:2aec5b8e:84dcbd06",
+      "predecessor_config": {
+        "path": "configs/governance/regulatory-fee-kernel-v1.json",
+        "sha256": "aa3758b0:69066e22:109f7898:c5554cff:224a1c87:fa4a64ca:9e57e69f:9aa45402"
+      },
+      "predecessor_schema": {
+        "path": "schemas/governance/regulatory-fee-kernel-v1.schema.json",
+        "sha256": "8e222dfc:321338bc:121022c7:cdd599b0:a4d168e6:04b9ed8a:3d10dd9d:be973344"
+      },
+      "predecessor_manifest": {
+        "path": "configs/governance/regulatory-fee-kernel-v1.hashes.json",
+        "sha256": "5c3a4a60:5c3c9370:2e3092e5:4548394d:6405d4ee:3839bfe6:59a318f5:adbf6a52"
+      },
+      "freeze_v4": {
+        "path": "configs/governance/specification-freeze-policy-v4.json",
+        "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458"
+      },
+      "freeze_v4_manifest": {
+        "path": "configs/governance/specification-freeze-v4.hashes.json",
+        "sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42"
+      }
+    },
+    "coverage_contract": {
+      "coordinate": "CALENDAR_DATE_DOMAIN_SEPARATE_SEC_CHARGE_DATE_AND_FINRA_TRADE_DATE",
+      "start_inclusive": "2010-01-04",
+      "end_inclusive": "2026-08-14",
+      "terminal_end_exclusive": "2026-08-15",
+      "interval_rule": "ORDERED_HALF_OPEN_CONTIGUOUS_NO_GAPS_NO_OVERLAPS",
+      "before_start": "PRE_COVERAGE_DATE",
+      "after_end": "POST_REVIEW_CUTOFF_DATE",
+      "invalid": "INVALID_EFFECTIVE_DATE"
+    },
+    "source_register": {
+      "path": "tests/fixtures/governance/regulatory-fee-historical-official-sources-v1.json",
+      "sha256": "b9a6e4fe:228b9d96:7a7c60ae:9c8960ec:97cdce33:4cbc2148:73f23a48:30c0380a",
+      "status": "COMPLETE_OFFICIAL_SOURCE_INVENTORY_REVIEWED",
+      "required_receipt_coverage": "EVERY_NUMERIC_OR_APPLICABILITY_TRANSITION_AND_STARTING_INTERVAL"
+    },
+    "source_precedence": {
+      "sec_charge_date_authority": "SEC_RULE_31_A_3_EXPLICIT_CALLER_SUPPLIED_CHARGE_DATE_NO_INFERENCE",
+      "sec_numeric_authority": "DATED_SEC_FEE_RATE_ADVISORY_CONTROLS_ITS_EXPLICIT_EFFECTIVE_INTERVAL",
+      "finra_numeric_authority": "DATED_FINRA_NOTICE_OR_IMMEDIATELY_EFFECTIVE_FILING_AND_SCHEDULE_CONTROLS_EXPLICIT_INTERVAL",
+      "finra_2026_conflict": "CURRENT_CONSOLIDATED_RULEBOOK_RETAINS_2024_2025_NUMERICS_DATED_SR_FINRA_2024_019_FILING_AND_SCHEDULE_CONTROL_2026",
+      "finra_2026_conflict_source_id": "FINRA-RULEBOOK-SECTION-1-CURRENT",
+      "finra_action_type_conflict": "ORIGINAL_SEC_RECORD_CONTROLS_SR_FINRA_2020_032_IS_NOTICE_OF_FILING_AND_IMMEDIATE_EFFECTIVENESS_LATER_APPROVAL_WORDING_RECORDED_AS_INCONSISTENCY",
+      "review_cutoff": "2026_08_14_IS_EVIDENCE_REVIEW_CUTOFF_NOT_LEGAL_END_OR_EXTRAPOLATION_AUTHORITY"
+    },
+    "schedules": {
+      "sec_section_31": {
+        "date_coordinate": "CHARGE_DATE",
+        "units": "USD_PER_MILLION_OF_COVERED_SALE_NOTIONAL",
+        "denominator": "1000000",
+        "status": "COMPLETE_OFFICIAL_SOURCE_LINKED",
+        "intervals": [
+          {
+            "interval_id": "SEC31-01",
+            "start_inclusive": "2010-01-04",
+            "end_exclusive": "2010-01-15",
+            "rate_per_million": "25.70",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2009-270"
+            ]
+          },
+          {
+            "interval_id": "SEC31-02",
+            "start_inclusive": "2010-01-15",
+            "end_exclusive": "2010-04-01",
+            "rate_per_million": "12.70",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2009-270",
+              "SEC-S31-FRA-2010-29"
+            ]
+          },
+          {
+            "interval_id": "SEC31-03",
+            "start_inclusive": "2010-04-01",
+            "end_exclusive": "2011-01-21",
+            "rate_per_million": "16.90",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2010-29",
+              "SEC-S31-FRA-2010-255"
+            ]
+          },
+          {
+            "interval_id": "SEC31-04",
+            "start_inclusive": "2011-01-21",
+            "end_exclusive": "2012-02-21",
+            "rate_per_million": "19.20",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2010-255",
+              "SEC-S31-FRA-2012-15"
+            ]
+          },
+          {
+            "interval_id": "SEC31-05",
+            "start_inclusive": "2012-02-21",
+            "end_exclusive": "2012-04-01",
+            "rate_per_million": "18.00",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2012-15",
+              "SEC-S31-FRA-2012-35"
+            ]
+          },
+          {
+            "interval_id": "SEC31-06",
+            "start_inclusive": "2012-04-01",
+            "end_exclusive": "2013-05-25",
+            "rate_per_million": "22.40",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2012-35",
+              "SEC-S31-FRA-2013-74"
+            ]
+          },
+          {
+            "interval_id": "SEC31-07",
+            "start_inclusive": "2013-05-25",
+            "end_exclusive": "2014-03-18",
+            "rate_per_million": "17.40",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2013-74",
+              "SEC-S31-FRA-2014-30"
+            ]
+          },
+          {
+            "interval_id": "SEC31-08",
+            "start_inclusive": "2014-03-18",
+            "end_exclusive": "2015-02-14",
+            "rate_per_million": "22.10",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2014-30",
+              "SEC-S31-FRA-2015-8"
+            ]
+          },
+          {
+            "interval_id": "SEC31-09",
+            "start_inclusive": "2015-02-14",
+            "end_exclusive": "2016-02-16",
+            "rate_per_million": "18.40",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2015-8",
+              "SEC-S31-FRA-2016-2"
+            ]
+          },
+          {
+            "interval_id": "SEC31-10",
+            "start_inclusive": "2016-02-16",
+            "end_exclusive": "2017-07-04",
+            "rate_per_million": "21.80",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2016-2",
+              "SEC-S31-FRA-2017-111"
+            ]
+          },
+          {
+            "interval_id": "SEC31-11",
+            "start_inclusive": "2017-07-04",
+            "end_exclusive": "2018-05-22",
+            "rate_per_million": "23.10",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2017-111",
+              "SEC-S31-FRA-2018-67"
+            ]
+          },
+          {
+            "interval_id": "SEC31-12",
+            "start_inclusive": "2018-05-22",
+            "end_exclusive": "2019-04-16",
+            "rate_per_million": "13.00",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2018-67",
+              "SEC-S31-FRA-2019-30"
+            ]
+          },
+          {
+            "interval_id": "SEC31-13",
+            "start_inclusive": "2019-04-16",
+            "end_exclusive": "2020-02-18",
+            "rate_per_million": "20.70",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2019-30",
+              "SEC-S31-FRA-2020-7"
+            ]
+          },
+          {
+            "interval_id": "SEC31-14",
+            "start_inclusive": "2020-02-18",
+            "end_exclusive": "2021-02-25",
+            "rate_per_million": "22.10",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2020-7",
+              "SEC-S31-FRA-2021-8"
+            ]
+          },
+          {
+            "interval_id": "SEC31-15",
+            "start_inclusive": "2021-02-25",
+            "end_exclusive": "2022-05-14",
+            "rate_per_million": "5.10",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2021-8",
+              "SEC-S31-FRA-2022-60"
+            ]
+          },
+          {
+            "interval_id": "SEC31-16",
+            "start_inclusive": "2022-05-14",
+            "end_exclusive": "2023-02-27",
+            "rate_per_million": "22.90",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2022-60",
+              "SEC-S31-FRA-2023-15"
+            ]
+          },
+          {
+            "interval_id": "SEC31-17",
+            "start_inclusive": "2023-02-27",
+            "end_exclusive": "2024-05-22",
+            "rate_per_million": "8.00",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2023-15",
+              "SEC-S31-FRA-2024-2"
+            ]
+          },
+          {
+            "interval_id": "SEC31-18",
+            "start_inclusive": "2024-05-22",
+            "end_exclusive": "2025-05-14",
+            "rate_per_million": "27.80",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2024-2",
+              "SEC-S31-FRA-2025-2"
+            ]
+          },
+          {
+            "interval_id": "SEC31-19",
+            "start_inclusive": "2025-05-14",
+            "end_exclusive": "2026-04-04",
+            "rate_per_million": "0",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2025-2",
+              "SEC-S31-FRA-2026-2"
+            ]
+          },
+          {
+            "interval_id": "SEC31-20",
+            "start_inclusive": "2026-04-04",
+            "end_exclusive": "2026-08-15",
+            "rate_per_million": "20.60",
+            "source_ids": [
+              "SEC-RULE31-34-49928",
+              "SEC-S31-FRA-2026-2"
+            ]
+          }
+        ]
+      },
+      "finra_taf": {
+        "date_coordinate": "TRADE_DATE",
+        "units": "USD_PER_ELIGIBLE_SOLD_SHARE_WITH_CAP_PER_REGULATORY_TRADE",
+        "status": "COMPLETE_OFFICIAL_SOURCE_LINKED",
+        "intervals": [
+          {
+            "interval_id": "FINRA-TAF-01",
+            "start_inclusive": "2010-01-04",
+            "end_exclusive": "2011-07-01",
+            "rate_per_share": ".000075",
+            "cap_per_regulatory_trade": "3.75",
+            "low_price_threshold": ".000075",
+            "applicability_regime": "BASE_COVERED_EQUITY",
+            "source_ids": [
+              "FINRA-RN-04-84",
+              "FINRA-RN-11-27",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-02",
+            "start_inclusive": "2011-07-01",
+            "end_exclusive": "2012-03-01",
+            "rate_per_share": ".000090",
+            "cap_per_regulatory_trade": "4.50",
+            "low_price_threshold": ".000090",
+            "applicability_regime": "BASE_COVERED_EQUITY",
+            "source_ids": [
+              "FINRA-RN-11-27",
+              "FINRA-SR-2011-071-FILING",
+              "FINRA-RN-12-06",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-03",
+            "start_inclusive": "2012-03-01",
+            "end_exclusive": "2012-07-01",
+            "rate_per_share": ".000095",
+            "cap_per_regulatory_trade": "4.75",
+            "low_price_threshold": ".000095",
+            "applicability_regime": "BASE_COVERED_EQUITY",
+            "source_ids": [
+              "FINRA-RN-12-06",
+              "FINRA-SR-2011-071-FILING",
+              "SEC-SR-FINRA-2012-023-NOTICE",
+              "FINRA-RN-12-31",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-04",
+            "start_inclusive": "2012-07-01",
+            "end_exclusive": "2022-01-01",
+            "rate_per_share": ".000119",
+            "cap_per_regulatory_trade": "5.95",
+            "low_price_threshold": ".000119",
+            "applicability_regime": "BASE_COVERED_EQUITY",
+            "source_ids": [
+              "FINRA-RN-12-31",
+              "SEC-SR-FINRA-2012-023-NOTICE",
+              "FINRA-SR-2020-032",
+              "SEC-SR-FINRA-2020-032-ACTION",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-05",
+            "start_inclusive": "2022-01-01",
+            "end_exclusive": "2023-01-01",
+            "rate_per_share": ".000130",
+            "cap_per_regulatory_trade": "6.49",
+            "low_price_threshold": ".000130",
+            "applicability_regime": "BASE_COVERED_EQUITY",
+            "source_ids": [
+              "FINRA-SR-2020-032",
+              "SEC-SR-FINRA-2020-032-ACTION",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-06",
+            "start_inclusive": "2023-01-01",
+            "end_exclusive": "2023-11-06",
+            "rate_per_share": ".000145",
+            "cap_per_regulatory_trade": "7.27",
+            "low_price_threshold": ".000145",
+            "applicability_regime": "PRE_PTF_MEMBER_EXCHANGE_EXEMPTION",
+            "source_ids": [
+              "FINRA-SR-2020-032",
+              "SEC-SR-FINRA-2020-032-ACTION",
+              "FINRA-RN-23-16",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-07",
+            "start_inclusive": "2023-11-06",
+            "end_exclusive": "2024-01-01",
+            "rate_per_share": ".000145",
+            "cap_per_regulatory_trade": "7.27",
+            "low_price_threshold": ".000145",
+            "applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+            "source_ids": [
+              "FINRA-SR-2020-032",
+              "SEC-SR-FINRA-2020-032-ACTION",
+              "FINRA-RN-23-16",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-08",
+            "start_inclusive": "2024-01-01",
+            "end_exclusive": "2026-01-01",
+            "rate_per_share": ".000166",
+            "cap_per_regulatory_trade": "8.30",
+            "low_price_threshold": ".000166",
+            "applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+            "source_ids": [
+              "FINRA-SR-2020-032",
+              "SEC-SR-FINRA-2020-032-ACTION",
+              "FINRA-RN-23-16",
+              "FINRA-SR-2024-019",
+              "SEC-SR-FINRA-2024-019-ACTION",
+              "FINRA-SR-2024-019-SCHEDULE",
+              "FINRA-TAF-FAQ"
+            ]
+          },
+          {
+            "interval_id": "FINRA-TAF-09",
+            "start_inclusive": "2026-01-01",
+            "end_exclusive": "2026-08-15",
+            "rate_per_share": ".000195",
+            "cap_per_regulatory_trade": "9.79",
+            "low_price_threshold": ".000195",
+            "applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+            "source_ids": [
+              "FINRA-SR-2024-019",
+              "SEC-SR-FINRA-2024-019-ACTION",
+              "FINRA-SR-2024-019-SCHEDULE",
+              "FINRA-RN-23-16",
+              "FINRA-TAF-FAQ"
+            ]
+          }
+        ]
+      }
+    },
+    "unresolved_source_inventory": [],
+    "active_freeze_v4_blockers": [
+      {
+        "blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+        "ticket_id": "NEE-110",
+        "category": "GOVERNANCE",
+        "description": "Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."
+      },
+      {
+        "blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."
+      },
+      {
+        "blocker_code": "NEE-116-CAPACITY-SOLVER",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."
+      },
+      {
+        "blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        "ticket_id": "NEE-116",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."
+      },
+      {
+        "blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+        "ticket_id": "NEE-116",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "Accepted point-in-time production data and receipts are unavailable."
+      },
+      {
+        "blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."
+      },
+      {
+        "blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        "ticket_id": "NEE-119",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."
+      },
+      {
+        "blocker_code": "NEE-119-AV-PROXY-EVIDENCE",
+        "ticket_id": "NEE-119",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."
+      },
+      {
+        "blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-120",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."
+      },
+      {
+        "blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+        "ticket_id": "NEE-121",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."
+      },
+      {
+        "blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+        "ticket_id": "NEE-121",
+        "category": "FINAL_DERIVED_EVIDENCE",
+        "description": "The final freeze anchor and receipt remain unavailable until every other blocker is accepted."
+      },
+      {
+        "blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."
+      },
+      {
+        "blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "The registered estimator and bootstrap uncertainty procedure are not implemented."
+      }
+    ],
+    "claims": {
+      "source_inventory_complete": true,
+      "schedule_executable": true,
+      "complete_historical_schedule_available": true,
+      "accounting_integration_available": false,
+      "broker_customer_pass_through_available": false,
+      "independent_ledger_fixture_available": false,
+      "freeze_blocker_changed": false,
+      "production_ready": false,
+      "milestone_m0_complete": false,
+      "alpha_proven": false,
+      "live_order_authority": false
+    },
+    "nonclaims": [
+      "NO_RATE_CAP_OR_APPLICABILITY_EXTRAPOLATION_AFTER_REVIEW_CUTOFF",
+      "NO_CALLER_EXEMPTION_CLASSIFICATION_INFERENCE",
+      "NO_BROKER_OR_CUSTOMER_PASS_THROUGH_OR_WEBULL_DEBIT_CLAIM",
+      "NO_REGULATOR_BROKER_OR_LEDGER_ROUNDING_CLAIM",
+      "NO_FILL_ORDER_DAY_OR_REGULATORY_TRADE_AGGREGATION_CLAIM",
+      "NO_ACCOUNTING_V2_OR_INDEPENDENT_LEDGER_FIXTURE_CLAIM",
+      "NO_FEE_CALCULATION_OR_LEDGER_BOOKING_CLAIM",
+      "NO_CAT_OPTIONS_FUTURES_OR_DEBT_COVERAGE_CLAIM",
+      "NO_PRODUCTION_COST_CALIBRATION_EMPIRICAL_EVIDENCE_OR_BLOCKER_REMOVAL",
+      "NO_M0_PRODUCTION_READINESS_ALPHA_OR_LIVE_ORDER_CLAIM"
+    ]
+  }
+}
