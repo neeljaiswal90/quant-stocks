@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/change-tier-policy-v1.schema.json",
+  "title": "QME Change Tier Policy V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "artifact_id",
+    "status",
+    "purpose",
+    "audit_reference",
+    "classification_rule",
+    "tiers",
+    "ordered_rules",
+    "forbidden_in_non_t0",
+    "checker_self_exclusions",
+    "m1_m3_engineering_stream",
+    "claims"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "qme.change_tier_policy.v1"
+    },
+    "artifact_id": {
+      "const": "QME-CHANGE-TIER-POLICY-V1"
+    },
+    "status": {
+      "const": "ACTIVE_ENFORCED_BY_ARCHITECTURE_TEST"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audit_reference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classification_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "T0_FROZEN_CONTRACT",
+        "T1_ACCEPTED_KERNEL",
+        "T2_ENGINEERING",
+        "T3_DOCUMENTATION"
+      ],
+      "properties": {
+        "T0_FROZEN_CONTRACT": {
+          "$ref": "#/$defs/tier"
+        },
+        "T1_ACCEPTED_KERNEL": {
+          "$ref": "#/$defs/tier"
+        },
+        "T2_ENGINEERING": {
+          "$ref": "#/$defs/tier"
+        },
+        "T3_DOCUMENTATION": {
+          "$ref": "#/$defs/tier"
+        }
+      }
+    },
+    "ordered_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tier",
+          "glob"
+        ],
+        "properties": {
+          "tier": {
+            "$ref": "#/$defs/tier_name"
+          },
+          "glob": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "forbidden_in_non_t0": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "python_source_patterns",
+        "path_suffix_patterns"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "python_source_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "path_suffix_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "checker_self_exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "m1_m3_engineering_stream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definition",
+        "per_slice_gate",
+        "per_slice_not_required",
+        "promotion_gate",
+        "target"
+      ],
+      "properties": {
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "per_slice_gate": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "per_slice_not_required": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "promotion_gate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reduces_existing_t0_ceremony",
+        "changes_any_frozen_artifact",
+        "applies_to_new_and_modified_files",
+        "enforced_in_ci"
+      ],
+      "properties": {
+        "reduces_existing_t0_ceremony": {
+          "const": false
+        },
+        "changes_any_frozen_artifact": {
+          "const": false
+        },
+        "applies_to_new_and_modified_files": {
+          "const": true
+        },
+        "enforced_in_ci": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "tier_name": {
+      "enum": [
+        "T0_FROZEN_CONTRACT",
+        "T1_ACCEPTED_KERNEL",
+        "T2_ENGINEERING",
+        "T3_DOCUMENTATION"
+      ]
+    },
+    "tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "governs",
+        "required_process",
+        "self_pinning_allowed",
+        "hashes_manifests_allowed",
+        "receipt_cadence"
+      ],
+      "properties": {
+        "governs": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_process": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "self_pinning_allowed": {
+          "type": "boolean"
+        },
+        "self_pinning_grandfathered_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hashes_manifests_allowed": {
+          "type": "boolean"
+        },
+        "receipt_cadence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hashes_manifests_grandfathered_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

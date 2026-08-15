@@ -1,0 +1,268 @@
+{
+  "$schema": "../../schemas/governance/change-tier-policy-v1.schema.json",
+  "schema_version": "qme.change_tier_policy.v1",
+  "artifact_id": "QME-CHANGE-TIER-POLICY-V1",
+  "status": "ACTIVE_ENFORCED_BY_ARCHITECTURE_TEST",
+  "purpose": "Make process weight proportional to what a change governs. Frozen contracts keep the full receipt ceremony; deterministic kernels keep KAT discipline; pipeline engineering (M1-M3) runs on PR + CI only. Enforced mechanically by qme.foundation.change_tiers on every CI run against the tracked tree.",
+  "audit_reference": "PROJECT_STATE_AUDIT_2026-08-14 finding F1: governance surface 50.7% of source, pipeline 0%; per-slice receipt ceremony applied to candidate kernels.",
+  "classification_rule": "First matching glob wins, evaluated in the order listed under `ordered_rules`. Every tracked file MUST classify; an unclassified path fails CI so new directories are placed deliberately.",
+  "tiers": {
+    "T0_FROZEN_CONTRACT": {
+      "governs": "Owner-mandate values, freeze policy, holdout/access-chain governance, decision math, receipts, and their schemas/fixtures/docs.",
+      "required_process": [
+        "branch_pr",
+        "protected_main_exact_sha_ci",
+        "independent_review_recorded",
+        "manifest_rebind_on_artifact_change",
+        "ledger_event",
+        "linear_reconcile"
+      ],
+      "self_pinning_allowed": true,
+      "hashes_manifests_allowed": true,
+      "receipt_cadence": "PER_ACCEPTED_CHANGE"
+    },
+    "T1_ACCEPTED_KERNEL": {
+      "governs": "Deterministic numeric kernels whose registered behavior is pinned by known-answer fixtures (stats, fees, equations).",
+      "required_process": [
+        "branch_pr",
+        "protected_main_exact_sha_ci",
+        "kat_fixture_change_requires_rationale_in_pr"
+      ],
+      "self_pinning_allowed": false,
+      "self_pinning_grandfathered_paths": [
+        "qme/quant/regulatory_fee_schedule.py",
+        "qme/quant/regulatory_fees.py",
+        "qme/stats/effective_trials.py",
+        "qme/stats/effective_trials_uncertainty.py",
+        "tests/quant/test_regulatory_fee_schedule.py",
+        "tests/quant/test_regulatory_fees.py",
+        "tests/stats/test_effective_trials.py",
+        "tests/stats/test_effective_trials_uncertainty.py"
+      ],
+      "hashes_manifests_allowed": false,
+      "receipt_cadence": "AT_ACCEPTANCE_MILESTONE_ONLY_NOT_PER_SLICE",
+      "hashes_manifests_grandfathered_paths": [
+        "tests/fixtures/stats/deterministic-kernel-v1.manifest.json"
+      ]
+    },
+    "T2_ENGINEERING": {
+      "governs": "Pipeline and product code: data ingestion, identity, universe, signal, ledger, backtest, execution adapters, UI, CLI, agent-review boundary, foundation utilities, scripts, and non-fixture tests.",
+      "required_process": [
+        "branch_pr",
+        "protected_main_exact_sha_ci"
+      ],
+      "self_pinning_allowed": false,
+      "hashes_manifests_allowed": false,
+      "receipt_cadence": "NONE_RESULTS_ARE_GOVERNED_ONLY_AT_PROMOTION",
+      "evidence_rule": "A T2 slice never produces a governance artifact. Empirical results become governed only when a run manifest is promoted through a T0 registration; until then they are engineering outputs under QME_DATA_ROOT."
+    },
+    "T3_DOCUMENTATION": {
+      "governs": "Plans, memory, notes, and non-governance documentation.",
+      "required_process": [
+        "branch_pr",
+        "protected_main_exact_sha_ci"
+      ],
+      "self_pinning_allowed": false,
+      "hashes_manifests_allowed": false,
+      "receipt_cadence": "NONE"
+    }
+  },
+  "ordered_rules": [
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "qme/quant/contract_v2.py"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "configs/governance/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "configs/quant/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "schemas/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "qme/governance/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "qme/promotion/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "qme/experiments/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "qme/fixtures/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "configs/ui/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "tests/governance/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "tests/promotion/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "tests/experiments/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "tests/fixtures/governance/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "tests/fixtures/quant/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "tests/fixtures/promotion/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "docs/governance/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": ".github/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "requirements-*.lock"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "requirements-*.in"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "requirements-*.txt"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "pyproject.toml"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "third_party/**"
+    },
+    {
+      "tier": "T0_FROZEN_CONTRACT",
+      "glob": "THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tier": "T1_ACCEPTED_KERNEL",
+      "glob": "qme/stats/**"
+    },
+    {
+      "tier": "T1_ACCEPTED_KERNEL",
+      "glob": "qme/quant/**"
+    },
+    {
+      "tier": "T1_ACCEPTED_KERNEL",
+      "glob": "tests/stats/**"
+    },
+    {
+      "tier": "T1_ACCEPTED_KERNEL",
+      "glob": "tests/quant/**"
+    },
+    {
+      "tier": "T1_ACCEPTED_KERNEL",
+      "glob": "tests/fixtures/stats/**"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": "configs/qme.example.json"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": "qme/**"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": "scripts/**"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": "tests/**"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": ".gitignore"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": ".gitattributes"
+    },
+    {
+      "tier": "T2_ENGINEERING",
+      "glob": ".env.example"
+    },
+    {
+      "tier": "T3_DOCUMENTATION",
+      "glob": "docs/**"
+    },
+    {
+      "tier": "T3_DOCUMENTATION",
+      "glob": "*.md"
+    }
+  ],
+  "forbidden_in_non_t0": {
+    "description": "Signatures of the self-verifying / capability-sealed style. Reserved for T0 verifiers; forbidden in new T1 code and all T2/T3 files so pipeline code cannot inherit the receipt ceremony.",
+    "python_source_patterns": [
+      "EXPECTED_[A-Z0-9_]*SHA256\\s*(?::\\s*Final)?\\s*=",
+      "_PREDECESSOR_HASHES\\s*(?::\\s*Final)?\\s*=",
+      "RUNTIME_SELF_PIN",
+      "_snapshot_global_graph\\s*\\(",
+      "_CAPABILITY\\s*=\\s*object\\(\\)",
+      "FORGED_[A-Z_]+",
+      "def _confined_bytes\\("
+    ],
+    "path_suffix_patterns": [
+      ".hashes.json",
+      ".manifest.json",
+      "-receipt-v*.json"
+    ]
+  },
+  "checker_self_exclusions": [
+    "qme/foundation/change_tiers.py",
+    "tests/foundation/test_change_tier_policy.py"
+  ],
+  "m1_m3_engineering_stream": {
+    "definition": "M1 (market-data spine), M2 (identity / corporate actions / coverage), and M3 (signal / ledger / backtest) are ONE T2 engineering stream. Contracts are already frozen (NEE-118/119 T0). Code iterates under PR + CI. The stream produces exactly one governed artifact: a promoted walk-forward run manifest, registered through T0 when it exists.",
+    "per_slice_gate": [
+      "ruff",
+      "strict mypy",
+      "pytest",
+      "locks",
+      "secret scan",
+      "protected-main exact-SHA CI"
+    ],
+    "per_slice_not_required": [
+      "hashes manifest",
+      "self-pin digest",
+      "receipt PR",
+      "ledger event",
+      "crosswalk version",
+      "independent frozen-byte review"
+    ],
+    "promotion_gate": "First backtest run manifest on pinned data -> T0 registration -> independent review -> receipt.",
+    "target": "First walk-forward v0.1 backtest on pinned data within 6-8 weeks of M0 closure."
+  },
+  "claims": {
+    "reduces_existing_t0_ceremony": false,
+    "changes_any_frozen_artifact": false,
+    "applies_to_new_and_modified_files": true,
+    "enforced_in_ci": true
+  }
+}
