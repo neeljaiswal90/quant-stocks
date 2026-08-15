@@ -86,6 +86,12 @@ wheel, CLI, dependency-consistency, lint, strict typing, unit,
 architecture, secret, deterministic-fixture, and clean-worktree checks. A local pass is
 not a substitute for a green exact-SHA remote run and required branch checks.
 
+The full suite includes several multi-minute deterministic replays and known-answer
+tests (about 15 minutes end to end). They are auto-marked `slow` by node id in
+`tests/conftest.py`; the developer loop deselects them with
+`python -m pytest -q -m "not slow"` (about 3 minutes). CI and every acceptance
+claim still run the complete suite; the marker never changes the default command.
+
 The existing `tools/` tree contains user-owned legacy scripts, nested Webull Git
 checkouts, and local virtual environments. It is intentionally ignored and is not part
 of the reviewed QME source, dependency closure, or release artifact. Required provider
