@@ -1,0 +1,87 @@
+name: XNAS calendar Linux replay
+
+# NEE-174 / NEE-121-CALENDAR-SESSION-REGISTRATION.
+# Rebuilds the frozen XNAS session-calendar and ordered-session-vector candidates
+# from the isolated generator on Linux and byte-compares them to the committed
+# artifacts. This is the Linux leg of the cross-platform replay evidence; the
+# Windows leg runs in ci.yml. A green run here is the evidence needed to flip
+# `claims.windows_linux_byte_replay_verified` in the calendar evidence artifact
+# (a T0 rebind performed separately, citing this run id).
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/xnas-calendar-linux.yml"
+      - "requirements-xnas-calendar-generator.in"
+      - "requirements-xnas-calendar-generator.lock"
+      - "requirements-xnas-calendar-generator-linux.lock"
+      - "scripts/materialize_xnas_calendar_v1.py"
+      - "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json"
+      - "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json"
+      - "configs/governance/xnas-session-calendar-evidence-v1.json"
+      - "configs/governance/xnas-session-calendar-evidence-v1.hashes.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/xnas-calendar-linux.yml"
+      - "requirements-xnas-calendar-generator.in"
+      - "requirements-xnas-calendar-generator.lock"
+      - "requirements-xnas-calendar-generator-linux.lock"
+      - "scripts/materialize_xnas_calendar_v1.py"
+      - "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json"
+      - "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json"
+      - "configs/governance/xnas-session-calendar-evidence-v1.json"
+      - "configs/governance/xnas-session-calendar-evidence-v1.hashes.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calendar-byte-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: requirements-xnas-calendar-generator-linux.lock
+      - name: Verify the Linux generator lock is fully hashed and version-identical to the Windows lock
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:3] == (3, 12, 10), sys.version"
+          python scripts/verify_lock.py requirements-xnas-calendar-generator-linux.lock
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          def pins(path):
+              text = Path(path).read_text(encoding="utf-8")
+              return sorted(re.findall(r"^([A-Za-z0-9_.-]+==[^ \\]+)", text, re.M))
+          win = pins("requirements-xnas-calendar-generator.lock")
+          lin = pins("requirements-xnas-calendar-generator-linux.lock")
+          assert win == lin, ("pinned versions differ between platform locks", win, lin)
+          print(f"pinned versions identical across platform locks: {len(win)} packages")
+          PY
+      - name: Install the isolated generator from the Linux hash lock (binary-only, isolated venv)
+        run: |
+          python -m venv "$RUNNER_TEMP/qme-xnas-calendar"
+          "$RUNNER_TEMP/qme-xnas-calendar/bin/python" -m pip install --require-hashes --only-binary=:all: -r requirements-xnas-calendar-generator-linux.lock
+          "$RUNNER_TEMP/qme-xnas-calendar/bin/python" -m pip check
+          "$RUNNER_TEMP/qme-xnas-calendar/bin/python" - <<'PY'
+          import numpy, pandas, pandas_market_calendars, exchange_calendars, tzdata, sys
+          print("platform:", sys.platform)
+          print("numpy", numpy.__version__, "pandas", pandas.__version__)
+          print("pandas_market_calendars", pandas_market_calendars.__version__)
+          print("exchange_calendars", exchange_calendars.__version__)
+          assert numpy.__version__ == "2.5.2" and pandas.__version__ == "3.0.5"
+          PY
+      - name: Byte-replay the frozen calendar and ordered session vector on Linux
+        run: |
+          "$RUNNER_TEMP/qme-xnas-calendar/bin/python" scripts/materialize_xnas_calendar_v1.py --repository-root . --verify
+          echo "Linux byte replay of XNAS calendar candidate and ordered session vector: IDENTICAL"
+      - name: Verify source tree unchanged
+        run: git diff --exit-code
