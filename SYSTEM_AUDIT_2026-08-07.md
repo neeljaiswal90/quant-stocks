@@ -300,3 +300,32 @@ Specification (before any implementation ticket is accepted):
 9. Hand-calculated multi-rebalance fixtures before any full data pull.
 
 Then, and only then: implement v0.1, validate, redesign v0.2 per the amended spec, run agents prospectively `report_only` with frozen evidence packets (A6), calibrate capacity/execution from paper fills, and consider capital last.
+
+---
+
+# Addendum 2026-08-14 — `tools/webull` findings remediated
+
+Applied at owner request. All changes are in the untracked `tools/` tree (outside
+the `qme` package and its CI by design). Verified by the package's own suite:
+**205 passed** (68 pre-existing + 137 new/updated safety tests) and an offline
+smoke test of the prototype's fail-closed paths.
+
+| Finding | Disposition | Where |
+|---|---|---|
+| **W1** confirmation only in prose | **Fixed.** Every mutating action is preview-only unless `--confirm-live` AND exact `--confirm-phrase` (`"PLACE LIVE ORDER"` in uat; `"PLACE LIVE ORDER <account_id>"` in prod). No bypass flag; parser test asserts none exists. | `pretrade_gate.py`, `cli.py` |
+| **W2** limits bypassed for options/combo/algo/event/AMOUNT/crypto-AMOUNT | **Fixed.** One universal gate normalizes every order class into priced legs; quantity, per-leg + aggregate notional, and whitelist enforced on all. Fails closed on any unpriceable payload. | `pretrade_gate.py` |
+| **W3** RiskEngine opt-in only | **Superseded.** Gate runs unconditionally before dispatch; `local-check` retained as a diagnostic. | `cli.py` |
+| **W4** generated `client_order_id` lost on submit failure | **Fixed.** `handle_submit_exception` surfaces the sent id with a do-not-resubmit warning at all 8 place paths. | `errors.py`, `trading/*.py` |
+| **W6** futures notional ignored multiplier | **Fixed.** Root-symbol multiplier registry (ES 50, MES 5, NQ 20, …) or explicit `contract_multiplier`; unknown roots fail closed. Test: 2 ES @ 5000 → $500,000. | `pretrade_gate.py` |
+| **W7** MARKET/STOP had no notional check | **Fixed.** Unpriced = unbounded → rejected unless `reference_price` supplied; STOP uses `stop_price`. | `pretrade_gate.py` |
+| **W9** bad limit env values fell back to defaults; NaN disabled caps | **Fixed.** Set-but-invalid/NaN/inf/negative limits raise `ConfigError` at startup. | `config.py` |
+| **W14/W15** 200-with-error and cancel 404/403 exited 0 | **Fixed.** Error markers detected anywhere in the result; mutating replies without an order id are treated as NOT PLACED. | `cli.py::_wrap_tool_result` |
+| **W17** non-exact `WEBULL_ENVIRONMENT` routed to prod | **Fixed.** Exact allowlist `{uat, prod}` in `validate_config` and again at endpoint injection (defense in depth); UAT with no sandbox endpoints also refuses. | `config.py`, `sdk_client.py` |
+| **W18** explicit `--account-id` overridden in single-account setups | **Fixed.** Explicit id is validated first and never substituted. | `trading/account.py` |
+| **W20** audit logger dead; MCP mode documented but absent; duplicate less-validated option placement | **Fixed / disclosed.** Logger now records `ORDER_ATTEMPT` per priced leg, `ORDER_RESULT`, `VALIDATION_ERROR`; README marks MCP mode as not implemented; duplicate `place_option_single_order`/`preview_option_order`/`_build_option_order` removed from `stock_order.py`. | `cli.py`, `README.md`, `stock_order.py` |
+| **D19** prototype `send-spread` placed live with no confirmation | **Fixed.** Preview-by-default; live requires `--live` + `--confirm-phrase "PLACE LIVE ORDER <account_id>"`; `resolve_host` fails closed on non-exact env. | `webull_prototype.py` |
+| W5, W8, W10–W13, W16, W19, W21 (low) | **Open** — W8 (no long-only switch / no position-aware check) is the most material of these and should precede any funded use through this rail. | — |
+
+Docs (`SKILL.md`, `README.md`) were rewritten so they describe only what the code
+enforces. Credential rotation (S2) remains an owner action and is not evidenced
+by this change.
