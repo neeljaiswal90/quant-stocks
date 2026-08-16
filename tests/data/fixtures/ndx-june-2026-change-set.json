@@ -1,0 +1,26 @@
+{
+  "schema_version": "qme.ndx_change_set.v1",
+  "change_set_id": "NDX-2026-06-22-QUARTERLY-RECONSTITUTION",
+  "index_symbol": "NDX",
+  "source_url": "PENDING_OWNER_RECORDED_ANNOUNCEMENT_URL",
+  "source_url_recorded": false,
+  "announced_at": null,
+  "effective_at": "2026-06-22",
+  "add": ["ALAB", "CRWV", "NBIS", "RKLB", "TER"],
+  "remove": ["CHTR", "CTSH", "INSM", "VRSK", "ZS"],
+  "registered_in": "NASDAQ100_LOCAL_LLM_EXTENSION_PLAN.md section 2.4",
+  "purpose": "Reconciliation fixture for the first manually downloaded GIW snapshot that spans the June 2026 quarterly reconstitution.",
+  "claims": {
+    "authoritative_nasdaq_100_membership_available": false,
+    "historical_membership_before_first_snapshot_claimed": false,
+    "freeze_blocker_changed": false,
+    "official_announcement_document_retrieved": false,
+    "source_class": "MANUAL_GIW_DOWNLOAD"
+  },
+  "non_claims": [
+    "This change set is not a membership file and never substitutes for one; it explains a diff, it does not define a basket.",
+    "The plan registered the adds, removes, and effective date but not the announcement URL or announcement timestamp, so source_url is a labelled placeholder and announced_at is null.",
+    "The owner must replace source_url with the retrieved Nasdaq announcement URL, and set source_url_recorded to true, before citing a reconciliation against this record in an approval.",
+    "Entry route (scheduled rank-based review versus Fast Entry) is not encoded here; a component file does not label it either."
+  ]
+}
