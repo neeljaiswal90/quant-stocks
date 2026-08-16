@@ -1,0 +1,336 @@
+"""Greatest-capital discrete capacity solver (NEE-116-CAPACITY-SOLVER).
+
+Registered design (M0 closeout plan §6.5, owner decision 2026-08-12: `$100`
+exhaustive capacity quantum) — the capacity claim must be a **global maximum
+proven by enumeration**, because integer share rounding makes feasibility
+non-monotone in capital, so bisection or neighbourhood sweeps only prove local
+certificates.
+
+Definitions
+-----------
+For initial capital ``C`` and a registered long-only target weight vector
+``w_i`` (Σ w_i ≤ 1), the discrete cost-aware target for name ``i`` is
+
+    investable_fraction f = (1 − cash_buffer) / (1 + bps/10,000)
+    shares_i(C)           = floor(f · C · w_i / price_i / order_quantum) · order_quantum
+
+(the ``(1 + bps)`` divisor makes the allocation cost-aware so the post-trade cash
+never dips below the buffer because of transaction costs). ``C`` is **feasible**
+iff every registered constraint holds:
+
+    F1  every target name receives ≥ one order quantum;
+    F2  post-trade cash  C − Σ shares_i·price_i·(1 + bps/10,000)  ≥ cash_buffer · C;
+    F3  participation    shares_i·price_i ≤ p_max · ADV20_i          for every i.
+
+Capacity ``C*`` = the greatest capital on the registered ``$capacity_quantum``
+grid that is feasible.
+
+Proof structure
+---------------
+1. **Dominating upper bound** ``Ĉ``: floor loses at most one order quantum, so
+   ``shares_i·price_i ≥ f·C·w_i − price_i·order_quantum``; therefore F3 for
+   name ``i`` is *certainly* violated once
+   ``C > (p_max·ADV20_i + price_i·order_quantum) / (f·w_i) =: Ĉ_i``. The
+   portfolio is infeasible for every ``C > Ĉ = min_i Ĉ_i``. This is a lemma with
+   its own tests, not an assumption.
+2. **Exhaustive scan** of every capital quantum in ``[quantum, ⌊Ĉ⌋_quantum]``:
+   the feasibility bitmap is materialised (and hashed) so islands are captured
+   by construction; ``C*`` is the greatest feasible grid point.
+3. **Certificate**: ``C*``, the solved portfolio at ``C*``, the feasibility bitmap
+   hash and scan length, and the first violated constraint at the smallest
+   infeasible grid point above ``C*``. No certificate ⇒ no capacity claim
+   (``UNAVAILABLE_NO_FEASIBLE_CAPITAL`` when the bitmap is all-false).
+
+Everything is exact ``Decimal`` at the accounting precision; the module makes no
+empirical claim and does not change any freeze blocker.
+"""
+
+from __future__ import annotations
+
+import hashlib
+from collections.abc import Mapping
+from dataclasses import dataclass
+from decimal import ROUND_FLOOR, ROUND_HALF_EVEN, Decimal, localcontext
+from typing import Final
+
+from qme.quant.equations import (
+    DEFAULT_ORDER_QUANTUM,
+    INTERNAL_CURRENCY_QUANTUM,
+    RawAdvNotional,
+    RawExecutionPrice,
+)
+
+METHOD_ID: Final = "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1"
+CAPACITY_QUANTUM: Final = Decimal("100")  # owner decision 2026-08-12
+DEFAULT_MAX_PARTICIPATION: Final = Decimal("0.01")  # registered maximum_participation_of_adv20
+DEFAULT_CASH_BUFFER: Final = Decimal("0.01")  # registered minimum_cash_buffer_weight
+_BPS: Final = Decimal(10_000)
+_PREC: Final = 38
+MAX_SCAN_POINTS: Final = 2_000_000  # safety limit (Ĉ ≤ $200M at $100)
+
+
+class CapacitySolverError(ValueError):
+    """Fail-closed error for malformed inputs or an unbounded scan."""
+
+
+def _dec(value: object, name: str) -> Decimal:
+    try:
+        parsed = Decimal(str(value))
+    except Exception as exc:  # noqa: BLE001
+        raise CapacitySolverError(f"{name} is not a decimal") from exc
+    if not parsed.is_finite():
+        raise CapacitySolverError(f"{name} must be finite")
+    return parsed
+
+
+def _q(value: Decimal) -> Decimal:
+    return value.quantize(INTERNAL_CURRENCY_QUANTUM, rounding=ROUND_HALF_EVEN)
+
+
+@dataclass(frozen=True)
+class TargetLeg:
+    symbol: str
+    weight: Decimal
+    price: Decimal
+    adv20: Decimal
+
+
+@dataclass(frozen=True)
+class SolvedLeg:
+    symbol: str
+    shares: Decimal
+    notional: Decimal
+    participation: Decimal
+
+
+@dataclass(frozen=True)
+class SolvedPortfolio:
+    capital: Decimal
+    legs: tuple[SolvedLeg, ...]
+    invested_notional: Decimal
+    transaction_cost: Decimal
+    cash_after: Decimal
+    feasible: bool
+    first_violation: str | None  # F1_ZERO_SHARES:<sym> | F2_CASH_BUFFER | F3_PARTICIPATION:<sym>
+
+
+@dataclass(frozen=True)
+class CapacityCertificate:
+    method_id: str
+    status: str  # PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID | UNAVAILABLE_NO_FEASIBLE_CAPITAL
+    capacity_quantum: str
+    dominating_upper_bound: str
+    scan_lower: str
+    scan_upper: str
+    scan_points: int
+    feasible_points: int
+    feasibility_bitmap_sha256: str
+    greatest_feasible_capital: str | None
+    portfolio_at_capacity: SolvedPortfolio | None
+    first_infeasible_above: str | None
+    first_infeasible_violation: str | None
+    parameters: Mapping[str, str]
+
+
+def _legs(
+    weights: Mapping[str, object],
+    prices: Mapping[str, RawExecutionPrice],
+    adv20: Mapping[str, RawAdvNotional],
+) -> tuple[TargetLeg, ...]:
+    if not weights:
+        raise CapacitySolverError("target weights are empty")
+    total = Decimal(0)
+    legs: list[TargetLeg] = []
+    for raw_symbol, raw_weight in weights.items():
+        symbol = raw_symbol.strip()
+        weight = _dec(raw_weight, f"weight[{symbol}]")
+        if not symbol or weight <= 0:
+            raise CapacitySolverError("every target weight must be positive with a non-empty symbol")
+        if symbol not in prices or symbol not in adv20:
+            raise CapacitySolverError(f"missing price or ADV20 for {symbol}")
+        price = prices[symbol]
+        adv = adv20[symbol]
+        if not isinstance(price, RawExecutionPrice) or not isinstance(adv, RawAdvNotional):
+            raise CapacitySolverError("prices and adv20 must be typed evidence-bound observations")
+        if price.evidence.security_id != symbol or adv.evidence.security_id != symbol:
+            raise CapacitySolverError(f"evidence security_id mismatch for {symbol}")
+        if price.value <= 0 or adv.value <= 0:
+            raise CapacitySolverError(f"price and ADV20 must be positive for {symbol}")
+        total += weight
+        legs.append(TargetLeg(symbol, weight, price.value, adv.value))
+    if total > 1:
+        raise CapacitySolverError("target weights sum above 1 (no leverage)")
+    return tuple(sorted(legs, key=lambda leg: leg.symbol))
+
+
+def solve_portfolio(
+    capital: object,
+    legs: tuple[TargetLeg, ...],
+    *,
+    transaction_cost_rate_bps: object,
+    cash_buffer_weight: object = DEFAULT_CASH_BUFFER,
+    maximum_participation: object = DEFAULT_MAX_PARTICIPATION,
+    order_quantum: object = DEFAULT_ORDER_QUANTUM,
+) -> SolvedPortfolio:
+    """Discrete cost-aware long-only targets at one capital, with feasibility verdict."""
+
+    with localcontext() as context:
+        context.prec = _PREC
+        context.rounding = ROUND_HALF_EVEN
+        c = _dec(capital, "capital")
+        bps = _dec(transaction_cost_rate_bps, "transaction_cost_rate_bps")
+        buffer = _dec(cash_buffer_weight, "cash_buffer_weight")
+        p_max = _dec(maximum_participation, "maximum_participation")
+        quantum = _dec(order_quantum, "order_quantum")
+        if c <= 0 or bps < 0 or bps >= _BPS or not (0 <= buffer < 1) or not (0 < p_max <= 1) or quantum <= 0:
+            raise CapacitySolverError("capital/bps/buffer/participation/quantum out of range")
+        rate = bps / _BPS
+        f = (Decimal(1) - buffer) / (Decimal(1) + rate)
+        solved: list[SolvedLeg] = []
+        invested = Decimal(0)
+        violation: str | None = None
+        for leg in legs:
+            units = (f * c * leg.weight / leg.price / quantum).to_integral_value(rounding=ROUND_FLOOR)
+            shares = units * quantum
+            notional = _q(shares * leg.price)
+            participation = notional / leg.adv20
+            solved.append(SolvedLeg(leg.symbol, shares, notional, participation))
+            invested += notional
+            if violation is None and shares <= 0:
+                violation = f"F1_ZERO_SHARES:{leg.symbol}"
+        cost = _q(rate * invested)
+        cash_after = _q(c - invested - cost)
+        if violation is None and cash_after < _q(buffer * c):
+            violation = "F2_CASH_BUFFER"
+        if violation is None:
+            for solved_leg in solved:
+                if solved_leg.participation > p_max:
+                    violation = f"F3_PARTICIPATION:{solved_leg.symbol}"
+                    break
+        return SolvedPortfolio(c, tuple(solved), invested, cost, cash_after, violation is None, violation)
+
+
+def dominating_upper_bound(
+    legs: tuple[TargetLeg, ...],
+    *,
+    transaction_cost_rate_bps: object,
+    cash_buffer_weight: object = DEFAULT_CASH_BUFFER,
+    maximum_participation: object = DEFAULT_MAX_PARTICIPATION,
+    order_quantum: object = DEFAULT_ORDER_QUANTUM,
+) -> Decimal:
+    """Ĉ = min_i (p_max·ADV20_i + price_i·quantum) / (f·w_i): every C > Ĉ is infeasible (F3)."""
+
+    with localcontext() as context:
+        context.prec = _PREC
+        context.rounding = ROUND_HALF_EVEN
+        rate = _dec(transaction_cost_rate_bps, "transaction_cost_rate_bps") / _BPS
+        f = (Decimal(1) - _dec(cash_buffer_weight, "cash_buffer_weight")) / (Decimal(1) + rate)
+        p_max = _dec(maximum_participation, "maximum_participation")
+        quantum = _dec(order_quantum, "order_quantum")
+        return min((p_max * leg.adv20 + leg.price * quantum) / (f * leg.weight) for leg in legs)
+
+
+def solve_greatest_capital(
+    weights: Mapping[str, object],
+    prices: Mapping[str, RawExecutionPrice],
+    adv20: Mapping[str, RawAdvNotional],
+    *,
+    transaction_cost_rate_bps: object,
+    cash_buffer_weight: object = DEFAULT_CASH_BUFFER,
+    maximum_participation: object = DEFAULT_MAX_PARTICIPATION,
+    order_quantum: object = DEFAULT_ORDER_QUANTUM,
+    capacity_quantum: object = CAPACITY_QUANTUM,
+) -> CapacityCertificate:
+    """Exhaustively scan the capital grid up to the dominating bound; return a certificate."""
+
+    legs = _legs(weights, prices, adv20)
+    with localcontext() as context:
+        context.prec = _PREC
+        context.rounding = ROUND_HALF_EVEN
+        grid = _dec(capacity_quantum, "capacity_quantum")
+        if grid <= 0:
+            raise CapacitySolverError("capacity_quantum must be positive")
+        upper_bound = dominating_upper_bound(
+            legs, transaction_cost_rate_bps=transaction_cost_rate_bps,
+            cash_buffer_weight=cash_buffer_weight, maximum_participation=maximum_participation,
+            order_quantum=order_quantum,
+        )
+        scan_upper = (upper_bound / grid).to_integral_value(rounding=ROUND_FLOOR) * grid
+        points = int(scan_upper / grid)
+        if points > MAX_SCAN_POINTS:
+            raise CapacitySolverError(f"scan of {points} points exceeds the {MAX_SCAN_POINTS} safety limit")
+
+        bitmap = bytearray()
+        feasible_points = 0
+        greatest: Decimal | None = None
+        best_portfolio: SolvedPortfolio | None = None
+        first_infeasible_above: Decimal | None = None
+        first_violation: str | None = None
+        capital = grid
+        # Track the most recent infeasible point after the current best.
+        pending_infeasible: tuple[Decimal, str] | None = None
+        while capital <= scan_upper:
+            portfolio = solve_portfolio(
+                capital, legs, transaction_cost_rate_bps=transaction_cost_rate_bps,
+                cash_buffer_weight=cash_buffer_weight, maximum_participation=maximum_participation,
+                order_quantum=order_quantum,
+            )
+            bitmap.append(1 if portfolio.feasible else 0)
+            if portfolio.feasible:
+                feasible_points += 1
+                greatest = capital
+                best_portfolio = portfolio
+                pending_infeasible = None
+            elif pending_infeasible is None:
+                pending_infeasible = (capital, portfolio.first_violation or "UNKNOWN")
+            capital += grid
+        if greatest is not None:
+            if pending_infeasible is not None:
+                first_infeasible_above, first_violation = pending_infeasible
+            else:
+                # Greatest feasible is the last grid point: the bound proves the next point infeasible.
+                above = solve_portfolio(
+                    greatest + grid, legs, transaction_cost_rate_bps=transaction_cost_rate_bps,
+                    cash_buffer_weight=cash_buffer_weight, maximum_participation=maximum_participation,
+                    order_quantum=order_quantum,
+                )
+                first_infeasible_above, first_violation = greatest + grid, above.first_violation or "UNKNOWN"
+
+    digest = hashlib.sha256(bytes(bitmap)).hexdigest()
+    return CapacityCertificate(
+        method_id=METHOD_ID,
+        status="PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID" if greatest is not None else "UNAVAILABLE_NO_FEASIBLE_CAPITAL",
+        capacity_quantum=format(grid, "f"),
+        dominating_upper_bound=format(upper_bound, "f"),
+        scan_lower=format(grid, "f"),
+        scan_upper=format(scan_upper, "f"),
+        scan_points=points,
+        feasible_points=feasible_points,
+        feasibility_bitmap_sha256=":".join(digest[i : i + 8] for i in range(0, 64, 8)),
+        greatest_feasible_capital=None if greatest is None else format(greatest, "f"),
+        portfolio_at_capacity=best_portfolio,
+        first_infeasible_above=None if first_infeasible_above is None else format(first_infeasible_above, "f"),
+        first_infeasible_violation=first_violation,
+        parameters={
+            "transaction_cost_rate_bps": format(_dec(transaction_cost_rate_bps, "bps"), "f"),
+            "cash_buffer_weight": format(_dec(cash_buffer_weight, "buffer"), "f"),
+            "maximum_participation": format(_dec(maximum_participation, "p_max"), "f"),
+            "order_quantum": format(_dec(order_quantum, "quantum"), "f"),
+        },
+    )
+
+
+__all__ = [
+    "CAPACITY_QUANTUM",
+    "DEFAULT_CASH_BUFFER",
+    "DEFAULT_MAX_PARTICIPATION",
+    "METHOD_ID",
+    "CapacityCertificate",
+    "CapacitySolverError",
+    "SolvedLeg",
+    "SolvedPortfolio",
+    "TargetLeg",
+    "dominating_upper_bound",
+    "solve_greatest_capital",
+    "solve_portfolio",
+]
