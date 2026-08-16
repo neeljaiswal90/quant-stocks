@@ -269,9 +269,9 @@ engine, agent orchestrator, broker controller, or alternative source of truth.
 | Workstream | Status | Exit evidence required |
 |---|---|---|
 | M0 foundation | `CI_VERIFIED` | Protected main SHA `f23abbd...` passed required exact-SHA workflow run `31537452368`; NEE-117 is Done. |
-| M1 market-data spine | `PLANNED` | Immutable raw receipts, schema validation, rate-limit/retry tests, replayable normalized outputs. |
-| M2 identity/corporate actions/coverage | `PLANNED` | Point-in-time identity and membership, explicit exclusions, adjustment fixtures, coverage gate. |
-| M3 deterministic signal/backtest | `IN_PROGRESS` | NEE-118/119 contracts are locally committed and tested; production engine, greatest-capital capacity solver, golden two-rebalance fixtures, and backtest remain. |
+| M1 market-data spine | `PLANNED` — **T2 engineering stream** (see `docs/governance/CHANGE_TIER_POLICY_V1.md`) | Immutable raw receipts, schema validation, rate-limit/retry tests, replayable normalized outputs. Per-slice gate is PR + CI only; no per-slice manifests, self-pins, or receipts. |
+| M2 identity/corporate actions/coverage | `PLANNED` — **T2 engineering stream** | Point-in-time identity and membership, explicit exclusions, adjustment fixtures, coverage gate. Same T2 gate as M1. |
+| M3 deterministic signal/backtest | `IN_PROGRESS` — contracts T0 (frozen); engine **T2 engineering stream** | NEE-118/119 contracts are committed and tested (T0). Production engine, target/capacity solver, and walk-forward backtest are T2 and iterate under PR + CI. The stream's single governed output is a promoted run manifest (T0 registration at promotion). Target: first walk-forward v0.1 backtest on pinned data within 6–8 weeks of M0 closure. |
 | M4 reporting/validation | `IN_PROGRESS` | NEE-120/121 governance is locally committed and tested; mandate thresholds, inference registrations, prospective evidence sufficiency, multiplicity execution, immutable empirical reports, and exact-SHA CI remain. |
 | M5 broker/paper operations | `PLANNED` | Preview-only default, account/environment allowlist, confirmation authority outside UI, reconciliation and abort evidence. |
 | M6 Nasdaq-100 agent review | `IN_PROGRESS/BLOCKED` | Full deterministic universe artifact, immutable evidence packets, process-isolated attested runtime, strict typed outputs, cross-ticker normalization. |
@@ -466,6 +466,11 @@ selection math. The UI renders those results and definitions; it never invents t
 
 ## 11. Next required actions
 
+0. Operate under the change-tier policy (`configs/governance/change-tier-policy-v1.json`,
+   enforced by `tests/foundation/test_change_tier_policy.py`): T0 frozen contracts keep the
+   full receipt ceremony; T1 kernels keep KAT discipline; **M1–M3 pipeline code is T2 and
+   ships on PR + CI only**. Do not add manifests, self-pinned digests, sealed result types,
+   or receipts to pipeline modules — the architecture test rejects them.
 1. Preserve the protected GitHub `main` branch and required exact-SHA `foundation` check;
    every new bounded slice must pass both branch and protected-main workflows before its
    evidence state is promoted.
@@ -530,6 +535,8 @@ selection math. The UI renders those results and definitions; it never invents t
 | 2026-08-11 | Implemented and committed NEE-169 Stage 2A immutable startup catalog as `c1c7f74f56727d6715d9f0a909a36242afb9fe7d`. | `COMMITTED_UNVERIFIED` | Exact run/hash lookup, same-run conflict visibility, bounded same-byte reads, canonical manifest/payload validation, immutable row models, opaque per-entry quarantine, 100 randomized discovery orders, and the 200-member boundary pass. Exact local gates: 84 focused UI tests and 382 full tests, Ruff, strict mypy on 33 source files, compile, four verified locks, wheel build, and 150-file tracked/staged secret scan. The local viewer, production producer compatibility, and browser/accessibility/performance qualification remain open. |
 | 2026-08-11 | Merged NEE-169 Stage 2A through PR #4 as protected-main SHA `1c3c258dd755741b300ed0dbf3f3232a81cd7d8b`; exact-main workflow `31561006797` passed. | `CI_VERIFIED — STAGE_2A_BOUNDED` | GitHub automation briefly marked NEE-169 Done; it was restored to In Progress. Linear comment `c3df92dd-ba23-4782-831b-6137d9c58e53` records branch/main evidence and the open viewer, production compatibility, browser, accessibility, performance, and clean-machine gates. |
 | 2026-08-12 | Implemented and merged the strict operational `qme.config.v1` contract through PR #5 as protected-main SHA `c4510ed57e41587262fb6b52f6d9d6aea4c49857`. | `CI_VERIFIED — BOUNDED_CONFIG_CONTRACT` | Branch workflow `31611951477` and protected-main workflow `31612222113` passed 405 tests, hashed locks, wheel/CLI smoke, lint, strict typing, compile, tracked-secret scan, deterministic replay, and clean-tree verification. Linear auto-closure was corrected; NEE-110 remains In Progress with comment `fb8ee4c3-2a5e-44ad-87e9-46126075a656` because NEE-116/120/121/122 and all registered production/owner inputs remain blocking. |
+
+| 2026-08-14 | Registered the change-tier policy (T0/T1/T2/T3) with a mechanical architecture test; defined M1–M3 as one T2 engineering stream. | `LOCAL_UNCOMMITTED` → branch `codex/change-tier-policy-v1` | New files only (policy, schema, `qme/foundation/change_tiers.py`, test, doc); no frozen artifact touched. Tree at `32253e8` measured 74.0% T0 / 13.8% T1 / 6.6% T2 / 5.5% T3 by lines. Resolves `PROJECT_STATE_AUDIT_2026-08-14` F1. Protected-main CI evidence pending. |
 
 ## 13. Per-ticket evidence record template
 
