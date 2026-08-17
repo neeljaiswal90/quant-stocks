@@ -1,0 +1,2782 @@
+{
+  "schema_version": "qme.tax_lots_fifo_wash_kat.v1",
+  "artifact_id": "NEE-116-TAX-LOTS-FIFO-WASH-KAT-V1",
+  "status": "REGRESSION_KAT_CANDIDATE_NOT_ACCEPTANCE_EVIDENCE",
+  "change_tier": "T1_ACCEPTED_KERNEL",
+  "classification_labels": [
+    "T1_ENGINEERING_KAT_CANDIDATE",
+    "SAME_CLAUDE_LINEAGE_INTERNAL_QA",
+    "FORMAL_EXTERNAL_ACCEPTANCE_REQUIRED_BEFORE_T0_BINDING",
+    "FREEZE_BLOCKER_UNCHANGED"
+  ],
+  "description": "Independently hand-derived FIFO / wash-sale / holding-period known-answer scenario for qme.quant.tax_lots. Every expected amount below was derived from the registered rule text with exact rational arithmetic before the production module was executed; the module is only compared against these numbers, never used to produce them.",
+  "merge_note": "Merging this bounded T1 candidate does NOT make it usable for blocker clearance. Before it can be bound into a T0 successor-freeze it must be included in a non-Claude review or independently recomputed by a qualifying human reviewer.",
+  "securities": {
+    "AAA": "Main FIFO / wash episode: multi-lot FIFO consumption, a full wash split across a before-replacement and an after-replacement, a prorated partial wash, a gain with a repurchase in the window, and a loss with no replacement.",
+    "BBB": "Forward-split security; also carries the exactly-365 (SHORT) and exactly-366 (LONG) holding-period boundary pair.",
+    "WB30": "Wash boundary probe: replacement acquired exactly 30 calendar days BEFORE the loss sale => INCLUDED.",
+    "WB31": "Wash boundary probe: replacement acquired exactly 31 calendar days BEFORE the loss sale => EXCLUDED.",
+    "WA30": "Wash boundary probe: replacement acquired exactly 30 calendar days AFTER the loss sale => INCLUDED.",
+    "WA31": "Wash boundary probe: replacement acquired exactly 31 calendar days AFTER the loss sale => EXCLUDED.",
+    "CHN": "Chained wash: lot A washes into lot B, then lot B (carrying the add-back basis and the tacked holding start) is itself sold at a loss and washes into lot C."
+  },
+  "units": {
+    "shares": "SHARES_DECIMAL_8PLACE_STRING",
+    "price": "ACCOUNT_CURRENCY_PER_SHARE_DECIMAL_STRING",
+    "fees": "ACCOUNT_CURRENCY_DECIMAL_STRING",
+    "proceeds": "ACCOUNT_CURRENCY_DECIMAL_8PLACE_STRING",
+    "basis": "ACCOUNT_CURRENCY_DECIMAL_8PLACE_STRING",
+    "raw_gain": "ACCOUNT_CURRENCY_DECIMAL_8PLACE_STRING",
+    "wash_disallowed": "ACCOUNT_CURRENCY_DECIMAL_8PLACE_STRING_POSITIVE_ADD_BACK",
+    "recognized_gain": "ACCOUNT_CURRENCY_DECIMAL_8PLACE_STRING",
+    "estimated_tax": "ACCOUNT_CURRENCY_DECIMAL_8PLACE_STRING",
+    "holding_days": "CALENDAR_DAYS_INTEGER",
+    "offset_days": "CALENDAR_DAYS_INTEGER_SIGNED_REPLACEMENT_MINUS_SALE",
+    "dates": "ISO_8601_CALENDAR_DATE"
+  },
+  "frozen_v0_1_tax_decisions": {
+    "lot_method": "FIFO",
+    "hifo_enabled": false,
+    "tax_reporting": "SCENARIO_ONLY",
+    "actual_personal_tax_liability_claimed": false,
+    "scenarios": [
+      "ST 0.22 / LT 0.15",
+      "ST 0.24 / LT 0.15",
+      "ST 0.32 / LT 0.15"
+    ],
+    "rate_scenario_note": "The 0.24 case is NOT the owner's actual tax bracket. All three short-term rates are registered scenarios only and no scenario is claimed to be the filer's marginal rate."
+  },
+  "registered_rules": {
+    "lot_method": "FIFO",
+    "election_verified": false,
+    "long_term_rule": "(sale_date - holding_start).days > 365",
+    "wash_window_calendar_days": 30,
+    "wash_scope": "STRATEGY_ACCOUNT_ONLY",
+    "split_rule": "shares*ratio, basis unchanged, applied before same-day fills",
+    "quantum": "0.00000001",
+    "rounding": "ROUND_HALF_EVEN",
+    "st_rate_scenarios": [
+      "0.22",
+      "0.24",
+      "0.32"
+    ],
+    "lt_rate": "0.15"
+  },
+  "rule_notes": [
+    "Fees are added to basis on BUY and subtracted from proceeds on SELL.",
+    "A realized LOSS is disallowed to the extent shares of the same security are acquired within 30 calendar days before or after the sale; the sold shares themselves never replace their own loss.",
+    "The window is inclusive at both ends: an offset of exactly -30 or +30 calendar days is INSIDE the window; -31 or +31 is OUTSIDE it.",
+    "Partial replacement is prorated by shares; each replacement share can absorb only one wash, so a replacement lot's capacity is consumed as it absorbs losses.",
+    "A disallowed amount is added to the replacement lot's basis and the replacement lot's holding start tacks back to the sold lot's holding start (only when that start is earlier).",
+    "Adjusted basis and tacked holding start travel with the replacement lot, so a chain of successive replacements accumulates them.",
+    "Gains never wash.",
+    "Scenario tax: ST and LT netted separately after carry-in, then a net loss in one character offsets a net gain in the other; the residual net loss carries forward with its character; taxable = max(net, 0) per character after offset."
+  ],
+  "per_event_row_schema": {
+    "description": "One row per realized event, carrying the owner-mandated per-event field names. A field that does not apply to an event is present and null, never omitted.",
+    "owner_mandated_fields": [
+      "event_id",
+      "lot_id",
+      "acquisition_date",
+      "sale_date",
+      "quantity",
+      "original_basis",
+      "buy_fees",
+      "sell_proceeds",
+      "sell_fees",
+      "pre_wash_gain_or_loss",
+      "replacement_lot_id",
+      "replacement_date",
+      "replacement_quantity",
+      "allocated_replacement_quantity",
+      "disallowed_loss",
+      "recognized_loss",
+      "adjusted_replacement_basis",
+      "original_holding_period_start",
+      "adjusted_holding_period_start",
+      "short_term_or_long_term",
+      "tax_scenario",
+      "estimated_scenario_tax",
+      "status",
+      "reason_codes"
+    ],
+    "additional_audit_fields": [
+      "realized_event_index",
+      "security_id",
+      "sale_fill_id",
+      "selection_rule",
+      "replacement_offset_days",
+      "replacement_basis_before_adjustment",
+      "replacement_holding_period_start_before_adjustment",
+      "holding_days",
+      "unreplaced_quantity"
+    ],
+    "conventions": {
+      "replacement_fields_are_arrays": "replacement_lot_id, replacement_date, replacement_offset_days, replacement_quantity, allocated_replacement_quantity, replacement_basis_before_adjustment, adjusted_replacement_basis, replacement_holding_period_start_before_adjustment and adjusted_holding_period_start are parallel arrays, one entry per replacement allocation in the order the allocations were made. They are null when the event has no replacement at all.",
+      "buy_fees": "the purchase-fee component of original_basis for the quantity sold: the opening fill's fee pro-rated by the fraction of the lot consumed. It is 0.00000000 for a lot opened with no fee even when the lot's basis contains a wash add-back that itself included a fee (see event E14).",
+      "sell_fees": "the sale fill's fee pro-rated by shares taken / shares sold. sell_proceeds is already net of it.",
+      "recognized_loss": "the event's recognized amount when pre_wash_gain_or_loss < 0 (so <= 0, and exactly 0.00000000 for a fully washed loss); null for a gain.",
+      "original_holding_period_start": "the holding start used to classify THIS sale. It equals acquisition_date unless the sold lot was itself a wash replacement, in which case it is the earlier tacked start - that is the chain evidence.",
+      "adjusted_holding_period_start": "each replacement lot's holding start AFTER tacking.",
+      "estimated_scenario_tax": "always null: the registered estimator nets ST and LT at YEAR level after carry-in and cross-offset, so no per-event tax exists. Attributing one would be a fabricated number. The year-level table is expected.scenario_tax and the event-to-year trace is expected.scenario_tax_composition.",
+      "tax_scenario": "the registered scenario set the event's recognized amount flows into; 0.24 is NOT the owner's actual bracket."
+    }
+  },
+  "status_codes": {
+    "GAIN_NO_WASH_APPLICABLE": "raw gain >= 0; the wash-sale rule does not apply to gains.",
+    "LOSS_FULLY_DISALLOWED_WASH": "every loss share was matched to a replacement share inside the window.",
+    "LOSS_PARTIALLY_DISALLOWED_WASH": "some loss shares were matched; the unmatched fraction stays recognized.",
+    "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW": "no replacement share was available inside the window; the whole loss is recognized.",
+    "REPLACEMENT_BEFORE_SALE_WITHIN_WINDOW": "allocation to a lot acquired on or after (sale_date - 30) and on or before the sale date.",
+    "REPLACEMENT_AFTER_SALE_WITHIN_WINDOW": "allocation to a lot acquired after the sale date and on or before (sale_date + 30).",
+    "REPLACEMENT_OUTSIDE_WINDOW": "candidate rejected: |offset_days| > 30."
+  },
+  "out_of_scope": {
+    "cross_account_wash_sales": {
+      "availability": "UNAVAILABLE_OUT_OF_SCOPE",
+      "value": null,
+      "module_label": "WASH_SALE_SCOPE_STRATEGY_ACCOUNT_ONLY_CROSS_ACCOUNT_UNDERSTATEMENT",
+      "note": "Replacement purchases made in any other account (including IRAs and a spouse's accounts) are not observable to this estimator and are NOT modelled. The effect is encoded as unavailable rather than as zero: any cross-account replacement would increase the disallowed loss, so every disallowed_loss figure here is a LOWER bound, every recognized_loss figure is an UPPER bound, and the strategy-account scope is a known UNDERSTATEMENT of wash-sale disallowance."
+    },
+    "ordinary_income_capital_loss_deduction": {
+      "availability": "UNAVAILABLE_OUT_OF_SCOPE",
+      "value": null,
+      "module_label": "ORDINARY_INCOME_LOSS_DEDUCTION_STATE_NIIT_DIVIDENDS_OUT_OF_SCOPE"
+    },
+    "state_tax": {
+      "availability": "UNAVAILABLE_OUT_OF_SCOPE",
+      "value": null,
+      "module_label": "ORDINARY_INCOME_LOSS_DEDUCTION_STATE_NIIT_DIVIDENDS_OUT_OF_SCOPE"
+    },
+    "niit": {
+      "availability": "UNAVAILABLE_OUT_OF_SCOPE",
+      "value": null,
+      "module_label": "ORDINARY_INCOME_LOSS_DEDUCTION_STATE_NIIT_DIVIDENDS_OUT_OF_SCOPE"
+    },
+    "dividend_taxation": {
+      "availability": "UNAVAILABLE_OUT_OF_SCOPE",
+      "value": null,
+      "module_label": "ORDINARY_INCOME_LOSS_DEDUCTION_STATE_NIIT_DIVIDENDS_OUT_OF_SCOPE"
+    },
+    "hifo_lot_method": {
+      "availability": "DISABLED_NO_VERIFIED_ACCOUNT_ELECTION",
+      "value": null,
+      "module_label": "ELECTION_UNVERIFIED_FIFO_DEFAULT"
+    }
+  },
+  "minimum_wash_sale_coverage": {
+    "FIFO lot selection across >= 2 lots": {
+      "realized_event_indices": [
+        0,
+        1
+      ],
+      "evidence": "F07 sells 150 AAA and consumes lot 3 (100 sh) then lot 4 (50 of 80) in acquisition order"
+    },
+    "loss sale with replacement acquired BEFORE the sale": {
+      "realized_event_indices": [
+        0,
+        9,
+        10
+      ],
+      "evidence": "lot 6 at -15 days, lot 16 at -14 days, lot 14 at -30 days"
+    },
+    "loss sale with replacement acquired AFTER the sale": {
+      "realized_event_indices": [
+        0,
+        1,
+        12,
+        14
+      ],
+      "evidence": "lot 7 at +17 days, lot 18 at +30 days, lot 17 at +14 days"
+    },
+    "replacement at exactly -30 calendar days => INCLUDED (wash)": {
+      "realized_event_indices": [
+        10
+      ],
+      "evidence": "WB30: lot 14 acquired 2026-04-01, sale 2026-05-01, 400.00 disallowed"
+    },
+    "replacement at exactly +30 calendar days => INCLUDED (wash)": {
+      "realized_event_indices": [
+        12
+      ],
+      "evidence": "WA30: lot 18 acquired 2026-06-10, sale 2026-05-11, 400.00 disallowed"
+    },
+    "replacement at -31 days => EXCLUDED (no wash)": {
+      "realized_event_indices": [
+        11
+      ],
+      "evidence": "WB31: lot 15 acquired 2026-04-04, sale 2026-05-05, 0.00 disallowed and no tacking"
+    },
+    "replacement at +31 days => EXCLUDED (no wash)": {
+      "realized_event_indices": [
+        13
+      ],
+      "evidence": "WA31: lot 19 acquired 2026-06-13, sale 2026-05-13, 0.00 disallowed and no tacking"
+    },
+    "partial replacement shares => proportionate disallowed loss": {
+      "realized_event_indices": [
+        1
+      ],
+      "evidence": "40 of 50 loss shares replaced => 440.00 of 550.00 disallowed, 110.00 recognized"
+    },
+    "one replacement share cannot absorb the same loss twice": {
+      "realized_event_indices": [
+        0,
+        1
+      ],
+      "evidence": "lot 7's 100 shares absorb 60 shares of event 0 and 40 shares of event 1; capacity is then 0, so event 1's last 10 loss shares stay recognized"
+    },
+    "disallowed loss added to replacement basis": {
+      "realized_event_indices": [
+        0,
+        1,
+        9,
+        10,
+        12,
+        14
+      ],
+      "evidence": "lot 6 600.00->840.40; lot 7 1200.60->1561.20->2001.20; lot 16 900.00->1380.30; lot 14 800.00->1200.00; lot 18 700.00->1100.00; lot 17 540.00->1320.30"
+    },
+    "holding period tacked to the replacement lot": {
+      "realized_event_indices": [
+        0,
+        7,
+        8,
+        9,
+        10,
+        12,
+        14
+      ],
+      "evidence": "lots 6, 7, 14, 16, 17 and 18 all move their holding start back to the sold lot's start; events 7 and 8 sell at 393 days and are LONG_TERM only because of it"
+    },
+    "CHAINED wash: adjusted basis + tacked holding period carried forward through successive replacements": {
+      "realized_event_indices": [
+        9,
+        14
+      ],
+      "evidence": "CHN lot 13 -> lot 16 -> lot 17: event 14's basis 1380.30 is lot 16's adjusted basis and its holding start 2026-03-11 is lot 13's; lot 17 inherits both again"
+    },
+    "gain sale with re-buy in window => NO wash": {
+      "realized_event_indices": [
+        2
+      ],
+      "evidence": "F09 gain on 2025-07-15 with F11 buying AAA exactly 30 days later; wash_disallowed 0.00"
+    },
+    "loss sale with NO replacement => fully recognized": {
+      "realized_event_indices": [
+        4,
+        11,
+        13
+      ],
+      "evidence": "AAA 2025-10-20 (-480.40), WB31 2026-05-05 (-100.00), WA31 2026-05-13 (-100.00)"
+    },
+    "fees increase BUY basis and reduce SELL proceeds": {
+      "realized_event_indices": [
+        3,
+        9
+      ],
+      "evidence": "event 3 basis 900.50 includes the 0.50 buy fee and proceeds 1199.80 are net of the 0.20 sell fee; event 9's 1200.30 basis includes a 0.30 buy fee that flows through the wash chain"
+    },
+    "exactly 365 days => SHORT-TERM; > 365 days => LONG-TERM": {
+      "realized_event_indices": [
+        5,
+        6
+      ],
+      "evidence": "BBB lot 2 sold 2026-01-06 at 365 days (SHORT_TERM) and 2026-01-07 at 366 days (LONG_TERM)"
+    },
+    "cross-account wash-sale effects => explicitly UNAVAILABLE / OUT_OF_SCOPE (labelled), NOT assumed zero": {
+      "realized_event_indices": [],
+      "evidence": "out_of_scope.cross_account_wash_sales carries availability UNAVAILABLE_OUT_OF_SCOPE with value null and the module's WASH_SALE_SCOPE_STRATEGY_ACCOUNT_ONLY_CROSS_ACCOUNT_UNDERSTATEMENT label"
+    }
+  },
+  "inputs": {
+    "method": "FIFO",
+    "election_verified": false,
+    "fills": [
+      {
+        "fill_id": "F01-BUY-BBB-20240610",
+        "security_id": "BBB",
+        "trade_date": "2024-06-10",
+        "side": "BUY",
+        "shares": "100",
+        "price": "9.00",
+        "fees": "0.50"
+      },
+      {
+        "fill_id": "F02-BUY-BBB-20250106",
+        "security_id": "BBB",
+        "trade_date": "2025-01-06",
+        "side": "BUY",
+        "shares": "100",
+        "price": "10.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F03-BUY-AAA-20250113",
+        "security_id": "AAA",
+        "trade_date": "2025-01-13",
+        "side": "BUY",
+        "shares": "100",
+        "price": "20.00",
+        "fees": "1.00"
+      },
+      {
+        "fill_id": "F04-BUY-AAA-20250218",
+        "security_id": "AAA",
+        "trade_date": "2025-02-18",
+        "side": "BUY",
+        "shares": "80",
+        "price": "25.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F05-BUY-AAA-20250320",
+        "security_id": "AAA",
+        "trade_date": "2025-03-20",
+        "side": "BUY",
+        "shares": "60",
+        "price": "30.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F06-BUY-AAA-20250410",
+        "security_id": "AAA",
+        "trade_date": "2025-04-10",
+        "side": "BUY",
+        "shares": "40",
+        "price": "15.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F07-SELL-AAA-20250425",
+        "security_id": "AAA",
+        "trade_date": "2025-04-25",
+        "side": "SELL",
+        "shares": "150",
+        "price": "14.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F08-BUY-AAA-20250512",
+        "security_id": "AAA",
+        "trade_date": "2025-05-12",
+        "side": "BUY",
+        "shares": "100",
+        "price": "12.00",
+        "fees": "0.60"
+      },
+      {
+        "fill_id": "F09-SELL-AAA-20250715",
+        "security_id": "AAA",
+        "trade_date": "2025-07-15",
+        "side": "SELL",
+        "shares": "30",
+        "price": "28.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F10-SELL-BBB-20250814",
+        "security_id": "BBB",
+        "trade_date": "2025-08-14",
+        "side": "SELL",
+        "shares": "200",
+        "price": "6.00",
+        "fees": "0.20"
+      },
+      {
+        "fill_id": "F11-BUY-AAA-20250814",
+        "security_id": "AAA",
+        "trade_date": "2025-08-14",
+        "side": "BUY",
+        "shares": "25",
+        "price": "26.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F12-SELL-AAA-20251020",
+        "security_id": "AAA",
+        "trade_date": "2025-10-20",
+        "side": "SELL",
+        "shares": "60",
+        "price": "22.00",
+        "fees": "0.40"
+      },
+      {
+        "fill_id": "F13-SELL-BBB-20260106",
+        "security_id": "BBB",
+        "trade_date": "2026-01-06",
+        "side": "SELL",
+        "shares": "150",
+        "price": "8.00",
+        "fees": "0.25"
+      },
+      {
+        "fill_id": "F14-SELL-BBB-20260107",
+        "security_id": "BBB",
+        "trade_date": "2026-01-07",
+        "side": "SELL",
+        "shares": "30",
+        "price": "8.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F15-SELL-AAA-20260210",
+        "security_id": "AAA",
+        "trade_date": "2026-02-10",
+        "side": "SELL",
+        "shares": "80",
+        "price": "24.00",
+        "fees": "0.40"
+      },
+      {
+        "fill_id": "F16-BUY-WB30-20260302",
+        "security_id": "WB30",
+        "trade_date": "2026-03-02",
+        "side": "BUY",
+        "shares": "100",
+        "price": "10.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F17-BUY-WB31-20260304",
+        "security_id": "WB31",
+        "trade_date": "2026-03-04",
+        "side": "BUY",
+        "shares": "25",
+        "price": "10.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F18-BUY-WA30-20260306",
+        "security_id": "WA30",
+        "trade_date": "2026-03-06",
+        "side": "BUY",
+        "shares": "100",
+        "price": "10.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F19-BUY-WA31-20260309",
+        "security_id": "WA31",
+        "trade_date": "2026-03-09",
+        "side": "BUY",
+        "shares": "25",
+        "price": "10.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F20-BUY-CHN-20260311",
+        "security_id": "CHN",
+        "trade_date": "2026-03-11",
+        "side": "BUY",
+        "shares": "60",
+        "price": "20.00",
+        "fees": "0.30"
+      },
+      {
+        "fill_id": "F21-BUY-WB30-20260401",
+        "security_id": "WB30",
+        "trade_date": "2026-04-01",
+        "side": "BUY",
+        "shares": "100",
+        "price": "8.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F22-BUY-WB31-20260404",
+        "security_id": "WB31",
+        "trade_date": "2026-04-04",
+        "side": "BUY",
+        "shares": "25",
+        "price": "8.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F23-BUY-CHN-20260406",
+        "security_id": "CHN",
+        "trade_date": "2026-04-06",
+        "side": "BUY",
+        "shares": "60",
+        "price": "15.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F24-SELL-CHN-20260420",
+        "security_id": "CHN",
+        "trade_date": "2026-04-20",
+        "side": "SELL",
+        "shares": "60",
+        "price": "12.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F25-SELL-WB30-20260501",
+        "security_id": "WB30",
+        "trade_date": "2026-05-01",
+        "side": "SELL",
+        "shares": "100",
+        "price": "6.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F26-SELL-WB31-20260505",
+        "security_id": "WB31",
+        "trade_date": "2026-05-05",
+        "side": "SELL",
+        "shares": "25",
+        "price": "6.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F27-SELL-WA30-20260511",
+        "security_id": "WA30",
+        "trade_date": "2026-05-11",
+        "side": "SELL",
+        "shares": "100",
+        "price": "6.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F28-SELL-WA31-20260513",
+        "security_id": "WA31",
+        "trade_date": "2026-05-13",
+        "side": "SELL",
+        "shares": "25",
+        "price": "6.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F29-SELL-CHN-20260518",
+        "security_id": "CHN",
+        "trade_date": "2026-05-18",
+        "side": "SELL",
+        "shares": "60",
+        "price": "10.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F30-BUY-CHN-20260601",
+        "security_id": "CHN",
+        "trade_date": "2026-06-01",
+        "side": "BUY",
+        "shares": "60",
+        "price": "9.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F31-BUY-WA30-20260610",
+        "security_id": "WA30",
+        "trade_date": "2026-06-10",
+        "side": "BUY",
+        "shares": "100",
+        "price": "7.00",
+        "fees": "0"
+      },
+      {
+        "fill_id": "F32-BUY-WA31-20260613",
+        "security_id": "WA31",
+        "trade_date": "2026-06-13",
+        "side": "BUY",
+        "shares": "25",
+        "price": "7.00",
+        "fees": "0"
+      }
+    ],
+    "splits": [
+      {
+        "security_id": "BBB",
+        "effective_date": "2025-06-02",
+        "ratio": "2"
+      }
+    ]
+  },
+  "hand_worked": [
+    {
+      "step": 1,
+      "date": "2024-06-10",
+      "event": "F01 BUY 100 BBB @ 9.00 fees 0.50",
+      "derivation": "basis = 100*9.00 + 0.50 = 900.50 (fees capitalised on BUY)",
+      "lot_opened": {
+        "lot_id": 1,
+        "security_id": "BBB",
+        "acquired": "2024-06-10",
+        "holding_start": "2024-06-10",
+        "shares": "100",
+        "basis": "900.50",
+        "replacement_capacity": "100"
+      },
+      "open_lots_after": [
+        "1:BBB 100/900.50"
+      ]
+    },
+    {
+      "step": 2,
+      "date": "2025-01-06",
+      "event": "F02 BUY 100 BBB @ 10.00 fees 0",
+      "derivation": "basis = 100*10.00 = 1000.00",
+      "lot_opened": {
+        "lot_id": 2,
+        "security_id": "BBB",
+        "acquired": "2025-01-06",
+        "holding_start": "2025-01-06",
+        "shares": "100",
+        "basis": "1000.00",
+        "replacement_capacity": "100"
+      },
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00"
+      ]
+    },
+    {
+      "step": 3,
+      "date": "2025-01-13",
+      "event": "F03 BUY 100 AAA @ 20.00 fees 1.00",
+      "derivation": "basis = 100*20.00 + 1.00 = 2001.00",
+      "lot_opened": {
+        "lot_id": 3,
+        "security_id": "AAA",
+        "acquired": "2025-01-13",
+        "holding_start": "2025-01-13",
+        "shares": "100",
+        "basis": "2001.00",
+        "replacement_capacity": "100"
+      },
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00",
+        "3:AAA 100/2001.00"
+      ]
+    },
+    {
+      "step": 4,
+      "date": "2025-02-18",
+      "event": "F04 BUY 80 AAA @ 25.00 fees 0",
+      "derivation": "basis = 80*25.00 = 2000.00",
+      "lot_opened": {
+        "lot_id": 4,
+        "security_id": "AAA",
+        "acquired": "2025-02-18",
+        "holding_start": "2025-02-18",
+        "shares": "80",
+        "basis": "2000.00",
+        "replacement_capacity": "80"
+      },
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00",
+        "3:AAA 100/2001.00",
+        "4:AAA 80/2000.00"
+      ]
+    },
+    {
+      "step": 5,
+      "date": "2025-03-20",
+      "event": "F05 BUY 60 AAA @ 30.00 fees 0",
+      "derivation": "basis = 60*30.00 = 1800.00",
+      "lot_opened": {
+        "lot_id": 5,
+        "security_id": "AAA",
+        "acquired": "2025-03-20",
+        "holding_start": "2025-03-20",
+        "shares": "60",
+        "basis": "1800.00",
+        "replacement_capacity": "60"
+      },
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00",
+        "3:AAA 100/2001.00",
+        "4:AAA 80/2000.00",
+        "5:AAA 60/1800.00"
+      ]
+    },
+    {
+      "step": 6,
+      "date": "2025-04-10",
+      "event": "F06 BUY 40 AAA @ 15.00 fees 0 (this lot is the replacement bought BEFORE the 2025-04-25 loss sale)",
+      "derivation": "basis = 40*15.00 = 600.00; offset to the coming sale = -15 calendar days",
+      "lot_opened": {
+        "lot_id": 6,
+        "security_id": "AAA",
+        "acquired": "2025-04-10",
+        "holding_start": "2025-04-10",
+        "shares": "40",
+        "basis": "600.00",
+        "replacement_capacity": "40"
+      },
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00",
+        "3:AAA 100/2001.00",
+        "4:AAA 80/2000.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/600.00"
+      ]
+    },
+    {
+      "step": 7,
+      "date": "2025-04-25",
+      "event": "F07 SELL 150 AAA @ 14.00 fees 0 (FIFO consumes lot 3 then lot 4)",
+      "derivation": "gross proceeds = 150*14.00 - 0 = 2100.00, allocated pro rata by shares taken",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 0,
+          "lot_id": 3,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "100",
+          "sell_proceeds": "2100.00 * 100/150 = 1400.00",
+          "original_basis": "2001.00 * 100/100 = 2001.00",
+          "pre_wash_gain_or_loss": "1400.00 - 2001.00 = -601.00 (LOSS)",
+          "holding_days": "(2025-04-25 - 2025-01-13).days = 102 -> SHORT_TERM",
+          "wash_window_before": "[2025-03-26, 2025-04-25]; lot 6 (acquired 2025-04-10, offset -15, 40 free shares) qualifies; lot 5 (2025-03-20, offset -36) misses the window by 6 days; lot 4 (2025-02-18) is far outside it",
+          "allocated_replacement_quantity": "per-share loss 601.00/100 = 6.01; 40 of the 100 loss shares are matched to lot 6",
+          "disallowed_loss": "6.01*40 = 240.40",
+          "adjusted_replacement_basis": "lot 6 basis 600.00 + 240.40 = 840.40; replacement capacity 40 -> 0",
+          "adjusted_holding_period_start": "lot 6 acquired stays 2025-04-10; holding_start tacks 2025-04-10 -> 2025-01-13",
+          "status": "LOSS_PARTIALLY_DISALLOWED_WASH at this point; upgraded to LOSS_FULLY_DISALLOWED_WASH at step 8",
+          "unreplaced_loss_open_to_a_later_replacement": "60 shares / 360.60, eligible through 2025-05-25",
+          "event_id": "E00"
+        },
+        {
+          "realized_event_index": 1,
+          "lot_id": 4,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "50",
+          "sell_proceeds": "2100.00 * 50/150 = 700.00",
+          "original_basis": "2000.00 * 50/80 = 1250.00",
+          "pre_wash_gain_or_loss": "700.00 - 1250.00 = -550.00 (LOSS)",
+          "holding_days": "(2025-04-25 - 2025-02-18).days = 66 -> SHORT_TERM",
+          "wash_window_before": "no eligible replacement: lot 3 was sold to zero, lot 6's capacity is already exhausted by event 0, lots 4/5 are outside the window",
+          "allocated_replacement_quantity": "none at this point",
+          "disallowed_loss": "0.00 at this point",
+          "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW at this point; becomes LOSS_PARTIALLY_DISALLOWED_WASH at step 8",
+          "unreplaced_loss_open_to_a_later_replacement": "50 shares / 550.00, eligible through 2025-05-25",
+          "event_id": "E01"
+        }
+      ],
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00",
+        "4:AAA 30/750.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/840.40 hs 2025-01-13 cap 0"
+      ]
+    },
+    {
+      "step": 8,
+      "date": "2025-05-12",
+      "event": "F08 BUY 100 AAA @ 12.00 fees 0.60 (replacement bought +17 days AFTER the 2025-04-25 loss sale)",
+      "derivation": "opening basis = 100*12.00 + 0.60 = 1200.60; lot 7 opens with 100 replacement shares",
+      "wash_matching": [
+        {
+          "absorbs": "event 0 remainder: 60 shares at 360.60/60 = 6.01 per share",
+          "disallowed_loss": "6.01*60 = 360.60",
+          "adjusted_replacement_basis": "lot 7 basis 1200.60 + 360.60 = 1561.20; capacity 100 -> 40",
+          "adjusted_holding_period_start": "lot 7 acquired stays 2025-05-12; holding_start tacks 2025-05-12 -> 2025-01-13",
+          "event_0_after": "wash_disallowed 240.40 + 360.60 = 601.00, recognized_gain -601.00 + 601.00 = 0.00, replacement lots [6, 7], status LOSS_FULLY_DISALLOWED_WASH"
+        },
+        {
+          "absorbs": "event 1: 50 loss shares at 550.00/50 = 11.00 per share, but only 40 replacement shares remain",
+          "disallowed_loss": "11.00*40 = 440.00",
+          "adjusted_replacement_basis": "lot 7 basis 1561.20 + 440.00 = 2001.20; capacity 40 -> 0",
+          "adjusted_holding_period_start": "lot 4's start 2025-02-18 is NOT earlier than lot 7's current 2025-01-13, so the holding start does not move",
+          "event_1_after": "wash_disallowed 440.00, recognized_gain -550.00 + 440.00 = -110.00, replacement lots [7], status LOSS_PARTIALLY_DISALLOWED_WASH",
+          "one_share_one_wash": "lot 7's 100 shares absorbed 60 shares of event 0 and 40 shares of event 1; no share absorbed twice, so event 1's last 10 loss shares (110.00) can never be disallowed by lot 7",
+          "residual": "10 unreplaced loss shares / 110.00 stay eligible only through 2025-05-25; the next AAA purchase is 2025-08-14, so 110.00 is permanently recognized"
+        }
+      ],
+      "open_lots_after": [
+        "1:BBB 100/900.50",
+        "2:BBB 100/1000.00",
+        "4:AAA 30/750.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/840.40 hs 2025-01-13",
+        "7:AAA 100/2001.20 hs 2025-01-13 cap 0"
+      ]
+    },
+    {
+      "step": 9,
+      "date": "2025-06-02",
+      "event": "BBB forward split 2:1 (applied before any fill on this date)",
+      "derivation": "lot shares double, total lot basis unchanged; no BBB loss is open to replacement",
+      "open_lots_after": [
+        "1:BBB 200/900.50",
+        "2:BBB 200/1000.00",
+        "4:AAA 30/750.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20"
+      ]
+    },
+    {
+      "step": 10,
+      "date": "2025-07-15",
+      "event": "F09 SELL 30 AAA @ 28.00 fees 0 (FIFO head is lot 4)",
+      "derivation": "gross proceeds = 30*28.00 = 840.00; lot 4 basis 750.00 * 30/30 = 750.00",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 2,
+          "lot_id": 4,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "30",
+          "sell_proceeds": "840.00",
+          "original_basis": "750.00",
+          "pre_wash_gain_or_loss": "840.00 - 750.00 = +90.00 (GAIN)",
+          "holding_days": "(2025-07-15 - 2025-02-18).days = 147 -> SHORT_TERM",
+          "allocated_replacement_quantity": "none - gains never wash",
+          "disallowed_loss": "0.00 even though F11 buys AAA at exactly +30 days",
+          "status": "GAIN_NO_WASH_APPLICABLE",
+          "event_id": "E02"
+        }
+      ],
+      "open_lots_after": [
+        "1:BBB 200/900.50",
+        "2:BBB 200/1000.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20"
+      ]
+    },
+    {
+      "step": 11,
+      "date": "2025-08-14",
+      "event": "F10 SELL 200 BBB @ 6.00 fees 0.20 (FIFO head is post-split lot 1)",
+      "derivation": "gross proceeds = 200*6.00 - 0.20 = 1199.80; basis 900.50 (unchanged by the split)",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 3,
+          "lot_id": 1,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "200",
+          "sell_proceeds": "1199.80 (net of the 0.20 sell fee)",
+          "original_basis": "900.50 (including the 0.50 buy fee)",
+          "pre_wash_gain_or_loss": "1199.80 - 900.50 = +299.30 (GAIN)",
+          "holding_days": "(2025-08-14 - 2024-06-10).days = 430 -> LONG_TERM",
+          "disallowed_loss": "0.00",
+          "status": "GAIN_NO_WASH_APPLICABLE",
+          "event_id": "E03"
+        }
+      ],
+      "open_lots_after": [
+        "2:BBB 200/1000.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20"
+      ]
+    },
+    {
+      "step": 12,
+      "date": "2025-08-14",
+      "event": "F11 BUY 25 AAA @ 26.00 fees 0",
+      "derivation": "basis = 25*26.00 = 650.00. This is +111 days after the 2025-04-25 sale, so event 1's 10 residual loss shares are out of window and absorb nothing. It is exactly +30 days after the 2025-07-15 GAIN, which cannot wash.",
+      "lot_opened": {
+        "lot_id": 8,
+        "security_id": "AAA",
+        "acquired": "2025-08-14",
+        "holding_start": "2025-08-14",
+        "shares": "25",
+        "basis": "650.00",
+        "replacement_capacity": "25"
+      },
+      "open_lots_after": [
+        "2:BBB 200/1000.00",
+        "5:AAA 60/1800.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20",
+        "8:AAA 25/650.00"
+      ]
+    },
+    {
+      "step": 13,
+      "date": "2025-10-20",
+      "event": "F12 SELL 60 AAA @ 22.00 fees 0.40 (FIFO head is lot 5)",
+      "derivation": "gross proceeds = 60*22.00 - 0.40 = 1319.60; basis 1800.00",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 4,
+          "lot_id": 5,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "60",
+          "sell_proceeds": "1319.60",
+          "original_basis": "1800.00",
+          "pre_wash_gain_or_loss": "1319.60 - 1800.00 = -480.40 (LOSS)",
+          "holding_days": "(2025-10-20 - 2025-03-20).days = 214 -> SHORT_TERM",
+          "wash_window_before": "[2025-09-20, 2025-10-20]; the newest AAA lot (8) was acquired 2025-08-14, offset -67, outside the window",
+          "wash_window_after": "no AAA purchase occurs on or before 2025-11-19",
+          "allocated_replacement_quantity": "none",
+          "disallowed_loss": "0.00 -> the whole -480.40 is recognized",
+          "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW",
+          "event_id": "E04"
+        }
+      ],
+      "open_lots_after": [
+        "2:BBB 200/1000.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20",
+        "8:AAA 25/650.00"
+      ]
+    },
+    {
+      "step": 14,
+      "date": "2026-01-06",
+      "event": "F13 SELL 150 BBB @ 8.00 fees 0.25 (holding-period boundary: exactly 365 days)",
+      "derivation": "gross proceeds = 150*8.00 - 0.25 = 1199.75; basis 1000.00 * 150/200 = 750.00",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 5,
+          "lot_id": 2,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "150",
+          "sell_proceeds": "1199.75",
+          "original_basis": "750.00",
+          "pre_wash_gain_or_loss": "1199.75 - 750.00 = +449.75 (GAIN)",
+          "holding_days": "(2026-01-06 - 2025-01-06).days = 365; 365 is NOT > 365 -> SHORT_TERM",
+          "status": "GAIN_NO_WASH_APPLICABLE",
+          "event_id": "E05"
+        }
+      ],
+      "open_lots_after": [
+        "2:BBB 50/250.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20",
+        "8:AAA 25/650.00"
+      ]
+    },
+    {
+      "step": 15,
+      "date": "2026-01-07",
+      "event": "F14 SELL 30 BBB @ 8.00 fees 0 (holding-period boundary: exactly 366 days)",
+      "derivation": "gross proceeds = 30*8.00 = 240.00; basis 250.00 * 30/50 = 150.00",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 6,
+          "lot_id": 2,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "30",
+          "sell_proceeds": "240.00",
+          "original_basis": "150.00",
+          "pre_wash_gain_or_loss": "240.00 - 150.00 = +90.00 (GAIN)",
+          "holding_days": "(2026-01-07 - 2025-01-06).days = 366; 366 > 365 -> LONG_TERM",
+          "status": "GAIN_NO_WASH_APPLICABLE",
+          "event_id": "E06"
+        }
+      ],
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "6:AAA 40/840.40",
+        "7:AAA 100/2001.20",
+        "8:AAA 25/650.00"
+      ]
+    },
+    {
+      "step": 16,
+      "date": "2026-02-10",
+      "event": "F15 SELL 80 AAA @ 24.00 fees 0.40 (FIFO consumes lot 6 then lot 7 - both carry a tacked holding start)",
+      "derivation": "gross proceeds = 80*24.00 - 0.40 = 1919.60, allocated 40/80 to each lot",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 7,
+          "lot_id": 6,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "40",
+          "sell_proceeds": "1919.60 * 40/80 = 959.80",
+          "original_basis": "840.40 * 40/40 = 840.40 (600.00 purchase + 240.40 wash add-back)",
+          "pre_wash_gain_or_loss": "959.80 - 840.40 = +119.40 (GAIN)",
+          "holding_days": "tacked start 2025-01-13: (2026-02-10 - 2025-01-13).days = 393 > 365 -> LONG_TERM (from its own acquisition 2025-04-10 it would be 306 days, i.e. SHORT_TERM)",
+          "status": "GAIN_NO_WASH_APPLICABLE",
+          "event_id": "E07"
+        },
+        {
+          "realized_event_index": 8,
+          "lot_id": 7,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "40",
+          "sell_proceeds": "1919.60 * 40/80 = 959.80",
+          "original_basis": "2001.20 * 40/100 = 800.48 (1200.60 purchase + 360.60 + 440.00 wash add-backs)",
+          "pre_wash_gain_or_loss": "959.80 - 800.48 = +159.32 (GAIN)",
+          "holding_days": "tacked start 2025-01-13: 393 > 365 -> LONG_TERM (from its own acquisition 2025-05-12 it would be 274 days, i.e. SHORT_TERM)",
+          "status": "GAIN_NO_WASH_APPLICABLE",
+          "event_id": "E08"
+        }
+      ],
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00"
+      ]
+    },
+    {
+      "step": 17,
+      "date": "2026-03-02 .. 2026-03-11",
+      "event": "F16..F20 open the boundary-probe and chain lots",
+      "derivation": "lot 9 WB30 100*10.00 = 1000.00; lot 10 WB31 25*10.00 = 250.00; lot 11 WA30 100*10.00 = 1000.00; lot 12 WA31 25*10.00 = 250.00; lot 13 CHN 60*20.00 + 0.30 fee = 1200.30",
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00",
+        "9:WB30 100/1000.00",
+        "10:WB31 25/250.00",
+        "11:WA30 100/1000.00",
+        "12:WA31 25/250.00",
+        "13:CHN 60/1200.30"
+      ]
+    },
+    {
+      "step": 18,
+      "date": "2026-04-01 .. 2026-04-06",
+      "event": "F21..F23 open the before-sale replacement candidates",
+      "derivation": "lot 14 WB30 100*8.00 = 800.00 (offset -30 from the 2026-05-01 sale => INSIDE the window); lot 15 WB31 25*8.00 = 200.00 (offset -31 from the 2026-05-05 sale => OUTSIDE the window); lot 16 CHN 60*15.00 = 900.00 (offset -14 from the 2026-04-20 sale => INSIDE)",
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00",
+        "9:WB30 100/1000.00",
+        "10:WB31 25/250.00",
+        "11:WA30 100/1000.00",
+        "12:WA31 25/250.00",
+        "13:CHN 60/1200.30",
+        "14:WB30 100/800.00",
+        "15:WB31 25/200.00",
+        "16:CHN 60/900.00"
+      ]
+    },
+    {
+      "step": 19,
+      "date": "2026-04-20",
+      "event": "F24 SELL 60 CHN @ 12.00 fees 0 -- CHAIN LINK 1",
+      "derivation": "gross proceeds = 60*12.00 = 720.00; FIFO head is lot 13",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 9,
+          "lot_id": 13,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "60",
+          "sell_proceeds": "720.00",
+          "original_basis": "1200.30 (1200.00 purchase + 0.30 buy fee)",
+          "pre_wash_gain_or_loss": "720.00 - 1200.30 = -480.30 (LOSS)",
+          "holding_days": "(2026-04-20 - 2026-03-11).days = 40 -> SHORT_TERM",
+          "wash_window_before": "[2026-03-21, 2026-04-20]; lot 16 (acquired 2026-04-06, offset -14, 60 free shares) qualifies",
+          "allocated_replacement_quantity": "per-share loss 480.30/60 = 8.005; all 60 loss shares matched to lot 16",
+          "disallowed_loss": "8.005*60 = 480.30",
+          "adjusted_replacement_basis": "lot 16 basis 900.00 + 480.30 = 1380.30; capacity 60 -> 0",
+          "adjusted_holding_period_start": "lot 16 acquired stays 2026-04-06; holding_start tacks 2026-04-06 -> 2026-03-11",
+          "status": "LOSS_FULLY_DISALLOWED_WASH",
+          "event_id": "E09"
+        }
+      ],
+      "open_lots_after": [
+        "...",
+        "14:WB30 100/800.00",
+        "15:WB31 25/200.00",
+        "16:CHN 60/1380.30 hs 2026-03-11 cap 0"
+      ]
+    },
+    {
+      "step": 20,
+      "date": "2026-05-01",
+      "event": "F25 SELL 100 WB30 @ 6.00 fees 0 -- BOUNDARY PROBE: replacement at exactly -30 days",
+      "derivation": "gross proceeds = 100*6.00 = 600.00; FIFO head is lot 9",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 10,
+          "lot_id": 9,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "100",
+          "sell_proceeds": "600.00",
+          "original_basis": "1000.00",
+          "pre_wash_gain_or_loss": "600.00 - 1000.00 = -400.00 (LOSS)",
+          "holding_days": "(2026-05-01 - 2026-03-02).days = 60 -> SHORT_TERM",
+          "wash_window_before": "[2026-04-01, 2026-05-01]; lot 14 was acquired 2026-04-01, exactly on the lower edge, offset -30 => INSIDE the window",
+          "allocated_replacement_quantity": "per-share loss 400.00/100 = 4.00; all 100 loss shares matched to lot 14",
+          "disallowed_loss": "4.00*100 = 400.00",
+          "adjusted_replacement_basis": "lot 14 basis 800.00 + 400.00 = 1200.00; capacity 100 -> 0",
+          "adjusted_holding_period_start": "lot 14 acquired stays 2026-04-01; holding_start tacks 2026-04-01 -> 2026-03-02",
+          "status": "LOSS_FULLY_DISALLOWED_WASH",
+          "event_id": "E10"
+        }
+      ],
+      "open_lots_after": [
+        "...",
+        "14:WB30 100/1200.00 hs 2026-03-02 cap 0",
+        "15:WB31 25/200.00",
+        "16:CHN 60/1380.30"
+      ]
+    },
+    {
+      "step": 21,
+      "date": "2026-05-05",
+      "event": "F26 SELL 25 WB31 @ 6.00 fees 0 -- BOUNDARY PROBE: replacement at exactly -31 days",
+      "derivation": "gross proceeds = 25*6.00 = 150.00; FIFO head is lot 10",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 11,
+          "lot_id": 10,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "25",
+          "sell_proceeds": "150.00",
+          "original_basis": "250.00",
+          "pre_wash_gain_or_loss": "150.00 - 250.00 = -100.00 (LOSS)",
+          "holding_days": "(2026-05-05 - 2026-03-04).days = 62 -> SHORT_TERM",
+          "wash_window_before": "[2026-04-05, 2026-05-05]; lot 15 was acquired 2026-04-04, one day before the lower edge, offset -31 => OUTSIDE the window",
+          "wash_window_after": "no WB31 purchase occurs on or before 2026-06-04",
+          "allocated_replacement_quantity": "none",
+          "disallowed_loss": "0.00 -> the whole -100.00 is recognized",
+          "adjusted_replacement_basis": "lot 15 stays at 200.00",
+          "adjusted_holding_period_start": "lot 15 holding_start stays 2026-04-04 (no tacking)",
+          "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW",
+          "event_id": "E11"
+        }
+      ],
+      "open_lots_after": [
+        "...",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00 hs 2026-04-04",
+        "16:CHN 60/1380.30"
+      ]
+    },
+    {
+      "step": 22,
+      "date": "2026-05-11",
+      "event": "F27 SELL 100 WA30 @ 6.00 fees 0 -- BOUNDARY PROBE: replacement at exactly +30 days (matched at step 26)",
+      "derivation": "gross proceeds = 100*6.00 = 600.00; FIFO head is lot 11, the only WA30 lot",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 12,
+          "lot_id": 11,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "100",
+          "sell_proceeds": "600.00",
+          "original_basis": "1000.00",
+          "pre_wash_gain_or_loss": "600.00 - 1000.00 = -400.00 (LOSS)",
+          "holding_days": "(2026-05-11 - 2026-03-06).days = 66 -> SHORT_TERM",
+          "wash_window_before": "[2026-04-11, 2026-05-11]; no other WA30 lot exists",
+          "disallowed_loss": "0.00 at this point",
+          "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW at this point; becomes LOSS_FULLY_DISALLOWED_WASH at step 26",
+          "unreplaced_loss_open_to_a_later_replacement": "100 shares / 400.00, eligible through 2026-06-10",
+          "event_id": "E12"
+        }
+      ],
+      "open_lots_after": [
+        "...",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00",
+        "16:CHN 60/1380.30"
+      ]
+    },
+    {
+      "step": 23,
+      "date": "2026-05-13",
+      "event": "F28 SELL 25 WA31 @ 6.00 fees 0 -- BOUNDARY PROBE: replacement at exactly +31 days (rejected at step 27)",
+      "derivation": "gross proceeds = 25*6.00 = 150.00; FIFO head is lot 12, the only WA31 lot",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 13,
+          "lot_id": 12,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "25",
+          "sell_proceeds": "150.00",
+          "original_basis": "250.00",
+          "pre_wash_gain_or_loss": "150.00 - 250.00 = -100.00 (LOSS)",
+          "holding_days": "(2026-05-13 - 2026-03-09).days = 65 -> SHORT_TERM",
+          "wash_window_before": "[2026-04-13, 2026-05-13]; no other WA31 lot exists",
+          "wash_window_after": "eligible through 2026-06-12; the only later WA31 purchase is 2026-06-13, offset +31 => OUTSIDE the window",
+          "allocated_replacement_quantity": "none",
+          "disallowed_loss": "0.00 -> the whole -100.00 is recognized",
+          "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW",
+          "event_id": "E13"
+        }
+      ],
+      "open_lots_after": [
+        "...",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00",
+        "16:CHN 60/1380.30"
+      ]
+    },
+    {
+      "step": 24,
+      "date": "2026-05-18",
+      "event": "F29 SELL 60 CHN @ 10.00 fees 0 -- CHAIN LINK 2 (selling the replacement lot itself)",
+      "derivation": "gross proceeds = 60*10.00 = 600.00; the only CHN lot left is lot 16, which carries the step-19 add-back and tack",
+      "lot_consumptions": [
+        {
+          "realized_event_index": 14,
+          "lot_id": 16,
+          "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+          "quantity": "60",
+          "sell_proceeds": "600.00",
+          "original_basis": "1380.30 -- the ADJUSTED basis carried forward (900.00 purchase + 480.30 disallowed loss from event 9); without the chain it would be 900.00",
+          "pre_wash_gain_or_loss": "600.00 - 1380.30 = -780.30 (LOSS); without the carried-forward add-back it would be -300.00",
+          "holding_days": "the TACKED start 2026-03-11 carries forward, so (2026-05-18 - 2026-03-11).days = 68, not the 42 days from lot 16's own acquisition 2026-04-06 -> SHORT_TERM",
+          "wash_window_before": "[2026-04-18, 2026-05-18]; lot 13 is fully sold and has no capacity, and lot 16 cannot replace its own loss",
+          "disallowed_loss": "0.00 at this point",
+          "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW at this point; becomes LOSS_FULLY_DISALLOWED_WASH at step 25",
+          "unreplaced_loss_open_to_a_later_replacement": "60 shares / 780.30, eligible through 2026-06-17",
+          "event_id": "E14"
+        }
+      ],
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00"
+      ]
+    },
+    {
+      "step": 25,
+      "date": "2026-06-01",
+      "event": "F30 BUY 60 CHN @ 9.00 fees 0 -- CHAIN LINK 3 (replacement at +14 days)",
+      "derivation": "opening basis = 60*9.00 = 540.00; per-share loss 780.30/60 = 13.005; all 60 loss shares matched",
+      "wash_matching": [
+        {
+          "absorbs": "event 14: 60 shares at 13.005 per share",
+          "disallowed_loss": "13.005*60 = 780.30",
+          "adjusted_replacement_basis": "lot 17 basis 540.00 + 780.30 = 1320.30; capacity 60 -> 0",
+          "adjusted_holding_period_start": "lot 17 acquired stays 2026-06-01; holding_start tacks 2026-06-01 -> 2026-03-11, i.e. back to the ORIGINAL lot 13 acquisition two links up the chain",
+          "event_14_after": "wash_disallowed 780.30, recognized_gain -780.30 + 780.30 = 0.00, replacement lots [17], status LOSS_FULLY_DISALLOWED_WASH",
+          "chain_summary": "lot 13 (1200.30 basis, start 2026-03-11) -> lot 16 (1380.30 basis, start 2026-03-11) -> lot 17 (1320.30 basis, start 2026-03-11); across the whole chain 480.30 + 780.30 = 1260.60 of loss is deferred into basis and no loss is recognized"
+        }
+      ],
+      "lot_opened": {
+        "lot_id": 17,
+        "security_id": "CHN",
+        "acquired": "2026-06-01",
+        "holding_start": "2026-03-11",
+        "shares": "60",
+        "basis": "1320.30",
+        "replacement_capacity": "0"
+      },
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00",
+        "17:CHN 60/1320.30 hs 2026-03-11"
+      ]
+    },
+    {
+      "step": 26,
+      "date": "2026-06-10",
+      "event": "F31 BUY 100 WA30 @ 7.00 fees 0 -- BOUNDARY PROBE: exactly +30 days after the 2026-05-11 loss => INCLUDED",
+      "derivation": "opening basis = 100*7.00 = 700.00; (2026-06-10 - 2026-05-11).days = 30, which is NOT > 30, so the purchase is inside the window",
+      "wash_matching": [
+        {
+          "absorbs": "event 12: 100 shares at 400.00/100 = 4.00 per share",
+          "disallowed_loss": "4.00*100 = 400.00",
+          "adjusted_replacement_basis": "lot 18 basis 700.00 + 400.00 = 1100.00; capacity 100 -> 0",
+          "adjusted_holding_period_start": "lot 18 acquired stays 2026-06-10; holding_start tacks 2026-06-10 -> 2026-03-06",
+          "event_12_after": "wash_disallowed 400.00, recognized_gain -400.00 + 400.00 = 0.00, replacement lots [18], status LOSS_FULLY_DISALLOWED_WASH"
+        }
+      ],
+      "lot_opened": {
+        "lot_id": 18,
+        "security_id": "WA30",
+        "acquired": "2026-06-10",
+        "holding_start": "2026-03-06",
+        "shares": "100",
+        "basis": "1100.00",
+        "replacement_capacity": "0"
+      },
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00",
+        "17:CHN 60/1320.30",
+        "18:WA30 100/1100.00 hs 2026-03-06"
+      ]
+    },
+    {
+      "step": 27,
+      "date": "2026-06-13",
+      "event": "F32 BUY 25 WA31 @ 7.00 fees 0 -- BOUNDARY PROBE: exactly +31 days after the 2026-05-13 loss => EXCLUDED",
+      "derivation": "opening basis = 25*7.00 = 175.00; (2026-06-13 - 2026-05-13).days = 31 > 30, so nothing is absorbed. Event 13 keeps its full -100.00 recognized loss and lot 19 keeps its own holding start.",
+      "lot_opened": {
+        "lot_id": 19,
+        "security_id": "WA31",
+        "acquired": "2026-06-13",
+        "holding_start": "2026-06-13",
+        "shares": "25",
+        "basis": "175.00",
+        "replacement_capacity": "25"
+      },
+      "open_lots_after": [
+        "2:BBB 20/100.00",
+        "7:AAA 60/1200.72",
+        "8:AAA 25/650.00",
+        "14:WB30 100/1200.00",
+        "15:WB31 25/200.00",
+        "17:CHN 60/1320.30",
+        "18:WA30 100/1100.00",
+        "19:WA31 25/175.00"
+      ]
+    },
+    {
+      "step": 28,
+      "date": "2025-12-31",
+      "event": "2025 year-end netting (scenario only)",
+      "derivation": "ST recognized (events 0,1,2,4) = 0.00 + (-110.00) + 90.00 + (-480.40) = -500.40; LT recognized (event 3) = +299.30. The net ST loss offsets the net LT gain: offset = min(500.40, 299.30) = 299.30, leaving ST -201.10 and LT 0.00. Taxable ST = max(-201.10, 0) = 0.00, taxable LT = 0.00, so tax = 0.00 at every registered rate. Residual ST loss carries forward: -201.10."
+    },
+    {
+      "step": 29,
+      "date": "2026-12-31",
+      "event": "2026 year-end netting with the 2025 carry-in (scenario only)",
+      "derivation": "ST recognized (events 5,9,10,11,12,13,14) = 449.75 + 0.00 + 0.00 + (-100.00) + 0.00 + (-100.00) + 0.00 = +249.75; with the -201.10 carry-in, net ST = +48.65. LT recognized (events 6,7,8) = 90.00 + 119.40 + 159.32 = +368.72. Both characters are positive, so no cross-offset and no carryforward. Tax = 48.65*st_rate + 368.72*0.15 = 48.65*st_rate + 55.308: 10.703 + 55.308 = 66.011 at 0.22; 11.676 + 55.308 = 66.984 at 0.24; 15.568 + 55.308 = 70.876 at 0.32."
+    }
+  ],
+  "expected": {
+    "labels": [
+      "LOT_METHOD_FIFO",
+      "ELECTION_UNVERIFIED_FIFO_DEFAULT",
+      "WASH_SALE_SCOPE_STRATEGY_ACCOUNT_ONLY_CROSS_ACCOUNT_UNDERSTATEMENT",
+      "LONG_TERM_IF_HELD_MORE_THAN_365_DAYS"
+    ],
+    "realized_events": [
+      {
+        "security_id": "AAA",
+        "sale_date": "2025-04-25",
+        "sale_fill_id": "F07-SELL-AAA-20250425",
+        "lot_id": 3,
+        "lot_acquired": "2025-01-13",
+        "holding_start": "2025-01-13",
+        "shares": "100.00000000",
+        "proceeds": "1400.00000000",
+        "basis": "2001.00000000",
+        "raw_gain": "-601.00000000",
+        "wash_disallowed": "601.00000000",
+        "recognized_gain": "0.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 102,
+        "wash_replacement_lot_ids": [
+          6,
+          7
+        ]
+      },
+      {
+        "security_id": "AAA",
+        "sale_date": "2025-04-25",
+        "sale_fill_id": "F07-SELL-AAA-20250425",
+        "lot_id": 4,
+        "lot_acquired": "2025-02-18",
+        "holding_start": "2025-02-18",
+        "shares": "50.00000000",
+        "proceeds": "700.00000000",
+        "basis": "1250.00000000",
+        "raw_gain": "-550.00000000",
+        "wash_disallowed": "440.00000000",
+        "recognized_gain": "-110.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 66,
+        "wash_replacement_lot_ids": [
+          7
+        ]
+      },
+      {
+        "security_id": "AAA",
+        "sale_date": "2025-07-15",
+        "sale_fill_id": "F09-SELL-AAA-20250715",
+        "lot_id": 4,
+        "lot_acquired": "2025-02-18",
+        "holding_start": "2025-02-18",
+        "shares": "30.00000000",
+        "proceeds": "840.00000000",
+        "basis": "750.00000000",
+        "raw_gain": "90.00000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "90.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 147,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "BBB",
+        "sale_date": "2025-08-14",
+        "sale_fill_id": "F10-SELL-BBB-20250814",
+        "lot_id": 1,
+        "lot_acquired": "2024-06-10",
+        "holding_start": "2024-06-10",
+        "shares": "200.00000000",
+        "proceeds": "1199.80000000",
+        "basis": "900.50000000",
+        "raw_gain": "299.30000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "299.30000000",
+        "term": "LONG_TERM",
+        "holding_days": 430,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "AAA",
+        "sale_date": "2025-10-20",
+        "sale_fill_id": "F12-SELL-AAA-20251020",
+        "lot_id": 5,
+        "lot_acquired": "2025-03-20",
+        "holding_start": "2025-03-20",
+        "shares": "60.00000000",
+        "proceeds": "1319.60000000",
+        "basis": "1800.00000000",
+        "raw_gain": "-480.40000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "-480.40000000",
+        "term": "SHORT_TERM",
+        "holding_days": 214,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "BBB",
+        "sale_date": "2026-01-06",
+        "sale_fill_id": "F13-SELL-BBB-20260106",
+        "lot_id": 2,
+        "lot_acquired": "2025-01-06",
+        "holding_start": "2025-01-06",
+        "shares": "150.00000000",
+        "proceeds": "1199.75000000",
+        "basis": "750.00000000",
+        "raw_gain": "449.75000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "449.75000000",
+        "term": "SHORT_TERM",
+        "holding_days": 365,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "BBB",
+        "sale_date": "2026-01-07",
+        "sale_fill_id": "F14-SELL-BBB-20260107",
+        "lot_id": 2,
+        "lot_acquired": "2025-01-06",
+        "holding_start": "2025-01-06",
+        "shares": "30.00000000",
+        "proceeds": "240.00000000",
+        "basis": "150.00000000",
+        "raw_gain": "90.00000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "90.00000000",
+        "term": "LONG_TERM",
+        "holding_days": 366,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "AAA",
+        "sale_date": "2026-02-10",
+        "sale_fill_id": "F15-SELL-AAA-20260210",
+        "lot_id": 6,
+        "lot_acquired": "2025-04-10",
+        "holding_start": "2025-01-13",
+        "shares": "40.00000000",
+        "proceeds": "959.80000000",
+        "basis": "840.40000000",
+        "raw_gain": "119.40000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "119.40000000",
+        "term": "LONG_TERM",
+        "holding_days": 393,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "AAA",
+        "sale_date": "2026-02-10",
+        "sale_fill_id": "F15-SELL-AAA-20260210",
+        "lot_id": 7,
+        "lot_acquired": "2025-05-12",
+        "holding_start": "2025-01-13",
+        "shares": "40.00000000",
+        "proceeds": "959.80000000",
+        "basis": "800.48000000",
+        "raw_gain": "159.32000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "159.32000000",
+        "term": "LONG_TERM",
+        "holding_days": 393,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "CHN",
+        "sale_date": "2026-04-20",
+        "sale_fill_id": "F24-SELL-CHN-20260420",
+        "lot_id": 13,
+        "lot_acquired": "2026-03-11",
+        "holding_start": "2026-03-11",
+        "shares": "60.00000000",
+        "proceeds": "720.00000000",
+        "basis": "1200.30000000",
+        "raw_gain": "-480.30000000",
+        "wash_disallowed": "480.30000000",
+        "recognized_gain": "0.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 40,
+        "wash_replacement_lot_ids": [
+          16
+        ]
+      },
+      {
+        "security_id": "WB30",
+        "sale_date": "2026-05-01",
+        "sale_fill_id": "F25-SELL-WB30-20260501",
+        "lot_id": 9,
+        "lot_acquired": "2026-03-02",
+        "holding_start": "2026-03-02",
+        "shares": "100.00000000",
+        "proceeds": "600.00000000",
+        "basis": "1000.00000000",
+        "raw_gain": "-400.00000000",
+        "wash_disallowed": "400.00000000",
+        "recognized_gain": "0.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 60,
+        "wash_replacement_lot_ids": [
+          14
+        ]
+      },
+      {
+        "security_id": "WB31",
+        "sale_date": "2026-05-05",
+        "sale_fill_id": "F26-SELL-WB31-20260505",
+        "lot_id": 10,
+        "lot_acquired": "2026-03-04",
+        "holding_start": "2026-03-04",
+        "shares": "25.00000000",
+        "proceeds": "150.00000000",
+        "basis": "250.00000000",
+        "raw_gain": "-100.00000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "-100.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 62,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "WA30",
+        "sale_date": "2026-05-11",
+        "sale_fill_id": "F27-SELL-WA30-20260511",
+        "lot_id": 11,
+        "lot_acquired": "2026-03-06",
+        "holding_start": "2026-03-06",
+        "shares": "100.00000000",
+        "proceeds": "600.00000000",
+        "basis": "1000.00000000",
+        "raw_gain": "-400.00000000",
+        "wash_disallowed": "400.00000000",
+        "recognized_gain": "0.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 66,
+        "wash_replacement_lot_ids": [
+          18
+        ]
+      },
+      {
+        "security_id": "WA31",
+        "sale_date": "2026-05-13",
+        "sale_fill_id": "F28-SELL-WA31-20260513",
+        "lot_id": 12,
+        "lot_acquired": "2026-03-09",
+        "holding_start": "2026-03-09",
+        "shares": "25.00000000",
+        "proceeds": "150.00000000",
+        "basis": "250.00000000",
+        "raw_gain": "-100.00000000",
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "-100.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 65,
+        "wash_replacement_lot_ids": []
+      },
+      {
+        "security_id": "CHN",
+        "sale_date": "2026-05-18",
+        "sale_fill_id": "F29-SELL-CHN-20260518",
+        "lot_id": 16,
+        "lot_acquired": "2026-04-06",
+        "holding_start": "2026-03-11",
+        "shares": "60.00000000",
+        "proceeds": "600.00000000",
+        "basis": "1380.30000000",
+        "raw_gain": "-780.30000000",
+        "wash_disallowed": "780.30000000",
+        "recognized_gain": "0.00000000",
+        "term": "SHORT_TERM",
+        "holding_days": 68,
+        "wash_replacement_lot_ids": [
+          17
+        ]
+      }
+    ],
+    "per_event_rows": [
+      {
+        "event_id": "E00",
+        "realized_event_index": 0,
+        "security_id": "AAA",
+        "sale_fill_id": "F07-SELL-AAA-20250425",
+        "lot_id": 3,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-01-13",
+        "sale_date": "2025-04-25",
+        "quantity": "100.00000000",
+        "original_basis": "2001.00000000",
+        "buy_fees": "1.00000000",
+        "sell_proceeds": "1400.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-601.00000000",
+        "replacement_lot_id": [
+          6,
+          7
+        ],
+        "replacement_date": [
+          "2025-04-10",
+          "2025-05-12"
+        ],
+        "replacement_offset_days": [
+          -15,
+          17
+        ],
+        "replacement_quantity": [
+          "40.00000000",
+          "100.00000000"
+        ],
+        "allocated_replacement_quantity": [
+          "40.00000000",
+          "60.00000000"
+        ],
+        "disallowed_loss": "601.00000000",
+        "recognized_loss": "0.00000000",
+        "replacement_basis_before_adjustment": [
+          "600.00000000",
+          "1200.60000000"
+        ],
+        "adjusted_replacement_basis": [
+          "840.40000000",
+          "1561.20000000"
+        ],
+        "original_holding_period_start": "2025-01-13",
+        "replacement_holding_period_start_before_adjustment": [
+          "2025-04-10",
+          "2025-05-12"
+        ],
+        "adjusted_holding_period_start": [
+          "2025-01-13",
+          "2025-01-13"
+        ],
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 102,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_DISALLOWED_WASH",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "REPLACEMENT_BEFORE_SALE_WITHIN_WINDOW",
+          "REPLACEMENT_AFTER_SALE_WITHIN_WINDOW",
+          "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS",
+          "HOLDING_PERIOD_TACKED_TO_REPLACEMENT",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E01",
+        "realized_event_index": 1,
+        "security_id": "AAA",
+        "sale_fill_id": "F07-SELL-AAA-20250425",
+        "lot_id": 4,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-02-18",
+        "sale_date": "2025-04-25",
+        "quantity": "50.00000000",
+        "original_basis": "1250.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "700.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-550.00000000",
+        "replacement_lot_id": [
+          7
+        ],
+        "replacement_date": [
+          "2025-05-12"
+        ],
+        "replacement_offset_days": [
+          17
+        ],
+        "replacement_quantity": [
+          "100.00000000"
+        ],
+        "allocated_replacement_quantity": [
+          "40.00000000"
+        ],
+        "disallowed_loss": "440.00000000",
+        "recognized_loss": "-110.00000000",
+        "replacement_basis_before_adjustment": [
+          "1561.20000000"
+        ],
+        "adjusted_replacement_basis": [
+          "2001.20000000"
+        ],
+        "original_holding_period_start": "2025-02-18",
+        "replacement_holding_period_start_before_adjustment": [
+          "2025-01-13"
+        ],
+        "adjusted_holding_period_start": [
+          "2025-01-13"
+        ],
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 66,
+        "unreplaced_quantity": "10.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_PARTIALLY_DISALLOWED_WASH",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "REPLACEMENT_AFTER_SALE_WITHIN_WINDOW",
+          "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS",
+          "PARTIAL_REPLACEMENT_PRORATED_BY_SHARES",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E02",
+        "realized_event_index": 2,
+        "security_id": "AAA",
+        "sale_fill_id": "F09-SELL-AAA-20250715",
+        "lot_id": 4,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-02-18",
+        "sale_date": "2025-07-15",
+        "quantity": "30.00000000",
+        "original_basis": "750.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "840.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "90.00000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": null,
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2025-02-18",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 147,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "GAIN_NO_WASH_APPLICABLE",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E03",
+        "realized_event_index": 3,
+        "security_id": "BBB",
+        "sale_fill_id": "F10-SELL-BBB-20250814",
+        "lot_id": 1,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2024-06-10",
+        "sale_date": "2025-08-14",
+        "quantity": "200.00000000",
+        "original_basis": "900.50000000",
+        "buy_fees": "0.50000000",
+        "sell_proceeds": "1199.80000000",
+        "sell_fees": "0.20000000",
+        "pre_wash_gain_or_loss": "299.30000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": null,
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2024-06-10",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "LONG_TERM",
+        "holding_days": 430,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "GAIN_NO_WASH_APPLICABLE",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_MORE_THAN_365_DAYS",
+          "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E04",
+        "realized_event_index": 4,
+        "security_id": "AAA",
+        "sale_fill_id": "F12-SELL-AAA-20251020",
+        "lot_id": 5,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-03-20",
+        "sale_date": "2025-10-20",
+        "quantity": "60.00000000",
+        "original_basis": "1800.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "1319.60000000",
+        "sell_fees": "0.40000000",
+        "pre_wash_gain_or_loss": "-480.40000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": "-480.40000000",
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2025-03-20",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 214,
+        "unreplaced_quantity": "60.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "NO_REPLACEMENT_SHARES_IN_WINDOW",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E05",
+        "realized_event_index": 5,
+        "security_id": "BBB",
+        "sale_fill_id": "F13-SELL-BBB-20260106",
+        "lot_id": 2,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-01-06",
+        "sale_date": "2026-01-06",
+        "quantity": "150.00000000",
+        "original_basis": "750.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "1199.75000000",
+        "sell_fees": "0.25000000",
+        "pre_wash_gain_or_loss": "449.75000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": null,
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2025-01-06",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 365,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "GAIN_NO_WASH_APPLICABLE",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E06",
+        "realized_event_index": 6,
+        "security_id": "BBB",
+        "sale_fill_id": "F14-SELL-BBB-20260107",
+        "lot_id": 2,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-01-06",
+        "sale_date": "2026-01-07",
+        "quantity": "30.00000000",
+        "original_basis": "150.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "240.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "90.00000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": null,
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2025-01-06",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "LONG_TERM",
+        "holding_days": 366,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "GAIN_NO_WASH_APPLICABLE",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_MORE_THAN_365_DAYS",
+          "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E07",
+        "realized_event_index": 7,
+        "security_id": "AAA",
+        "sale_fill_id": "F15-SELL-AAA-20260210",
+        "lot_id": 6,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-04-10",
+        "sale_date": "2026-02-10",
+        "quantity": "40.00000000",
+        "original_basis": "840.40000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "959.80000000",
+        "sell_fees": "0.20000000",
+        "pre_wash_gain_or_loss": "119.40000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": null,
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2025-01-13",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "LONG_TERM",
+        "holding_days": 393,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "GAIN_NO_WASH_APPLICABLE",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "SOLD_LOT_CARRIES_TACKED_HOLDING_START_FROM_EARLIER_WASH",
+          "HELD_MORE_THAN_365_DAYS",
+          "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E08",
+        "realized_event_index": 8,
+        "security_id": "AAA",
+        "sale_fill_id": "F15-SELL-AAA-20260210",
+        "lot_id": 7,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2025-05-12",
+        "sale_date": "2026-02-10",
+        "quantity": "40.00000000",
+        "original_basis": "800.48000000",
+        "buy_fees": "0.24000000",
+        "sell_proceeds": "959.80000000",
+        "sell_fees": "0.20000000",
+        "pre_wash_gain_or_loss": "159.32000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": null,
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2025-01-13",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "LONG_TERM",
+        "holding_days": 393,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "GAIN_NO_WASH_APPLICABLE",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "SOLD_LOT_CARRIES_TACKED_HOLDING_START_FROM_EARLIER_WASH",
+          "HELD_MORE_THAN_365_DAYS",
+          "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E09",
+        "realized_event_index": 9,
+        "security_id": "CHN",
+        "sale_fill_id": "F24-SELL-CHN-20260420",
+        "lot_id": 13,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2026-03-11",
+        "sale_date": "2026-04-20",
+        "quantity": "60.00000000",
+        "original_basis": "1200.30000000",
+        "buy_fees": "0.30000000",
+        "sell_proceeds": "720.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-480.30000000",
+        "replacement_lot_id": [
+          16
+        ],
+        "replacement_date": [
+          "2026-04-06"
+        ],
+        "replacement_offset_days": [
+          -14
+        ],
+        "replacement_quantity": [
+          "60.00000000"
+        ],
+        "allocated_replacement_quantity": [
+          "60.00000000"
+        ],
+        "disallowed_loss": "480.30000000",
+        "recognized_loss": "0.00000000",
+        "replacement_basis_before_adjustment": [
+          "900.00000000"
+        ],
+        "adjusted_replacement_basis": [
+          "1380.30000000"
+        ],
+        "original_holding_period_start": "2026-03-11",
+        "replacement_holding_period_start_before_adjustment": [
+          "2026-04-06"
+        ],
+        "adjusted_holding_period_start": [
+          "2026-03-11"
+        ],
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 40,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_DISALLOWED_WASH",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "REPLACEMENT_BEFORE_SALE_WITHIN_WINDOW",
+          "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS",
+          "HOLDING_PERIOD_TACKED_TO_REPLACEMENT",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E10",
+        "realized_event_index": 10,
+        "security_id": "WB30",
+        "sale_fill_id": "F25-SELL-WB30-20260501",
+        "lot_id": 9,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2026-03-02",
+        "sale_date": "2026-05-01",
+        "quantity": "100.00000000",
+        "original_basis": "1000.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "600.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-400.00000000",
+        "replacement_lot_id": [
+          14
+        ],
+        "replacement_date": [
+          "2026-04-01"
+        ],
+        "replacement_offset_days": [
+          -30
+        ],
+        "replacement_quantity": [
+          "100.00000000"
+        ],
+        "allocated_replacement_quantity": [
+          "100.00000000"
+        ],
+        "disallowed_loss": "400.00000000",
+        "recognized_loss": "0.00000000",
+        "replacement_basis_before_adjustment": [
+          "800.00000000"
+        ],
+        "adjusted_replacement_basis": [
+          "1200.00000000"
+        ],
+        "original_holding_period_start": "2026-03-02",
+        "replacement_holding_period_start_before_adjustment": [
+          "2026-04-01"
+        ],
+        "adjusted_holding_period_start": [
+          "2026-03-02"
+        ],
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 60,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_DISALLOWED_WASH",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "REPLACEMENT_BEFORE_SALE_WITHIN_WINDOW",
+          "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS",
+          "HOLDING_PERIOD_TACKED_TO_REPLACEMENT",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E11",
+        "realized_event_index": 11,
+        "security_id": "WB31",
+        "sale_fill_id": "F26-SELL-WB31-20260505",
+        "lot_id": 10,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2026-03-04",
+        "sale_date": "2026-05-05",
+        "quantity": "25.00000000",
+        "original_basis": "250.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "150.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-100.00000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": "-100.00000000",
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2026-03-04",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 62,
+        "unreplaced_quantity": "25.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "NO_REPLACEMENT_SHARES_IN_WINDOW",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E12",
+        "realized_event_index": 12,
+        "security_id": "WA30",
+        "sale_fill_id": "F27-SELL-WA30-20260511",
+        "lot_id": 11,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2026-03-06",
+        "sale_date": "2026-05-11",
+        "quantity": "100.00000000",
+        "original_basis": "1000.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "600.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-400.00000000",
+        "replacement_lot_id": [
+          18
+        ],
+        "replacement_date": [
+          "2026-06-10"
+        ],
+        "replacement_offset_days": [
+          30
+        ],
+        "replacement_quantity": [
+          "100.00000000"
+        ],
+        "allocated_replacement_quantity": [
+          "100.00000000"
+        ],
+        "disallowed_loss": "400.00000000",
+        "recognized_loss": "0.00000000",
+        "replacement_basis_before_adjustment": [
+          "700.00000000"
+        ],
+        "adjusted_replacement_basis": [
+          "1100.00000000"
+        ],
+        "original_holding_period_start": "2026-03-06",
+        "replacement_holding_period_start_before_adjustment": [
+          "2026-06-10"
+        ],
+        "adjusted_holding_period_start": [
+          "2026-03-06"
+        ],
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 66,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_DISALLOWED_WASH",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "REPLACEMENT_AFTER_SALE_WITHIN_WINDOW",
+          "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS",
+          "HOLDING_PERIOD_TACKED_TO_REPLACEMENT",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E13",
+        "realized_event_index": 13,
+        "security_id": "WA31",
+        "sale_fill_id": "F28-SELL-WA31-20260513",
+        "lot_id": 12,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2026-03-09",
+        "sale_date": "2026-05-13",
+        "quantity": "25.00000000",
+        "original_basis": "250.00000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "150.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-100.00000000",
+        "replacement_lot_id": null,
+        "replacement_date": null,
+        "replacement_offset_days": null,
+        "replacement_quantity": null,
+        "allocated_replacement_quantity": null,
+        "disallowed_loss": "0.00000000",
+        "recognized_loss": "-100.00000000",
+        "replacement_basis_before_adjustment": null,
+        "adjusted_replacement_basis": null,
+        "original_holding_period_start": "2026-03-09",
+        "replacement_holding_period_start_before_adjustment": null,
+        "adjusted_holding_period_start": null,
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 65,
+        "unreplaced_quantity": "25.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_RECOGNIZED_NO_REPLACEMENT_IN_WINDOW",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "HELD_365_DAYS_OR_FEWER",
+          "NO_REPLACEMENT_SHARES_IN_WINDOW",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      },
+      {
+        "event_id": "E14",
+        "realized_event_index": 14,
+        "security_id": "CHN",
+        "sale_fill_id": "F29-SELL-CHN-20260518",
+        "lot_id": 16,
+        "selection_rule": "FIFO_OLDEST_ACQUIRED_FIRST",
+        "acquisition_date": "2026-04-06",
+        "sale_date": "2026-05-18",
+        "quantity": "60.00000000",
+        "original_basis": "1380.30000000",
+        "buy_fees": "0.00000000",
+        "sell_proceeds": "600.00000000",
+        "sell_fees": "0.00000000",
+        "pre_wash_gain_or_loss": "-780.30000000",
+        "replacement_lot_id": [
+          17
+        ],
+        "replacement_date": [
+          "2026-06-01"
+        ],
+        "replacement_offset_days": [
+          14
+        ],
+        "replacement_quantity": [
+          "60.00000000"
+        ],
+        "allocated_replacement_quantity": [
+          "60.00000000"
+        ],
+        "disallowed_loss": "780.30000000",
+        "recognized_loss": "0.00000000",
+        "replacement_basis_before_adjustment": [
+          "540.00000000"
+        ],
+        "adjusted_replacement_basis": [
+          "1320.30000000"
+        ],
+        "original_holding_period_start": "2026-03-11",
+        "replacement_holding_period_start_before_adjustment": [
+          "2026-06-01"
+        ],
+        "adjusted_holding_period_start": [
+          "2026-03-11"
+        ],
+        "short_term_or_long_term": "SHORT_TERM",
+        "holding_days": 68,
+        "unreplaced_quantity": "0.00000000",
+        "tax_scenario": "SCENARIO_ONLY_ST_0.22_0.24_0.32_LT_0.15",
+        "estimated_scenario_tax": null,
+        "status": "LOSS_FULLY_DISALLOWED_WASH",
+        "reason_codes": [
+          "FIFO_OLDEST_ACQUIRED_FIRST",
+          "SOLD_LOT_CARRIES_TACKED_HOLDING_START_FROM_EARLIER_WASH",
+          "HELD_365_DAYS_OR_FEWER",
+          "REPLACEMENT_AFTER_SALE_WITHIN_WINDOW",
+          "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS",
+          "HOLDING_PERIOD_TACKED_TO_REPLACEMENT",
+          "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE",
+          "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING"
+        ]
+      }
+    ],
+    "wash_window_boundary_probes": [
+      {
+        "probe": "MINUS_30_INCLUDED",
+        "security_id": "WB30",
+        "loss_sale_fill_id": "F25-SELL-WB30-20260501",
+        "replacement_fill_id": "F21-BUY-WB30-20260401",
+        "offset_days": -30,
+        "within_window": true,
+        "realized_event_index": 10,
+        "wash_disallowed": "400.00000000",
+        "recognized_gain": "0.00000000"
+      },
+      {
+        "probe": "MINUS_31_EXCLUDED",
+        "security_id": "WB31",
+        "loss_sale_fill_id": "F26-SELL-WB31-20260505",
+        "replacement_fill_id": "F22-BUY-WB31-20260404",
+        "offset_days": -31,
+        "within_window": false,
+        "realized_event_index": 11,
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "-100.00000000"
+      },
+      {
+        "probe": "PLUS_30_INCLUDED",
+        "security_id": "WA30",
+        "loss_sale_fill_id": "F27-SELL-WA30-20260511",
+        "replacement_fill_id": "F31-BUY-WA30-20260610",
+        "offset_days": 30,
+        "within_window": true,
+        "realized_event_index": 12,
+        "wash_disallowed": "400.00000000",
+        "recognized_gain": "0.00000000"
+      },
+      {
+        "probe": "PLUS_31_EXCLUDED",
+        "security_id": "WA31",
+        "loss_sale_fill_id": "F28-SELL-WA31-20260513",
+        "replacement_fill_id": "F32-BUY-WA31-20260613",
+        "offset_days": 31,
+        "within_window": false,
+        "realized_event_index": 13,
+        "wash_disallowed": "0.00000000",
+        "recognized_gain": "-100.00000000"
+      }
+    ],
+    "wash_chain": {
+      "security_id": "CHN",
+      "links": [
+        {
+          "link": 1,
+          "sold_lot_id": 13,
+          "sold_lot_acquired": "2026-03-11",
+          "sold_lot_holding_start": "2026-03-11",
+          "original_basis": "1200.30000000",
+          "raw_loss": "-480.30000000",
+          "replacement_lot_id": 16,
+          "replacement_basis_after": "1380.30000000",
+          "replacement_holding_start_after": "2026-03-11",
+          "realized_event_index": 9
+        },
+        {
+          "link": 2,
+          "sold_lot_id": 16,
+          "sold_lot_acquired": "2026-04-06",
+          "sold_lot_holding_start": "2026-03-11",
+          "original_basis": "1380.30000000",
+          "raw_loss": "-780.30000000",
+          "replacement_lot_id": 17,
+          "replacement_basis_after": "1320.30000000",
+          "replacement_holding_start_after": "2026-03-11",
+          "realized_event_index": 14
+        }
+      ],
+      "total_loss_deferred_into_basis": "1260.60000000",
+      "total_loss_recognized": "0.00000000",
+      "note": "Link 2 proves the carry-forward: its original_basis is link 1's replacement_basis_after, and its holding start is the ORIGINAL 2026-03-11 rather than lot 16's own 2026-04-06 acquisition (68 holding days instead of 42)."
+    },
+    "open_lots_final": [
+      {
+        "lot_id": 2,
+        "security_id": "BBB",
+        "acquired": "2025-01-06",
+        "holding_start": "2025-01-06",
+        "shares": "20.00000000",
+        "basis": "100.00000000"
+      },
+      {
+        "lot_id": 7,
+        "security_id": "AAA",
+        "acquired": "2025-05-12",
+        "holding_start": "2025-01-13",
+        "shares": "60.00000000",
+        "basis": "1200.72000000"
+      },
+      {
+        "lot_id": 8,
+        "security_id": "AAA",
+        "acquired": "2025-08-14",
+        "holding_start": "2025-08-14",
+        "shares": "25.00000000",
+        "basis": "650.00000000"
+      },
+      {
+        "lot_id": 14,
+        "security_id": "WB30",
+        "acquired": "2026-04-01",
+        "holding_start": "2026-03-02",
+        "shares": "100.00000000",
+        "basis": "1200.00000000"
+      },
+      {
+        "lot_id": 15,
+        "security_id": "WB31",
+        "acquired": "2026-04-04",
+        "holding_start": "2026-04-04",
+        "shares": "25.00000000",
+        "basis": "200.00000000"
+      },
+      {
+        "lot_id": 17,
+        "security_id": "CHN",
+        "acquired": "2026-06-01",
+        "holding_start": "2026-03-11",
+        "shares": "60.00000000",
+        "basis": "1320.30000000"
+      },
+      {
+        "lot_id": 18,
+        "security_id": "WA30",
+        "acquired": "2026-06-10",
+        "holding_start": "2026-03-06",
+        "shares": "100.00000000",
+        "basis": "1100.00000000"
+      },
+      {
+        "lot_id": 19,
+        "security_id": "WA31",
+        "acquired": "2026-06-13",
+        "holding_start": "2026-06-13",
+        "shares": "25.00000000",
+        "basis": "175.00000000"
+      }
+    ],
+    "scenario_tax_composition": {
+      "2025": {
+        "short_term_event_indices": [
+          0,
+          1,
+          2,
+          4
+        ],
+        "long_term_event_indices": [
+          3
+        ],
+        "short_term_recognized_sum": "-500.40000000",
+        "long_term_recognized_sum": "299.30000000"
+      },
+      "2026": {
+        "short_term_event_indices": [
+          5,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "long_term_event_indices": [
+          6,
+          7,
+          8
+        ],
+        "short_term_recognized_sum": "249.75000000",
+        "long_term_recognized_sum": "368.72000000"
+      }
+    },
+    "scenario_tax": {
+      "2025": {
+        "0.22": {
+          "year": 2025,
+          "st_rate": "0.22",
+          "lt_rate": "0.15",
+          "carry_in_short_term": "0",
+          "carry_in_long_term": "0",
+          "net_short_term": "-500.40000000",
+          "net_long_term": "299.30000000",
+          "taxable_short_term": "0.00000000",
+          "taxable_long_term": "0.00000000",
+          "estimated_tax": "0.00000000",
+          "loss_carryforward_short_term": "-201.10000000",
+          "loss_carryforward_long_term": "0.00000000"
+        },
+        "0.24": {
+          "year": 2025,
+          "st_rate": "0.24",
+          "lt_rate": "0.15",
+          "carry_in_short_term": "0",
+          "carry_in_long_term": "0",
+          "net_short_term": "-500.40000000",
+          "net_long_term": "299.30000000",
+          "taxable_short_term": "0.00000000",
+          "taxable_long_term": "0.00000000",
+          "estimated_tax": "0.00000000",
+          "loss_carryforward_short_term": "-201.10000000",
+          "loss_carryforward_long_term": "0.00000000"
+        },
+        "0.32": {
+          "year": 2025,
+          "st_rate": "0.32",
+          "lt_rate": "0.15",
+          "carry_in_short_term": "0",
+          "carry_in_long_term": "0",
+          "net_short_term": "-500.40000000",
+          "net_long_term": "299.30000000",
+          "taxable_short_term": "0.00000000",
+          "taxable_long_term": "0.00000000",
+          "estimated_tax": "0.00000000",
+          "loss_carryforward_short_term": "-201.10000000",
+          "loss_carryforward_long_term": "0.00000000"
+        }
+      },
+      "2026": {
+        "0.22": {
+          "year": 2026,
+          "st_rate": "0.22",
+          "lt_rate": "0.15",
+          "carry_in_short_term": "-201.10000000",
+          "carry_in_long_term": "0.00000000",
+          "net_short_term": "48.65000000",
+          "net_long_term": "368.72000000",
+          "taxable_short_term": "48.65000000",
+          "taxable_long_term": "368.72000000",
+          "estimated_tax": "66.01100000",
+          "loss_carryforward_short_term": "0.00000000",
+          "loss_carryforward_long_term": "0.00000000"
+        },
+        "0.24": {
+          "year": 2026,
+          "st_rate": "0.24",
+          "lt_rate": "0.15",
+          "carry_in_short_term": "-201.10000000",
+          "carry_in_long_term": "0.00000000",
+          "net_short_term": "48.65000000",
+          "net_long_term": "368.72000000",
+          "taxable_short_term": "48.65000000",
+          "taxable_long_term": "368.72000000",
+          "estimated_tax": "66.98400000",
+          "loss_carryforward_short_term": "0.00000000",
+          "loss_carryforward_long_term": "0.00000000"
+        },
+        "0.32": {
+          "year": 2026,
+          "st_rate": "0.32",
+          "lt_rate": "0.15",
+          "carry_in_short_term": "-201.10000000",
+          "carry_in_long_term": "0.00000000",
+          "net_short_term": "48.65000000",
+          "net_long_term": "368.72000000",
+          "taxable_short_term": "48.65000000",
+          "taxable_long_term": "368.72000000",
+          "estimated_tax": "70.87600000",
+          "loss_carryforward_short_term": "0.00000000",
+          "loss_carryforward_long_term": "0.00000000"
+        }
+      }
+    }
+  },
+  "fail_closed_inputs": [
+    {
+      "name": "oversell",
+      "reason": "selling 15 shares out of a 10-share position must fail closed, not net to zero",
+      "method": "FIFO",
+      "election_verified": false,
+      "fills": [
+        {
+          "fill_id": "X01-BUY-AAA",
+          "security_id": "AAA",
+          "trade_date": "2025-01-02",
+          "side": "BUY",
+          "shares": "10",
+          "price": "10.00",
+          "fees": "0"
+        },
+        {
+          "fill_id": "X02-SELL-AAA",
+          "security_id": "AAA",
+          "trade_date": "2025-02-03",
+          "side": "SELL",
+          "shares": "15",
+          "price": "11.00",
+          "fees": "0"
+        }
+      ],
+      "splits": [],
+      "expected_error": "TaxLotError",
+      "expected_error_match": "oversell"
+    },
+    {
+      "name": "sell_unknown_security",
+      "reason": "a sale of a security with no open lot has no basis and must not default to zero basis",
+      "method": "FIFO",
+      "election_verified": false,
+      "fills": [
+        {
+          "fill_id": "X03-BUY-AAA",
+          "security_id": "AAA",
+          "trade_date": "2025-01-02",
+          "side": "BUY",
+          "shares": "10",
+          "price": "10.00",
+          "fees": "0"
+        },
+        {
+          "fill_id": "X04-SELL-ZZZ",
+          "security_id": "ZZZ",
+          "trade_date": "2025-02-03",
+          "side": "SELL",
+          "shares": "1",
+          "price": "11.00",
+          "fees": "0"
+        }
+      ],
+      "splits": [],
+      "expected_error": "TaxLotError",
+      "expected_error_match": "oversell"
+    },
+    {
+      "name": "non_positive_shares",
+      "reason": "a zero-share fill is not a valid lot event",
+      "method": "FIFO",
+      "election_verified": false,
+      "fills": [
+        {
+          "fill_id": "X05-BUY-AAA",
+          "security_id": "AAA",
+          "trade_date": "2025-01-02",
+          "side": "BUY",
+          "shares": "0",
+          "price": "10.00",
+          "fees": "0"
+        }
+      ],
+      "splits": [],
+      "expected_error": "TaxLotError",
+      "expected_error_match": "shares must be > 0"
+    },
+    {
+      "name": "negative_fees",
+      "reason": "a negative fee would silently manufacture proceeds",
+      "method": "FIFO",
+      "election_verified": false,
+      "fills": [
+        {
+          "fill_id": "X06-BUY-AAA",
+          "security_id": "AAA",
+          "trade_date": "2025-01-02",
+          "side": "BUY",
+          "shares": "10",
+          "price": "10.00",
+          "fees": "-1.00"
+        }
+      ],
+      "splits": [],
+      "expected_error": "TaxLotError",
+      "expected_error_match": "price/fees"
+    },
+    {
+      "name": "hifo_requested_without_verified_election",
+      "reason": "v0.1 is FIFO-only: a HIFO request must fail closed unless a verified account-election artifact exists, so no HIFO election is ever claimed.",
+      "method": "HIFO",
+      "election_verified": false,
+      "fills": [
+        {
+          "fill_id": "X07-BUY-AAA",
+          "security_id": "AAA",
+          "trade_date": "2025-01-02",
+          "side": "BUY",
+          "shares": "10",
+          "price": "10.00",
+          "fees": "0"
+        }
+      ],
+      "splits": [],
+      "expected_error": "TaxLotError",
+      "expected_error_match": "HIFO requires"
+    }
+  ],
+  "reviewer_identity": null,
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "claims": {
+    "blocker_cleared": false,
+    "production_data": false,
+    "personal_tax_liability_claimed": false,
+    "authored_independently_of_production_implementation": true,
+    "authoring_lineage": "CLAUDE_CODE_SUBAGENT_SAME_LINEAGE_AS_MODULE_AUTHOR",
+    "formal_independent_review_satisfied": false,
+    "milestone_m0_complete": false
+  },
+  "nonclaims": [
+    "No Freeze V4 blocker is cleared by this fixture; NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE remains ACTIVE and the blocker count is unchanged.",
+    "Synthetic scenario with invented securities AAA/BBB/WB30/WB31/WA30/WA31/CHN; no production or market data is used.",
+    "No actual tax liability is estimated: the figures are registered rate scenarios only and 0.24 is NOT the owner's actual bracket.",
+    "No HIFO account election is claimed; hifo_enabled is false and the module rejects HIFO without a verified election artifact.",
+    "Cross-account wash sales are excluded and may cause understatement of disallowed loss; they are encoded as UNAVAILABLE_OUT_OF_SCOPE, not as zero.",
+    "Ordinary-income capital-loss deduction, state tax, NIIT and dividend taxation are out of scope.",
+    "Same-Claude-lineage review is internal QA only; external independent acceptance remains required before any T0 binding.",
+    "milestone_m0_complete = false."
+  ],
+  "reason_codes": {
+    "FIFO_OLDEST_ACQUIRED_FIRST": "the consumed lot was chosen by FIFO: oldest acquisition first, lot id as tiebreak.",
+    "SOLD_LOT_CARRIES_TACKED_HOLDING_START_FROM_EARLIER_WASH": "the SOLD lot's holding start is earlier than its own acquisition because it was itself a wash replacement; that tacked start classifies this sale.",
+    "HELD_MORE_THAN_365_DAYS": "(sale_date - holding_start).days > 365.",
+    "HELD_365_DAYS_OR_FEWER": "(sale_date - holding_start).days <= 365.",
+    "GAIN_NOT_SUBJECT_TO_WASH_SALE_RULE": "pre_wash_gain_or_loss >= 0, so the wash-sale rule does not apply.",
+    "REPLACEMENT_BEFORE_SALE_WITHIN_WINDOW": "at least one replacement lot was acquired within 30 days before the sale.",
+    "REPLACEMENT_AFTER_SALE_WITHIN_WINDOW": "at least one replacement lot was acquired within 30 days after the sale.",
+    "DISALLOWED_LOSS_ADDED_TO_REPLACEMENT_BASIS": "the disallowed loss was added to the replacement lot's basis.",
+    "HOLDING_PERIOD_TACKED_TO_REPLACEMENT": "at least one replacement lot's holding start was moved back to the sold lot's.",
+    "PARTIAL_REPLACEMENT_PRORATED_BY_SHARES": "fewer replacement shares than loss shares, so the disallowance was prorated.",
+    "NO_REPLACEMENT_SHARES_IN_WINDOW": "no replacement share was available in the window; the loss is recognized.",
+    "CROSS_ACCOUNT_REPLACEMENTS_OUT_OF_SCOPE": "replacements in other accounts are not observable, so the disallowed loss is a lower bound and the recognized loss is an upper bound.",
+    "PER_EVENT_TAX_NOT_DEFINED_YEAR_LEVEL_NETTING": "no per-event tax is defined: the registered estimator nets at year level after carry-in and cross-offset."
+  }
+}
