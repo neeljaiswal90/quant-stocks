@@ -54,15 +54,16 @@ future agent must not rubber-stamp them.)*
 ## D. Owner decisions registered by the 2026-08-16 review
 
 The owner review made these decisions; they are recorded here for the successor-freeze
-registration (this document does not itself clear any blocker):
+registration (this document does not itself clear any blocker). The owner's 2026-08-16
+determination refines several of them with exact parameters — the authoritative capture is
+`OWNER_DECISION_RECORD_2026_08_16_V1.md` (D.5 and D.6 below are aligned to it):
 
 1. **Listing signal-session date = 2026-07-31** (confirmed).
 2. **Tax-lot method = FIFO for v0.1**; all tax outputs remain **registered scenarios**, no exact personal tax-liability claim; **owner bracket is not required**. (Removes the HIFO/bracket dependency from M0.)
 3. **Research fee rounding = `RAW_EXACT_QUANTIZED_AT_LEDGER_QUANTUM_ONLY`**. Broker pass-through and broker-specific rounding are deferred to **M7 reconciliation** (no broker statements yet).
 4. **COST corrected dates**: ex `2023-12-27`, record `2023-12-28`, payment `2024-01-12`, amount `$15`/share. The old `2024-01-11` ex-date is preserved as a **superseded incorrect registration**, never overwritten silently.
-5. **BBBY dual-event semantics** — three coordinates rather than one ambiguous `delisting_date`:
-   `exchange_delisting_or_suspension_date` (May 2023), `final_trading_or_observation_date`, and `plan_effective_or_security_cancellation_date` (`2023-09-29`, the terminal adverse coordinate). An exchange change is not treated as immediate security cancellation.
-6. **AV proxy accepted only under its limited identity** `AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY`; **must not** be promoted to `AUTHORITATIVE_POINT_IN_TIME_US_COMMON_STOCK_UNIVERSE`. Review proceeds under a **registered review protocol** (full review of high-risk-ambiguity rows and all symbol collisions; stratified samples per exclusion class; explicit FP/FN findings; signed acceptance of limitations) rather than manual reading of all 1,724 review-log entries.
+5. **BBBY/BBBYQ = two separate events** (owner 2026-08-16, exact dates): `exchange_delisting_or_OTC_transition_date` = `2023-05-03` (`security_terminal=false`) and `terminal_plan_effective_or_cancellation_date` = `2023-09-29` (`security_terminal=true`). A venue-transition fixture uses event date `2023-05-03`; the adverse terminal-outcome fixture uses `2023-09-29`. An exchange/OTC transition is not economic extinction and must not force liquidation or terminal valuation in May.
+6. **AV proxy accepted only under its limited identity** `AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY`; **must not** be promoted to `AUTHORITATIVE_POINT_IN_TIME_US_COMMON_STOCK_UNIVERSE` or authoritative NDX membership. Before `proxy_snapshot_reviewed=true` the owner requires **100 % review of all 1,724 review-log entries, 100 % of symbol collisions, and 100 % of `AMBIGUOUS_IDENTITY` dispositions**, a documented disposition for every reviewed row, and independent sample verification by a different reviewer. Review may be agent-assisted but the reviewer must be independent of the authoring model lineage; material false inclusions are corrected before registration; known limitations (ADR/REIT name-based, CEF/BDC/MLP pass-through, not full historical PIT) are retained in the artifact.
 7. **M0 engineering blockers may be cleared with conformance evidence** (method registration, exact hashes, deterministic fixtures, exact-SHA CI, independent recomputation) **without requiring later-stage empirical ledgers** — the governing rule against the M0/M3 dependency inversion above.
 8. **Independent-review standard** to be defined and registered: reviewer identity, model/provider, model revision, prompt/artifact hashes, and whether same-lineage self-review is prohibited.
 
