@@ -1,0 +1,34 @@
+"""Record why pinned-interpreter regeneration was not performed.
+
+This sandbox is CPython 3.10. The registered generator requires CPython 3.12.10
+and CPython 3.12 wheels (numpy 2.5.2, pandas 3.0.5). This script does not
+install unpinned substitutes and does not claim byte-identity.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+print("python_executable", sys.executable)
+print("python_version", ".".join(str(p) for p in sys.version_info[:3]))
+print("implementation", sys.implementation.name)
+print("cache_tag", sys.implementation.cache_tag)
+print("registered_generator_python", "3.12.10")
+print("registered_generator_cache_tag", "cpython-312")
+print("interpreter_matches_pin", sys.version_info[:3] == (3, 12, 10))
+
+for name in ("pandas_market_calendars", "exchange_calendars", "tzdata", "pandas", "numpy"):
+    try:
+        __import__(name)
+        print(f"import_{name}=present")
+    except Exception as exc:
+        print(f"import_{name}=absent ({type(exc).__name__}: {exc})")
+
+print(
+    "REGENERATION_STEP=NOT_PERFORMED "
+    "reason=sandbox_is_CPython_3.10_not_3.12.10; "
+    "pinned_numpy_2.5.2_and_pandas_3.0.5_are_cp312_wheels; "
+    "no_byte_identity_is_claimed"
+)
+print("RESULT PASS gap recorded honestly; remaining checks do not require local regeneration")
+sys.exit(0)

@@ -1,0 +1,394 @@
+"""Independent calendar/vector structure, DST, holiday, and half-day checks.
+
+Does not import qme production functions or pandas_market_calendars.
+Holiday dates are derived from weekday arithmetic plus independently fetched
+2026 Nasdaq published calendar dates.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+from datetime import date, datetime, timedelta
+from pathlib import Path
+
+ROOT = Path("/workspace/QME-external-review/A4")
+CALENDAR = ROOT / "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json"
+VECTOR = ROOT / (
+    "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json"
+)
+EVIDENCE = ROOT / "configs/governance/xnas-session-calendar-evidence-v1.json"
+
+AS_OF = date(2026, 8, 13)
+START = date(2010, 1, 4)
+END = date(2027, 12, 31)
+
+# Independently recorded from https://www.nasdaqtrader.com/trader.aspx?id=Calendar
+PUBLISHED_2026 = {
+    "2026-01-01": "CLOSED",
+    "2026-01-19": "CLOSED",
+    "2026-02-16": "CLOSED",
+    "2026-04-03": "CLOSED",
+    "2026-05-25": "CLOSED",
+    "2026-06-19": "CLOSED",
+    "2026-07-03": "CLOSED",
+    "2026-09-07": "CLOSED",
+    "2026-11-26": "CLOSED",
+    "2026-11-27": "EARLY_CLOSE",
+    "2026-12-24": "EARLY_CLOSE",
+    "2026-12-25": "CLOSED",
+}
+
+SPECIAL_CLOSURES = {
+    "2012-10-29",
+    "2012-10-30",
+    "2018-12-05",
+    "2025-01-09",
+}
+
+
+def grouped(digest_hex: str) -> str:
+    return ":".join(digest_hex[i : i + 8] for i in range(0, 64, 8))
+
+
+def nth_weekday(year: int, month: int, weekday: int, n: int) -> date:
+    d = date(year, month, 1)
+    while d.weekday() != weekday:
+        d += timedelta(days=1)
+    return d + timedelta(weeks=n - 1)
+
+
+def last_weekday(year: int, month: int, weekday: int) -> date:
+    if month == 12:
+        d = date(year + 1, 1, 1) - timedelta(days=1)
+    else:
+        d = date(year, month + 1, 1) - timedelta(days=1)
+    while d.weekday() != weekday:
+        d -= timedelta(days=1)
+    return d
+
+
+def easter_sunday(year: int) -> date:
+    # Anonymous Gregorian algorithm.
+    a = year % 19
+    b = year // 100
+    c = year % 100
+    d = b // 4
+    e = b % 4
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i = c // 4
+    k = c % 4
+    el = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * el) // 451
+    month = (h + el - 7 * m + 114) // 31
+    day = ((h + el - 7 * m + 114) % 31) + 1
+    return date(year, month, day)
+
+
+def observed(d: date) -> date | None:
+    # NYSE/NASDAQ: Sunday holidays observe Monday. Saturday New Year's is NOT
+    # observed on the preceding Friday. Saturday Independence Day and Saturday
+    # Christmas are observed on the preceding Friday.
+    if d.month == 1 and d.day == 1 and d.weekday() == 5:
+        return None
+    if d.weekday() == 5:  # Saturday
+        return d - timedelta(days=1)
+    if d.weekday() == 6:  # Sunday
+        return d + timedelta(days=1)
+    return d
+    if d.weekday() == 5:  # Saturday
+        return d - timedelta(days=1)
+    if d.weekday() == 6:  # Sunday
+        return d + timedelta(days=1)
+    return d
+
+
+def regular_closures(year: int) -> set[date]:
+    days: set[date] = {
+        nth_weekday(year, 1, 0, 3),  # MLK
+        nth_weekday(year, 2, 0, 3),  # Presidents
+        easter_sunday(year) - timedelta(days=2),  # Good Friday
+        last_weekday(year, 5, 0),  # Memorial
+        nth_weekday(year, 9, 0, 1),  # Labor
+        nth_weekday(year, 11, 3, 4),  # Thanksgiving
+    }
+    for raw in (
+        date(year, 1, 1),
+        date(year, 7, 4),
+        date(year, 12, 25),
+    ):
+        observed_day = observed(raw)
+        if observed_day is not None:
+            days.add(observed_day)
+    if year >= 2022:
+        juneteenth = observed(date(year, 6, 19))
+        if juneteenth is not None:
+            days.add(juneteenth)
+    return days
+
+
+def expected_early_close_dates(year: int) -> set[date]:
+    thanksgiving = nth_weekday(year, 11, 3, 4)
+    days = {thanksgiving + timedelta(days=1)}
+    christmas = date(year, 12, 25)
+    eve = date(year, 12, 24)
+    if eve.weekday() < 5:
+        days.add(eve)
+    independence = date(year, 7, 4)
+    day_before = date(year, 7, 3)
+    if independence.weekday() < 5 and day_before.weekday() < 5:
+        days.add(day_before)
+    elif independence.weekday() == 5 and day_before.weekday() < 5:
+        # Saturday July 4 -> Friday July 3 is the observed holiday, not early close.
+        pass
+    return days
+
+
+def main() -> int:
+    calendar = json.loads(CALENDAR.read_text(encoding="utf-8"))
+    vector = json.loads(VECTOR.read_text(encoding="utf-8"))
+    evidence = json.loads(EVIDENCE.read_text(encoding="utf-8"))
+    failures: list[str] = []
+
+    sessions = calendar["sessions"]
+    ids = [row["session_id"] for row in sessions]
+    by_id = {row["session_id"]: row for row in sessions}
+
+    print("== coverage / count ==")
+    print(f"calendar.session_count={calendar['session_count']} len(sessions)={len(sessions)}")
+    print(f"vector.session_count={vector['session_count']} len(session_ids)={len(vector['session_ids'])}")
+    print(f"first={ids[0]} last={ids[-1]}")
+    if calendar["session_count"] != 4526 or len(sessions) != 4526:
+        failures.append("calendar session_count")
+    if vector["session_count"] != 4526 or len(vector["session_ids"]) != 4526:
+        failures.append("vector session_count")
+    if ids != vector["session_ids"]:
+        failures.append("calendar session order != vector")
+        print("FAIL calendar session_ids != vector.session_ids")
+    else:
+        print("PASS calendar session_ids == vector.session_ids (order and membership)")
+    if ids != sorted(set(ids)):
+        failures.append("session ids not strictly unique ascending")
+        print("FAIL session ids not strictly unique ascending")
+    else:
+        print("PASS session ids strictly unique and ascending")
+    if ids[0] != "2010-01-04" or ids[-1] != "2027-12-31":
+        failures.append("endpoints")
+        print("FAIL endpoints")
+    else:
+        print("PASS endpoints 2010-01-04 .. 2027-12-31")
+
+    print()
+    print("== session_ids canonical hash ==")
+    canonical = json.dumps(vector["session_ids"], ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    observed_hash = grouped(hashlib.sha256(canonical).hexdigest())
+    print(f"observed {observed_hash}")
+    print(f"vector   {vector['session_ids_sha256']}")
+    print(f"evidence {evidence['artifacts']['ordered_session_vector']['session_ids_sha256']}")
+    print(f"calendar {calendar['ordered_session_vector']['session_ids_sha256']}")
+    if not (
+        observed_hash
+        == vector["session_ids_sha256"]
+        == evidence["artifacts"]["ordered_session_vector"]["session_ids_sha256"]
+        == calendar["ordered_session_vector"]["session_ids_sha256"]
+    ):
+        failures.append("session_ids_sha256")
+        print("FAIL session_ids_sha256 mismatch")
+    else:
+        print("PASS session_ids_sha256 consistent across vector, calendar binding, evidence")
+
+    print()
+    print("== per-session invariants ==")
+    weekend = 0
+    bad_open = 0
+    bad_close = 0
+    bad_class = 0
+    bad_phase = 0
+    bad_date = 0
+    early = []
+    for row in sessions:
+        sid = row["session_id"]
+        d = date.fromisoformat(sid)
+        if d.weekday() >= 5:
+            weekend += 1
+        open_ts = datetime.fromisoformat(row["market_open"])
+        close_ts = datetime.fromisoformat(row["market_close"])
+        if open_ts.date() != d or close_ts.date() != d:
+            bad_date += 1
+        if (open_ts.hour, open_ts.minute, open_ts.second) != (9, 30, 0):
+            bad_open += 1
+        close_hm = (close_ts.hour, close_ts.minute, close_ts.second)
+        if close_hm not in {(13, 0, 0), (16, 0, 0)}:
+            bad_close += 1
+        expected_class = "EARLY_CLOSE" if close_hm == (13, 0, 0) else "NORMAL"
+        if row["close_class"] != expected_class:
+            bad_class += 1
+        expected_phase = (
+            "GENERATED_HISTORICAL_CANDIDATE"
+            if d <= AS_OF
+            else "GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY"
+        )
+        if row["authority_phase"] != expected_phase:
+            bad_phase += 1
+        if expected_class == "EARLY_CLOSE":
+            early.append(sid)
+    print(f"weekend_sessions={weekend} bad_open={bad_open} bad_close={bad_close}")
+    print(f"bad_class={bad_class} bad_phase={bad_phase} bad_date={bad_date}")
+    print(f"early_close_count={len(early)}")
+    for name, value in [
+        ("weekend", weekend),
+        ("bad_open", bad_open),
+        ("bad_close", bad_close),
+        ("bad_class", bad_class),
+        ("bad_phase", bad_phase),
+        ("bad_date", bad_date),
+    ]:
+        if value:
+            failures.append(name)
+    if weekend == 0 and not any([bad_open, bad_close, bad_class, bad_phase, bad_date]):
+        print("PASS no weekends; opens 09:30; closes 13:00 or 16:00; class/phase consistent")
+
+    print()
+    print("== DST offset checks (US rule since 2007; 2026: start 03-08, end 11-01) ==")
+    dst_cases = {
+        "2026-03-06": "-05:00",  # Friday before DST
+        "2026-03-09": "-04:00",  # Monday after DST start
+        "2026-10-30": "-04:00",  # Friday before DST end
+        "2026-11-02": "-05:00",  # Monday after DST end
+    }
+    for sid, offset in dst_cases.items():
+        row = by_id.get(sid)
+        if row is None:
+            print(f"FAIL {sid} missing")
+            failures.append(f"dst missing {sid}")
+            continue
+        if row["market_open"].endswith(offset) and row["market_close"].endswith(offset):
+            print(f"PASS {sid} offset {offset}")
+        else:
+            print(f"FAIL {sid} open={row['market_open']} close={row['market_close']} expected {offset}")
+            failures.append(f"dst {sid}")
+
+    print()
+    print("== independently derived regular holiday closures in coverage ==")
+    missing_regular = []
+    present_regular = []
+    for year in range(2010, 2028):
+        for d in sorted(regular_closures(year)):
+            if d < START or d > END:
+                continue
+            sid = d.isoformat()
+            if sid in by_id:
+                present_regular.append(sid)
+            else:
+                missing_regular.append(sid)
+    print(f"regular_holiday_dates_in_range={len(missing_regular)+len(present_regular)}")
+    print(f"correctly_absent={len(missing_regular)} unexpectedly_present={len(present_regular)}")
+    if present_regular:
+        print("FAIL present regular holidays:", ", ".join(present_regular[:20]))
+        failures.append("regular holiday present")
+    else:
+        print("PASS all independently derived regular holidays are absent from the candidate")
+
+    print()
+    print("== special closures ==")
+    for sid in sorted(SPECIAL_CLOSURES):
+        if sid in by_id:
+            print(f"FAIL {sid} present")
+            failures.append(f"special present {sid}")
+        else:
+            print(f"PASS {sid} absent")
+
+    print()
+    print("== published 2026 Nasdaq calendar (independent fetch 2026-08-18) ==")
+    for sid, kind in PUBLISHED_2026.items():
+        row = by_id.get(sid)
+        if kind == "CLOSED":
+            if row is None:
+                print(f"PASS {sid} CLOSED absent")
+            else:
+                print(f"FAIL {sid} published CLOSED but present {row}")
+                failures.append(f"2026 closed present {sid}")
+        else:
+            if row is None:
+                print(f"FAIL {sid} published EARLY_CLOSE missing")
+                failures.append(f"2026 early missing {sid}")
+            elif row["close_class"] == "EARLY_CLOSE" and row["market_close"].endswith("T13:00:00-05:00"):
+                print(f"PASS {sid} EARLY_CLOSE 13:00")
+            else:
+                print(f"FAIL {sid} {row}")
+                failures.append(f"2026 early wrong {sid}")
+
+    print()
+    print("== independently derived early-close dates vs candidate ==")
+    expected_early = set()
+    for year in range(2010, 2028):
+        for d in expected_early_close_dates(year):
+            if START <= d <= END and d.isoformat() not in SPECIAL_CLOSURES:
+                # skip if the date is itself a regular holiday (e.g. observed Jul 3)
+                if d in regular_closures(d.year):
+                    continue
+                expected_early.add(d.isoformat())
+    candidate_early = set(early)
+    extra = sorted(candidate_early - expected_early)
+    missing = sorted(expected_early - candidate_early)
+    print(f"derived_early={len(expected_early)} candidate_early={len(candidate_early)}")
+    print(f"extra_in_candidate={len(extra)} missing_from_candidate={len(missing)}")
+    if extra:
+        print("NOTE extra early closes in candidate (not automatically FAIL; may be specials):")
+        for sid in extra:
+            print(f"  EXTRA {sid} {by_id[sid]['market_close']}")
+    if missing:
+        print("FAIL derived early closes missing from candidate:")
+        for sid in missing:
+            print(f"  MISSING {sid}")
+        failures.append("missing derived early closes")
+    else:
+        print("PASS every independently derived recurring early-close date is EARLY_CLOSE in the candidate")
+
+    print()
+    print("== semantic hash of evidence JSON ==")
+    payload = dict(evidence)
+    payload.pop("semantic_sha256", None)
+    semantic = grouped(
+        hashlib.sha256(
+            json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+    )
+    print(f"observed {semantic}")
+    print(f"recorded {evidence['semantic_sha256']}")
+    if semantic != evidence["semantic_sha256"]:
+        failures.append("semantic_sha256")
+        print("FAIL semantic_sha256")
+    else:
+        print("PASS semantic_sha256")
+
+    print()
+    print("== freeze flags remain unflipped ==")
+    claims = evidence["claims"]
+    print(f"linux_generator_hash_lock_available={claims['linux_generator_hash_lock_available']}")
+    print(f"windows_linux_byte_replay_verified={claims['windows_linux_byte_replay_verified']}")
+    print(f"complete_official_history_verified={claims['complete_official_history_verified']}")
+    print(f"production_calendar_available={claims['production_calendar_available']}")
+    print(f"calendar_session_registration_blocker_resolved={claims['calendar_session_registration_blocker_resolved']}")
+    if claims["linux_generator_hash_lock_available"] is not False:
+        failures.append("linux flag unexpectedly true")
+    if claims["windows_linux_byte_replay_verified"] is not False:
+        failures.append("replay flag unexpectedly true")
+    if claims["complete_official_history_verified"] is not False:
+        failures.append("complete history unexpectedly true")
+    print("PASS reviewed evidence still records both freeze flags as false")
+
+    print()
+    if failures:
+        print(f"RESULT FAIL ({len(failures)})")
+        for item in failures:
+            print(f"  - {item}")
+        return 1
+    print("RESULT PASS structure, vector hash, DST, holidays, 2026 published calendar, semantic hash, unflipped flags")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

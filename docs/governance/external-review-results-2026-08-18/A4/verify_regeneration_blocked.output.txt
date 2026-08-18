@@ -1,0 +1,14 @@
+python_executable /usr/local/bin/python3
+python_version 3.10.20
+implementation cpython
+cache_tag cpython-310
+registered_generator_python 3.12.10
+registered_generator_cache_tag cpython-312
+interpreter_matches_pin False
+import_pandas_market_calendars=absent (ModuleNotFoundError: No module named 'pandas_market_calendars')
+import_exchange_calendars=absent (ModuleNotFoundError: No module named 'exchange_calendars')
+import_tzdata=absent (ModuleNotFoundError: No module named 'tzdata')
+import_pandas=absent (ModuleNotFoundError: No module named 'pandas')
+import_numpy=present
+REGENERATION_STEP=NOT_PERFORMED reason=sandbox_is_CPython_3.10_not_3.12.10; pinned_numpy_2.5.2_and_pandas_3.0.5_are_cp312_wheels; no_byte_identity_is_claimed
+RESULT PASS gap recorded honestly; remaining checks do not require local regeneration

@@ -1,0 +1,70 @@
+== input pins ==
+# Isolated, non-shipping generator inputs for NEE-174.
+# Keep these out of runtime, build, agent, and development dependency sets.
+exchange-calendars==4.13.2
+pandas-market-calendars==5.4.0
+tzdata==2026.3
+PASS input contains exchange-calendars==4.13.2
+PASS input contains pandas-market-calendars==5.4.0
+PASS input contains tzdata==2026.3
+
+== lock parse ==
+windows_packages=10 linux_packages=10
+windows missing_hash=[]
+linux missing_hash=[]
+windows ['exchange-calendars==4.13.2', 'korean-lunar-calendar==0.4.0', 'numpy==2.5.2', 'pandas-market-calendars==5.4.0', 'pandas==3.0.5', 'pyluach==2.3.0', 'python-dateutil==2.9.0.post0', 'six==1.17.0', 'toolz==1.1.0', 'tzdata==2026.3']
+linux    ['exchange-calendars==4.13.2', 'korean-lunar-calendar==0.4.0', 'numpy==2.5.2', 'pandas-market-calendars==5.4.0', 'pandas==3.0.5', 'pyluach==2.3.0', 'python-dateutil==2.9.0.post0', 'six==1.17.0', 'toolz==1.1.0', 'tzdata==2026.3']
+PASS 10 version pins identical across platform locks
+
+== digest comparison windows vs linux ==
+exchange-calendars==4.13.2 same_digest=True
+  win   fc5a2ad0d61b5c3a6539a3061cd4cbb55c59f4a903455cec7926e4b798919996
+  linux fc5a2ad0d61b5c3a6539a3061cd4cbb55c59f4a903455cec7926e4b798919996
+korean-lunar-calendar==0.4.0 same_digest=True
+  win   c042e20de0bb702add6bec8d0f6da1ea8d3b170838e63846f70420cf341fe4e7
+  linux c042e20de0bb702add6bec8d0f6da1ea8d3b170838e63846f70420cf341fe4e7
+numpy==2.5.2 same_digest=False
+  win   28ac63476ec7651484215ee7fa15a1f78b57c14621f01e392afe17b9a1390ce4
+  linux 3cdec01fa790a186d430433fdd4d4ffb70eed6f0eeb4bf05c8dbe2dce0a9bcb8
+pandas==3.0.5 same_digest=False
+  win   80a611068e8a3ac23f7398c6c14eb46dc974e5cc9997f653e2dcfd1da74edd41
+  linux d373ce03ffd84010ed9839fa73672a9c8256990532e158440c0085db7d914b34
+pandas-market-calendars==5.4.0 same_digest=True
+  win   bb2b93b28d496cab173b41c7d120fd5cd9d506b31f3bb0ad3d1d9f2b60d9d9e3
+  linux bb2b93b28d496cab173b41c7d120fd5cd9d506b31f3bb0ad3d1d9f2b60d9d9e3
+pyluach==2.3.0 same_digest=True
+  win   4497b731aef59508b079dbf5f00bc5bf4329ac45090a6cd37b5a83756f0e69ab
+  linux 4497b731aef59508b079dbf5f00bc5bf4329ac45090a6cd37b5a83756f0e69ab
+python-dateutil==2.9.0.post0 same_digest=True
+  win   a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
+  linux a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
+six==1.17.0 same_digest=True
+  win   4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274
+  linux 4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274
+toolz==1.1.0 same_digest=True
+  win   15ccc861ac51c53696de0a5d6d4607f99c210739caf987b5d2054f3efed429d8
+  linux 15ccc861ac51c53696de0a5d6d4607f99c210739caf987b5d2054f3efed429d8
+tzdata==2026.3 same_digest=True
+  win   dc096730c87af6cab1b171c9d532be840741ff5d459015e7f6947bd7d7e54931
+  linux dc096730c87af6cab1b171c9d532be840741ff5d459015e7f6947bd7d7e54931
+
+== PyPI metadata (fetched 2026-08-18) vs locks and evidence ==
+PASS pandas-market-calendars==5.4.0 universal lock==pypi True
+PASS evidence grouped digest for pandas-market-calendars
+PASS exchange-calendars==4.13.2 universal lock==pypi True
+PASS evidence grouped digest for exchange-calendars
+PASS tzdata==2026.3 universal lock==pypi True
+PASS evidence grouped digest for tzdata
+PASS numpy==2.5.2 win lock==pypi True
+PASS numpy==2.5.2 linux lock==pypi True
+PASS pandas==3.0.5 win lock==pypi True
+PASS pandas==3.0.5 linux lock==pypi True
+
+== CR/LF check on generator input and linux workflow ==
+PASS crlf=False requirements-xnas-calendar-generator.in
+PASS crlf=False requirements-xnas-calendar-generator.lock
+PASS crlf=False requirements-xnas-calendar-generator-linux.lock
+PASS crlf=False .github/workflows/xnas-calendar-linux.yml
+PASS crlf=False scripts/materialize_xnas_calendar_v1.py
+
+RESULT PASS lock version-parity, hash completeness, PyPI wheel digests, evidence bindings

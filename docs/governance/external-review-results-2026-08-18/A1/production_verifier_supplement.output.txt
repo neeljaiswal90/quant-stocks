@@ -1,0 +1,4 @@
+verifier+manifest OK
+semantic f934ba37c7e86108a8087074f4f421e7aea4e81df753007163c618f50a8c3a82
+registered True
+blocker_cleared False

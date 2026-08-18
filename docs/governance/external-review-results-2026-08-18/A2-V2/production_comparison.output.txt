@@ -1,0 +1,152 @@
+========================================================================
+A2-V2 production V1/V2 comparison (AFTER independent oracle)
+========================================================================
+PASS  oracle_did_not_import_production_inference  ({'forbidden_modules_imported': [], 'qme_stats_modules_imported': [], 'documented_production_import': 'qme/stats/rng.py loaded by file path as independent_pcg32_rng (Pcg32 only)'})
+PASS  oracle_only_loaded_rng_by_file_path  ({'forbidden_modules_imported': [], 'qme_stats_modules_imported': [], 'documented_production_import': 'qme/stats/rng.py loaded by file path as independent_pcg32_rng (Pcg32 only)'})
+
+--- V2 vs independent oracle on KAT fixture ---
+PASS  v2_equals_v1_dataclass
+PASS  v2_point_vs_oracle
+PASS  v2_block_vs_oracle
+PASS  v2_raw_block_vs_oracle
+PASS  v2_lag_vs_oracle
+PASS  v2_lcb_vs_oracle
+PASS  v2_interval_low_vs_oracle
+PASS  v2_interval_high_vs_oracle
+PASS  v2_hash_vs_oracle
+PASS  v2_nw_lag_vs_oracle
+PASS  v2_nw_omega_vs_oracle
+PASS  v2_nw_se_vs_oracle
+PASS  v2_nw_t_vs_oracle
+
+--- Canonical delegation: V2 byte-identical to V1 ---
+PASS  byte_point_estimate
+PASS  byte_block_length
+PASS  byte_raw_block
+PASS  byte_selected_lag
+PASS  byte_bootstrap_hash
+PASS  byte_lcb
+PASS  byte_interval
+PASS  byte_nw_lag
+PASS  byte_nw_omega
+PASS  byte_nw_se
+PASS  byte_nw_t
+
+--- Extra series: V1 == V2 == oracle ---
+PASS  n24_seed7_v2_eq_v1
+PASS  n24_seed7_point
+PASS  n24_seed7_block
+PASS  n24_seed7_hash
+PASS  n24_seed7_lcb
+PASS  n24_seed7_interval
+PASS  n24_seed7_nw_t
+PASS  n36_seed3_v2_eq_v1
+PASS  n36_seed3_point
+PASS  n36_seed3_block
+PASS  n36_seed3_hash
+PASS  n36_seed3_lcb
+PASS  n36_seed3_interval
+PASS  n36_seed3_nw_t
+PASS  n60_seed11_v2_eq_v1
+PASS  n60_seed11_point
+PASS  n60_seed11_block
+PASS  n60_seed11_hash
+PASS  n60_seed11_lcb
+PASS  n60_seed11_interval
+PASS  n60_seed11_nw_t
+
+--- Holm: V2 vs V1 vs oracle ---
+PASS  holm_v2_eq_v1
+PASS  holm_family_size
+PASS  holm_ordered
+PASS  holm_thr
+PASS  holm_rejected
+PASS  holm_m1_a0.05_v2_eq_v1
+PASS  holm_m1_a0.05_vs_oracle
+PASS  holm_m1_a0.05_thr_vs_oracle
+PASS  holm_m4_a0.05_v2_eq_v1
+PASS  holm_m4_a0.05_vs_oracle
+PASS  holm_m4_a0.05_thr_vs_oracle
+PASS  holm_m3_a0.10_v2_eq_v1
+PASS  holm_m3_a0.10_vs_oracle
+PASS  holm_m3_a0.10_thr_vs_oracle
+PASS  holm_m3_a0.005_v2_eq_v1
+PASS  holm_m3_a0.005_vs_oracle
+PASS  holm_m3_a0.005_thr_vs_oracle
+PASS  holm_alpha_0.05_delegates
+PASS  holm_alpha_0.10_delegates
+PASS  holm_alpha_0.005_delegates
+
+--- V2 rejects non-canonical; V1 remains permissive ---
+PASS  v2_run_reject '1E-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '1E-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '1E-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '1e-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '1e-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '1e-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '+0.001'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '+0.001'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '+0.001'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject ' 0.001'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject ' 0.001'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject ' 0.001'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '0.001 '  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '0.001 '  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '0.001 '  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '.5'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '.5'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '.5'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '5.'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '5.'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '5.'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject 'NaN'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject 'NaN'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject 'NaN'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject 'Infinity'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject 'Infinity'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject 'Infinity'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '-Infinity'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '-Infinity'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '-Infinity'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '0.00_1'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '0.00_1'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '0.00_1'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '-0'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '-0'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '-0'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '-0.0'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '-0.0'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '-0.0'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '0123'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '0123'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '0123'  (NO_GO_FAIL_CLOSED)
+PASS  v2_run_reject '1e999999'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_p_reject '1e999999'  (NO_GO_FAIL_CLOSED)
+PASS  v2_holm_alpha_reject '1e999999'  (NO_GO_FAIL_CLOSED)
+PASS  v1_still_accepts ' 0.003970'  (V1 reproduced canonical result)
+PASS  v2_rejects_value_preserving ' 0.003970'  (NO_GO_FAIL_CLOSED)
+PASS  v1_still_accepts '+0.003970'  (V1 reproduced canonical result)
+PASS  v2_rejects_value_preserving '+0.003970'  (NO_GO_FAIL_CLOSED)
+PASS  v1_still_accepts '3.970E-3'  (V1 reproduced canonical result)
+PASS  v2_rejects_value_preserving '3.970E-3'  (NO_GO_FAIL_CLOSED)
+PASS  v2_alpha_domain_reject '2.0'  (alpha must be a significance level in the open interval (0, 1))
+PASS  v2_alpha_domain_reject '1'  (alpha must be a significance level in the open interval (0, 1))
+PASS  v2_alpha_domain_reject '0'  (alpha must be a significance level in the open interval (0, 1))
+PASS  v2_alpha_domain_reject '-12.500'  (alpha must be a significance level in the open interval (0, 1))
+
+--- Structural: V1 kernel retained; V2 is adapter only ---
+PASS  hash_qme/stats/nee120_inference_v2.py  (4bf93af1:47321f8e:0b2575a4:b49b8a29:c434182b:d4cf29cf:15b67bca:85f9ed31)
+PASS  hash_qme/stats/nee120_inference.py  (d3a381a8:f8a7eeb6:c2f7e226:9b378498:eda5dbe7:171710d7:93d863ed:91494cff)
+PASS  v2_public_entrypoints  (['_require_canonical_decimal', '_require_canonical_series', 'holm_step_down_v2', 'run_inference_v2'])
+PASS  v2_does_not_reimplement_kernel  (['_require_canonical_decimal', '_require_canonical_series', 'holm_step_down_v2', 'run_inference_v2'])
+PASS  v2_imports_run_inference
+PASS  v2_delegates_run
+PASS  v2_delegates_holm
+PASS  v2_binds_sibling_grammar
+PASS  v2_run_has_no_Decimal_call
+PASS  v2_holm_has_exactly_one_Decimal_call
+PASS  v2_holm_Decimal_only_after_grammar
+
+========================================================================
+RESULT  passes=133  failures=0
+ALL PRODUCTION COMPARISON CHECKS PASSED

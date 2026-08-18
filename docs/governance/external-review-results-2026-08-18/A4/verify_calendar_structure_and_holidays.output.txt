@@ -1,0 +1,71 @@
+== coverage / count ==
+calendar.session_count=4526 len(sessions)=4526
+vector.session_count=4526 len(session_ids)=4526
+first=2010-01-04 last=2027-12-31
+PASS calendar session_ids == vector.session_ids (order and membership)
+PASS session ids strictly unique and ascending
+PASS endpoints 2010-01-04 .. 2027-12-31
+
+== session_ids canonical hash ==
+observed dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8
+vector   dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8
+evidence dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8
+calendar dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8
+PASS session_ids_sha256 consistent across vector, calendar binding, evidence
+
+== per-session invariants ==
+weekend_sessions=0 bad_open=0 bad_close=0
+bad_class=0 bad_phase=0 bad_date=0
+early_close_count=37
+PASS no weekends; opens 09:30; closes 13:00 or 16:00; class/phase consistent
+
+== DST offset checks (US rule since 2007; 2026: start 03-08, end 11-01) ==
+PASS 2026-03-06 offset -05:00
+PASS 2026-03-09 offset -04:00
+PASS 2026-10-30 offset -04:00
+PASS 2026-11-02 offset -05:00
+
+== independently derived regular holiday closures in coverage ==
+regular_holiday_dates_in_range=165
+correctly_absent=165 unexpectedly_present=0
+PASS all independently derived regular holidays are absent from the candidate
+
+== special closures ==
+PASS 2012-10-29 absent
+PASS 2012-10-30 absent
+PASS 2018-12-05 absent
+PASS 2025-01-09 absent
+
+== published 2026 Nasdaq calendar (independent fetch 2026-08-18) ==
+PASS 2026-01-01 CLOSED absent
+PASS 2026-01-19 CLOSED absent
+PASS 2026-02-16 CLOSED absent
+PASS 2026-04-03 CLOSED absent
+PASS 2026-05-25 CLOSED absent
+PASS 2026-06-19 CLOSED absent
+PASS 2026-07-03 CLOSED absent
+PASS 2026-09-07 CLOSED absent
+PASS 2026-11-26 CLOSED absent
+PASS 2026-11-27 EARLY_CLOSE 13:00
+PASS 2026-12-24 EARLY_CLOSE 13:00
+PASS 2026-12-25 CLOSED absent
+
+== independently derived early-close dates vs candidate ==
+derived_early=37 candidate_early=37
+extra_in_candidate=0 missing_from_candidate=0
+PASS every independently derived recurring early-close date is EARLY_CLOSE in the candidate
+
+== semantic hash of evidence JSON ==
+observed 1f6decbd:6290b6e6:4889c46e:91a941ea:bc42e452:016cf2d1:9c49516d:44ce3d1d
+recorded 1f6decbd:6290b6e6:4889c46e:91a941ea:bc42e452:016cf2d1:9c49516d:44ce3d1d
+PASS semantic_sha256
+
+== freeze flags remain unflipped ==
+linux_generator_hash_lock_available=False
+windows_linux_byte_replay_verified=False
+complete_official_history_verified=False
+production_calendar_available=False
+calendar_session_registration_blocker_resolved=False
+PASS reviewed evidence still records both freeze flags as false
+
+RESULT PASS structure, vector hash, DST, holidays, 2026 published calendar, semantic hash, unflipped flags

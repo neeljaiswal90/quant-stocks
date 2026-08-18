@@ -1,0 +1,36 @@
+== packet-bound files ==
+MATCH  348e67d9:92183c49:4f625f90:ada2bb58:e90165f5:3fd90419:3e6d8584:7eb0e290      5783  configs/governance/xnas-session-calendar-evidence-v1.json
+MATCH  31077a2d:6b7a6eb9:f974b343:b91c99d5:b48c2049:d38758a2:a455c10d:5ca2f453      2244  configs/governance/xnas-session-calendar-evidence-v1.hashes.json
+MATCH  cc19e055:15434882:2260f6cf:f3763218:c487f751:50ab933f:9fb06155:e827c6f2      6362  schemas/governance/xnas-session-calendar-evidence-v1.schema.json
+MATCH  c70349fb:df114824:918a6bd9:8ab1f8d9:7a51faf1:ab806134:a58841e7:e9be64aa     39516  qme/governance/xnas_calendar_evidence_v1.py
+MATCH  8ce09033:276ea754:5903f93c:1fef236a:2483ac98:516eefba:2e4e1fbb:0adf1daa     16074  tests/governance/test_xnas_calendar_evidence_v1.py
+MATCH  a414d89a:2d18a3e2:27c7cfab:05c271c8:209490e3:beb49bf0:bb1a00f1:9ecd2a5e   1089729  tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json
+MATCH  d9646f29:8439975d:f8a9ab77:45662b8b:b0b74625:591c1144:96570031:b684e2d8      3992  tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json
+MATCH  79750595:76fd61ef:4b82be9b:4cdf2c83:cb0e4e83:349fbe13:f6d7cc64:4e5e37e5     10484  scripts/materialize_xnas_calendar_v1.py
+MATCH  6b4e0591:4b9c5a48:5dc4fcd7:a59aaef2:6c7c1b63:cf7a8232:81617b40:b7af8b7c       204  requirements-xnas-calendar-generator.in
+MATCH  e040a582:49116e7a:7442e438:ffb6cd48:b745664a:3c034d96:6d75da6a:08588278      2039  requirements-xnas-calendar-generator.lock
+MATCH  7cef8951:814d8ef8:5cc3f526:0c894da6:c6bc436c:ed8e3188:a3901c90:8f494571      2431  requirements-xnas-calendar-generator-linux.lock
+MATCH  74869cc5:ba427a9a:7909ac96:e0448d25:3697d5ed:f5897fe0:a89fd679:31043c66      4395  .github/workflows/xnas-calendar-linux.yml
+== ordered session vector (recorded inside evidence JSON) ==
+OBSERVED  97f0eebd:efa68f08:46dfc1dc:a6ad4de5:31a8c0db:066b908f:073f45d0:a9bb9b4e     81923  tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json
+MATCH    evidence artifacts.ordered_session_vector.sha256
+== hashes.json leaf re-check ==
+MATCH  .gitattributes
+MATCH  .github/workflows/ci.yml
+MATCH  configs/governance/xnas-session-calendar-evidence-v1.json
+MATCH  tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json
+MATCH  tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json
+MATCH  docs/governance/XNAS_SESSION_CALENDAR_EVIDENCE_V1.md
+MATCH  qme/governance/xnas_calendar_evidence_v1.py
+MATCH  requirements-xnas-calendar-generator.in
+MATCH  requirements-xnas-calendar-generator.lock
+MATCH  schemas/governance/xnas-session-calendar-evidence-v1.schema.json
+MATCH  scripts/materialize_xnas_calendar_v1.py
+MATCH  tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json
+MATCH  tests/governance/test_xnas_calendar_evidence_v1.py
+== registered-authority files cited by evidence JSON ==
+MATCH  c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f     17008  configs/governance/sample-holdout-v2.json
+MATCH  b2d1a7f2:afb6ea18:62d87bed:2323dd35:863f55b1:e53ca99b:c5d1168d:018606b5    118700  configs/governance/s0a-contract-materialization-crosswalk-v3.json
+MATCH  289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5     20421  configs/governance/owner-mandate-supplement-2026-08-13-v1.json
+
+RESULT PASS all packet-bound, evidence-bound, manifest, and authority hashes match
