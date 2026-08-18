@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/owner-implementation-correction-2026-08-17-v1.schema.json",
+  "title": "QME owner implementation correction 2026-08-17 v1",
+  "description": "Exact immutable 2026-08-17 owner implementation corrections; registration is not blocker clearance and asserts no empirical, capacity, production, or formal-independent-review evidence.",
+  "type": "object",
+  "const": {
+    "$schema": "../../schemas/governance/owner-implementation-correction-2026-08-17-v1.schema.json",
+    "schema_version": "qme.owner_implementation_correction.v1",
+    "record_id": "OWNER-IMPLEMENTATION-CORRECTION-2026-08-17-V1",
+    "status": "IMPLEMENTATION_CORRECTIONS_REGISTERED_NOT_AUTHORITY_TO_CLEAR_BLOCKERS",
+    "semantic_sha256": "067b17e4:25b86589:a6098c8a:3b4253b0:2f16b6d1:6ffb6294:ca88d2f4:3cffc0e7",
+    "authority": {
+      "approval_owner": "neeljaiswal90",
+      "approval_date": "2026-08-17",
+      "approved_at": null,
+      "approved_at_status": "PERMANENTLY_UNAVAILABLE_NOT_INFERRED",
+      "source_type": "OWNER_IMPLEMENTATION_CORRECTION_DIRECTIVE_2026-08-17_PLUS_2026-08-18_CONFIRMATIONS",
+      "approval_disposition": "OWNER_CONFIRMED",
+      "empirical_results_used": false,
+      "predecessor": {
+        "record_id": "OWNER-DECISION-RECORD-2026-08-16-V1",
+        "relationship": "VERSIONED_SUCCESSOR_NO_IN_PLACE_MODIFICATION"
+      }
+    },
+    "purpose": "Register the V1->V2 implementation corrections for the internally-reproduced A2 (NEE-120 inference input validation) and A3 (NEE-116 capacity solver one-quantum) findings; bind the defective/old V1 modules, the corrected V2 modules, the registered sibling grammar, the PR #26 owner-selection artifact, and the same-Claude-lineage internal-QA reports. This record clears no Freeze V4 blocker and makes no empirical or production claim.",
+    "lineage": {
+      "protected_main_at_authoring": "a5ac307f:e1b35883:6fa0c088:771ba086:7b64a1ca",
+      "owner_decision_record": {
+        "path": "configs/governance/owner-decision-record-2026-08-16-v1.json",
+        "sha256": "85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0",
+        "role": "PREDECESSOR_OWNER_AUTHORITY"
+      },
+      "ppw_bootstrap_owner_selections": {
+        "path": "configs/governance/ppw-bootstrap-owner-selections-v1.json",
+        "sha256": "6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6",
+        "role": "PR26_OWNER_SELECTION_ARTIFACT"
+      },
+      "sibling_registered_grammar": {
+        "path": "qme/stats/effective_trials_uncertainty.py",
+        "sha256": "209a9289:0fdcb191:9eddb077:93ee75e6:258b10af:2f6c5042:31a55874:d33c9f7a",
+        "role": "REGISTERED_CANONICAL_DECIMAL_GRAMMAR_BOUND_BY_INFERENCE_V2"
+      },
+      "v1_capacity_solver": {
+        "path": "qme/quant/capacity_solver.py",
+        "sha256": "a78bd421:99898fe3:a1000bf8:7ad58363:5adb60fd:a47bf7c2:0c8a79b9:75107487",
+        "role": "V1_DEFECTIVE_CAPACITY_SOLVER"
+      },
+      "v1_nee120_inference": {
+        "path": "qme/stats/nee120_inference.py",
+        "sha256": "d3a381a8:f8a7eeb6:c2f7e226:9b378498:eda5dbe7:171710d7:93d863ed:91494cff",
+        "role": "V1_INFERENCE_KERNEL_RETAINED_PERMISSIVE_INPUT_SUPERSEDED"
+      },
+      "v2_capacity_solver": {
+        "path": "qme/quant/capacity_solver_v2.py",
+        "sha256": "6cd9d45d:6e860246:640959a1:13f679f7:bbe7cc75:f3f6c661:9ac2d7c0:c60f805c",
+        "role": "V2_CORRECTED_CAPACITY_SOLVER"
+      },
+      "v2_capacity_solver_test": {
+        "path": "tests/quant/test_capacity_solver_v2.py",
+        "sha256": "5d5c11ae:4209a6e2:3dcb9c09:3fa6ae06:91cf5ca5:a13f76e5:51e8e830:6bb6b1d2",
+        "role": "V2_CAPACITY_TEST"
+      },
+      "v2_capacity_solver_doc": {
+        "path": "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V2.md",
+        "sha256": "c5182854:b23b346b:d4b86cf9:afe8490a:4a96543e:42732686:7d3efa69:85de4afe",
+        "role": "V2_CAPACITY_DOC"
+      },
+      "v2_nee120_inference": {
+        "path": "qme/stats/nee120_inference_v2.py",
+        "sha256": "4bf93af1:47321f8e:0b2575a4:b49b8a29:c434182b:d4cf29cf:15b67bca:85f9ed31",
+        "role": "V2_INFERENCE_STRICT_ADAPTER"
+      },
+      "v2_nee120_inference_test": {
+        "path": "tests/stats/test_nee120_inference_v2.py",
+        "sha256": "d1496cff:a965f28d:6d5070b2:ce2822d8:883806f9:96e479e8:2e213b12:c7ea4ce3",
+        "role": "V2_INFERENCE_TEST"
+      },
+      "v2_nee120_inference_doc": {
+        "path": "docs/quant/NEE_120_INFERENCE_IMPLEMENTATION_V2.md",
+        "sha256": "64f34d4e:234b8321:fa1712a6:e47a8ffc:23b27b21:5f15571f:6069f69b:6bf0dddc",
+        "role": "V2_INFERENCE_DOC"
+      },
+      "internal_qa_a2_rehearsal": {
+        "path": "docs/governance/internal-qa/A2-nee120-inference-rehearsal.md",
+        "sha256": "3fa06ded:77482d0e:6f96eaa0:04b81e37:90997c7e:dd0375e2:d49db81b:6e7c2448",
+        "role": "A2_REHEARSAL_INTERNAL_CLAUDE_QA"
+      },
+      "internal_qa_a3_rehearsal": {
+        "path": "docs/governance/internal-qa/A3-capacity-solver-rehearsal.md",
+        "sha256": "036acec4:184c5304:e9454985:bd42ee77:9cb397c9:c937d41b:b0d5aa65:7bc18785",
+        "role": "A3_REHEARSAL_INTERNAL_CLAUDE_QA"
+      },
+      "internal_qa_capacity_v2_review": {
+        "path": "docs/governance/internal-qa/capacity-solver-v2-review.md",
+        "sha256": "2f4cd3e2:38518bb9:5e0a6d89:a3c09b0b:9a7d8eb5:d7e41d24:326e89b1:93202825",
+        "role": "CAPACITY_V2_INTERNAL_CLAUDE_QA_REVIEW"
+      },
+      "internal_qa_inference_v2_review_numerical": {
+        "path": "docs/governance/internal-qa/inference-v2-review-1-numerical.md",
+        "sha256": "873bee36:da84904e:14375ea2:4a60ee06:e19faa7e:c2948f4c:cf012286:b9200008",
+        "role": "INFERENCE_V2_INTERNAL_CLAUDE_QA_REVIEW_NUMERICAL_PRE_FIX_CANDIDATE",
+        "committed_copy_transform": "ONE_LABEL_REWORDED_Secrets_TO_Secret_scan_gate_TO_CLEAR_A_KEYWORD_DETECTOR_FALSE_POSITIVE_CONTENT_OTHERWISE_IDENTICAL",
+        "raw_report_sha256": "0cf2a72d:dcc7a045:976680c0:a9b182ea:e4e37ce2:5617ff9c:5d7da7ad:ac3840dc"
+      },
+      "internal_qa_inference_v2_review_spec": {
+        "path": "docs/governance/internal-qa/inference-v2-review-2-spec.md",
+        "sha256": "84c3352c:949e2804:69db4fd0:5b8d1b89:53e92dda:18c4b6ad:8177e2e5:d131f391",
+        "role": "INFERENCE_V2_INTERNAL_CLAUDE_QA_REVIEW_SPEC_PRE_FIX_CANDIDATE"
+      }
+    },
+    "corrections": {
+      "a3_capacity_solver": {
+        "finding": "A3 P1 (lead-reproduced): the V1 target-share floor is computed from a rounded finite-precision Decimal f=(1-buffer)/(1+rate) then chained Decimal division before ROUND_FLOOR (plus rounded dominating bound / scan_upper / quantized-notional F3), which can push a mathematical integer one below its boundary. Witness A(w=0.35,px=3600,adv=1e12) B(w=0.65,px=1,adv=668500) bps=10 registered params: exact shares_A(10400)=1 and C*=10400 is feasible; V1 returns UNAVAILABLE_NO_FEASIBLE_CAPITAL (F1_ZERO_SHARES:A).",
+        "v1_status": "SUPERSEDED_DEFECTIVE_CANDIDATE_NOT_ACCEPTED",
+        "v1_in_place_edited": false,
+        "v2_implementation_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V2",
+        "economic_method_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1",
+        "v2_status": "IMPLEMENTED_EXTERNAL_ACCEPTANCE_PENDING",
+        "v2_correction": "Exact fractions.Fraction throughout the feasibility verdict (share floor, F1/F2/F3, dominating bound, grid floor); Decimal only at the reporting boundary; reproduces C*=10400 feasible; false non-monotonicity/island rationale withdrawn (F1-up/F3-down/F2-structural => contiguous interval); exhaustive scan retained as the conservative registered method.",
+        "merged_pr": "#47",
+        "merge_sha": "43a84301:f01a1f3f:7a9ee634:ebe22bbd:97cb2b7d"
+      },
+      "a2_nee120_inference": {
+        "finding": "A2 P1 (lead-reproduced): V1 _parse_series and holm_step_down build Decimal(value) after only type/finite checks, so the 'canonical decimal string' contract is unenforced and noncanonical spellings (1E-3, +0.001, ' 0.001', .5, 5., -0, ...) are accepted. No numeric impact on canonical inputs; the fail-closed boundary claim was falsifiable.",
+        "v1_kernel_status": "KERNEL_RETAINED_AND_DELEGATED_NUMERICS_CORRECT",
+        "v1_permissive_input_entrypoint_status": "SUPERSEDED_BY_V2_STRICT_ADAPTER",
+        "v1_in_place_edited": false,
+        "v2_implementation_id": "QME-NEE120-INFERENCE-IMPLEMENTATION-V2",
+        "statistical_method_ids": "UNCHANGED",
+        "v2_status": "IMPLEMENTED_EXTERNAL_ACCEPTANCE_PENDING",
+        "v2_correction": "Strict input adapter (run_inference_v2 / holm_step_down_v2) binding the registered sibling grammar (same compiled effective_trials_uncertainty._DECIMAL_PATTERN object + negative-zero + len>128 rules, fail-closed import-time pin); validates every paired delta, Holm p-value, and alpha before any Decimal(); enforces p in [0,1] (via V1) and alpha in the open significance-level domain (0,1) (no narrower numeric alpha range is registered; owner-confirmed default 2026-08-18); delegates canonical inputs to the byte-unchanged V1 kernel; byte-identical to V1 on canonical inputs including the bootstrap distribution SHA-256.",
+        "authoritative_entrypoints": [
+          "run_inference_v2",
+          "holm_step_down_v2"
+        ],
+        "v1_permissive_entrypoints_not_removed_but_not_accepted": [
+          "run_inference",
+          "holm_step_down"
+        ],
+        "merged_pr": "#48",
+        "merge_sha": "a5ac307f:e1b35883:6fa0c088:771ba086:7b64a1ca"
+      }
+    },
+    "internal_qa_evidence": {
+      "classification": "SAME_CLAUDE_LINEAGE_INTERNAL_QA",
+      "formal_independent_review_satisfied": false,
+      "note": "The A2/A3 rehearsals reproduced the V1 defects; the capacity-V2 and inference-V2 reviews verified the corrections. The two inference-V2 review reports examined the PRE-fix candidate and returned PASS with P2 findings; those P2s were resolved in a fix loop and lead-re-verified before the final merged bytes (v2_nee120_inference sha above). Claude-only review establishes machine-verifiable planning authority only; it does NOT satisfy the registered external independent-review requirement.",
+      "external_independent_review": "REQUIRED_BEFORE_ANY_T0_BLOCKER_CLEARANCE_BINDING"
+    },
+    "claims": {
+      "implementation_corrections_registered": true,
+      "registration_meaning": "DECISIONS_REGISTERED_NOT_BLOCKER_CLEARANCE",
+      "capacity_v2_implemented": true,
+      "inference_v2_implemented": true,
+      "v1_modules_modified_in_place": false,
+      "any_freeze_v4_blocker_cleared": false,
+      "milestone_m0_complete": false,
+      "empirical_performance_available": false,
+      "empirical_capacity_available": false,
+      "production_ready": false,
+      "formal_independent_review_satisfied": false
+    },
+    "nonclaims": [
+      "NO_FREEZE_V4_BLOCKER_IS_RESOLVED_BY_THIS_RECORD",
+      "FREEZE_V4_REMAINS_13_ACTIVE_0_RESOLVED",
+      "MILESTONE_M0_COMPLETE_IS_FALSE",
+      "NO_V1_MODULE_IS_MODIFIED_IN_PLACE",
+      "V2_IMPLEMENTATIONS_ARE_CANDIDATES_PENDING_EXTERNAL_INDEPENDENT_ACCEPTANCE",
+      "NO_EMPIRICAL_PERFORMANCE_CAPACITY_DOLLAR_VALUE_OR_PRODUCTION_READINESS_IS_CLAIMED",
+      "SAME_CLAUDE_LINEAGE_INTERNAL_QA_DOES_NOT_SATISFY_FORMAL_INDEPENDENT_REVIEW",
+      "NO_PROTECTED_MAIN_RECEIPT_TIMESTAMP_IS_INFERRED",
+      "NO_LIVE_ORDER_OR_DATA_SPINE_AUTHORITY_IS_GRANTED"
+    ]
+  }
+}
