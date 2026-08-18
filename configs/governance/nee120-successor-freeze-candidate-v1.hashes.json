@@ -1,0 +1,13 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-120-INFERENCE-EVIDENCE-SUCCESSOR-FREEZE-CANDIDATE-V1",
+  "implementation_status": "CANDIDATE_PR_OPEN_BLOCKER_REMAINS_ACTIVE_PENDING_EXTERNAL_DELTA_REVIEW_OWNER_SIGNOFF_AND_RECEIPT",
+  "production_status": "NO_OPERATIONAL_CONTRACT_OR_PRODUCTION_EVIDENCE",
+  "artifacts": [
+    {"path": "configs/governance/nee120-successor-freeze-candidate-v1.json", "sha256": "e8ef9bf9:7fdf277c:322e12d2:4b2e31ba:ce97fdd2:4183ad69:8f1d0bc3:c142c9e6"},
+    {"path": "docs/governance/NEE_120_SUCCESSOR_FREEZE_CANDIDATE_V1.md", "sha256": "e0cb4f85:3ee5264c:62b7f570:d0dbb5dc:de4d787b:461cf574:98da26a9:71d49dae"},
+    {"path": "qme/governance/nee120_successor_freeze_candidate.py", "sha256": "bba14e0f:2d3c3b8d:e9a17431:2f279da8:4c724845:09f28b8b:c9c79d2a:f85f2e05"},
+    {"path": "schemas/governance/nee120-successor-freeze-candidate-v1.schema.json", "sha256": "0fd7b6a8:76359dcf:e0f2b7e8:dafd1455:530ecfed:d1b8ad12:35ae96e4:9b424782"},
+    {"path": "tests/governance/test_nee120_successor_freeze_candidate.py", "sha256": "2159d8ea:b706d1e1:9068072b:e79da77f:413118fb:9aaaa3c3:3343d62a:d2211c70"}
+  ]
+}
