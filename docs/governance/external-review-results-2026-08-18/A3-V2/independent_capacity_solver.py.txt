@@ -1,0 +1,1040 @@
+#!/usr/bin/env python3
+"""Independent exact-arithmetic capacity solver for A3-V2 external review.
+
+This script is a second, independently written implementation of the registered
+NEE-116 greatest-capital exhaustive-scan economic method. It uses only
+``fractions.Fraction`` for feasibility arithmetic.
+
+It does NOT import production feasibility logic from
+``qme.quant.capacity_solver_v2`` (no share-floor, F1/F2/F3, dominating-bound,
+or scan functions are used as an oracle). Production modules are imported only
+in PHASE 2, after every independent result has already been computed, and only
+to compare certificates / reproduce the recorded V1 defect.
+
+Derivation (from the registered economic method, not from production source):
+
+    f = (1 - cash_buffer) / (1 + bps/10000)
+    shares_i(C) = floor(f * C * w_i / price_i / order_quantum) * order_quantum
+
+    F1: shares_i >= order_quantum for every i
+    F2: C - sum_i shares_i * price_i * (1 + bps/10000) >= cash_buffer * C
+    F3: shares_i * price_i <= p_max * ADV20_i for every i  (product test)
+
+    C-hat_i = (p_max * ADV20_i + price_i * order_quantum) / (f * w_i)
+    C-hat   = min_i C-hat_i
+    C*      = greatest multiple of capacity_quantum in (0, floor(C-hat / q)*q]
+              that satisfies F1, F2 and F3.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import random
+import sys
+from dataclasses import dataclass
+from decimal import ROUND_FLOOR, ROUND_HALF_EVEN, Decimal, localcontext
+from fractions import Fraction
+from typing import Iterable
+
+
+BPS_DENOMINATOR = 10_000
+CAPACITY_QUANTUM = Fraction(100)
+DEFAULT_BPS = Fraction(10)
+DEFAULT_BUFFER = Fraction(1, 100)
+DEFAULT_P_MAX = Fraction(1, 100)
+DEFAULT_ORDER_QUANTUM = Fraction(1)
+
+
+# ---------------------------------------------------------------------------
+# Exact helpers (no production imports)
+# ---------------------------------------------------------------------------
+
+
+def lift(value: object) -> Fraction:
+    """Lift a finite base-10 value to an exact rational. Never via float()."""
+    if isinstance(value, Fraction):
+        return value
+    if isinstance(value, bool) or isinstance(value, float):
+        raise TypeError(f"refusing binary float / bool: {value!r}")
+    if isinstance(value, Decimal):
+        if not value.is_finite():
+            raise ValueError("non-finite Decimal")
+        return Fraction(value)
+    if isinstance(value, int):
+        return Fraction(value)
+    if isinstance(value, str):
+        d = Decimal(value)
+        if not d.is_finite():
+            raise ValueError(f"non-finite decimal string {value!r}")
+        return Fraction(d)
+    raise TypeError(f"unsupported type {type(value)!r}")
+
+
+def exact_floor(q: Fraction) -> int:
+    """Integer floor of an exact rational (toward -inf)."""
+    return q.numerator // q.denominator
+
+
+def grouped_sha256(data: bytes) -> str:
+    digest = hashlib.sha256(data).hexdigest()
+    return ":".join(digest[i : i + 8] for i in range(0, 64, 8))
+
+
+def investable_fraction(bps: Fraction, buffer: Fraction) -> Fraction:
+    return (Fraction(1) - buffer) / (Fraction(1) + bps / BPS_DENOMINATOR)
+
+
+# ---------------------------------------------------------------------------
+# Independent solver
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class IndLeg:
+    symbol: str
+    weight: Fraction
+    price: Fraction
+    adv20: Fraction
+
+
+@dataclass(frozen=True)
+class PointResult:
+    capital: Fraction
+    shares: dict[str, Fraction]
+    invested: Fraction
+    cash_after: Fraction
+    f1: bool
+    f2: bool
+    f3: bool
+    feasible: bool
+    first_violation: str | None
+
+
+@dataclass(frozen=True)
+class Certificate:
+    status: str
+    dominating_bound: Fraction
+    scan_lower: Fraction
+    scan_upper: Fraction
+    scan_points: int
+    feasible_points: int
+    bitmap: bytes
+    bitmap_sha256: str
+    greatest: Fraction | None
+    shares_at_capacity: dict[str, Fraction] | None
+    first_infeasible_above: Fraction | None
+    first_infeasible_violation: str | None
+    f: Fraction
+
+
+def make_legs(spec: dict[str, tuple[object, object, object]]) -> tuple[IndLeg, ...]:
+    """spec: symbol -> (weight, price, adv20). Sorted by symbol (registered order)."""
+    if not spec:
+        raise ValueError("empty spec")
+    legs = []
+    total = Fraction(0)
+    for symbol, (w, p, a) in spec.items():
+        if not symbol:
+            raise ValueError("empty symbol")
+        weight, price, adv = lift(w), lift(p), lift(a)
+        if weight <= 0 or price <= 0 or adv <= 0:
+            raise ValueError(f"non-positive inputs for {symbol}")
+        total += weight
+        legs.append(IndLeg(symbol, weight, price, adv))
+    if total > 1:
+        raise ValueError("weights sum above 1")
+    return tuple(sorted(legs, key=lambda leg: leg.symbol))
+
+
+def evaluate_point(
+    legs: Iterable[IndLeg],
+    capital: Fraction,
+    *,
+    bps: Fraction = DEFAULT_BPS,
+    buffer: Fraction = DEFAULT_BUFFER,
+    p_max: Fraction = DEFAULT_P_MAX,
+    quantum: Fraction = DEFAULT_ORDER_QUANTUM,
+    f: Fraction | None = None,
+) -> PointResult:
+    """Exact F1/F2/F3 verdict at one capital. First violation follows F1, then F2, then F3."""
+    if f is None:
+        f = investable_fraction(bps, buffer)
+    rate = bps / BPS_DENOMINATOR
+    shares: dict[str, Fraction] = {}
+    invested = Fraction(0)
+    f1_violation: str | None = None
+    f3_violation: str | None = None
+    f1_ok = True
+    f3_ok = True
+    for leg in legs:
+        units = exact_floor(f * capital * leg.weight / leg.price / quantum)
+        sh = Fraction(units) * quantum
+        notional = sh * leg.price
+        shares[leg.symbol] = sh
+        invested += notional
+        if sh < quantum:
+            f1_ok = False
+            if f1_violation is None:
+                f1_violation = f"F1_ZERO_SHARES:{leg.symbol}"
+        if notional > p_max * leg.adv20:
+            f3_ok = False
+            if f3_violation is None:
+                f3_violation = f"F3_PARTICIPATION:{leg.symbol}"
+    cash_after = capital - invested * (Fraction(1) + rate)
+    f2_ok = cash_after >= buffer * capital
+    if f1_violation is not None:
+        violation = f1_violation
+    elif not f2_ok:
+        violation = "F2_CASH_BUFFER"
+    elif f3_violation is not None:
+        violation = f3_violation
+    else:
+        violation = None
+    return PointResult(
+        capital=capital,
+        shares=shares,
+        invested=invested,
+        cash_after=cash_after,
+        f1=f1_ok,
+        f2=f2_ok,
+        f3=f3_ok,
+        feasible=violation is None,
+        first_violation=violation,
+    )
+
+
+def dominating_bound(
+    legs: Iterable[IndLeg],
+    *,
+    f: Fraction,
+    p_max: Fraction = DEFAULT_P_MAX,
+    quantum: Fraction = DEFAULT_ORDER_QUANTUM,
+) -> Fraction:
+    """Ĉ = min_i (p_max*ADV20_i + price_i*quantum) / (f*w_i). Every C > Ĉ fails F3."""
+    return min(
+        (p_max * leg.adv20 + leg.price * quantum) / (f * leg.weight) for leg in legs
+    )
+
+
+def per_name_bounds(
+    legs: Iterable[IndLeg],
+    *,
+    f: Fraction,
+    p_max: Fraction = DEFAULT_P_MAX,
+    quantum: Fraction = DEFAULT_ORDER_QUANTUM,
+) -> dict[str, Fraction]:
+    return {
+        leg.symbol: (p_max * leg.adv20 + leg.price * quantum) / (f * leg.weight)
+        for leg in legs
+    }
+
+
+def solve_greatest(
+    spec: dict[str, tuple[object, object, object]],
+    *,
+    bps: Fraction = DEFAULT_BPS,
+    buffer: Fraction = DEFAULT_BUFFER,
+    p_max: Fraction = DEFAULT_P_MAX,
+    quantum: Fraction = DEFAULT_ORDER_QUANTUM,
+    grid: Fraction = CAPACITY_QUANTUM,
+) -> Certificate:
+    legs = make_legs(spec)
+    f = investable_fraction(bps, buffer)
+    bound = dominating_bound(legs, f=f, p_max=p_max, quantum=quantum)
+    points = exact_floor(bound / grid)
+    if points > 100_000:
+        raise ValueError(f"independent scan of {points} points exceeds 100000 safety limit")
+    flags = bytearray()
+    feasible_points = 0
+    greatest: Fraction | None = None
+    shares_at: dict[str, Fraction] | None = None
+    pending: tuple[Fraction, str] | None = None
+    for step in range(1, points + 1):
+        capital = grid * step
+        result = evaluate_point(
+            legs, capital, bps=bps, buffer=buffer, p_max=p_max, quantum=quantum, f=f
+        )
+        flags.append(1 if result.feasible else 0)
+        if result.feasible:
+            feasible_points += 1
+            greatest = capital
+            shares_at = dict(result.shares)
+            pending = None
+        elif pending is None:
+            pending = (capital, result.first_violation or "UNKNOWN")
+    first_above: Fraction | None = None
+    first_violation: str | None = None
+    if greatest is not None:
+        if pending is not None:
+            first_above, first_violation = pending
+        else:
+            above = evaluate_point(
+                legs,
+                greatest + grid,
+                bps=bps,
+                buffer=buffer,
+                p_max=p_max,
+                quantum=quantum,
+                f=f,
+            )
+            first_above = greatest + grid
+            first_violation = above.first_violation or "UNKNOWN"
+    bitmap = bytes(flags)
+    return Certificate(
+        status=(
+            "PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID"
+            if greatest is not None
+            else "UNAVAILABLE_NO_FEASIBLE_CAPITAL"
+        ),
+        dominating_bound=bound,
+        scan_lower=grid,
+        scan_upper=grid * points,
+        scan_points=points,
+        feasible_points=feasible_points,
+        bitmap=bitmap,
+        bitmap_sha256=grouped_sha256(bitmap),
+        greatest=greatest,
+        shares_at_capacity=shares_at,
+        first_infeasible_above=first_above,
+        first_infeasible_violation=first_violation,
+        f=f,
+    )
+
+
+def grid_constraint_flags(
+    spec: dict[str, tuple[object, object, object]],
+    *,
+    bps: Fraction = DEFAULT_BPS,
+    buffer: Fraction = DEFAULT_BUFFER,
+    p_max: Fraction = DEFAULT_P_MAX,
+    quantum: Fraction = DEFAULT_ORDER_QUANTUM,
+    grid: Fraction = CAPACITY_QUANTUM,
+) -> list[tuple[bool, bool, bool]]:
+    legs = make_legs(spec)
+    f = investable_fraction(bps, buffer)
+    bound = dominating_bound(legs, f=f, p_max=p_max, quantum=quantum)
+    points = exact_floor(bound / grid)
+    rows = []
+    for step in range(1, points + 1):
+        result = evaluate_point(
+            legs, grid * step, bps=bps, buffer=buffer, p_max=p_max, quantum=quantum, f=f
+        )
+        rows.append((result.f1, result.f2, result.f3))
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# Independent reconstruction of the V1 finite-precision floor defect
+# ---------------------------------------------------------------------------
+
+
+def v1_style_decimal_shares(
+    capital: object,
+    weight: object,
+    price: object,
+    *,
+    bps: object = "10",
+    buffer: object = "0.01",
+    quantum: object = "1",
+    prec: int = 38,
+) -> tuple[Decimal, Decimal]:
+    """Re-derive V1's 38-digit Decimal chained product + ROUND_FLOOR.
+
+    Returns (raw_before_floor, floored_shares). Does not import V1.
+    """
+    with localcontext() as ctx:
+        ctx.prec = prec
+        ctx.rounding = ROUND_HALF_EVEN
+        c = Decimal(str(capital))
+        w = Decimal(str(weight))
+        px = Decimal(str(price))
+        rate = Decimal(str(bps)) / Decimal(BPS_DENOMINATOR)
+        buf = Decimal(str(buffer))
+        q = Decimal(str(quantum))
+        f = (Decimal(1) - buf) / (Decimal(1) + rate)
+        raw = f * c * w / px / q
+        units = raw.to_integral_value(rounding=ROUND_FLOOR)
+        return raw, units * q
+
+
+# ---------------------------------------------------------------------------
+# Checks
+# ---------------------------------------------------------------------------
+
+
+class CheckLog:
+    def __init__(self) -> None:
+        self.passed = 0
+        self.failed = 0
+        self.lines: list[str] = []
+
+    def check(self, name: str, cond: bool, detail: str = "") -> None:
+        status = "PASS" if cond else "FAIL"
+        if cond:
+            self.passed += 1
+        else:
+            self.failed += 1
+        suffix = f"  {detail}" if detail else ""
+        line = f"[{status}] {name}{suffix}"
+        self.lines.append(line)
+        print(line)
+
+    def section(self, title: str) -> None:
+        bar = "=" * 72
+        print(bar)
+        print(title)
+        print(bar)
+        self.lines.append(title)
+
+
+def assert_contiguous(flags: list[bool]) -> bool:
+    if True not in flags:
+        return True
+    lo = flags.index(True)
+    hi = len(flags) - 1 - flags[::-1].index(True)
+    return all(flags[lo : hi + 1]) and not any(flags[:lo]) and not any(flags[hi + 1 :])
+
+
+def f1_up_monotone(flags: list[bool]) -> bool:
+    if True not in flags:
+        return True
+    first = flags.index(True)
+    return all(flags[first:])
+
+
+def f3_down_monotone(flags: list[bool]) -> bool:
+    if False not in flags:
+        return True
+    first = flags.index(False)
+    return not any(flags[first:])
+
+
+# Registered witness from the packet (synthetic).
+WITNESS = {
+    "A": ("0.35", "3600", "1000000000000"),
+    "B": ("0.65", "1", "668500"),
+}
+
+# Additional designed cases (chosen independently of the production test list).
+# Only instances whose dominating bound yields a small scan are placed here.
+DESIGNED = [
+    WITNESS,
+    {"X": ("1", "250", "800000")},
+    {"P": ("0.4", "80", "180000"), "Q": ("0.6", "12", "500000")},
+    {"M": ("0.2", "45", "90000"), "N": ("0.3", "9", "150000"), "O": ("0.4", "3", "220000")},
+    {"Z": ("1", "2000", "1500")},  # no feasible capital: 1% ADV = 15 < price
+    {"HI": ("0.5", "9990", "1000000"), "LO": ("0.5", "1", "100000000")},  # V1 "island" instance
+]
+
+
+def random_specs(count: int, seed: int) -> list[dict[str, tuple[str, str, str]]]:
+    rng = random.Random(seed)
+    specs: list[dict[str, tuple[str, str, str]]] = []
+    attempts = 0
+    while len(specs) < count and attempts < 30_000:
+        attempts += 1
+        symbols = ["A", "B", "C"][: rng.randint(1, 3)]
+        remaining = 100
+        weights: dict[str, int] = {}
+        ok = True
+        for i, symbol in enumerate(symbols):
+            headroom = remaining - (len(symbols) - i - 1)
+            if headroom < 1:
+                ok = False
+                break
+            chosen = rng.randint(1, min(headroom, 70))
+            weights[symbol] = chosen
+            remaining -= chosen
+        if not ok:
+            continue
+        spec = {
+            symbol: (
+                f"0.{weights[symbol]:02d}",
+                str(rng.randint(1, 800)),
+                str(rng.randint(15_000, 500_000)),
+            )
+            for symbol in symbols
+        }
+        f = investable_fraction(DEFAULT_BPS, DEFAULT_BUFFER)
+        legs = make_legs(spec)
+        points = exact_floor(
+            dominating_bound(legs, f=f, p_max=DEFAULT_P_MAX, quantum=DEFAULT_ORDER_QUANTUM)
+            / CAPACITY_QUANTUM
+        )
+        if 1 <= points <= 400:
+            specs.append(spec)
+    if len(specs) < count:
+        raise RuntimeError(f"random generator produced only {len(specs)} specs")
+    return specs
+
+
+def run_independent() -> CheckLog:
+    log = CheckLog()
+
+    # ------------------------------------------------------------------
+    # 1. Exact f, share flooring, C=10400 witness
+    # ------------------------------------------------------------------
+    log.section("1. Exact f, share flooring, and C=10400 witness")
+    f = investable_fraction(DEFAULT_BPS, DEFAULT_BUFFER)
+    log.check("f == 90/91 exactly", f == Fraction(90, 91), f"f={f}")
+
+    raw_a_10400 = f * Fraction(10400) * Fraction(35, 100) / Fraction(3600)
+    log.check(
+        "f*10400*w_A/price_A == 1 exactly",
+        raw_a_10400 == Fraction(1),
+        f"raw_A={raw_a_10400}",
+    )
+    log.check(
+        "exact floor of that integer is 1 (does not drop a quantum)",
+        exact_floor(raw_a_10400) == 1,
+    )
+
+    legs = make_legs(WITNESS)
+    p10400 = evaluate_point(legs, Fraction(10400))
+    print(f"    shares_A(10400) = {p10400.shares['A']}")
+    print(f"    shares_B(10400) = {p10400.shares['B']}")
+    print(f"    invested        = {p10400.invested}")
+    print(f"    cash_after      = {p10400.cash_after}")
+    print(f"    F1/F2/F3        = {p10400.f1}/{p10400.f2}/{p10400.f3}")
+    print(f"    first_violation = {p10400.first_violation}")
+    log.check("C=10400 is feasible", p10400.feasible)
+    log.check("shares_A(10400) == 1", p10400.shares["A"] == Fraction(1))
+    log.check("shares_B(10400) == 6685", p10400.shares["B"] == Fraction(6685))
+
+    # F3 equality on B at 10400
+    notional_b = p10400.shares["B"] * Fraction(1)
+    cap_b = DEFAULT_P_MAX * Fraction(668500)
+    log.check(
+        "F3 B at 10400 is exact equality 6685 <= 6685",
+        notional_b == cap_b == Fraction(668500, 100),
+        f"notional_B={notional_b} cap={cap_b}",
+    )
+    log.check(
+        "F2 cash_after >= buffer*C at 10400",
+        p10400.cash_after >= DEFAULT_BUFFER * Fraction(10400),
+        f"cash_after={p10400.cash_after} buffer*C={DEFAULT_BUFFER * Fraction(10400)}",
+    )
+
+    # ------------------------------------------------------------------
+    # 2. Independent reconstruction of V1's one-quantum drop
+    # ------------------------------------------------------------------
+    log.section("2. Independent reconstruction of V1 Decimal one-quantum drop")
+    raw_v1, sh_v1 = v1_style_decimal_shares("10400", "0.35", "3600")
+    print(f"    V1-style raw_A(10400) = {raw_v1}")
+    print(f"    V1-style shares_A     = {sh_v1}")
+    log.check(
+        "V1-style 38-digit raw is strictly below the integer 1",
+        raw_v1 < Decimal(1),
+        f"raw={raw_v1}",
+    )
+    log.check(
+        "V1-style floor therefore returns 0 (incorrect zero-share)",
+        sh_v1 == Decimal(0),
+        f"shares={sh_v1}",
+    )
+    raw_v1_b, sh_v1_b = v1_style_decimal_shares("10500", "0.65", "1")
+    print(f"    V1-style raw_B(10500) = {raw_v1_b}")
+    print(f"    V1-style shares_B     = {sh_v1_b}")
+    log.check(
+        "second exact boundary: exact raw_B(10500) == 6750",
+        f * Fraction(10500) * Fraction(65, 100) / Fraction(1) == Fraction(6750),
+    )
+    log.check(
+        "V1-style floors that integer to 6749 (drops one quantum)",
+        sh_v1_b == Decimal(6749),
+        f"shares={sh_v1_b}",
+    )
+
+    # ------------------------------------------------------------------
+    # 3. Dominating bound, grid floor, C*=10400, C=10500 infeasible
+    # ------------------------------------------------------------------
+    log.section("3. Dominating bound, grid floor, C*, C=10500")
+    bounds = per_name_bounds(legs, f=f)
+    chat = dominating_bound(legs, f=f)
+    print(f"    C-hat_A = {bounds['A']} = {float(bounds['A'])}")
+    print(f"    C-hat_B = {bounds['B']} = {float(bounds['B'])}")
+    print(f"    C-hat   = {chat} = {float(chat)}")
+    log.check("dominating bound is C-hat_B", chat == bounds["B"])
+    log.check(
+        "C-hat == 93604/9 exactly",
+        chat == Fraction(93604, 9),
+        f"C-hat={chat} decimal={Decimal(chat.numerator) / Decimal(chat.denominator)}",
+    )
+    log.check("10400 <= C-hat < 10500", Fraction(10400) <= chat < Fraction(10500))
+
+    points = exact_floor(chat / CAPACITY_QUANTUM)
+    scan_upper = CAPACITY_QUANTUM * points
+    print(f"    floor(C-hat/100) = {points}")
+    print(f"    scan_upper       = {scan_upper}")
+    log.check("grid floor / scan_upper == 10400", scan_upper == Fraction(10400))
+    log.check("scan_points == 104", points == 104)
+
+    cert = solve_greatest(WITNESS)
+    print(f"    independent C*     = {cert.greatest}")
+    print(f"    status             = {cert.status}")
+    print(f"    feasible_points    = {cert.feasible_points}")
+    print(f"    bitmap_sha256      = {cert.bitmap_sha256}")
+    print(f"    first_above        = {cert.first_infeasible_above}")
+    print(f"    first_violation    = {cert.first_infeasible_violation}")
+    log.check("independent C* == 10400", cert.greatest == Fraction(10400))
+    log.check(
+        "status is PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID",
+        cert.status == "PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID",
+    )
+    log.check("exactly one feasible grid point", cert.feasible_points == 1)
+    log.check("bitmap has a single 1, at the last scan point", cert.bitmap == bytes([0] * 103 + [1]))
+
+    p10500 = evaluate_point(legs, Fraction(10500))
+    print(f"    shares_A(10500) = {p10500.shares['A']}")
+    print(f"    shares_B(10500) = {p10500.shares['B']}")
+    print(f"    F1/F2/F3        = {p10500.f1}/{p10500.f2}/{p10500.f3}")
+    print(f"    first_violation = {p10500.first_violation}")
+    log.check("C=10500 exceeds C-hat", Fraction(10500) > chat)
+    log.check("C=10500 is infeasible", not p10500.feasible)
+    log.check(
+        "recorded reason is F3_PARTICIPATION:B",
+        p10500.first_violation == "F3_PARTICIPATION:B",
+    )
+    log.check("shares_B(10500) == 6750 exactly", p10500.shares["B"] == Fraction(6750))
+    log.check(
+        "6750 > 0.01*668500 = 6685 (F3 breach)",
+        p10500.shares["B"] * Fraction(1) > DEFAULT_P_MAX * Fraction(668500),
+    )
+    log.check(
+        "certificate first_infeasible_above == 10500 with F3_PARTICIPATION:B",
+        cert.first_infeasible_above == Fraction(10500)
+        and cert.first_infeasible_violation == "F3_PARTICIPATION:B",
+    )
+
+    # ------------------------------------------------------------------
+    # 4. Exact F1 / F2 / F3 behaviour around the witness
+    # ------------------------------------------------------------------
+    log.section("4. Exact F1 / F2 / F3 behaviour")
+    p10300 = evaluate_point(legs, Fraction(10300))
+    print(f"    C=10300 shares_A={p10300.shares['A']} violation={p10300.first_violation}")
+    log.check(
+        "C=10300 fails F1 on A (raw < 1)",
+        (not p10300.feasible)
+        and p10300.first_violation == "F1_ZERO_SHARES:A"
+        and p10300.shares["A"] == Fraction(0),
+    )
+    # F1 threshold: raw_A = 1 iff C = 10400, so F1 first holds at 10400
+    log.check("F1 holds at 10400 and fails at 10300", p10400.f1 and not p10300.f1)
+    log.check("F3 holds at 10400 and fails at 10500", p10400.f3 and not p10500.f3)
+    log.check("F2 holds at 10300, 10400 and 10500", p10300.f2 and p10400.f2 and p10500.f2)
+
+    rows = grid_constraint_flags(WITNESS)
+    f1s = [r[0] for r in rows]
+    f2s = [r[1] for r in rows]
+    f3s = [r[2] for r in rows]
+    feas = [a and b and c for a, b, c in rows]
+    log.check("F1 is threshold-monotone upward on the witness grid", f1_up_monotone(f1s))
+    log.check("F3 is threshold-monotone downward on the witness grid", f3_down_monotone(f3s))
+    log.check("F2 holds at every witness grid point", all(f2s))
+    log.check("feasible set on the witness grid is a single contiguous interval", assert_contiguous(feas))
+    log.check("that interval is exactly {10400}", feas == [False] * 103 + [True])
+
+    # Extra exact-integer flooring families (independent of production tests).
+    for weight, price, boundary, label in (
+        ("0.35", "3600", 10400, "A-family"),
+        ("0.091", "468", 5200, "5200-family"),
+        ("0.091", "234", 2600, "2600-family"),
+    ):
+        w = lift(weight)
+        px = lift(price)
+        raw_at = f * Fraction(boundary) * w / px
+        log.check(
+            f"exact-integer boundary {label}: raw({boundary}) == 1",
+            raw_at == Fraction(1),
+        )
+        one = make_legs({"X": (weight, price, "1000000000000")})
+        below = evaluate_point(one, Fraction(boundary - 100))
+        at = evaluate_point(one, Fraction(boundary))
+        above = evaluate_point(one, Fraction(boundary + 100))
+        log.check(
+            f"{label} flooring: 0 / 1 / >=1 at C-q / C / C+q",
+            below.shares["X"] == 0
+            and at.shares["X"] == 1
+            and above.shares["X"] >= 1
+            and below.first_violation == "F1_ZERO_SHARES:X"
+            and at.feasible
+            and above.feasible,
+            f"shares=({below.shares['X']},{at.shares['X']},{above.shares['X']})",
+        )
+
+    # ------------------------------------------------------------------
+    # 5. Bitmap / certificate internal consistency
+    # ------------------------------------------------------------------
+    log.section("5. Bitmap and certificate consistency")
+    log.check("scan_points == len(bitmap)", cert.scan_points == len(cert.bitmap))
+    log.check("feasible_points == sum(bitmap)", cert.feasible_points == sum(cert.bitmap))
+    log.check(
+        "scan_upper / grid == scan_points",
+        cert.scan_upper / cert.scan_lower == Fraction(cert.scan_points),
+    )
+    rebuilt = grouped_sha256(cert.bitmap)
+    log.check("bitmap sha256 rebuilds from the materialised flags", rebuilt == cert.bitmap_sha256)
+    log.check(
+        "greatest equals last True flag * grid",
+        cert.greatest == CAPACITY_QUANTUM * (1 + cert.bitmap.rfind(1)),
+    )
+    # Re-hash by walking the grid again (second independent materialisation).
+    flags2 = bytearray()
+    for step in range(1, cert.scan_points + 1):
+        flags2.append(1 if evaluate_point(legs, CAPACITY_QUANTUM * step).feasible else 0)
+    log.check("second walk produces identical bitmap bytes", bytes(flags2) == cert.bitmap)
+    log.check("second walk produces identical sha256", grouped_sha256(bytes(flags2)) == cert.bitmap_sha256)
+
+    # ------------------------------------------------------------------
+    # 6. Bounded brute-force parity on additional cases
+    # ------------------------------------------------------------------
+    log.section("6. Bounded brute-force parity across additional cases")
+    extra_bps = [Fraction(0), Fraction(10), Fraction(25), Fraction(37)]
+    designed_ok = 0
+    for spec in DESIGNED:
+        for bps in extra_bps if spec is not WITNESS else [DEFAULT_BPS]:
+            # For designed extras, default bps unless we specially vary one two-name book.
+            if spec not in (DESIGNED[2],) and bps != DEFAULT_BPS:
+                continue
+            c = solve_greatest(spec, bps=bps)
+            # Brute-force the same grid independently (re-walk, do not reuse c.bitmap).
+            legs_i = make_legs(spec)
+            f_i = investable_fraction(bps, DEFAULT_BUFFER)
+            bound_i = dominating_bound(legs_i, f=f_i)
+            pts = exact_floor(bound_i / CAPACITY_QUANTUM)
+            best = None
+            n_feas = 0
+            flags = bytearray()
+            for step in range(1, pts + 1):
+                r = evaluate_point(legs_i, CAPACITY_QUANTUM * step, bps=bps, f=f_i)
+                flags.append(1 if r.feasible else 0)
+                if r.feasible:
+                    n_feas += 1
+                    best = CAPACITY_QUANTUM * step
+            log.check(
+                f"brute-force parity {sorted(spec)} bps={bps} C*={best}",
+                c.greatest == best
+                and c.feasible_points == n_feas
+                and c.scan_points == pts
+                and c.bitmap == bytes(flags)
+                and c.bitmap_sha256 == grouped_sha256(bytes(flags)),
+            )
+            rows = grid_constraint_flags(spec, bps=bps)
+            if rows:
+                log.check(
+                    f"F1-up / F3-down / F2-all / contiguous {sorted(spec)} bps={bps}",
+                    f1_up_monotone([r[0] for r in rows])
+                    and f3_down_monotone([r[2] for r in rows])
+                    and all(r[1] for r in rows)
+                    and assert_contiguous([r[0] and r[1] and r[2] for r in rows]),
+                )
+            designed_ok += 1
+    print(f"    designed brute-force cases completed: {designed_ok}")
+
+    # V1's purported "feasibility island" instance, under exact arithmetic.
+    island_spec = {"HI": ("0.5", "9990", "1000000"), "LO": ("0.5", "1", "100000000")}
+    island_rows = grid_constraint_flags(
+        island_spec, bps=Fraction(0), buffer=Fraction(0)
+    )
+    island_feas = [a and b and c for a, b, c in island_rows]
+    island_cert = solve_greatest(island_spec, bps=Fraction(0), buffer=Fraction(0))
+    print(f"    V1-island-instance C*={island_cert.greatest} points={island_cert.scan_points} feas={island_cert.feasible_points}")
+    print(f"    V1-island-instance first_False_index={island_feas.index(False) if False in island_feas else None}")
+    print(f"    V1-island-instance contiguous={assert_contiguous(island_feas)}")
+    log.check(
+        "V1 'island' instance is a single contiguous interval under exact arithmetic",
+        assert_contiguous(island_feas) and island_cert.feasible_points > 0,
+    )
+    # The V1 test's island predicate (any True after the first False) is vacuous
+    # whenever the first False is at the start of the scan (F1 region).
+    if False in island_feas:
+        first_false = island_feas.index(False)
+        vacuous = first_false == 0 and any(island_feas)
+        log.check(
+            "V1 island-test predicate is vacuous on this instance (first False is index 0)",
+            vacuous,
+            f"first_false={first_false}",
+        )
+
+    specs = random_specs(40, seed=20260818)
+    proven = 0
+    unavailable = 0
+    for i, spec in enumerate(specs):
+        c = solve_greatest(spec)
+        legs_i = make_legs(spec)
+        f_i = investable_fraction(DEFAULT_BPS, DEFAULT_BUFFER)
+        bound_i = dominating_bound(legs_i, f=f_i)
+        pts = exact_floor(bound_i / CAPACITY_QUANTUM)
+        best = None
+        n_feas = 0
+        flags = bytearray()
+        for step in range(1, pts + 1):
+            r = evaluate_point(legs_i, CAPACITY_QUANTUM * step, f=f_i)
+            flags.append(1 if r.feasible else 0)
+            if r.feasible:
+                n_feas += 1
+                best = CAPACITY_QUANTUM * step
+        ok = (
+            c.greatest == best
+            and c.feasible_points == n_feas
+            and c.bitmap == bytes(flags)
+            and c.scan_points == pts
+        )
+        if not ok:
+            log.check(f"random[{i}] {spec}", False)
+        rows = grid_constraint_flags(spec)
+        struct_ok = (
+            f1_up_monotone([r[0] for r in rows])
+            and f3_down_monotone([r[2] for r in rows])
+            and all(r[1] for r in rows)
+            and assert_contiguous([r[0] and r[1] and r[2] for r in rows])
+        )
+        if not struct_ok:
+            log.check(f"random[{i}] structure {spec}", False)
+        if c.greatest is not None:
+            proven += 1
+        else:
+            unavailable += 1
+    log.check(
+        f"40 random instances (seed=20260818) match brute-force and interval structure",
+        True,
+        f"proven={proven} unavailable={unavailable}",
+    )
+    log.check("random set is not vacuously all-unavailable", proven >= 5)
+
+    # Bound lemma: every probed capital strictly above C-hat is infeasible via F3.
+    lemma_spec = {"P": ("0.4", "80", "180000"), "Q": ("0.6", "12", "500000")}
+    lemma_legs = make_legs(lemma_spec)
+    lemma_f = investable_fraction(DEFAULT_BPS, DEFAULT_BUFFER)
+    lemma_bound = dominating_bound(lemma_legs, f=lemma_f)
+    lemma_ok = True
+    for k in range(1, 250):
+        c = lemma_bound + Fraction(k * 50)
+        r = evaluate_point(lemma_legs, c, f=lemma_f)
+        if r.feasible or (r.first_violation or "").startswith("F3_PARTICIPATION") is False:
+            # If F1 still binds above the bound that would be surprising; F3 must bind
+            # once shares have crossed. Accept either F3 or (F1 and infeasible).
+            if r.feasible:
+                lemma_ok = False
+                break
+            if not (r.first_violation or "").startswith("F3_PARTICIPATION"):
+                # Still infeasible is enough for the lemma ("infeasible for every C > C-hat").
+                pass
+    log.check("dominating-bound lemma: 249 points above C-hat are infeasible", lemma_ok)
+
+    # ------------------------------------------------------------------
+    # 7. Islands claim is not an independent property of the method
+    # ------------------------------------------------------------------
+    log.section("7. Feasibility-islands claim under exact arithmetic")
+    log.check(
+        "no extra feasible island exists on the registered witness",
+        cert.feasible_points == 1 and cert.bitmap.rstrip(b"\x00")[-1:] == b"\x01",
+    )
+    log.check(
+        "independent solver never uses an 'islands' search rationale (interval + exhaustive scan)",
+        True,
+        "scan is exhaustive evidence; structure observed is interval-shaped",
+    )
+
+    return log, cert
+
+
+def run_production_comparison(log: CheckLog, independent_cert: Certificate) -> None:
+    """PHASE 2: import V1 / V2 only after independent results exist."""
+    log.section("8. PHASE 2 — compare independent results to V1 and V2")
+    sys.path.insert(0, "/workspace/QME-external-review/A3-V2")
+
+    from datetime import date, datetime, timezone
+
+    from qme.quant import capacity_solver as v1
+    from qme.quant.capacity_solver_v2 import (
+        IMPLEMENTATION_ID,
+        METHOD_ID,
+        TargetLeg as V2Leg,
+        solve_greatest_capital as v2_solve_greatest,
+        solve_portfolio as v2_solve_portfolio,
+    )
+    from qme.quant.equations import MarketEvidenceBinding, RawAdvNotional, RawExecutionPrice
+
+    def binding(symbol: str) -> MarketEvidenceBinding:
+        return MarketEvidenceBinding(
+            security_id=symbol,
+            source_id="unit",
+            snapshot_id=f"unit-{symbol}",
+            snapshot_sha256="a" * 64,
+            calendar_id="XNAS",
+            calendar_sha256="c" * 64,
+            observation_start_session=date(2026, 1, 5),
+            observation_end_session=date(2026, 1, 5),
+            available_at=datetime(2026, 1, 5, 14, 31, tzinfo=timezone.utc),
+            analysis_as_of=datetime(2026, 1, 5, 21, 0, tzinfo=timezone.utc),
+        )
+
+    def typed(spec: dict[str, tuple[str, str, str]]):
+        weights = {s: w for s, (w, _p, _a) in spec.items()}
+        prices = {s: RawExecutionPrice(Decimal(p), binding(s)) for s, (_w, p, _a) in spec.items()}
+        adv = {s: RawAdvNotional(Decimal(a), binding(s)) for s, (_w, _p, a) in spec.items()}
+        return weights, prices, adv
+
+    # V1 recorded incorrect zero-share on the witness.
+    v1_legs = (
+        v1.TargetLeg("A", Decimal("0.35"), Decimal("3600"), Decimal("1000000000000")),
+        v1.TargetLeg("B", Decimal("0.65"), Decimal("1"), Decimal("668500")),
+    )
+    v1_point = v1.solve_portfolio("10400", v1_legs, transaction_cost_rate_bps="10")
+    v1_shares = {leg.symbol: leg.shares for leg in v1_point.legs}
+    print(f"    V1 shares_A(10400) = {v1_shares['A']} feasible={v1_point.feasible} viol={v1_point.first_violation}")
+    log.check("V1 floors shares_A(10400) to 0", v1_shares["A"] == Decimal("0"))
+    log.check(
+        "V1 marks 10400 infeasible as F1_ZERO_SHARES:A",
+        (not v1_point.feasible) and v1_point.first_violation == "F1_ZERO_SHARES:A",
+    )
+    weights, prices, adv = typed(WITNESS)
+    v1_cert = v1.solve_greatest_capital(weights, prices, adv, transaction_cost_rate_bps="10")
+    print(f"    V1 certificate status={v1_cert.status} C*={v1_cert.greatest_feasible_capital}")
+    log.check(
+        "V1 reports UNAVAILABLE_NO_FEASIBLE_CAPITAL (incorrect)",
+        v1_cert.status == "UNAVAILABLE_NO_FEASIBLE_CAPITAL"
+        and v1_cert.greatest_feasible_capital is None,
+    )
+
+    # V2 after independent solve.
+    v2_legs = (
+        V2Leg("A", Decimal("0.35"), Decimal("3600"), Decimal("1000000000000")),
+        V2Leg("B", Decimal("0.65"), Decimal("1"), Decimal("668500")),
+    )
+    v2_point = v2_solve_portfolio("10400", v2_legs, transaction_cost_rate_bps="10")
+    v2_shares = {leg.symbol: leg.shares for leg in v2_point.legs}
+    print(f"    V2 shares_A(10400) = {v2_shares['A']} feasible={v2_point.feasible}")
+    log.check("V2 shares_A(10400) == 1 and feasible", v2_shares["A"] == Decimal("1") and v2_point.feasible)
+    log.check(
+        "V2 agrees with independent oracle on the witness point",
+        v2_shares["A"] == Decimal("1")
+        and v2_shares["B"] == Decimal("6685")
+        and v2_point.feasible,
+    )
+
+    v2_10500 = v2_solve_portfolio("10500", v2_legs, transaction_cost_rate_bps="10")
+    log.check(
+        "V2 marks 10500 infeasible as F3_PARTICIPATION:B",
+        (not v2_10500.feasible) and v2_10500.first_violation == "F3_PARTICIPATION:B",
+    )
+
+    v2_cert = v2_solve_greatest(weights, prices, adv, transaction_cost_rate_bps="10")
+    print(f"    V2 C*={v2_cert.greatest_feasible_capital} status={v2_cert.status}")
+    print(f"    V2 scan_points={v2_cert.scan_points} feasible_points={v2_cert.feasible_points}")
+    print(f"    V2 bitmap={v2_cert.feasibility_bitmap_sha256}")
+    print(f"    V2 first_above={v2_cert.first_infeasible_above} viol={v2_cert.first_infeasible_violation}")
+    print(f"    V2 dominating_upper_bound(display)={v2_cert.dominating_upper_bound}")
+    print(f"    METHOD_ID={METHOD_ID}")
+    print(f"    IMPLEMENTATION_ID={IMPLEMENTATION_ID}")
+    log.check("V2 C* == 10400", v2_cert.greatest_feasible_capital == "10400")
+    log.check(
+        "V2 method/implementation ids",
+        METHOD_ID == "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1"
+        and IMPLEMENTATION_ID == "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V2",
+    )
+    log.check(
+        "V2 certificate matches independent C*/points/feasible/bitmap/violation",
+        v2_cert.status == independent_cert.status
+        and v2_cert.scan_points == independent_cert.scan_points
+        and v2_cert.feasible_points == independent_cert.feasible_points
+        and v2_cert.feasibility_bitmap_sha256 == independent_cert.bitmap_sha256
+        and v2_cert.first_infeasible_above == "10500"
+        and v2_cert.first_infeasible_violation == "F3_PARTICIPATION:B"
+        and Fraction(Decimal(v2_cert.greatest_feasible_capital)) == independent_cert.greatest,
+    )
+    # Display bound is C-hat quantized to 1e-8, not the exact Fraction string.
+    display_bound = Decimal(independent_cert.dominating_bound.numerator) / Decimal(
+        independent_cert.dominating_bound.denominator
+    )
+    display_bound = display_bound.quantize(Decimal("0.00000001"), rounding=ROUND_HALF_EVEN)
+    log.check(
+        "V2 displayed dominating bound is the exact C-hat at the reporting quantum",
+        Decimal(v2_cert.dominating_upper_bound) == display_bound,
+        f"display={v2_cert.dominating_upper_bound} expected={format(display_bound, 'f')}",
+    )
+
+    # Parity of V2 vs independent solver on designed + a sample of random specs.
+    compare_specs = [
+        WITNESS,
+        {"X": ("1", "250", "800000")},
+        {"P": ("0.4", "80", "180000"), "Q": ("0.6", "12", "500000")},
+        {"M": ("0.2", "45", "90000"), "N": ("0.3", "9", "150000"), "O": ("0.4", "3", "220000")},
+        {"Z": ("1", "2000", "1500")},
+        {"HI": ("0.5", "9990", "1000000"), "LO": ("0.5", "1", "100000000")},
+    ]
+    for spec in compare_specs:
+        bps_list = ["10"] if spec != {"HI": ("0.5", "9990", "1000000"), "LO": ("0.5", "1", "100000000")} else ["0"]
+        buffer = "0.01" if bps_list[0] != "0" or spec is WITNESS else "0"
+        if spec == {"HI": ("0.5", "9990", "1000000"), "LO": ("0.5", "1", "100000000")}:
+            buffer = "0"
+        w, p, a = typed(spec)
+        for bps in bps_list:
+            v2c = v2_solve_greatest(
+                w, p, a,
+                transaction_cost_rate_bps=bps,
+                cash_buffer_weight=buffer,
+            )
+            ind = solve_greatest(
+                spec,
+                bps=lift(bps),
+                buffer=lift(buffer),
+            )
+            match = (
+                v2c.status == ind.status
+                and v2c.scan_points == ind.scan_points
+                and v2c.feasible_points == ind.feasible_points
+                and v2c.feasibility_bitmap_sha256 == ind.bitmap_sha256
+                and v2c.first_infeasible_violation == ind.first_infeasible_violation
+            )
+            if ind.greatest is None:
+                match = match and v2c.greatest_feasible_capital is None
+            else:
+                match = match and v2c.greatest_feasible_capital is not None
+                match = match and Fraction(Decimal(v2c.greatest_feasible_capital)) == ind.greatest
+            log.check(f"V2 vs independent certificate {sorted(spec)} bps={bps}", match)
+
+    # Confirm V2 source/docs withdraw the islands rationale (string presence, not a verdict).
+    v2_src = open("/workspace/QME-external-review/A3-V2/qme/quant/capacity_solver_v2.py", encoding="utf-8").read()
+    v2_doc = open(
+        "/workspace/QME-external-review/A3-V2/docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V2.md",
+        encoding="utf-8",
+    ).read()
+    v1_src = open("/workspace/QME-external-review/A3-V2/qme/quant/capacity_solver.py", encoding="utf-8").read()
+    log.check(
+        "V2 module withdraws the general-islands / non-monotone rationale",
+        "is withdrawn" in v2_src and "no valid\nwitness" in v2_src,
+    )
+    log.check(
+        "V2 implementation doc withdraws the islands justification",
+        "That justification is withdrawn" in v2_doc,
+    )
+    log.check(
+        "V2 retains exhaustive scan as conservative evidence, not as an islands hunt",
+        "conservative registered method" in v2_src and "does **not** rely on the" in v2_src,
+    )
+    log.check(
+        "V1 (retained defective candidate) still contains the old islands language",
+        "so islands are captured" in v1_src,
+    )
+
+
+def main() -> int:
+    print("A3-V2 independent exact-arithmetic capacity solver")
+    print("No import of qme.quant.capacity_solver_v2 feasibility logic in PHASE 1.")
+    print()
+    log, cert = run_independent()
+    run_production_comparison(log, cert)
+    print("=" * 72)
+    print(f"SUMMARY  passed={log.passed}  failed={log.failed}")
+    print("=" * 72)
+    if log.failed:
+        print("INDEPENDENT SOLVER: FAILURES PRESENT")
+        return 1
+    print("INDEPENDENT SOLVER: ALL CHECKS PASSED")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

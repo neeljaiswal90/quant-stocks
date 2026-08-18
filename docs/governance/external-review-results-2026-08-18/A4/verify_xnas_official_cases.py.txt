@@ -1,0 +1,167 @@
+"""Independent official-case interval comparison for A4.
+
+Does not import qme.governance.xnas_calendar_evidence_v1 or the generator.
+Reads committed candidate bytes and the official-case fixture only.
+"""
+from __future__ import annotations
+
+import json
+import sys
+from datetime import date, datetime, timedelta
+from pathlib import Path
+
+ROOT = Path("/workspace/QME-external-review/A4")
+CALENDAR = ROOT / "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json"
+CASES = ROOT / "tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json"
+VECTOR = ROOT / (
+    "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json"
+)
+
+# Independently recorded from live Nasdaq Trader pages on 2026-08-18.
+INDEPENDENT_PRIMARY_SOURCE_NOTES = {
+    "sandy_closure_2012_10_29": (
+        "ETA2012-44: NASDAQ OMX closed all U.S. equity and derivatives exchanges "
+        "on Monday 2012-10-29 due to Hurricane Sandy."
+    ),
+    "sandy_closure_2012_10_30": (
+        "MFQS 2012-3: NASDAQ OMX and the other equity, options and futures markets "
+        "closed Tuesday 2012-10-30 due to Hurricane Sandy."
+    ),
+    "bush_mourning_closure_2018_12_05": (
+        "ETA2018-98: Nasdaq U.S. equities and options markets closed Wednesday "
+        "2018-12-05 for the National Day of Mourning for President George H.W. Bush."
+    ),
+    "thanksgiving_early_close_2018_11_23": (
+        "ETA2018-92: Nasdaq Day Session closed 1:00 p.m. ET Friday 2018-11-23."
+    ),
+    "carter_mourning_closure_2025_01_09": (
+        "ETA2025-1: Nasdaq U.S. equities markets closed Thursday 2025-01-09 in "
+        "observance of the passing of President Jimmy Carter."
+    ),
+    "published_future_thanksgiving_early_close_2026_11_27": (
+        "nasdaqtrader.com/trader.aspx?id=Calendar: 2026-11-27 Early Close U.S. 1:00 p.m."
+    ),
+    "published_future_christmas_early_close_2026_12_24": (
+        "nasdaqtrader.com/trader.aspx?id=Calendar: 2026-12-24 Early Close U.S. 1:00 p.m."
+    ),
+}
+
+NEIGHBORS = {
+    "2012-10-29": ("2012-10-26", "2012-10-31"),  # Fri before, Wed after
+    "2012-10-30": ("2012-10-26", "2012-10-31"),
+    "2018-12-05": ("2018-12-04", "2018-12-06"),
+    "2025-01-09": ("2025-01-08", "2025-01-10"),
+}
+
+
+def load(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def iso_weekday(session_id: str) -> str:
+    return date.fromisoformat(session_id).strftime("%A")
+
+
+def main() -> int:
+    calendar = load(CALENDAR)
+    fixture = load(CASES)
+    vector = load(VECTOR)
+    sessions = {row["session_id"]: row for row in calendar["sessions"]}
+    failures: list[str] = []
+
+    print("== fixture identity ==")
+    print(f"schema_version={fixture['schema_version']}")
+    print(f"data_class={fixture['data_class']}")
+    print(f"calendar_id={fixture['calendar_id']}")
+    print(f"source_count={len(fixture['sources'])} case_count={len(fixture['cases'])}")
+    if fixture["calendar_id"] != calendar["calendar_id"]:
+        failures.append("fixture calendar_id != candidate calendar_id")
+    if len(fixture["cases"]) != 7:
+        failures.append(f"expected 7 official cases, got {len(fixture['cases'])}")
+
+    print()
+    print("== complete official-case interval comparison ==")
+    for case in fixture["cases"]:
+        case_id = case["case_id"]
+        session_id = case["session_id"]
+        expected = case["expected"]
+        observed = sessions.get(session_id)
+        present = observed is not None
+        print(f"-- {case_id}  session_id={session_id}  weekday={iso_weekday(session_id)}")
+        print(f"   source_id={case['source_id']}")
+        print(f"   independent_source_note={INDEPENDENT_PRIMARY_SOURCE_NOTES[case_id]}")
+        print(f"   expected.present={expected['present']}  observed.present={present}")
+        if expected["present"] is False:
+            if present:
+                print("   FAIL closure is present in candidate")
+                failures.append(f"{case_id} unexpectedly present")
+            else:
+                print("   PASS absent from candidate (closure)")
+            for key in ("market_open", "market_close", "close_class", "authority_phase"):
+                if expected[key] is not None:
+                    print(f"   FAIL expected.{key} should be null for a closure")
+                    failures.append(f"{case_id} {key} not null")
+            neighbors = NEIGHBORS.get(session_id)
+            if neighbors:
+                for neighbor in neighbors:
+                    if neighbor in sessions:
+                        print(f"   PASS adjacent session present {neighbor}")
+                    else:
+                        print(f"   FAIL adjacent session missing {neighbor}")
+                        failures.append(f"{case_id} missing neighbor {neighbor}")
+        else:
+            if observed is None:
+                print("   FAIL expected session missing from candidate")
+                failures.append(f"{case_id} missing")
+                continue
+            for key in ("market_open", "market_close", "close_class", "authority_phase"):
+                got = observed[key]
+                exp = expected[key]
+                status = "PASS" if got == exp else "FAIL"
+                print(f"   {status} {key}: expected={exp} observed={got}")
+                if got != exp:
+                    failures.append(f"{case_id} {key}")
+            close = datetime.fromisoformat(observed["market_close"])
+            if (close.hour, close.minute) != (13, 0):
+                print("   FAIL half-day close is not 13:00")
+                failures.append(f"{case_id} close not 13:00")
+            else:
+                print("   PASS close clock time is 13:00 America/New_York")
+
+    print()
+    print("== vector membership for official-case dates ==")
+    vector_ids = set(vector["session_ids"])
+    for case in fixture["cases"]:
+        session_id = case["session_id"]
+        in_vector = session_id in vector_ids
+        should = case["expected"]["present"] is True
+        status = "PASS" if in_vector is should else "FAIL"
+        print(f"{status} {session_id} present_in_vector={in_vector} expected={should}")
+        if in_vector is not should:
+            failures.append(f"vector membership {session_id}")
+
+    print()
+    print("== Thanksgiving 2018 context (Thu closed, Fri early) ==")
+    if "2018-11-22" in sessions:
+        print("FAIL 2018-11-22 Thanksgiving should be absent")
+        failures.append("2018-11-22 present")
+    else:
+        print("PASS 2018-11-22 Thanksgiving absent")
+    if "2018-11-21" in sessions and "2018-11-26" in sessions:
+        print("PASS surrounding sessions 2018-11-21 and 2018-11-26 present")
+    else:
+        print("FAIL surrounding Thanksgiving-week sessions missing")
+        failures.append("thanksgiving-week neighbors")
+
+    print()
+    if failures:
+        print(f"RESULT FAIL ({len(failures)})")
+        for item in failures:
+            print(f"  - {item}")
+        return 1
+    print("RESULT PASS all 7 official cases and neighbor/vector checks")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

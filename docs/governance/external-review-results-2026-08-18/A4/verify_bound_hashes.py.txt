@@ -1,0 +1,136 @@
+"""Independent SHA-256 rehash of every A4 packet-bound file.
+
+Does not import any qme production module.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path("/workspace/QME-external-review/A4")
+
+PACKET_EXPECTED = {
+    "configs/governance/xnas-session-calendar-evidence-v1.json": (
+        "348e67d9:92183c49:4f625f90:ada2bb58:e90165f5:3fd90419:3e6d8584:7eb0e290"
+    ),
+    "configs/governance/xnas-session-calendar-evidence-v1.hashes.json": (
+        "31077a2d:6b7a6eb9:f974b343:b91c99d5:b48c2049:d38758a2:a455c10d:5ca2f453"
+    ),
+    "schemas/governance/xnas-session-calendar-evidence-v1.schema.json": (
+        "cc19e055:15434882:2260f6cf:f3763218:c487f751:50ab933f:9fb06155:e827c6f2"
+    ),
+    "qme/governance/xnas_calendar_evidence_v1.py": (
+        "c70349fb:df114824:918a6bd9:8ab1f8d9:7a51faf1:ab806134:a58841e7:e9be64aa"
+    ),
+    "tests/governance/test_xnas_calendar_evidence_v1.py": (
+        "8ce09033:276ea754:5903f93c:1fef236a:2483ac98:516eefba:2e4e1fbb:0adf1daa"
+    ),
+    "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json": (
+        "a414d89a:2d18a3e2:27c7cfab:05c271c8:209490e3:beb49bf0:bb1a00f1:9ecd2a5e"
+    ),
+    "tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json": (
+        "d9646f29:8439975d:f8a9ab77:45662b8b:b0b74625:591c1144:96570031:b684e2d8"
+    ),
+    "scripts/materialize_xnas_calendar_v1.py": (
+        "79750595:76fd61ef:4b82be9b:4cdf2c83:cb0e4e83:349fbe13:f6d7cc64:4e5e37e5"
+    ),
+    "requirements-xnas-calendar-generator.in": (
+        "6b4e0591:4b9c5a48:5dc4fcd7:a59aaef2:6c7c1b63:cf7a8232:81617b40:b7af8b7c"
+    ),
+    "requirements-xnas-calendar-generator.lock": (
+        "e040a582:49116e7a:7442e438:ffb6cd48:b745664a:3c034d96:6d75da6a:08588278"
+    ),
+    "requirements-xnas-calendar-generator-linux.lock": (
+        "7cef8951:814d8ef8:5cc3f526:0c894da6:c6bc436c:ed8e3188:a3901c90:8f494571"
+    ),
+    ".github/workflows/xnas-calendar-linux.yml": (
+        "74869cc5:ba427a9a:7909ac96:e0448d25:3697d5ed:f5897fe0:a89fd679:31043c66"
+    ),
+}
+
+AUTHORITY_EXPECTED = {
+    "configs/governance/sample-holdout-v2.json": (
+        "c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f"
+    ),
+    "configs/governance/s0a-contract-materialization-crosswalk-v3.json": (
+        "b2d1a7f2:afb6ea18:62d87bed:2323dd35:863f55b1:e53ca99b:c5d1168d:018606b5"
+    ),
+    "configs/governance/owner-mandate-supplement-2026-08-13-v1.json": (
+        "289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5"
+    ),
+}
+
+
+def grouped_sha256(path: Path) -> str:
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    return ":".join(digest[i : i + 8] for i in range(0, 64, 8))
+
+
+def check(label: str, expected: dict[str, str]) -> list[str]:
+    failures: list[str] = []
+    print(f"== {label} ==")
+    for rel, exp in expected.items():
+        path = ROOT / rel
+        if not path.is_file():
+            print(f"MISSING  {rel}")
+            failures.append(f"missing {rel}")
+            continue
+        got = grouped_sha256(path)
+        status = "MATCH" if got == exp else "MISMATCH"
+        print(f"{status}  {got}  {path.stat().st_size:8d}  {rel}")
+        if got != exp:
+            print(f"  expected {exp}")
+            failures.append(f"mismatch {rel}")
+    return failures
+
+
+def main() -> int:
+    failures = check("packet-bound files", PACKET_EXPECTED)
+    vector = ROOT / (
+        "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json"
+    )
+    vector_hash = grouped_sha256(vector)
+    print("== ordered session vector (recorded inside evidence JSON) ==")
+    print(f"OBSERVED  {vector_hash}  {vector.stat().st_size:8d}  {vector.relative_to(ROOT)}")
+    evidence = json.loads(
+        (ROOT / "configs/governance/xnas-session-calendar-evidence-v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    bound_vector = evidence["artifacts"]["ordered_session_vector"]["sha256"]
+    if vector_hash != bound_vector:
+        print(f"MISMATCH evidence artifacts.ordered_session_vector.sha256={bound_vector}")
+        failures.append("vector hash vs evidence")
+    else:
+        print("MATCH    evidence artifacts.ordered_session_vector.sha256")
+
+    print("== hashes.json leaf re-check ==")
+    manifest = json.loads(
+        (ROOT / "configs/governance/xnas-session-calendar-evidence-v1.hashes.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    for row in manifest["artifacts"]:
+        rel = row["path"]
+        got = grouped_sha256(ROOT / rel)
+        status = "MATCH" if got == row["sha256"] else "MISMATCH"
+        print(f"{status}  {rel}")
+        if got != row["sha256"]:
+            failures.append(f"manifest mismatch {rel}")
+
+    failures.extend(check("registered-authority files cited by evidence JSON", AUTHORITY_EXPECTED))
+
+    print()
+    if failures:
+        print(f"RESULT FAIL ({len(failures)})")
+        for item in failures:
+            print(f"  - {item}")
+        return 1
+    print("RESULT PASS all packet-bound, evidence-bound, manifest, and authority hashes match")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

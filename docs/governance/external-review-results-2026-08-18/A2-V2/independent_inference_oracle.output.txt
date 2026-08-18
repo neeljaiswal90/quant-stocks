@@ -1,0 +1,146 @@
+========================================================================
+A2-V2 independent inference oracle
+Does NOT import run_inference / run_inference_v2 / holm_step_down*
+Production import: qme/stats/rng.py via file path (Pcg32 only)
+========================================================================
+PASS  oracle_source_has_no_inference_import  (ast_imports=__future__,ast,dataclasses,decimal,hashlib,importlib.util,json,pathlib,re,sys)
+PASS  production_inference_modules_absent_from_sys_modules  (modules=)
+
+--- 1. Independent grammar rejection ---
+PASS  reject[exponent notation] '1E-3'  (grammar fullmatch failed)
+PASS  reject[exponent notation] '1e-3'  (grammar fullmatch failed)
+PASS  reject[leading plus] '+0.001'  (grammar fullmatch failed)
+PASS  reject[leading whitespace] ' 0.001'  (grammar fullmatch failed)
+PASS  reject[trailing whitespace] '0.001 '  (grammar fullmatch failed)
+PASS  reject[leading-dot] '.5'  (grammar fullmatch failed)
+PASS  reject[trailing-dot] '5.'  (grammar fullmatch failed)
+PASS  reject[nonfinite] 'NaN'  (grammar fullmatch failed)
+PASS  reject[nonfinite] 'Infinity'  (grammar fullmatch failed)
+PASS  reject[nonfinite] '-Infinity'  (grammar fullmatch failed)
+PASS  reject[underscore] '0.00_1'  (grammar fullmatch failed)
+PASS  reject[negative zero] '-0'  (negative zero)
+PASS  reject[negative zero] '-0.0'  (negative zero)
+PASS  reject[leading zeros] '0123'  (grammar fullmatch failed)
+PASS  reject[exponent / overflow-shaped] '1e999999'  (grammar fullmatch failed)
+PASS  reject_negzero '-0'  (negative zero)
+PASS  reject_negzero '-0.0'  (negative zero)
+PASS  reject_negzero '-0.00'  (negative zero)
+PASS  reject_negzero '-0.000000'  (negative zero)
+PASS  reject_leading_zero '0123'  (grammar fullmatch failed)
+PASS  reject_leading_zero '00'  (grammar fullmatch failed)
+PASS  reject_leading_zero '01'  (grammar fullmatch failed)
+PASS  reject_leading_zero '-01'  (grammar fullmatch failed)
+PASS  reject_leading_zero '-00'  (grammar fullmatch failed)
+PASS  accept_canonical '1.50'  (ok)
+PASS  accept_canonical '0.006650'  (ok)
+PASS  accept_canonical '-0.002210'  (ok)
+PASS  accept_canonical '0'  (ok)
+PASS  accept_canonical '-1'  (ok)
+PASS  accept_canonical '0.000000'  (ok)
+PASS  accept_canonical '10.00'  (ok)
+PASS  accept_len_128  (len=128)
+PASS  reject_len_129  (len=129)
+PASS  reject_misc None  (not a str)
+PASS  reject_misc 0.001  (not a str)
+PASS  reject_misc 0  (not a str)
+PASS  reject_misc b'0.001'  (not a str)
+PASS  reject_misc ''  (grammar fullmatch failed)
+PASS  reject_misc '+'  (grammar fullmatch failed)
+PASS  reject_misc '.'  (grammar fullmatch failed)
+PASS  reject_misc '-'  (grammar fullmatch failed)
+PASS  reject_misc '0.00.1'  (grammar fullmatch failed)
+PASS  reject_misc '1E3'  (grammar fullmatch failed)
+PASS  reject_misc '\t0.1'  (grammar fullmatch failed)
+PASS  reject_misc '0.1\n'  (grammar fullmatch failed)
+PASS  reject_list_classified_without_Decimal
+
+--- 2. Holm alpha open interval (0, 1) ---
+PASS  alpha_reject '2.0'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_reject '1'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_reject '0'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_reject '-12.500'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_reject '0.0'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_reject '1.0'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_reject '-0.05'  (alpha must be a significance level in the open interval (0, 1))
+PASS  alpha_grammar_reject[exponent notation] '1E-3'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[exponent notation] '1e-3'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[leading plus] '+0.001'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[leading whitespace] ' 0.001'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[trailing whitespace] '0.001 '  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[leading-dot] '.5'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[trailing-dot] '5.'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[nonfinite] 'NaN'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[nonfinite] 'Infinity'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[nonfinite] '-Infinity'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[underscore] '0.00_1'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[negative zero] '-0'  (alpha: negative zero)
+PASS  alpha_grammar_reject[negative zero] '-0.0'  (alpha: negative zero)
+PASS  alpha_grammar_reject[leading zeros] '0123'  (alpha: grammar fullmatch failed)
+PASS  alpha_grammar_reject[exponent / overflow-shaped] '1e999999'  (alpha: grammar fullmatch failed)
+
+--- 3. Hand-worked Holm KAT ---
+PASS  holm_family_size  (3)
+PASS  holm_ordered_p  (('0.010000000000000000000000000000000000', '0.030000000000000000000000000000000000', '0.040000000000000000000000000000000000'))
+PASS  holm_thresholds  (('0.016666666666666666666666666666666667', '0.025000000000000000000000000000000000', '0.050000000000000000000000000000000000'))
+PASS  holm_rejected  ((True, False, False))
+PASS  alpha_accept '0.05'
+PASS  alpha_accept '0.10'
+PASS  alpha_accept '0.005'
+
+--- 4. Independent recomputation of registered KAT fixture ---
+  hand_sum          = 0.019950
+  hand_mean         = 0.00055416666666666666666666666666666666666666666666666666666666666666666666666666667
+  hand_point        = 0.0066500000000000000000000000000000000000000000000000000000000000000000000000000000
+  hand_point_plain  = 0.006650000000000000000000000000000000
+  expected_point    = 0.006650000000000000000000000000000000
+PASS  hand_sum_equals_0.01995  (0.019950)
+PASS  hand_point_equals_0.00665  (0.0066500000000000000000000000000000000000000000000000000000000000000000000000000000)
+  oracle.point_estimate                 = 0.006650000000000000000000000000000000
+  oracle.raw_block_length               = 7.572865871496319160871186351784781094
+  oracle.common_block_length            = 8
+  oracle.selected_lag                   = 1
+  oracle.one_sided_95_lcb               = -0.002943333333333333333333333333333333
+  oracle.two_sided_90                   = (-0.002943333333333333333333333333333333, 0.016760000000000000000000000000000000)
+  oracle.bootstrap_distribution_sha256  = 37c479ad:82f994a6:9357fb93:e8a60a7b:14a7319c:0efb1bb6:9ddfd5c8:ca6ac4fb
+  oracle.nw_lag                         = 3
+  oracle.nw_long_run_variance           = 0.000009664218885030864197530864197531
+  oracle.nw_se                          = 0.006217465363001506644591455725665418
+  oracle.nw_t                           = 1.069567679391089603668878462754475335
+PASS  kat_series_length
+PASS  kat_point_estimate
+PASS  kat_raw_block_length
+PASS  kat_common_block_length
+PASS  kat_selected_lag
+PASS  kat_one_sided_95_lcb
+PASS  kat_two_sided_90_low
+PASS  kat_two_sided_90_high
+PASS  kat_bootstrap_hash
+PASS  kat_replicate_count
+PASS  kat_seed
+PASS  kat_nw_lag
+PASS  kat_nw_long_run_variance
+PASS  kat_nw_se
+PASS  kat_nw_t
+  hand_nw_lag = floor(4*(0.36)^(2/9)) = 3
+PASS  hand_nw_lag_equals_3
+  hand_k_n=5  hand_m_max=11  hand_floor_cap=9
+PASS  hand_k_n_equals_5
+PASS  hand_m_max_equals_11
+PASS  hand_floor_cap_equals_9
+PASS  hand_common_min9_max3_ceil_raw
+
+--- 5. Additional independent series ---
+PASS  extra_n24_seed7_ran  (block=3 point=0.018760000000000000000000000000000000)
+PASS  extra_n36_seed3_ran  (block=3 point=0.023650000000000000000000000000000000)
+PASS  extra_n60_seed11_ran  (block=5 point=0.020668000000000000000000000000000000)
+PASS  holm_extra alpha=0.05 m=1
+PASS  holm_extra alpha=0.05 m=4
+PASS  holm_extra alpha=0.10 m=3
+PASS  holm_extra alpha=0.005 m=3
+
+Wrote /workspace/QME-external-review/outputs/A2-V2/independent_inference_oracle.json
+PASS  final_independence_still_holds
+
+========================================================================
+RESULT  passes=107  failures=0
+ALL INDEPENDENT CHECKS PASSED

@@ -1,0 +1,56 @@
+== reviewed vs cited Linux-run commit ==
+reviewed_commit=d890078803c58f3ca995ff80004b025583fe6b2e
+linux_run_id=31922669149
+linux_run_head_sha=62351e273843a62c77615f064a38c8050300dc58
+linux_run_commit_is_ancestor_of_reviewed=True
+
+== byte identity of A4 files between run commit and reviewed commit ==
+IDENTICAL  configs/governance/xnas-session-calendar-evidence-v1.json
+IDENTICAL  configs/governance/xnas-session-calendar-evidence-v1.hashes.json
+IDENTICAL  schemas/governance/xnas-session-calendar-evidence-v1.schema.json
+IDENTICAL  qme/governance/xnas_calendar_evidence_v1.py
+IDENTICAL  tests/governance/test_xnas_calendar_evidence_v1.py
+IDENTICAL  tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json
+IDENTICAL  tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json
+IDENTICAL  tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json
+IDENTICAL  scripts/materialize_xnas_calendar_v1.py
+IDENTICAL  requirements-xnas-calendar-generator.in
+IDENTICAL  requirements-xnas-calendar-generator.lock
+IDENTICAL  requirements-xnas-calendar-generator-linux.lock
+IDENTICAL  .github/workflows/xnas-calendar-linux.yml
+
+== facts recorded from GitHub Actions API / job logs ==
+workflow_name=XNAS calendar Linux replay
+workflow_path=.github/workflows/xnas-calendar-linux.yml
+event=push
+head_branch=main
+run_number=3
+status=completed
+conclusion=success
+job_name=calendar-byte-replay
+job_id=95104990190
+runner_labels=ubuntu-latest
+python_version_requested=3.12.10
+log: Successfully set up CPython (3.12.10)
+log: requirements-xnas-calendar-generator-linux.lock: verified
+log: pinned versions identical across platform locks: 10 packages
+log: Successfully installed exchange-calendars-4.13.2 ... pandas-market-calendars-5.4.0 ... tzdata-2026.3
+log: platform: linux
+log: numpy 2.5.2 pandas 3.0.5
+log: pandas_market_calendars 5.4.0
+log: exchange_calendars 4.13.2
+log: scripts/materialize_xnas_calendar_v1.py --repository-root . --verify  (exit 0)
+log: Linux byte replay of XNAS calendar candidate and ordered session vector: IDENTICAL
+log: git diff --exit-code  (exit 0)
+html_url=https://github.com/neeljaiswal90/quant-stocks/actions/runs/31922669149
+
+== workflow file claims vs evidence flags ==
+PASS workflow contains 'python-version: "3.12.10"'
+PASS workflow contains '--require-hashes --only-binary=:all:'
+PASS workflow contains 'scripts/materialize_xnas_calendar_v1.py --repository-root . --verify'
+PASS workflow contains 'git diff --exit-code'
+PASS workflow contains 'branches: [main]'
+NOTE a later T0 rebind must cite this run; this review does not flip
+     linux_generator_hash_lock_available or windows_linux_byte_replay_verified.
+
+RESULT PASS protected-main run 31922669149 succeeded on ancestor 62351e27; every A4 byte is identical at the reviewed commit. Evidence sufficiency for a later flip is supported. Flags remain false.

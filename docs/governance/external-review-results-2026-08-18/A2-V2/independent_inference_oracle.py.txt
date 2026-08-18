@@ -1,0 +1,889 @@
+#!/usr/bin/env python3
+"""Independent NEE-120 inference oracle for A2-V2 external review.
+
+This script does NOT import run_inference, run_inference_v2, holm_step_down,
+holm_step_down_v2, or any other symbol from qme.stats.nee120_inference or
+qme.stats.nee120_inference_v2.
+
+Allowed production import (documented):
+    qme/stats/rng.py loaded by file path as module independent_pcg32_rng
+        (Pcg32 only). Bit-exact SplitMix64-seeded PCG32. The qme.stats
+        package __init__ is not executed, so bootstrap.py is not imported.
+        Reimplementing the inference equations is the required independence;
+        the registered RNG stream is used so the bootstrap index stream
+        matches the registered seed mapping. Stationary-bootstrap INDEX
+        ASSEMBLY is reimplemented here.
+
+Independently reimplemented:
+    - canonical-decimal grammar + companion bounds (length, negative zero)
+    - paired-delta point estimate  12 * mean(delta_t)
+    - Newton cube-root
+    - corrected Politis-White block-length selector + registered bounds
+    - Politis-Romano stationary-bootstrap index assembly
+    - uncentered percentile order statistics (1-based, no interpolation)
+    - bootstrap-distribution canonical hash
+    - Newey-West intercept-only diagnostic (Bartlett, automatic lag)
+    - Holm-Bonferroni step-down
+    - Holm alpha open-interval domain  0 < alpha < 1
+
+Usage:
+    PYTHONPATH=/workspace/QME-external-review/A2-V2 \\
+        python3 independent_inference_oracle.py
+"""
+
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+import re
+import sys
+from dataclasses import dataclass
+from decimal import (
+    ROUND_CEILING,
+    ROUND_FLOOR,
+    ROUND_HALF_EVEN,
+    Clamped,
+    Context,
+    Decimal,
+    DivisionByZero,
+    Inexact,
+    InvalidOperation,
+    Overflow,
+    Rounded,
+    Subnormal,
+    Underflow,
+    localcontext,
+)
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Independence guard — fail immediately if a production inference module
+# is imported by this process (directly or transitively).
+# ---------------------------------------------------------------------------
+
+_FORBIDDEN_MODULES = (
+    "qme.stats.nee120_inference",
+    "qme.stats.nee120_inference_v2",
+)
+_FORBIDDEN_NAMES = (
+    "run_inference",
+    "run_inference_v2",
+    "holm_step_down",
+    "holm_step_down_v2",
+)
+
+
+def _assert_no_production_inference_import() -> None:
+    for name in _FORBIDDEN_MODULES:
+        if name in sys.modules:
+            raise RuntimeError(
+                f"INDEPENDENCE VIOLATION: {name} is imported into this process"
+            )
+
+
+_assert_no_production_inference_import()
+
+# Registered PCG32 only. Load rng.py by file path so qme.stats.__init__
+# (which also imports bootstrap.py) is not executed. Index assembly is
+# reimplemented below from the documented Politis-Romano rule.
+import importlib.util
+
+_RNG_PATH = Path("/workspace/QME-external-review/A2-V2/qme/stats/rng.py")
+_rng_spec = importlib.util.spec_from_file_location("independent_pcg32_rng", _RNG_PATH)
+if _rng_spec is None or _rng_spec.loader is None:
+    raise RuntimeError("failed to load qme/stats/rng.py by file path")
+_rng_mod = importlib.util.module_from_spec(_rng_spec)
+_rng_spec.loader.exec_module(_rng_mod)
+Pcg32 = _rng_mod.Pcg32
+
+_assert_no_production_inference_import()
+
+# ---------------------------------------------------------------------------
+# Registered constants (from the NEE-120 method registration, not from
+# importing the production inference function).
+# ---------------------------------------------------------------------------
+
+BOOTSTRAP_SEED = 20_260_812
+BOOTSTRAP_REPLICATES = 10_000
+ONE_SIDED_95_LCB_RANK = 500  # one-based ascending
+TWO_SIDED_90_RANKS = (500, 9500)
+MIN_SERIES_LENGTH = 12
+MIN_BLOCK_LENGTH = 3
+ANNUALIZATION = 12
+DECIMAL_PRECISION = 80
+DISPLAY_PLACES = 36
+_QUANT = Decimal(1).scaleb(-DISPLAY_PLACES)
+
+# Independent grammar: same mathematical language as the registered sibling
+# pattern, compiled here from a locally owned literal. Not imported from
+# effective_trials_uncertainty or from V2.
+_INDEPENDENT_DECIMAL_PATTERN = re.compile(r"^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$")
+_MAX_CANONICAL_DECIMAL_LENGTH = 128
+_NONZERO_DIGITS = frozenset("123456789")
+
+WORKTREE = Path("/workspace/QME-external-review/A2-V2")
+FIXTURE_PATH = WORKTREE / "tests/fixtures/stats/nee120-inference-v1.json"
+OUT_DIR = Path("/workspace/QME-external-review/outputs/A2-V2")
+
+
+class OracleError(Exception):
+    def __init__(self, reason: str, detail: str) -> None:
+        self.reason = reason
+        self.detail = detail
+        super().__init__(f"{reason}: {detail}")
+
+
+def _context() -> Context:
+    context = Context(
+        prec=DECIMAL_PRECISION,
+        rounding=ROUND_HALF_EVEN,
+        Emin=-999_999,
+        Emax=999_999,
+        capitals=1,
+        clamp=0,
+    )
+    for quiet in (Clamped, Underflow, Subnormal, Inexact, Rounded):
+        context.traps[quiet] = False
+    for trapped in (InvalidOperation, DivisionByZero, Overflow):
+        context.traps[trapped] = True
+    context.clear_flags()
+    return context
+
+
+def _plain(value: Decimal) -> str:
+    with localcontext(_context()):
+        return format(value.quantize(_QUANT), "f")
+
+
+# ---------------------------------------------------------------------------
+# Independent canonical-decimal gate
+# ---------------------------------------------------------------------------
+
+
+def is_canonical_decimal(value: object) -> tuple[bool, str]:
+    """Pure-string canonical-decimal predicate. Never constructs Decimal."""
+
+    if type(value) is not str:
+        return False, "not a str"
+    if len(value) > _MAX_CANONICAL_DECIMAL_LENGTH:
+        return False, "length exceeds 128"
+    if _INDEPENDENT_DECIMAL_PATTERN.fullmatch(value) is None:
+        return False, "grammar fullmatch failed"
+    if value.startswith("-") and not any(ch in _NONZERO_DIGITS for ch in value):
+        return False, "negative zero"
+    return True, "ok"
+
+
+def require_canonical_decimal(value: object, *, field: str) -> str:
+    ok, why = is_canonical_decimal(value)
+    if not ok:
+        raise OracleError("NO_GO_FAIL_CLOSED", f"{field}: {why}")
+    return value  # type: ignore[return-value]
+
+
+def require_canonical_series(values: object, *, kind: str) -> list[str]:
+    if type(values) is not list or not values:
+        raise OracleError("NO_GO_FAIL_CLOSED", f"{kind} must be a non-empty list")
+    out: list[str] = []
+    for i, value in enumerate(values):
+        out.append(require_canonical_decimal(value, field=f"{kind}[{i}]"))
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Independent numerical kernel
+# ---------------------------------------------------------------------------
+
+
+def _cube_root(value: Decimal) -> Decimal:
+    """Newton cube-root at registered precision. Independent implementation."""
+
+    if value <= 0 or not value.is_finite():
+        raise OracleError("NO_GO_NO_FALLBACK", "cube-root radicand must be finite and positive")
+    with localcontext(_context()) as context:
+        # Extra guard digits during iteration, then fold back to registered prec.
+        context.prec = DECIMAL_PRECISION + 16
+        # Decimal.adjusted() is the exponent of the leading digit (scientific).
+        estimate = Decimal(10) ** (value.adjusted() // 3)
+        two, three = Decimal(2), Decimal(3)
+        for _ in range(256):
+            updated = (two * estimate + value / (estimate * estimate)) / three
+            scale = max(updated.adjusted(), estimate.adjusted()) - context.prec + 2
+            tolerance = Decimal(1).scaleb(scale)
+            if updated == estimate or abs(updated - estimate) <= tolerance:
+                estimate = updated
+                break
+            estimate = updated
+        else:
+            raise OracleError("NO_GO_NO_FALLBACK", "cube-root iteration did not converge")
+        context.prec = DECIMAL_PRECISION
+        return +estimate
+
+
+def select_block_length(deltas: list[Decimal]) -> tuple[str, int, int]:
+    """Corrected Politis-White automatic selector, then registered bounds.
+
+    Returns (raw_block_length_plain, common_block_length, selected_lag).
+    """
+
+    count = len(deltas)
+    if count < MIN_SERIES_LENGTH:
+        raise OracleError(
+            "NO_GO_NO_FALLBACK",
+            f"series length {count} < registered minimum {MIN_SERIES_LENGTH}",
+        )
+    with localcontext(_context()):
+        n = Decimal(count)
+        mean = sum(deltas, Decimal(0)) / n
+        centered = [value - mean for value in deltas]
+        k_n = max(5, int((n.log10().sqrt()).to_integral_value(rounding=ROUND_CEILING)))
+        m_max = int(n.sqrt().to_integral_value(rounding=ROUND_CEILING)) + k_n
+        autocovariances = [
+            sum((centered[i] * centered[i + lag] for i in range(count - lag)), Decimal(0)) / n
+            for lag in range(m_max + 1)
+        ]
+        gamma_zero = autocovariances[0]
+        if gamma_zero.is_zero():
+            raise OracleError("NO_GO_NO_FALLBACK", "gamma_hat(0) is exactly zero")
+        threshold = Decimal(2) * (n.log10() / n).sqrt()
+        autocorrelations = [value / gamma_zero for value in autocovariances]
+        selected_lag: int | None = None
+        for candidate in range(1, m_max - k_n + 2):
+            if all(
+                abs(autocorrelations[lag]) < threshold
+                for lag in range(candidate, candidate + k_n)
+            ):
+                selected_lag = candidate
+                break
+        if selected_lag is None:
+            raise OracleError(
+                "NO_GO_NO_FALLBACK",
+                "no full K_N autocorrelation window is strictly insignificant",
+            )
+        lag_window = min(2 * selected_lag, m_max)
+        lag_window_decimal = Decimal(lag_window)
+
+        def flat_top(lag: int) -> Decimal:
+            ratio = Decimal(lag) / lag_window_decimal
+            if Decimal(2) * ratio <= 1:
+                return Decimal(1)
+            return Decimal(2) * (Decimal(1) - ratio)
+
+        weighted_lag_moment = Decimal(2) * sum(
+            (flat_top(lag) * Decimal(lag) * autocovariances[lag] for lag in range(1, lag_window + 1)),
+            Decimal(0),
+        )
+        spectral_zero = gamma_zero + Decimal(2) * sum(
+            (flat_top(lag) * autocovariances[lag] for lag in range(1, lag_window + 1)),
+            Decimal(0),
+        )
+        denominator = Decimal(2) * spectral_zero * spectral_zero
+        if not denominator.is_finite() or denominator.is_zero():
+            raise OracleError("NO_GO_NO_FALLBACK", "D_hat_SB is zero, nonfinite, or undefined")
+        radicand = Decimal(2) * weighted_lag_moment * weighted_lag_moment * n / denominator
+        raw = _cube_root(radicand)
+        integerized = int(raw.to_integral_value(rounding=ROUND_CEILING))
+        floor_cap = int((n / Decimal(4)).to_integral_value(rounding=ROUND_FLOOR))
+        common = min(floor_cap, max(MIN_BLOCK_LENGTH, integerized))
+        if common < 1:
+            raise OracleError("NO_GO_NO_FALLBACK", "bounded common block length is nonpositive")
+        return _plain(raw), common, selected_lag
+
+
+def stationary_bootstrap_indices(
+    *,
+    series_length: int,
+    replicate_count: int,
+    mean_block_length: int,
+    seed: int,
+) -> tuple[tuple[int, ...], ...]:
+    """Independent Politis-Romano index assembly on the registered PCG32 stream.
+
+    Each block starts at an independently uniform series index, has an exact
+    integer-geometric length, wraps around the series, and a final block is
+    truncated so every replicate has exactly ``series_length`` indices. The
+    RNG stream is shared across replicates in output order.
+    """
+
+    generator = Pcg32.from_seed(seed)
+    output: list[tuple[int, ...]] = []
+    for _ in range(replicate_count):
+        replicate: list[int] = []
+        while len(replicate) < series_length:
+            start = generator.bounded_index(series_length)
+            block_length = generator.geometric(mean_block_length)
+            remaining = series_length - len(replicate)
+            take = min(block_length, remaining)
+            replicate.extend((start + offset) % series_length for offset in range(take))
+        output.append(tuple(replicate))
+    return tuple(output)
+
+
+def annualized_mean(values: list[Decimal]) -> Decimal:
+    n = Decimal(len(values))
+    return Decimal(ANNUALIZATION) * (sum(values, Decimal(0)) / n)
+
+
+def bootstrap_statistics(
+    deltas: list[Decimal], indices: tuple[tuple[int, ...], ...]
+) -> list[Decimal]:
+    with localcontext(_context()):
+        annualization = Decimal(ANNUALIZATION)
+        n = Decimal(len(deltas))
+        stats: list[Decimal] = []
+        for replicate in indices:
+            total = sum((deltas[i] for i in replicate), Decimal(0))
+            stats.append(annualization * (total / n))
+        return stats
+
+
+def canonical_hash(values: list[Decimal]) -> str:
+    payload = json.dumps([_plain(v) for v in values], separators=(",", ":")).encode("utf-8")
+    digest = hashlib.sha256(payload).hexdigest()
+    return ":".join(digest[i : i + 8] for i in range(0, 64, 8))
+
+
+def newey_west_diagnostic(deltas: list[Decimal]) -> tuple[int, str, str, str]:
+    count = len(deltas)
+    if count < 2:
+        raise OracleError("DIAGNOSTIC_UNAVAILABLE_NO_PRIMARY_FALLBACK", "n < 2")
+    with localcontext(_context()):
+        n = Decimal(count)
+        ratio = n / Decimal(100)
+        two_ninths = Decimal(2) / Decimal(9)
+        power = (two_ninths * ratio.ln()).exp()
+        q = min(count - 1, int((Decimal(4) * power).to_integral_value(rounding=ROUND_FLOOR)))
+        if q < 0:
+            raise OracleError("DIAGNOSTIC_UNAVAILABLE_NO_PRIMARY_FALLBACK", "lag q is negative")
+        mean = sum(deltas, Decimal(0)) / n
+        centered = [value - mean for value in deltas]
+
+        def gamma(k: int) -> Decimal:
+            return sum(
+                (centered[t] * centered[t - k] for t in range(k, count)), Decimal(0)
+            ) / n
+
+        gamma_zero = gamma(0)
+        omega = gamma_zero + Decimal(2) * sum(
+            (
+                (Decimal(1) - Decimal(k) / Decimal(q + 1)) * gamma(k)
+                for k in range(1, q + 1)
+            ),
+            Decimal(0),
+        )
+        if not omega.is_finite() or omega < 0:
+            raise OracleError(
+                "DIAGNOSTIC_UNAVAILABLE_NO_PRIMARY_FALLBACK",
+                "Omega_hat is negative or nonfinite",
+            )
+        se_annualized = Decimal(ANNUALIZATION) * (omega / n).sqrt()
+        annualized = Decimal(ANNUALIZATION) * mean
+        if se_annualized.is_zero():
+            raise OracleError(
+                "DIAGNOSTIC_UNAVAILABLE_NO_PRIMARY_FALLBACK",
+                "annualized standard error is zero",
+            )
+        t_stat = annualized / se_annualized
+        return q, _plain(omega), _plain(se_annualized), _plain(t_stat)
+
+
+@dataclass(frozen=True)
+class IndependentHolm:
+    family_size: int
+    ordered_p_values: tuple[str, ...]
+    adjusted_thresholds: tuple[str, ...]
+    rejected: tuple[bool, ...]
+
+
+def holm_step_down_independent(p_values: object, *, alpha: object = "0.05") -> IndependentHolm:
+    series = require_canonical_series(p_values, kind="holm_p")
+    checked_alpha = require_canonical_decimal(alpha, field="alpha")
+    with localcontext(_context()):
+        alpha_d = Decimal(checked_alpha)
+        if alpha_d <= 0 or alpha_d >= 1:
+            raise OracleError(
+                "NO_GO_FAIL_CLOSED",
+                "alpha must be a significance level in the open interval (0, 1)",
+            )
+        parsed: list[Decimal] = []
+        for i, value in enumerate(series):
+            p = Decimal(value)
+            if not (Decimal(0) <= p <= Decimal(1)):
+                raise OracleError("NO_GO_FAIL_CLOSED", f"holm_p[{i}] outside [0, 1]")
+            parsed.append(p)
+        m = len(parsed)
+        order = sorted(range(m), key=lambda i: parsed[i])
+        thresholds: list[Decimal] = []
+        rejected_sorted: list[bool] = []
+        still = True
+        for rank, _ in enumerate(order):
+            thr = alpha_d / Decimal(m - rank)
+            thresholds.append(thr)
+            reject = still and parsed[order[rank]] <= thr
+            if not reject:
+                still = False
+            rejected_sorted.append(reject)
+        return IndependentHolm(
+            m,
+            tuple(_plain(parsed[i]) for i in order),
+            tuple(_plain(t) for t in thresholds),
+            tuple(rejected_sorted),
+        )
+
+
+@dataclass(frozen=True)
+class IndependentInference:
+    series_length: int
+    point_estimate: str
+    raw_block_length: str
+    common_block_length: int
+    selected_lag: int
+    one_sided_95_lcb: str
+    two_sided_90_low: str
+    two_sided_90_high: str
+    bootstrap_distribution_sha256: str
+    replicate_count: int
+    seed: int
+    nw_lag: int
+    nw_long_run_variance: str
+    nw_annualized_standard_error: str
+    nw_t_statistic: str
+
+
+def run_inference_independent(deltas: object) -> IndependentInference:
+    strings = require_canonical_series(deltas, kind="delta")
+    with localcontext(_context()):
+        series = [Decimal(s) for s in strings]
+    raw, common, lag = select_block_length(series)
+    indices = stationary_bootstrap_indices(
+        series_length=len(series),
+        replicate_count=BOOTSTRAP_REPLICATES,
+        mean_block_length=common,
+        seed=BOOTSTRAP_SEED,
+    )
+    stats = bootstrap_statistics(series, indices)
+    with localcontext(_context()):
+        point = annualized_mean(series)
+        ordered = sorted(stats)
+        lcb = ordered[ONE_SIDED_95_LCB_RANK - 1]
+        low = ordered[TWO_SIDED_90_RANKS[0] - 1]
+        high = ordered[TWO_SIDED_90_RANKS[1] - 1]
+    q, omega, se, t = newey_west_diagnostic(series)
+    return IndependentInference(
+        series_length=len(series),
+        point_estimate=_plain(point),
+        raw_block_length=raw,
+        common_block_length=common,
+        selected_lag=lag,
+        one_sided_95_lcb=_plain(lcb),
+        two_sided_90_low=_plain(low),
+        two_sided_90_high=_plain(high),
+        bootstrap_distribution_sha256=canonical_hash(stats),
+        replicate_count=BOOTSTRAP_REPLICATES,
+        seed=BOOTSTRAP_SEED,
+        nw_lag=q,
+        nw_long_run_variance=omega,
+        nw_annualized_standard_error=se,
+        nw_t_statistic=t,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Test fixtures / helpers
+# ---------------------------------------------------------------------------
+
+_REJECT = [
+    ("1E-3", "exponent notation"),
+    ("1e-3", "exponent notation"),
+    ("+0.001", "leading plus"),
+    (" 0.001", "leading whitespace"),
+    ("0.001 ", "trailing whitespace"),
+    (".5", "leading-dot"),
+    ("5.", "trailing-dot"),
+    ("NaN", "nonfinite"),
+    ("Infinity", "nonfinite"),
+    ("-Infinity", "nonfinite"),
+    ("0.00_1", "underscore"),
+    ("-0", "negative zero"),
+    ("-0.0", "negative zero"),
+    ("0123", "leading zeros"),
+    ("1e999999", "exponent / overflow-shaped"),
+]
+
+_NEGATIVE_ZEROS = ("-0", "-0.0", "-0.00", "-0.000000")
+_LEADING_ZEROS = ("0123", "00", "01", "-01", "-00")
+_TRAILING_FRAC_OK = ("1.50", "0.006650", "-0.002210", "0", "-1", "0.000000", "10.00")
+_ALPHA_OUT = ("2.0", "1", "0", "-12.500", "0.0", "1.0", "-0.05")
+_ALPHA_IN = ("0.05", "0.10", "0.005")
+
+
+def _canonical_series(n: int, seed: int = 7) -> list[str]:
+    out: list[str] = []
+    x = seed
+    for _ in range(n):
+        x = (x * 1103515245 + 12345) % (2**31)
+        out.append(f"{Decimal(x % 2001 - 1000) / Decimal(100000) + Decimal('0.0012'):.6f}")
+    return out
+
+
+def _grouped_sha256(data: bytes) -> str:
+    h = hashlib.sha256(data).hexdigest()
+    return ":".join(h[i : i + 8] for i in range(0, 64, 8))
+
+
+# ---------------------------------------------------------------------------
+# Runner
+# ---------------------------------------------------------------------------
+
+
+def main() -> int:
+    failures: list[str] = []
+    passes = 0
+
+    def check(name: str, cond: bool, detail: str = "") -> None:
+        nonlocal passes
+        if cond:
+            passes += 1
+            print(f"PASS  {name}" + (f"  ({detail})" if detail else ""))
+        else:
+            failures.append(name)
+            print(f"FAIL  {name}" + (f"  ({detail})" if detail else ""))
+
+    print("=" * 72)
+    print("A2-V2 independent inference oracle")
+    print("Does NOT import run_inference / run_inference_v2 / holm_step_down*")
+    print("Production import: qme/stats/rng.py via file path (Pcg32 only)")
+    print("=" * 72)
+
+    # 0. Independence of this process
+    _assert_no_production_inference_import()
+    src = Path(__file__).read_text(encoding="utf-8")
+    src_tree = ast.parse(src)
+    imported_modules: set[str] = set()
+    for node in ast.walk(src_tree):
+        if isinstance(node, ast.Import):
+            imported_modules.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported_modules.add(node.module)
+    check(
+        "oracle_source_has_no_inference_import",
+        not any(
+            m == "qme.stats.nee120_inference"
+            or m == "qme.stats.nee120_inference_v2"
+            or m.startswith("qme.stats.nee120_inference.")
+            for m in imported_modules
+        ),
+        "ast_imports=" + ",".join(sorted(imported_modules)),
+    )
+    check(
+        "production_inference_modules_absent_from_sys_modules",
+        all(m not in sys.modules for m in _FORBIDDEN_MODULES),
+        "modules=" + ",".join(sorted(m for m in sys.modules if m.startswith("qme.stats"))),
+    )
+
+    # 1. Grammar rejection of the registered reject list
+    print("\n--- 1. Independent grammar rejection ---")
+    for bad, label in _REJECT:
+        ok, why = is_canonical_decimal(bad)
+        check(f"reject[{label}] {bad!r}", ok is False, why)
+
+    for zero in _NEGATIVE_ZEROS:
+        ok, why = is_canonical_decimal(zero)
+        check(f"reject_negzero {zero!r}", ok is False, why)
+
+    for bad in _LEADING_ZEROS:
+        ok, why = is_canonical_decimal(bad)
+        check(f"reject_leading_zero {bad!r}", ok is False, why)
+
+    for good in _TRAILING_FRAC_OK:
+        ok, why = is_canonical_decimal(good)
+        check(f"accept_canonical {good!r}", ok is True, why)
+
+    long_ok = "1" + "0" * 127
+    long_bad = "1" + "0" * 128
+    check("accept_len_128", is_canonical_decimal(long_ok)[0] is True, f"len={len(long_ok)}")
+    check("reject_len_129", is_canonical_decimal(long_bad)[0] is False, f"len={len(long_bad)}")
+
+    for bad in (None, 0.001, 0, b"0.001", "", "+", ".", "-", "0.00.1", "1E3", "\t0.1", "0.1\n"):
+        ok, why = is_canonical_decimal(bad)
+        check(f"reject_misc {bad!r}", ok is False, why)
+
+    # Grammar must not construct Decimal on reject-list items. The predicate
+    # above is string-only; assert Decimal is never needed to classify them.
+    check(
+        "reject_list_classified_without_Decimal",
+        all(is_canonical_decimal(bad)[0] is False for bad, _ in _REJECT),
+    )
+
+    # 2. Holm alpha domain  0 < alpha < 1
+    print("\n--- 2. Holm alpha open interval (0, 1) ---")
+    family = ["0.04", "0.01", "0.03"]
+    for bad in _ALPHA_OUT:
+        try:
+            holm_step_down_independent(family, alpha=bad)
+            check(f"alpha_reject {bad!r}", False, "accepted but should reject")
+        except OracleError as exc:
+            check(f"alpha_reject {bad!r}", exc.reason == "NO_GO_FAIL_CLOSED", exc.detail)
+
+    # Non-canonical alpha is rejected by the grammar BEFORE the domain check.
+    for bad, label in _REJECT:
+        try:
+            holm_step_down_independent(["0.01"], alpha=bad)
+            check(f"alpha_grammar_reject[{label}] {bad!r}", False, "accepted")
+        except OracleError as exc:
+            check(
+                f"alpha_grammar_reject[{label}] {bad!r}",
+                exc.reason == "NO_GO_FAIL_CLOSED",
+                exc.detail,
+            )
+
+    # 3. Hand-worked Holm known-answer
+    print("\n--- 3. Hand-worked Holm KAT ---")
+    # family {0.04, 0.01, 0.03}, alpha=0.05, m=3
+    # ordered p: 0.01, 0.03, 0.04
+    # thresholds: 0.05/3, 0.05/2, 0.05/1
+    # 0.01 <= 0.05/3 = 0.0166...  YES
+    # 0.03 <= 0.05/2 = 0.025      NO  -> stop
+    # 0.04 not rejected
+    holm = holm_step_down_independent(family, alpha="0.05")
+    with localcontext(_context()):
+        expected_thr_0 = _plain(Decimal("0.05") / Decimal(3))
+        expected_thr_1 = _plain(Decimal("0.05") / Decimal(2))
+        expected_thr_2 = _plain(Decimal("0.05") / Decimal(1))
+    check("holm_family_size", holm.family_size == 3, str(holm.family_size))
+    check(
+        "holm_ordered_p",
+        holm.ordered_p_values
+        == (
+            _plain(Decimal("0.01")),
+            _plain(Decimal("0.03")),
+            _plain(Decimal("0.04")),
+        ),
+        str(holm.ordered_p_values),
+    )
+    check(
+        "holm_thresholds",
+        holm.adjusted_thresholds == (expected_thr_0, expected_thr_1, expected_thr_2),
+        str(holm.adjusted_thresholds),
+    )
+    check("holm_rejected", holm.rejected == (True, False, False), str(holm.rejected))
+
+    for good in _ALPHA_IN:
+        h = holm_step_down_independent(family, alpha=good)
+        check(f"alpha_accept {good!r}", h.family_size == 3)
+
+    # 4. KAT fixture: independent recomputation vs frozen expected
+    print("\n--- 4. Independent recomputation of registered KAT fixture ---")
+    fixture = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    series = list(fixture["paired_monthly_log_return_deltas"])
+    expected = fixture["expected"]
+
+    # Hand-worked point estimate: sum of the 36 canonical six-place deltas.
+    with localcontext(_context()):
+        parsed = [Decimal(s) for s in series]
+        exact_sum = sum(parsed, Decimal(0))
+        exact_mean = exact_sum / Decimal(36)
+        exact_point = Decimal(12) * exact_mean
+        print(f"  hand_sum          = {exact_sum}")
+        print(f"  hand_mean         = {exact_mean}")
+        print(f"  hand_point        = {exact_point}")
+        print(f"  hand_point_plain  = {_plain(exact_point)}")
+        print(f"  expected_point    = {expected['point_estimate']}")
+        # Registered expected is 0.00665 exactly at 36 places; that implies
+        # sum = 0.00665 * 36 / 12 = 0.01995.
+        check("hand_sum_equals_0.01995", exact_sum == Decimal("0.01995"), str(exact_sum))
+        check(
+            "hand_point_equals_0.00665",
+            exact_point == Decimal("0.00665"),
+            str(exact_point),
+        )
+
+    result = run_inference_independent(series)
+    print(f"  oracle.point_estimate                 = {result.point_estimate}")
+    print(f"  oracle.raw_block_length               = {result.raw_block_length}")
+    print(f"  oracle.common_block_length            = {result.common_block_length}")
+    print(f"  oracle.selected_lag                   = {result.selected_lag}")
+    print(f"  oracle.one_sided_95_lcb               = {result.one_sided_95_lcb}")
+    print(f"  oracle.two_sided_90                   = ({result.two_sided_90_low}, {result.two_sided_90_high})")
+    print(f"  oracle.bootstrap_distribution_sha256  = {result.bootstrap_distribution_sha256}")
+    print(f"  oracle.nw_lag                         = {result.nw_lag}")
+    print(f"  oracle.nw_long_run_variance           = {result.nw_long_run_variance}")
+    print(f"  oracle.nw_se                          = {result.nw_annualized_standard_error}")
+    print(f"  oracle.nw_t                           = {result.nw_t_statistic}")
+
+    check("kat_series_length", result.series_length == expected["series_length"])
+    check("kat_point_estimate", result.point_estimate == expected["point_estimate"])
+    check(
+        "kat_raw_block_length",
+        result.raw_block_length == expected["block_selection"]["raw_block_length"],
+    )
+    check(
+        "kat_common_block_length",
+        result.common_block_length == expected["block_selection"]["common_block_length"],
+    )
+    check(
+        "kat_selected_lag",
+        result.selected_lag == expected["block_selection"]["selected_lag"],
+    )
+    check("kat_one_sided_95_lcb", result.one_sided_95_lcb == expected["one_sided_95_lcb"])
+    check(
+        "kat_two_sided_90_low",
+        result.two_sided_90_low == expected["two_sided_90_interval"][0],
+    )
+    check(
+        "kat_two_sided_90_high",
+        result.two_sided_90_high == expected["two_sided_90_interval"][1],
+    )
+    check(
+        "kat_bootstrap_hash",
+        result.bootstrap_distribution_sha256 == expected["bootstrap_distribution_sha256"],
+    )
+    check("kat_replicate_count", result.replicate_count == expected["replicate_count"])
+    check("kat_seed", result.seed == expected["seed"])
+    check("kat_nw_lag", result.nw_lag == expected["newey_west"]["lag"])
+    check(
+        "kat_nw_long_run_variance",
+        result.nw_long_run_variance == expected["newey_west"]["long_run_variance"],
+    )
+    check(
+        "kat_nw_se",
+        result.nw_annualized_standard_error == expected["newey_west"]["annualized_standard_error"],
+    )
+    check("kat_nw_t", result.nw_t_statistic == expected["newey_west"]["t_statistic"])
+
+    # Hand-worked Newey-West lag: floor(4 * (36/100)^(2/9))
+    with localcontext(_context()):
+        ratio = Decimal(36) / Decimal(100)
+        power = ((Decimal(2) / Decimal(9)) * ratio.ln()).exp()
+        nw_lag_hand = int((Decimal(4) * power).to_integral_value(rounding=ROUND_FLOOR))
+        print(f"  hand_nw_lag = floor(4*(0.36)^(2/9)) = {nw_lag_hand}")
+        check("hand_nw_lag_equals_3", nw_lag_hand == 3 and result.nw_lag == 3)
+
+    # Hand-worked PPW k_n / m_max / floor_cap for n=36
+    with localcontext(_context()):
+        n = Decimal(36)
+        k_n = max(5, int((n.log10().sqrt()).to_integral_value(rounding=ROUND_CEILING)))
+        m_max = int(n.sqrt().to_integral_value(rounding=ROUND_CEILING)) + k_n
+        floor_cap = int((n / Decimal(4)).to_integral_value(rounding=ROUND_FLOOR))
+        print(f"  hand_k_n={k_n}  hand_m_max={m_max}  hand_floor_cap={floor_cap}")
+        check("hand_k_n_equals_5", k_n == 5)
+        check("hand_m_max_equals_11", m_max == 11)
+        check("hand_floor_cap_equals_9", floor_cap == 9)
+        check("hand_common_min9_max3_ceil_raw", result.common_block_length == 8)
+
+    # 5. Additional independent series (saved for later production comparison)
+    print("\n--- 5. Additional independent series ---")
+    extra_payload: dict[str, object] = {}
+    for n, seed in ((24, 7), (36, 3), (60, 11)):
+        extra = _canonical_series(n, seed=seed)
+        extra_result = run_inference_independent(extra)
+        key = f"n{n}_seed{seed}"
+        extra_payload[key] = {
+            "series": extra,
+            "point_estimate": extra_result.point_estimate,
+            "raw_block_length": extra_result.raw_block_length,
+            "common_block_length": extra_result.common_block_length,
+            "selected_lag": extra_result.selected_lag,
+            "one_sided_95_lcb": extra_result.one_sided_95_lcb,
+            "two_sided_90_interval": [
+                extra_result.two_sided_90_low,
+                extra_result.two_sided_90_high,
+            ],
+            "bootstrap_distribution_sha256": extra_result.bootstrap_distribution_sha256,
+            "nw_lag": extra_result.nw_lag,
+            "nw_long_run_variance": extra_result.nw_long_run_variance,
+            "nw_annualized_standard_error": extra_result.nw_annualized_standard_error,
+            "nw_t_statistic": extra_result.nw_t_statistic,
+        }
+        check(
+            f"extra_{key}_ran",
+            extra_result.series_length == n and extra_result.replicate_count == 10000,
+            f"block={extra_result.common_block_length} point={extra_result.point_estimate}",
+        )
+
+    extra_holm = {
+        "family": family,
+        "alpha": "0.05",
+        "family_size": holm.family_size,
+        "ordered_p_values": list(holm.ordered_p_values),
+        "adjusted_thresholds": list(holm.adjusted_thresholds),
+        "rejected": list(holm.rejected),
+    }
+    # Additional Holm families
+    holm_more = []
+    for fam, alpha in (
+        (["0.001"], "0.05"),
+        (["0.04", "0.02", "0.01", "0.03"], "0.05"),
+        (["0.04", "0.01", "0.03"], "0.10"),
+        (["0.04", "0.01", "0.03"], "0.005"),
+    ):
+        h = holm_step_down_independent(fam, alpha=alpha)
+        holm_more.append(
+            {
+                "family": fam,
+                "alpha": alpha,
+                "family_size": h.family_size,
+                "ordered_p_values": list(h.ordered_p_values),
+                "adjusted_thresholds": list(h.adjusted_thresholds),
+                "rejected": list(h.rejected),
+            }
+        )
+        check(f"holm_extra alpha={alpha} m={len(fam)}", h.family_size == len(fam))
+
+    # 6. Persist oracle outputs for the later production comparison
+    payload = {
+        "independence": {
+            "forbidden_modules_imported": [
+                m for m in _FORBIDDEN_MODULES if m in sys.modules
+            ],
+            "qme_stats_modules_imported": sorted(
+                m for m in sys.modules if m.startswith("qme.stats")
+            ),
+            "documented_production_import": "qme/stats/rng.py loaded by file path as independent_pcg32_rng (Pcg32 only)",
+        },
+        "kat": {
+            "point_estimate": result.point_estimate,
+            "raw_block_length": result.raw_block_length,
+            "common_block_length": result.common_block_length,
+            "selected_lag": result.selected_lag,
+            "one_sided_95_lcb": result.one_sided_95_lcb,
+            "two_sided_90_interval": [result.two_sided_90_low, result.two_sided_90_high],
+            "bootstrap_distribution_sha256": result.bootstrap_distribution_sha256,
+            "replicate_count": result.replicate_count,
+            "seed": result.seed,
+            "nw_lag": result.nw_lag,
+            "nw_long_run_variance": result.nw_long_run_variance,
+            "nw_annualized_standard_error": result.nw_annualized_standard_error,
+            "nw_t_statistic": result.nw_t_statistic,
+        },
+        "extra_series": extra_payload,
+        "holm_kat": extra_holm,
+        "holm_more": holm_more,
+        "reject_list": [bad for bad, _ in _REJECT],
+        "oracle_source_sha256": _grouped_sha256(src.encode("utf-8")),
+    }
+    out_json = OUT_DIR / "independent_inference_oracle.json"
+    out_json.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"\nWrote {out_json}")
+
+    # Final independence check after all work
+    _assert_no_production_inference_import()
+    check(
+        "final_independence_still_holds",
+        all(m not in sys.modules for m in _FORBIDDEN_MODULES),
+    )
+
+    print("\n" + "=" * 72)
+    print(f"RESULT  passes={passes}  failures={len(failures)}")
+    if failures:
+        print("FAILED CHECKS:")
+        for name in failures:
+            print(f"  - {name}")
+        return 1
+    print("ALL INDEPENDENT CHECKS PASSED")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

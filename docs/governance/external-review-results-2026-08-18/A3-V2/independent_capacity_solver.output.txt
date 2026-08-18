@@ -1,0 +1,165 @@
+A3-V2 independent exact-arithmetic capacity solver
+No import of qme.quant.capacity_solver_v2 feasibility logic in PHASE 1.
+
+========================================================================
+1. Exact f, share flooring, and C=10400 witness
+========================================================================
+[PASS] f == 90/91 exactly  f=90/91
+[PASS] f*10400*w_A/price_A == 1 exactly  raw_A=1
+[PASS] exact floor of that integer is 1 (does not drop a quantum)
+    shares_A(10400) = 1
+    shares_B(10400) = 6685
+    invested        = 10285
+    cash_after      = 20943/200
+    F1/F2/F3        = True/True/True
+    first_violation = None
+[PASS] C=10400 is feasible
+[PASS] shares_A(10400) == 1
+[PASS] shares_B(10400) == 6685
+[PASS] F3 B at 10400 is exact equality 6685 <= 6685  notional_B=6685 cap=6685
+[PASS] F2 cash_after >= buffer*C at 10400  cash_after=20943/200 buffer*C=104
+========================================================================
+2. Independent reconstruction of V1 Decimal one-quantum drop
+========================================================================
+    V1-style raw_A(10400) = 0.99999999999999999999999999999999999997
+    V1-style shares_A     = 0
+[PASS] V1-style 38-digit raw is strictly below the integer 1  raw=0.99999999999999999999999999999999999997
+[PASS] V1-style floor therefore returns 0 (incorrect zero-share)  shares=0
+    V1-style raw_B(10500) = 6749.9999999999999999999999999999999998
+    V1-style shares_B     = 6749
+[PASS] second exact boundary: exact raw_B(10500) == 6750
+[PASS] V1-style floors that integer to 6749 (drops one quantum)  shares=6749
+========================================================================
+3. Dominating bound, grid floor, C*, C=10500
+========================================================================
+    C-hat_A = 260000093600/9 = 28888899288.88889
+    C-hat_B = 93604/9 = 10400.444444444445
+    C-hat   = 93604/9 = 10400.444444444445
+[PASS] dominating bound is C-hat_B
+[PASS] C-hat == 93604/9 exactly  C-hat=93604/9 decimal=10400.44444444444444444444444
+[PASS] 10400 <= C-hat < 10500
+    floor(C-hat/100) = 104
+    scan_upper       = 10400
+[PASS] grid floor / scan_upper == 10400
+[PASS] scan_points == 104
+    independent C*     = 10400
+    status             = PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID
+    feasible_points    = 1
+    bitmap_sha256      = 4da90a83:7b4d67f6:583e00af:0833195e:ef018aba:e267f6ce:e33baa6f:e19f396e
+    first_above        = 10500
+    first_violation    = F3_PARTICIPATION:B
+[PASS] independent C* == 10400
+[PASS] status is PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID
+[PASS] exactly one feasible grid point
+[PASS] bitmap has a single 1, at the last scan point
+    shares_A(10500) = 1
+    shares_B(10500) = 6750
+    F1/F2/F3        = True/True/False
+    first_violation = F3_PARTICIPATION:B
+[PASS] C=10500 exceeds C-hat
+[PASS] C=10500 is infeasible
+[PASS] recorded reason is F3_PARTICIPATION:B
+[PASS] shares_B(10500) == 6750 exactly
+[PASS] 6750 > 0.01*668500 = 6685 (F3 breach)
+[PASS] certificate first_infeasible_above == 10500 with F3_PARTICIPATION:B
+========================================================================
+4. Exact F1 / F2 / F3 behaviour
+========================================================================
+    C=10300 shares_A=0 violation=F1_ZERO_SHARES:A
+[PASS] C=10300 fails F1 on A (raw < 1)
+[PASS] F1 holds at 10400 and fails at 10300
+[PASS] F3 holds at 10400 and fails at 10500
+[PASS] F2 holds at 10300, 10400 and 10500
+[PASS] F1 is threshold-monotone upward on the witness grid
+[PASS] F3 is threshold-monotone downward on the witness grid
+[PASS] F2 holds at every witness grid point
+[PASS] feasible set on the witness grid is a single contiguous interval
+[PASS] that interval is exactly {10400}
+[PASS] exact-integer boundary A-family: raw(10400) == 1
+[PASS] A-family flooring: 0 / 1 / >=1 at C-q / C / C+q  shares=(0,1,1)
+[PASS] exact-integer boundary 5200-family: raw(5200) == 1
+[PASS] 5200-family flooring: 0 / 1 / >=1 at C-q / C / C+q  shares=(0,1,1)
+[PASS] exact-integer boundary 2600-family: raw(2600) == 1
+[PASS] 2600-family flooring: 0 / 1 / >=1 at C-q / C / C+q  shares=(0,1,1)
+========================================================================
+5. Bitmap and certificate consistency
+========================================================================
+[PASS] scan_points == len(bitmap)
+[PASS] feasible_points == sum(bitmap)
+[PASS] scan_upper / grid == scan_points
+[PASS] bitmap sha256 rebuilds from the materialised flags
+[PASS] greatest equals last True flag * grid
+[PASS] second walk produces identical bitmap bytes
+[PASS] second walk produces identical sha256
+========================================================================
+6. Bounded brute-force parity across additional cases
+========================================================================
+[PASS] brute-force parity ['A', 'B'] bps=10 C*=10400
+[PASS] F1-up / F3-down / F2-all / contiguous ['A', 'B'] bps=10
+[PASS] brute-force parity ['X'] bps=10 C*=8300
+[PASS] F1-up / F3-down / F2-all / contiguous ['X'] bps=10
+[PASS] brute-force parity ['P', 'Q'] bps=0 C*=4600
+[PASS] F1-up / F3-down / F2-all / contiguous ['P', 'Q'] bps=0
+[PASS] brute-force parity ['P', 'Q'] bps=10 C*=4600
+[PASS] F1-up / F3-down / F2-all / contiguous ['P', 'Q'] bps=10
+[PASS] brute-force parity ['P', 'Q'] bps=25 C*=4600
+[PASS] F1-up / F3-down / F2-all / contiguous ['P', 'Q'] bps=25
+[PASS] brute-force parity ['P', 'Q'] bps=37 C*=4600
+[PASS] F1-up / F3-down / F2-all / contiguous ['P', 'Q'] bps=37
+[PASS] brute-force parity ['M', 'N', 'O'] bps=10 C*=4700
+[PASS] F1-up / F3-down / F2-all / contiguous ['M', 'N', 'O'] bps=10
+[PASS] brute-force parity ['Z'] bps=10 C*=None
+[PASS] F1-up / F3-down / F2-all / contiguous ['Z'] bps=10
+[PASS] brute-force parity ['HI', 'LO'] bps=10 C*=40400
+[PASS] F1-up / F3-down / F2-all / contiguous ['HI', 'LO'] bps=10
+    designed brute-force cases completed: 9
+    V1-island-instance C*=39900 points=399 feas=200
+    V1-island-instance first_False_index=0
+    V1-island-instance contiguous=True
+[PASS] V1 'island' instance is a single contiguous interval under exact arithmetic
+[PASS] V1 island-test predicate is vacuous on this instance (first False is index 0)  first_false=0
+[PASS] 40 random instances (seed=20260818) match brute-force and interval structure  proven=29 unavailable=11
+[PASS] random set is not vacuously all-unavailable
+[PASS] dominating-bound lemma: 249 points above C-hat are infeasible
+========================================================================
+7. Feasibility-islands claim under exact arithmetic
+========================================================================
+[PASS] no extra feasible island exists on the registered witness
+[PASS] independent solver never uses an 'islands' search rationale (interval + exhaustive scan)  scan is exhaustive evidence; structure observed is interval-shaped
+========================================================================
+8. PHASE 2 — compare independent results to V1 and V2
+========================================================================
+    V1 shares_A(10400) = 0 feasible=False viol=F1_ZERO_SHARES:A
+[PASS] V1 floors shares_A(10400) to 0
+[PASS] V1 marks 10400 infeasible as F1_ZERO_SHARES:A
+    V1 certificate status=UNAVAILABLE_NO_FEASIBLE_CAPITAL C*=None
+[PASS] V1 reports UNAVAILABLE_NO_FEASIBLE_CAPITAL (incorrect)
+    V2 shares_A(10400) = 1 feasible=True
+[PASS] V2 shares_A(10400) == 1 and feasible
+[PASS] V2 agrees with independent oracle on the witness point
+[PASS] V2 marks 10500 infeasible as F3_PARTICIPATION:B
+    V2 C*=10400 status=PROVEN_GLOBAL_MAXIMUM_ON_QUANTUM_GRID
+    V2 scan_points=104 feasible_points=1
+    V2 bitmap=4da90a83:7b4d67f6:583e00af:0833195e:ef018aba:e267f6ce:e33baa6f:e19f396e
+    V2 first_above=10500 viol=F3_PARTICIPATION:B
+    V2 dominating_upper_bound(display)=10400.44444444
+    METHOD_ID=QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1
+    IMPLEMENTATION_ID=QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V2
+[PASS] V2 C* == 10400
+[PASS] V2 method/implementation ids
+[PASS] V2 certificate matches independent C*/points/feasible/bitmap/violation
+[PASS] V2 displayed dominating bound is the exact C-hat at the reporting quantum  display=10400.44444444 expected=10400.44444444
+[PASS] V2 vs independent certificate ['A', 'B'] bps=10
+[PASS] V2 vs independent certificate ['X'] bps=10
+[PASS] V2 vs independent certificate ['P', 'Q'] bps=10
+[PASS] V2 vs independent certificate ['M', 'N', 'O'] bps=10
+[PASS] V2 vs independent certificate ['Z'] bps=10
+[PASS] V2 vs independent certificate ['HI', 'LO'] bps=0
+[PASS] V2 module withdraws the general-islands / non-monotone rationale
+[PASS] V2 implementation doc withdraws the islands justification
+[PASS] V2 retains exhaustive scan as conservative evidence, not as an islands hunt
+[PASS] V1 (retained defective candidate) still contains the old islands language
+========================================================================
+SUMMARY  passed=94  failed=0
+========================================================================
+INDEPENDENT SOLVER: ALL CHECKS PASSED

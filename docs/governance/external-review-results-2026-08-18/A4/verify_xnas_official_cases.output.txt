@@ -1,0 +1,77 @@
+== fixture identity ==
+schema_version=qme.xnas_calendar_official_cases.v1
+data_class=BOUNDED_PRIMARY_SOURCE_CASES_NOT_COMPLETE_OFFICIAL_HISTORY
+calendar_id=XNAS_2010-01-04_2027-12-31_v1
+source_count=6 case_count=7
+
+== complete official-case interval comparison ==
+-- sandy_closure_2012_10_29  session_id=2012-10-29  weekday=Monday
+   source_id=NASDAQ_SANDY_2012_10_29
+   independent_source_note=ETA2012-44: NASDAQ OMX closed all U.S. equity and derivatives exchanges on Monday 2012-10-29 due to Hurricane Sandy.
+   expected.present=False  observed.present=False
+   PASS absent from candidate (closure)
+   PASS adjacent session present 2012-10-26
+   PASS adjacent session present 2012-10-31
+-- sandy_closure_2012_10_30  session_id=2012-10-30  weekday=Tuesday
+   source_id=NASDAQ_SANDY_2012_10_30
+   independent_source_note=MFQS 2012-3: NASDAQ OMX and the other equity, options and futures markets closed Tuesday 2012-10-30 due to Hurricane Sandy.
+   expected.present=False  observed.present=False
+   PASS absent from candidate (closure)
+   PASS adjacent session present 2012-10-26
+   PASS adjacent session present 2012-10-31
+-- bush_mourning_closure_2018_12_05  session_id=2018-12-05  weekday=Wednesday
+   source_id=NASDAQ_BUSH_2018_12_05
+   independent_source_note=ETA2018-98: Nasdaq U.S. equities and options markets closed Wednesday 2018-12-05 for the National Day of Mourning for President George H.W. Bush.
+   expected.present=False  observed.present=False
+   PASS absent from candidate (closure)
+   PASS adjacent session present 2018-12-04
+   PASS adjacent session present 2018-12-06
+-- thanksgiving_early_close_2018_11_23  session_id=2018-11-23  weekday=Friday
+   source_id=NASDAQ_THANKSGIVING_2018_11_23
+   independent_source_note=ETA2018-92: Nasdaq Day Session closed 1:00 p.m. ET Friday 2018-11-23.
+   expected.present=True  observed.present=True
+   PASS market_open: expected=2018-11-23T09:30:00-05:00 observed=2018-11-23T09:30:00-05:00
+   PASS market_close: expected=2018-11-23T13:00:00-05:00 observed=2018-11-23T13:00:00-05:00
+   PASS close_class: expected=EARLY_CLOSE observed=EARLY_CLOSE
+   PASS authority_phase: expected=GENERATED_HISTORICAL_CANDIDATE observed=GENERATED_HISTORICAL_CANDIDATE
+   PASS close clock time is 13:00 America/New_York
+-- carter_mourning_closure_2025_01_09  session_id=2025-01-09  weekday=Thursday
+   source_id=NASDAQ_CARTER_2025_01_09
+   independent_source_note=ETA2025-1: Nasdaq U.S. equities markets closed Thursday 2025-01-09 in observance of the passing of President Jimmy Carter.
+   expected.present=False  observed.present=False
+   PASS absent from candidate (closure)
+   PASS adjacent session present 2025-01-08
+   PASS adjacent session present 2025-01-10
+-- published_future_thanksgiving_early_close_2026_11_27  session_id=2026-11-27  weekday=Friday
+   source_id=NASDAQ_PUBLISHED_2026_CALENDAR
+   independent_source_note=nasdaqtrader.com/trader.aspx?id=Calendar: 2026-11-27 Early Close U.S. 1:00 p.m.
+   expected.present=True  observed.present=True
+   PASS market_open: expected=2026-11-27T09:30:00-05:00 observed=2026-11-27T09:30:00-05:00
+   PASS market_close: expected=2026-11-27T13:00:00-05:00 observed=2026-11-27T13:00:00-05:00
+   PASS close_class: expected=EARLY_CLOSE observed=EARLY_CLOSE
+   PASS authority_phase: expected=GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY observed=GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY
+   PASS close clock time is 13:00 America/New_York
+-- published_future_christmas_early_close_2026_12_24  session_id=2026-12-24  weekday=Thursday
+   source_id=NASDAQ_PUBLISHED_2026_CALENDAR
+   independent_source_note=nasdaqtrader.com/trader.aspx?id=Calendar: 2026-12-24 Early Close U.S. 1:00 p.m.
+   expected.present=True  observed.present=True
+   PASS market_open: expected=2026-12-24T09:30:00-05:00 observed=2026-12-24T09:30:00-05:00
+   PASS market_close: expected=2026-12-24T13:00:00-05:00 observed=2026-12-24T13:00:00-05:00
+   PASS close_class: expected=EARLY_CLOSE observed=EARLY_CLOSE
+   PASS authority_phase: expected=GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY observed=GENERATED_FUTURE_CANDIDATE_NOT_OBSERVED_OR_COMPLETE_OFFICIAL_AUTHORITY
+   PASS close clock time is 13:00 America/New_York
+
+== vector membership for official-case dates ==
+PASS 2012-10-29 present_in_vector=False expected=False
+PASS 2012-10-30 present_in_vector=False expected=False
+PASS 2018-12-05 present_in_vector=False expected=False
+PASS 2018-11-23 present_in_vector=True expected=True
+PASS 2025-01-09 present_in_vector=False expected=False
+PASS 2026-11-27 present_in_vector=True expected=True
+PASS 2026-12-24 present_in_vector=True expected=True
+
+== Thanksgiving 2018 context (Thu closed, Fri early) ==
+PASS 2018-11-22 Thanksgiving absent
+PASS surrounding sessions 2018-11-21 and 2018-11-26 present
+
+RESULT PASS all 7 official cases and neighbor/vector checks

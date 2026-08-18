@@ -1,0 +1,1045 @@
+#!/usr/bin/env python3
+"""Independent A1 verification. Does not import production qme modules."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+WORKTREE = Path("/workspace/QME-external-review/A1")
+PACKET = Path("/workspace/QME-external-review/packets/A1")
+OUT_DIR = Path("/workspace/QME-external-review/outputs/A1")
+TAMPER_DIR = OUT_DIR / "tamper-copies"
+LATER_COMMIT = "4848a7f8:99624288:ad0d34ef:3bce4707:0de0e1f5"
+
+EXPECTED_COMMIT = "d8900788:03c58f3c:a995ff80:004b0255:83fe6b2e"
+EXPECTED_TREE = "0d00c7b1:ac87409c:67ec32cb:d0cde29c:316d8334"
+EXPECTED_SEMANTIC = "f934ba37:c7e86108:a8087074:f4f421e7:aea4e81d:f7530071:63c618f5:0a8c3a82"
+EXPECTED_PROTECTED_MAIN = "900715b3:67b5b507:7a6cea8b:8297139c:08b416ad"
+PR26_PATH = "configs/governance/ppw-bootstrap-owner-selections-v1.json"
+PR26_EXPECTED = "6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6"
+
+BOUND = {
+    "configs/governance/owner-decision-record-2026-08-16-v1.json": (
+        "85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0"
+    ),
+    "schemas/governance/owner-decision-record-2026-08-16-v1.schema.json": (
+        "681f6d61:6c77916a:11902d67:dd41d493:f46dc4c0:4a1460ef:6b0946c8:d3b24f3e"
+    ),
+    "configs/governance/owner-decision-record-2026-08-16-v1.hashes.json": (
+        "552456b5:924c46bc:5b2b1e5c:58ce4efc:1b4e5303:c77bf607:0590d74f:e457f78c"
+    ),
+    "qme/governance/owner_decision_record.py": (
+        "c6d17f09:1847c484:da1af481:77ea4c07:7a22c85d:7ef34c55:e5318761:9d7670c0"
+    ),
+    "tests/governance/test_owner_decision_record.py": (
+        "2e447524:391b6d2a:bc0bab6a:4f28b71c:c2941b58:59e15d16:314e2ef2:d5a2b903"
+    ),
+    "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md": (
+        "68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662"
+    ),
+}
+
+REQUIRED_TRUE = (
+    "owner_decisions_registered",
+    "capacity_solver_implemented",
+    "nee120_inference_implemented",
+    "effective_trials_estimator_implemented",
+)
+FORBIDDEN_TRUE = (
+    "milestone_m0_complete",
+    "any_freeze_v4_blocker_cleared",
+    "empirical_performance_available",
+    "empirical_capacity_available",
+    "portfolio_capacity_usd_claimed",
+    "alpha_proven",
+    "production_ready",
+    "production_pit_data_spine_complete",
+    "prospective_receipt_verified",
+    "data_spine_start_authorized",
+)
+REGISTRATION_MEANING = "DECISIONS_REGISTERED_NOT_BLOCKER_CLEARANCE"
+MANIFEST_PATHS = (
+    "configs/governance/owner-decision-record-2026-08-16-v1.json",
+    "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md",
+    "qme/governance/owner_decision_record.py",
+    "schemas/governance/owner-decision-record-2026-08-16-v1.schema.json",
+    "tests/governance/test_owner_decision_record.py",
+)
+
+FAILURES: list[str] = []
+PASSES: list[str] = []
+
+
+def grouped_sha256(data: bytes) -> str:
+    digest = hashlib.sha256(data).hexdigest()
+    return ":".join(digest[i : i + 8] for i in range(0, 64, 8))
+
+
+def file_grouped(path: Path) -> str:
+    return grouped_sha256(path.read_bytes())
+
+
+def independent_canonical_json_bytes(document: Any) -> bytes:
+    """Independently written canonical JSON: sorted keys, compact, UTF-8, trailing NL."""
+    return (
+        json.dumps(
+            document,
+            ensure_ascii=False,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        + b"\n"
+    )
+
+
+def independent_semantic_sha256(document: dict[str, Any]) -> str:
+    semantic = dict(document)
+    semantic.pop("semantic_sha256", None)
+    return grouped_sha256(independent_canonical_json_bytes(semantic))
+
+
+def check(condition: bool, label: str, detail: str = "") -> None:
+    if condition:
+        PASSES.append(label)
+        extra = f" — {detail}" if detail else ""
+        print(f"PASS  {label}{extra}")
+    else:
+        FAILURES.append(label)
+        extra = f" — {detail}" if detail else ""
+        print(f"FAIL  {label}{extra}")
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    def reject_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        out: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in out:
+                raise ValueError(f"duplicate JSON key: {key}")
+            out[key] = value
+        return out
+
+    value = json.loads(path.read_text("utf-8"), object_pairs_hook=reject_duplicates)
+    if not isinstance(value, dict):
+        raise TypeError(f"{path} is not a JSON object")
+    return value
+
+
+def git(args: list[str]) -> str:
+    return subprocess.check_output(["git", *args], cwd=WORKTREE, text=True).strip()
+
+
+def verify_head_and_tree() -> None:
+    print("\n=== 1. HEAD and tree identity ===")
+    head = git(["rev-parse", "HEAD"])
+    tree = git(["rev-parse", "HEAD^{tree}"])
+    porcelain = git(["status", "--porcelain"])
+    check(head == EXPECTED_COMMIT, "HEAD equals reviewed commit", head)
+    check(tree == EXPECTED_TREE, "HEAD^{tree} equals reviewed tree", tree)
+    check(porcelain == "", "worktree clean before independent work", repr(porcelain))
+
+
+def verify_bound_file_hashes() -> None:
+    print("\n=== 2. Independent SHA-256 of packet-listed bound files ===")
+    for rel, expected in BOUND.items():
+        observed = file_grouped(WORKTREE / rel)
+        check(observed == expected, f"bound hash {rel}", observed)
+
+
+def verify_semantic_and_schema_pin(config: dict[str, Any], schema: dict[str, Any]) -> None:
+    print("\n=== 3. Independent semantic hash and schema const pin ===")
+    observed_semantic = independent_semantic_sha256(config)
+    check(
+        observed_semantic == EXPECTED_SEMANTIC,
+        "independently recomputed semantic_sha256 matches pin",
+        observed_semantic,
+    )
+    check(
+        config.get("semantic_sha256") == EXPECTED_SEMANTIC,
+        "config.semantic_sha256 field equals pin",
+        str(config.get("semantic_sha256")),
+    )
+    check(
+        set(schema.keys()) == {"$schema", "$id", "title", "description", "type", "const"},
+        "schema top-level shape is exact-const pin",
+        str(sorted(schema.keys())),
+    )
+    check(schema.get("type") == "object", "schema type is object")
+    check(schema.get("const") == config, "schema.const exact-equals config object")
+    # Also prove byte-independent object equality is not a pointer trick.
+    check(
+        json.dumps(schema["const"], sort_keys=True, separators=(",", ":"))
+        == json.dumps(config, sort_keys=True, separators=(",", ":")),
+        "schema.const and config serialize identically after independent dumps",
+    )
+
+
+def verify_lineage_hashes(config: dict[str, Any]) -> None:
+    print("\n=== 4. Independent lineage predecessor hashes ===")
+    lineage = config["lineage"]
+    check(
+        lineage["protected_main_at_authoring"] == EXPECTED_PROTECTED_MAIN,
+        "protected_main_at_authoring matches parent commit grouped prefix",
+    )
+    parent = git(["rev-parse", "HEAD^"])
+    reconstructed = ":".join(parent[i : i + 8] for i in range(0, 40, 8))
+    check(
+        reconstructed == EXPECTED_PROTECTED_MAIN,
+        "parent commit SHA reconstructs protected_main_at_authoring",
+        f"{parent} -> {reconstructed}",
+    )
+    checked = 0
+    for name, binding in lineage.items():
+        if not isinstance(binding, dict) or "path" not in binding or "sha256" not in binding:
+            continue
+        rel = binding["path"]
+        observed = file_grouped(WORKTREE / rel)
+        check(observed == binding["sha256"], f"lineage {name} {rel}", observed)
+        checked += 1
+    check(checked == 9, "exactly nine path-bound lineage predecessors", str(checked))
+    serialized = json.dumps(config)
+    check(
+        PR26_PATH not in serialized,
+        "A1 record does not mention PR #26 owner-selection path",
+    )
+    check(
+        "ppw_bootstrap_owner_selections" not in lineage,
+        "A1 lineage object has no ppw_bootstrap_owner_selections key",
+        str(list(lineage.keys())),
+    )
+
+
+def verify_manifest(manifest: dict[str, Any]) -> None:
+    print("\n=== 5. Independent manifest / reviewed-slice hashes ===")
+    check(set(manifest.keys()) == {
+        "schema_version",
+        "artifact_id",
+        "implementation_status",
+        "production_status",
+        "artifacts",
+    }, "manifest top-level shape")
+    check(manifest["schema_version"] == "qme.hash_manifest.v1", "manifest schema_version")
+    check(manifest["artifact_id"] == "OWNER-DECISION-RECORD-2026-08-16-V1", "manifest artifact_id")
+    check(
+        manifest["implementation_status"]
+        == "OWNER_DECISIONS_REGISTERED_NOT_AUTHORITY_TO_CLEAR_BLOCKERS",
+        "manifest implementation_status",
+    )
+    check(
+        manifest["production_status"] == "NO_OPERATIONAL_CONTRACT_OR_PRODUCTION_EVIDENCE",
+        "manifest production_status",
+    )
+    artifacts = manifest["artifacts"]
+    check(isinstance(artifacts, list) and len(artifacts) == 5, "manifest has 5 artifacts")
+    observed_paths = []
+    for item in artifacts:
+        check(set(item.keys()) == {"path", "sha256"}, f"manifest row keys {item.get('path')}")
+        rel = item["path"]
+        observed_paths.append(rel)
+        observed = file_grouped(WORKTREE / rel)
+        check(observed == item["sha256"], f"manifest hash {rel}", observed)
+    check(tuple(observed_paths) == MANIFEST_PATHS, "manifest path order/set exact")
+
+
+def verify_claims(config: dict[str, Any]) -> None:
+    print("\n=== 6. Claims contract (required-true / forbidden-true) ===")
+    claims = config["claims"]
+    for key in REQUIRED_TRUE:
+        check(claims.get(key) is True, f"required-true {key} is True", str(claims.get(key)))
+    for key in FORBIDDEN_TRUE:
+        check(claims.get(key) is False, f"forbidden-true {key} is False", str(claims.get(key)))
+    check(
+        claims.get("registration_meaning") == REGISTRATION_MEANING,
+        "registration_meaning",
+        str(claims.get("registration_meaning")),
+    )
+    check(config["status"] == "OWNER_DECISIONS_REGISTERED_NOT_AUTHORITY_TO_CLEAR_BLOCKERS", "record status")
+    for name, transition in config["status_transitions"].items():
+        check(
+            transition.get("blocker_cleared") is False,
+            f"status_transition {name} blocker_cleared is False",
+        )
+    check(
+        "FREEZE_V4_REMAINS_13_ACTIVE_0_RESOLVED" in config["nonclaims"],
+        "nonclaims records Freeze V4 13/0",
+    )
+    auth = config["authority"]
+    check(auth["approval_owner"] == "neeljaiswal90", "approval_owner")
+    check(auth["approval_date"] == "2026-08-16", "approval_date")
+    check(auth["approved_at"] is None, "approved_at is null / not inferred")
+    check(
+        auth["approved_at_status"] == "PERMANENTLY_UNAVAILABLE_NOT_INFERRED",
+        "approved_at_status",
+    )
+    check(auth["empirical_results_used"] is False, "empirical_results_used is false")
+
+
+def extract_yaml_block(doc_text: str) -> str:
+    match = re.search(r"```yaml\n(.*?)```", doc_text, re.S)
+    if not match:
+        raise RuntimeError("canonical YAML block missing from bound doc")
+    return match.group(1)
+
+
+def verify_eighteen_decisions(config: dict[str, Any], doc_text: str) -> None:
+    print("\n=== 7. Faithfulness of all 18 decisions to bound doc + canonical YAML ===")
+    yaml_text = extract_yaml_block(doc_text)
+    decisions = config["decisions"]
+    check(set(decisions.keys()) == {
+        "d1_m0_engineering_acceptance_standard",
+        "d2_signal_session_date",
+        "d3_tax_lot_method",
+        "d4_tax_reporting_scenarios",
+        "d5_research_fee_rounding",
+        "d6_capacity_method",
+        "d7_nee120_primary_inference",
+        "d8_nee122_effective_trials",
+        "d9_xnas_calendar_v1_accept",
+        "d10_cost_corporate_action",
+        "d11_bbby_two_events",
+        "d12_av_proxy_limited_claim",
+        "d13_av_pull_scope",
+        "d14_ndx_membership_authority",
+        "d15_independent_review_standard",
+        "d16_linear_reconciliation",
+        "d17_defer_final_two_gates",
+        "d18_rotate_alpha_vantage_key",
+    }, "exactly 18 structured decisions present")
+
+    d1 = decisions["d1_m0_engineering_acceptance_standard"]
+    check(d1["disposition"] == "NEW", "D1 disposition NEW")
+    check(
+        d1["standard"]
+        == [
+            "FROZEN_METHOD",
+            "EXACT_ARTIFACT_HASHES",
+            "DETERMINISTIC_FIXTURES",
+            "EXACT_SHA_CI",
+            "INDEPENDENT_RECOMPUTATION",
+            "FAIL_CLOSED_BEHAVIOR",
+        ],
+        "D1 standard matches prose six-element list",
+    )
+    check(
+        d1["does_not_require"]
+        == [
+            "ACTUAL_STRATEGY_RETURNS",
+            "COMPLETE_HISTORICAL_PRODUCTION_DATA",
+            "LIVE_PORTFOLIO",
+            "ACTUAL_TAX_LIABILITY",
+            "EMPIRICAL_PORTFOLIO_CAPACITY",
+            "PAPER_FILLS",
+            "BROKER_RECONCILIATION",
+        ],
+        "D1 does_not_require matches prose exclusions",
+    )
+    check(
+        "engineering_requires_empirical_results: false" in yaml_text,
+        "D1 YAML engineering_requires_empirical_results false",
+    )
+    check(
+        set(d1["clearable_from_conformance_evidence"])
+        == {
+            "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+            "NEE-116-CAPACITY-SOLVER",
+            "NEE-122-CORRELATED-TRIAL-FIXTURE",
+            "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+        },
+        "D1 clearable set matches both NEE-122 + capacity + inference",
+    )
+
+    d2 = decisions["d2_signal_session_date"]
+    check(d2["disposition"] == "NEW", "D2 disposition NEW")
+    check(d2["listing_signal_session_date"] == "2026-07-31", "D2 date")
+    check(d2["calendar"] == "XNAS_SESSION_VECTOR_V1", "D2 calendar")
+    check(
+        d2["unavailable_rule"]
+        == "NDX_MEMBERSHIP_AT_2026_07_31_UNAVAILABLE_NO_AUGUST_CURRENT_OR_QQQ_SUBSTITUTION",
+        "D2 fail-closed no substitution",
+    )
+    check('date: "2026-07-31"' in yaml_text, "D2 YAML date")
+    check("nearest_date_substitution: forbidden" in yaml_text, "D2 YAML no substitution")
+    check("2026-07-31" in doc_text and "XNAS_SESSION_VECTOR_V1" in doc_text, "D2 prose")
+
+    d3 = decisions["d3_tax_lot_method"]
+    check(d3["disposition"] == "NEW", "D3 disposition NEW")
+    check(d3["v0_1_tax_lot_method"] == "FIFO", "D3 FIFO")
+    check(d3["hifo_enabled"] is False, "D3 HIFO disabled")
+    check(
+        d3["hifo_requires"]
+        == ["BROKER_ELECTION", "EFFECTIVE_DATE", "RECONCILIATION", "NEW_REGISTERED_VERSION"],
+        "D3 HIFO prerequisites",
+    )
+    check("lot_method: FIFO" in yaml_text and "hifo_enabled: false" in yaml_text, "D3 YAML")
+
+    d4 = decisions["d4_tax_reporting_scenarios"]
+    check(d4["disposition"] == "NEW", "D4 disposition NEW")
+    check(d4["canonical_results"] == "PRE_TAX_NET_OF_TRANSACTION_COSTS", "D4 canonical results")
+    check(
+        d4["scenarios"]
+        == [
+            {"short_term_rate": "0.22", "long_term_rate": "0.15"},
+            {"short_term_rate": "0.24", "long_term_rate": "0.15"},
+            {"short_term_rate": "0.32", "long_term_rate": "0.15"},
+        ],
+        "D4 three ST/LT scenarios",
+    )
+    check(d4["actual_personal_tax_liability_claimed"] is False, "D4 no actual liability")
+    check(d4["middle_scenario_is_actual_bracket"] is False, "D4 24% is not actual bracket")
+    check("canonical_results: PRE_TAX_NET_OF_COSTS" in yaml_text, "D4 YAML abbreviated name")
+    check("actual_tax_liability_claimed: false" in yaml_text, "D4 YAML no actual liability")
+    check("ST 22 % / LT 15 %" in doc_text and "ST 24 % / LT 15 %" in doc_text, "D4 prose rates")
+    check("ST 32 % / LT 15 %" in doc_text, "D4 prose 32/15")
+
+    d5 = decisions["d5_research_fee_rounding"]
+    check(d5["disposition"] == "NEW", "D5 disposition NEW")
+    check(
+        d5["research_regulatory_fee_rounding"] == "RAW_EXACT_QUANTIZED_AT_LEDGER_QUANTUM_ONLY",
+        "D5 rounding rule",
+    )
+    check(d5["broker_rounding_deferred_to"] == "M7_RECONCILIATION", "D5 broker rounding deferred")
+    check(d5["regulatory_fees_reported_separately_from_bps"] is True, "D5 fees separate from bps")
+    check(
+        "regulatory_fee_rounding: RAW_EXACT_QUANTIZED_AT_LEDGER_QUANTUM_ONLY" in yaml_text,
+        "D5 YAML rounding",
+    )
+
+    d6 = decisions["d6_capacity_method"]
+    check(d6["disposition"] == "STATUS_TRANSITION", "D6 STATUS_TRANSITION")
+    check(d6["method_id"] == "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1", "D6 method id")
+    check(d6["capital_search_quantum_usd"] == "100", "D6 quantum 100")
+    check(d6["max_adv20_participation"] == "0.01", "D6 participation 0.01")
+    check(d6["cash_buffer"] == "0.01", "D6 cash buffer 0.01")
+    check(d6["order_quantum_shares"] == "1", "D6 order quantum 1")
+    check(d6["status_from"] == "UNAVAILABLE_DISCRETE_SOLVER_NOT_IMPLEMENTED", "D6 from")
+    check(d6["status_to"] == "IMPLEMENTED_PRODUCTION_INPUTS_UNAVAILABLE", "D6 to")
+    check(d6["empirical_capacity_number_claimed"] is False, "D6 no empirical capacity number")
+    check("capital_quantum_usd: 100" in yaml_text, "D6 YAML quantum")
+    check("empirical_capacity_claimed: false" in yaml_text, "D6 YAML no claim")
+    check(
+        config["status_transitions"]["capacity_solver"]["blocker_cleared"] is False,
+        "D6 transition does not clear blocker",
+    )
+
+    d7 = decisions["d7_nee120_primary_inference"]
+    check(d7["disposition"] == "STATUS_TRANSITION", "D7 STATUS_TRANSITION")
+    check(
+        d7["point_estimate"] == "12_TIMES_MEAN_MONTHLY_PAIRED_NET_LOG_RETURN_DELTA",
+        "D7 point estimate encodes prose net-log-return delta",
+    )
+    check(
+        d7["primary_interval"] == "ONE_SIDED_95_PERCENT_STATIONARY_BOOTSTRAP_LCB",
+        "D7 primary interval",
+    )
+    check(d7["bootstrap_replicates"] == 10000, "D7 B=10000")
+    check(d7["bootstrap_seed"] == 20260812, "D7 seed")
+    check(d7["block_selector"] == "CORRECTED_POLITIS_WHITE", "D7 selector")
+    check(d7["min_block_length"] == 3, "D7 min block 3")
+    check(d7["max_block_length_formula"] == "floor(n / 4)", "D7 max block floor(n/4)")
+    check(d7["minimum_series_length"] == 12, "D7 min N 12")
+    check(d7["selector_failure_action"] == "NO_GO_NO_FALLBACK", "D7 no fallback")
+    check(d7["two_sided_90_percent_interval"] == "DIAGNOSTIC", "D7 two-sided diagnostic")
+    check(d7["newey_west"] == "DIAGNOSTIC_ONLY_NO_P_VALUE", "D7 NW diagnostic only")
+    check(d7["does_not_require_empirical_paired_ledger_returns"] is True, "D7 no empirical ledgers")
+    check("bootstrap_replicates: 10000" in yaml_text, "D7 YAML B")
+    check("seed: 20260812" in yaml_text, "D7 YAML seed")
+    check("fallback_on_selector_failure: NO_GO_NO_FALLBACK" in yaml_text, "D7 YAML no fallback")
+    check(
+        "12_TIMES_MEAN_MONTHLY_PAIRED_LOG_RETURN_DIFFERENCE" in yaml_text,
+        "D7 YAML uses LOG_RETURN_DIFFERENCE synonym of prose/JSON delta",
+    )
+    check(
+        config["status_transitions"]["nee120_inference"]["blocker_cleared"] is False,
+        "D7 transition does not clear blocker",
+    )
+
+    d8 = decisions["d8_nee122_effective_trials"]
+    check(d8["disposition"] == "ALREADY_REGISTERED_CONFIRMED", "D8 already registered")
+    check(
+        d8["univariate_block_aggregation"] == "MEDIAN_OF_SORTED_POSITIONS_48_AND_49",
+        "D8 median 48/49",
+    )
+    check(d8["bootstrap_replicates"] == 2000, "D8 B=2000")
+    check(d8["bootstrap_seed"] == 20260812, "D8 seed")
+    check(d8["resampling"] == "SHARED_MONTH_INDICES_ACROSS_ALL_96_COLUMNS", "D8 shared months")
+    check(
+        d8["per_replicate_recomputation"]
+        == ["LEDOIT_WOLF", "CORRELATION_RESCALING", "PARTICIPATION_RATIO"],
+        "D8 per-replicate steps",
+    )
+    check(d8["p97_5_order_statistic_one_based_rank"] == 1950, "D8 rank 1950")
+    check(d8["n_eff_used_formula"] == "min(96, ceil(P97_5_effective_trials))", "D8 n_eff formula")
+    check(d8["invalid_replicate_policy"] == "INVALIDATE_DISTRIBUTION", "D8 invalidate")
+    check(d8["invalid_distribution_fallback"] == "CONSERVATIVE_N_EFF_USED_96", "D8 conservative 96")
+    check(
+        d8["authority_config"]
+        == "configs/governance/ppw-bootstrap-uncertainty-authority-v1.json",
+        "D8 authority config path",
+    )
+    check(d8["clears_only_after"] == "NEE-204_SUCCESSOR_FREEZE_AND_RECEIPT_SEQUENCE", "D8 NEE-204")
+    check("MEDIAN_OF_SORTED_POSITIONS_48_AND_49" in doc_text, "D8 prose aggregation")
+    check("P97.5 = one-based rank 1950" in doc_text, "D8 prose rank")
+
+    d9 = decisions["d9_xnas_calendar_v1_accept"]
+    check(d9["disposition"] == "NEW_DISPOSITION_ON_EXISTING_EVIDENCE", "D9 disposition")
+    check(d9["xnas_calendar_v1_accepted"] is True, "D9 accept V1")
+    check(
+        d9["flags_to_flip"]
+        == ["linux_generator_hash_lock_available", "windows_linux_byte_replay_verified"],
+        "D9 flags",
+    )
+    check(d9["protected_main_linux_run"] == "31922669149", "D9 linux run id")
+    check(
+        d9["correction_policy"] == "ANY_CORRECTION_PRODUCES_XNAS_CALENDAR_V2_NEVER_IN_PLACE_OVERWRITE",
+        "D9 no in-place overwrite",
+    )
+    check("31922669149" in doc_text, "D9 prose run id")
+
+    d10 = decisions["d10_cost_corporate_action"]
+    check(d10["disposition"] == "NEW", "D10 disposition NEW")
+    check(d10["amount_per_share_usd"] == "15.00", "D10 $15.00")
+    check(d10["ex_date"] == "2023-12-27", "D10 ex")
+    check(d10["record_date"] == "2023-12-28", "D10 record")
+    check(d10["payment_date"] == "2024-01-12", "D10 payment")
+    check(d10["superseded_ex_date"] == "2024-01-11", "D10 superseded ex")
+    check(
+        d10["superseded_status"] == "SUPERSEDED_INCORRECT_DATE_PRESERVED_NOT_DELETED",
+        "D10 preserved not deleted",
+    )
+    check('ex_date: "2023-12-27"' in yaml_text, "D10 YAML ex")
+    check("amount_per_share_usd: 15.00" in yaml_text, "D10 YAML amount")
+
+    d11 = decisions["d11_bbby_two_events"]
+    check(d11["disposition"] == "NEW_REFINES_D5_OF_PROPOSAL", "D11 disposition")
+    check(d11["exchange_delisting_or_otc_transition_date"] == "2023-05-03", "D11 exchange date")
+    check(d11["exchange_event_security_terminal"] is False, "D11 exchange not terminal")
+    check(d11["terminal_plan_effective_or_cancellation_date"] == "2023-09-29", "D11 terminal date")
+    check(d11["terminal_event_security_terminal"] is True, "D11 terminal is terminal")
+    check(
+        d11["rule"] == "EXCHANGE_OR_OTC_TRANSITION_IS_NOT_ECONOMIC_EXTINCTION_NO_FORCED_MAY_LIQUIDATION",
+        "D11 two-event rule",
+    )
+    check('exchange_transition_date: "2023-05-03"' in yaml_text, "D11 YAML exchange")
+    check('terminal_cancellation_date: "2023-09-29"' in yaml_text, "D11 YAML terminal")
+
+    d12 = decisions["d12_av_proxy_limited_claim"]
+    check(d12["disposition"] == "NEW_STRENGTHENS_D6_OF_PROPOSAL", "D12 disposition")
+    check(
+        d12["accepted_universe_identity"] == "AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY",
+        "D12 limited claim",
+    )
+    check(d12["authoritative_us_common_stock_universe"] is False, "D12 not authoritative universe")
+    check(d12["authoritative_ndx_membership"] is False, "D12 not authoritative ndx")
+    check(
+        d12["review_before_flip_requires"]
+        == [
+            "100_PERCENT_ALL_1724_REVIEW_LOG_ENTRIES",
+            "100_PERCENT_SYMBOL_COLLISIONS",
+            "100_PERCENT_AMBIGUOUS_IDENTITY",
+            "DOCUMENTED_DISPOSITION_PER_ROW",
+            "INDEPENDENT_SAMPLE_VERIFICATION_DIFFERENT_REVIEWER",
+        ],
+        "D12 100% review protocol",
+    )
+    check(
+        d12["reviewer_independence"] == "INDEPENDENT_OF_AUTHORING_MODEL_LINEAGE",
+        "D12 reviewer independence",
+    )
+    check("av_proxy_claim: AV_SURVIVORSHIP_REDUCED_COMMON_STOCK_PROXY" in yaml_text, "D12 YAML")
+    check("1,724 review-log entries" in doc_text, "D12 prose 1724")
+
+    d13 = decisions["d13_av_pull_scope"]
+    check(d13["disposition"] == "NEW", "D13 disposition NEW")
+    check(d13["accepted_as"] == "M0_PRODUCTION_SOURCE_FIXTURE_EVIDENCE", "D13 accepted as")
+    check(
+        d13["not_described_as"] == "COMPLETE_PRODUCTION_POINT_IN_TIME_DATA_SPINE",
+        "D13 not complete PIT spine",
+    )
+    check(d13["registered_pull_count"] == 23, "D13 23 pulls")
+    check("23/23 immutable pulls" in doc_text, "D13 prose 23/23")
+
+    d14 = decisions["d14_ndx_membership_authority"]
+    check(d14["disposition"] == "NEW_REFINES_GIW_RUNBOOK", "D14 disposition")
+    check(d14["ndx_membership_authority"] == "NASDAQ_GIW_COMPONENT_OR_WEIGHTING_EXPORT", "D14 GIW")
+    check(
+        d14["change_reconciliation_authority"] == "OFFICIAL_NASDAQ_CHANGE_ANNOUNCEMENTS",
+        "D14 announcements",
+    )
+    check(d14["qqq_holdings_authority"] is False, "D14 QQQ not authority")
+    check(d14["preferred_effective_date"] == "2026-07-31", "D14 preferred date")
+    check(
+        d14["first_prospective_effective_date_if_historical_unavailable"] == "2026-08-14",
+        "D14 fallback date",
+    )
+    check(d14["pre_first_snapshot_membership"] == "UNAVAILABLE", "D14 pre-first unavailable")
+    check(d14["reconcile_change_set_dated"] == "2026-06-22", "D14 2026-06-22 changeset")
+    check(d14["preserve_goog_googl_separately"] is True, "D14 GOOG/GOOGL separate")
+    check(d14["basket_row_count_assumed_exactly_100"] is False, "D14 not assume 100 rows")
+    check("authority: NASDAQ_GIW" in yaml_text, "D14 YAML authority")
+    check("qqq_holdings_authoritative: false" in yaml_text, "D14 YAML QQQ")
+
+    d15 = decisions["d15_independent_review_standard"]
+    check(d15["disposition"] == "NEW_EXPANDS_D8_OF_PROPOSAL", "D15 disposition")
+    check(
+        d15["same_model_lineage_self_review_is_sole_independent_review"] is False,
+        "D15 same-lineage insufficient",
+    )
+    required_fields = [
+        "AUTHOR_PROVIDER",
+        "AUTHOR_MODEL_AND_EXACT_REVISION",
+        "REVIEWER_PROVIDER",
+        "REVIEWER_MODEL_AND_EXACT_REVISION",
+        "QUANTIZATION",
+        "INFERENCE_ENGINE",
+        "PROMPT_HASH",
+        "TOOL_SCHEMA_HASH",
+        "REVIEWED_ARTIFACT_HASHES",
+        "REVIEW_SCOPE",
+        "P0_COUNT",
+        "P1_COUNT",
+        "REVIEW_DISPOSITION",
+    ]
+    check(d15["required_acceptance_fields"] == required_fields, "D15 required fields")
+    check(
+        set(d15["numerical_kernel_requires_at_least_one_of"])
+        == {
+            "INDEPENDENTLY_WRITTEN_ORACLE",
+            "EXACT_FRACTION_OR_DECIMAL_RECOMPUTATION",
+            "ALTERNATIVE_IMPLEMENTATION",
+            "CROSS_PLATFORM_BYTE_REPLAY",
+            "HAND_WORKED_FIXTURE",
+            "INDEPENDENTLY_DERIVED_KNOWN_ANSWER_TEST",
+        },
+        "D15 numerical options",
+    )
+    check("same_lineage_self_review_sufficient: false" in yaml_text, "D15 YAML")
+    check("numerical_oracle_required: true" in yaml_text, "D15 YAML oracle")
+
+    d16 = decisions["d16_linear_reconciliation"]
+    check(d16["disposition"] == "NEW_DISPOSITION", "D16 disposition")
+    check(
+        d16["keep_in_progress"] == ["NEE-110", "NEE-119", "NEE-120", "NEE-121", "NEE-122", "NEE-204"],
+        "D16 keep in progress set",
+    )
+    check(d16["nee116_status"] == "IN_PROGRESS", "D16 NEE-116 in progress")
+    check(d16["branch_name_autoclose_is_not_acceptance"] is True, "D16 branch autoclose not acceptance")
+    check("NEE-110/119/120/121/122/204" in doc_text, "D16 prose ticket set")
+
+    d17 = decisions["d17_defer_final_two_gates"]
+    check(d17["disposition"] == "NEW_DISPOSITION", "D17 disposition")
+    check(
+        d17["deferred"]
+        == [
+            "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+            "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+        ],
+        "D17 deferred gates",
+    )
+    check(d17["not_mere_ceremony"] is True, "D17 not ceremony")
+    check(
+        d17["occurs_only_after"]
+        == [
+            "EVERY_SUBSTANTIVE_BLOCKER_HAS_RECORDED_DISPOSITION",
+            "CORRECTIONS_INCORPORATED",
+            "SUCCESSOR_FREEZE_REPRODUCES",
+            "INDEPENDENT_REVIEW_CLEAN",
+            "OWNER_SIGNS_ACCEPTED_SCOPE",
+            "PROTECTED_MAIN_CI_SUCCEEDS",
+        ],
+        "D17 preconditions",
+    )
+    check("cross_contract_approval: DEFERRED" in yaml_text, "D17 YAML gate 1")
+    check("final_freeze_timestamp: DEFERRED" in yaml_text, "D17 YAML gate 2")
+    check("milestone_m0_complete: false" in yaml_text, "D17 YAML m0 false")
+
+    d18 = decisions["d18_rotate_alpha_vantage_key"]
+    check(d18["disposition"] == "NEW_OWNER_ACTION", "D18 disposition")
+    check(
+        d18["action"] == "ROTATE_ALPHA_VANTAGE_KEY_IMMEDIATELY_NOT_AFTER_M0_CLOSE",
+        "D18 rotate now",
+    )
+    check("rotate_alpha_vantage_key_immediately: true" in yaml_text, "D18 YAML")
+    check("Rotate the Alpha Vantage credential now" in doc_text, "D18 prose")
+
+    bd = config["blocker_disposition"]
+    check(
+        bd["ready_for_engineering_successor_freeze"]
+        == [
+            "NEE-116-CAPACITY-SOLVER",
+            "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+            "NEE-121-CALENDAR-SESSION-REGISTRATION",
+        ],
+        "blocker disposition ready-for-successor-freeze",
+    )
+    check(
+        bd["ready_after_nee204_acceptance_sequence"]
+        == [
+            "NEE-122-CORRELATED-TRIAL-FIXTURE",
+            "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+        ],
+        "blocker disposition after NEE-204",
+    )
+    check(
+        bd["require_one_bounded_fixture"]
+        == [
+            "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+            "NEE-116-ASYMMETRIC-COST-METHOD",
+            "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        ],
+        "blocker disposition bounded fixture",
+    )
+    check(
+        bd["require_owner_or_data_action"]
+        == [
+            "NEE-116-PRODUCTION-PIT-DATA",
+            "NEE-119-AV-PROXY-EVIDENCE",
+            "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        ],
+        "blocker disposition owner/data",
+    )
+    check(
+        bd["final_derived_gates"]
+        == [
+            "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+            "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+        ],
+        "blocker disposition final gates",
+    )
+    check("Freeze V4 stays **13 active / 0 resolved**" in doc_text, "doc freeze 13/0")
+    check("`milestone_m0_complete = false`" in doc_text, "doc m0 false")
+
+
+def independent_claims_ok(document: dict[str, Any]) -> tuple[bool, str]:
+    claims = document.get("claims")
+    if not isinstance(claims, dict):
+        return False, "claims missing"
+    if any(claims.get(field) is not False for field in FORBIDDEN_TRUE):
+        return False, "forbidden claim not False"
+    if any(claims.get(field) is not True for field in REQUIRED_TRUE):
+        return False, "required claim not True"
+    if claims.get("registration_meaning") != REGISTRATION_MEANING:
+        return False, "registration meaning changed"
+    return True, "ok"
+
+
+def verify_tamper(config: dict[str, Any]) -> None:
+    print("\n=== 8. Tamper rejection on copies OUTSIDE the worktree ===")
+    if TAMPER_DIR.exists():
+        shutil.rmtree(TAMPER_DIR)
+    TAMPER_DIR.mkdir(parents=True)
+
+    config_src = WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.json"
+    schema_src = WORKTREE / "schemas/governance/owner-decision-record-2026-08-16-v1.schema.json"
+    manifest_src = WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.hashes.json"
+    lineage_src = WORKTREE / "qme/quant/capacity_solver.py"
+
+    # 8a. Byte flip of config copy — hash must diverge from pin.
+    mutated_config = TAMPER_DIR / "mutated-config.json"
+    raw = bytearray(config_src.read_bytes())
+    raw[0] ^= 0x01
+    mutated_config.write_bytes(bytes(raw))
+    check(
+        file_grouped(mutated_config) != BOUND[config_src.relative_to(WORKTREE).as_posix()],
+        "tamper: flipped config byte changes SHA-256 vs pin",
+        file_grouped(mutated_config),
+    )
+    check(
+        file_grouped(config_src) == BOUND[config_src.relative_to(WORKTREE).as_posix()],
+        "tamper: original worktree config bytes unchanged after copy mutation",
+    )
+
+    # 8b. Semantic-hash field rewrite.
+    forged = json.loads(config_src.read_text("utf-8"))
+    forged["semantic_sha256"] = "00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000"
+    semantic_copy = TAMPER_DIR / "forged-semantic.json"
+    semantic_copy.write_text(json.dumps(forged, indent=2) + "\n", "utf-8")
+    recomputed = independent_semantic_sha256(forged)
+    check(
+        recomputed == EXPECTED_SEMANTIC,
+        "tamper: rewriting only the semantic_sha256 field leaves true digest unchanged",
+        recomputed,
+    )
+    check(
+        forged["semantic_sha256"] != recomputed,
+        "tamper: forged semantic_sha256 field no longer equals independent digest",
+    )
+
+    # 8c. Mutate each forbidden claim to True in a copy.
+    for key in FORBIDDEN_TRUE:
+        forged_claims = json.loads(config_src.read_text("utf-8"))
+        forged_claims["claims"][key] = True
+        ok, reason = independent_claims_ok(forged_claims)
+        check(not ok, f"tamper: setting {key}=True fails claims contract", reason)
+        path = TAMPER_DIR / f"claim-true-{key}.json"
+        path.write_text(json.dumps(forged_claims), "utf-8")
+        check(
+            file_grouped(path) != BOUND[config_src.relative_to(WORKTREE).as_posix()],
+            f"tamper: {key}=True copy hash diverges from pin",
+        )
+
+    # 8d. Mutate each required claim to False.
+    for key in REQUIRED_TRUE:
+        forged_claims = json.loads(config_src.read_text("utf-8"))
+        forged_claims["claims"][key] = False
+        ok, reason = independent_claims_ok(forged_claims)
+        check(not ok, f"tamper: setting {key}=False fails claims contract", reason)
+
+    # 8e. Mutate registration meaning.
+    forged_meaning = json.loads(config_src.read_text("utf-8"))
+    forged_meaning["claims"]["registration_meaning"] = "DECISIONS_REGISTERED_AND_BLOCKERS_CLEARED"
+    ok, reason = independent_claims_ok(forged_meaning)
+    check(not ok, "tamper: forged registration_meaning fails claims contract", reason)
+
+    # 8f. Mutate a lineage predecessor file copy.
+    lineage_copy = TAMPER_DIR / "mutated-capacity-solver.py"
+    lineage_bytes = bytearray(lineage_src.read_bytes())
+    lineage_bytes[-1] ^= 0x01
+    lineage_copy.write_bytes(bytes(lineage_bytes))
+    expected_lineage = config["lineage"]["capacity_solver_code"]["sha256"]
+    check(
+        file_grouped(lineage_copy) != expected_lineage,
+        "tamper: mutated predecessor file hash diverges from A1 lineage pin",
+        file_grouped(lineage_copy),
+    )
+    check(
+        file_grouped(lineage_src) == expected_lineage,
+        "tamper: original predecessor file in worktree unchanged",
+    )
+
+    # 8g. Mutate schema const pin copy.
+    schema_forged = json.loads(schema_src.read_text("utf-8"))
+    schema_forged["const"]["claims"]["production_ready"] = True
+    schema_copy = TAMPER_DIR / "mutated-schema.json"
+    schema_copy.write_text(json.dumps(schema_forged), "utf-8")
+    original_schema = json.loads(schema_src.read_text("utf-8"))
+    check(
+        schema_forged["const"] != original_schema["const"],
+        "tamper: mutated schema.const no longer exact-pins config",
+    )
+    check(
+        file_grouped(schema_copy)
+        != BOUND["schemas/governance/owner-decision-record-2026-08-16-v1.schema.json"],
+        "tamper: mutated schema hash diverges from pin",
+    )
+
+    # 8h. Mutate manifest hash row.
+    manifest_forged = json.loads(manifest_src.read_text("utf-8"))
+    manifest_forged["artifacts"][0]["sha256"] = (
+        "00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000"
+    )
+    manifest_copy = TAMPER_DIR / "mutated-manifest.json"
+    manifest_copy.write_text(json.dumps(manifest_forged), "utf-8")
+    observed_cfg = file_grouped(config_src)
+    check(
+        observed_cfg != manifest_forged["artifacts"][0]["sha256"],
+        "tamper: forged manifest row no longer matches config bytes",
+    )
+    check(
+        file_grouped(manifest_copy)
+        != BOUND["configs/governance/owner-decision-record-2026-08-16-v1.hashes.json"],
+        "tamper: mutated manifest hash diverges from pin",
+    )
+
+    # 8i. Invent an approval timestamp.
+    forged_ts = json.loads(config_src.read_text("utf-8"))
+    forged_ts["authority"]["approved_at"] = "2026-08-16T00:00:00Z"
+    check(
+        forged_ts["authority"]["approved_at"] is not None,
+        "tamper setup: invented timestamp present in copy only",
+    )
+    check(
+        json.loads(config_src.read_text("utf-8"))["authority"]["approved_at"] is None,
+        "tamper: worktree approved_at remains null",
+    )
+    invented_copy = TAMPER_DIR / "invented-timestamp.json"
+    invented_copy.write_text(json.dumps(forged_ts), "utf-8")
+    check(
+        file_grouped(invented_copy) != BOUND[config_src.relative_to(WORKTREE).as_posix()],
+        "tamper: invented timestamp copy rejected by hash pin",
+    )
+
+    # Confirm worktree still clean of our copies (copies live under outputs/).
+    check(TAMPER_DIR.is_relative_to(OUT_DIR), "tamper copies live only under outputs/A1")
+    check(not TAMPER_DIR.is_relative_to(WORKTREE), "tamper copies are outside the worktree")
+
+
+def verify_pr26_and_correction() -> None:
+    print("\n=== 9. Disclosed P2 and later correction record ===")
+    a1_text = (WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.json").read_text(
+        "utf-8"
+    )
+    check(PR26_PATH not in a1_text, "P2 confirmed: A1 JSON text lacks PR #26 path")
+    check(
+        "ppw-bootstrap-owner-selections" not in a1_text,
+        "P2 confirmed: A1 JSON text lacks owner-selections artifact name",
+    )
+
+    pr26_hash = file_grouped(WORKTREE / PR26_PATH)
+    check(
+        pr26_hash == PR26_EXPECTED,
+        "A1-tree PR #26 owner-selection file hash",
+        pr26_hash,
+    )
+
+    packet_corr = (PACKET / "OWNER_IMPLEMENTATION_CORRECTION_2026_08_17_V1.md").read_text("utf-8")
+    check(
+        PR26_PATH in packet_corr and PR26_EXPECTED in packet_corr,
+        "packet correction doc binds PR #26 path + exact grouped SHA-256",
+    )
+    check(
+        "Freeze V4 stays **13 active / 0 resolved**" in packet_corr
+        or "Freeze V4 remains **13 active / 0 resolved**" in packet_corr,
+        "packet correction states Freeze V4 remains 13 active / 0 resolved",
+    )
+    check("`milestone_m0_complete = false`" in packet_corr, "packet correction m0 remains false")
+    check(
+        "any_freeze_v4_blocker_cleared | `false`" in packet_corr
+        or "any_freeze_v4_blocker_cleared` | `false`" in packet_corr
+        or "| any_freeze_v4_blocker_cleared | `false` |" in packet_corr,
+        "packet correction any_freeze_v4_blocker_cleared remains false",
+    )
+    check(
+        "No Freeze V4 blocker is resolved by this record" in packet_corr
+        or "No Freeze V4 blocker is cleared here" in packet_corr,
+        "packet correction does not claim Freeze V4 clearance",
+    )
+    check(
+        "VERSIONED_SUCCESSOR_NO_IN_PLACE_MODIFICATION" in packet_corr,
+        "packet correction is a versioned successor, not an in-place A1 edit",
+    )
+
+    later_json = git(
+        [
+            "show",
+            f"{LATER_COMMIT}:configs/governance/owner-implementation-correction-2026-08-17-v1.json",
+        ]
+    )
+    later = json.loads(later_json)
+    later_binding = later["lineage"]["ppw_bootstrap_owner_selections"]
+    check(
+        later_binding["path"] == PR26_PATH and later_binding["sha256"] == PR26_EXPECTED,
+        "later-commit JSON binds PR #26 by exact grouped SHA-256",
+        f"{later_binding['path']} {later_binding['sha256']}",
+    )
+    check(
+        later["claims"]["any_freeze_v4_blocker_cleared"] is False,
+        "later-commit any_freeze_v4_blocker_cleared is false",
+    )
+    check(
+        later["claims"]["milestone_m0_complete"] is False,
+        "later-commit milestone_m0_complete is false",
+    )
+    check(
+        later["claims"]["registration_meaning"] == REGISTRATION_MEANING,
+        "later-commit registration_meaning unchanged",
+    )
+    check(
+        "FREEZE_V4_REMAINS_13_ACTIVE_0_RESOLVED" in later["nonclaims"],
+        "later-commit nonclaims Freeze V4 13/0",
+    )
+    check(
+        later["record_id"] == "OWNER-IMPLEMENTATION-CORRECTION-2026-08-17-V1",
+        "later-commit record identity",
+    )
+    check(
+        later["status"]
+        == "IMPLEMENTATION_CORRECTIONS_REGISTERED_NOT_AUTHORITY_TO_CLEAR_BLOCKERS",
+        "later-commit status is registration, not clearance",
+    )
+    a1_bytes_now = file_grouped(
+        WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.json"
+    )
+    check(
+        a1_bytes_now == BOUND["configs/governance/owner-decision-record-2026-08-16-v1.json"],
+        "later correction does not change reviewed A1 Freeze-V4-era bytes",
+        a1_bytes_now,
+    )
+    later_pred = later["lineage"]["owner_decision_record"]["sha256"]
+    check(
+        later_pred == BOUND["configs/governance/owner-decision-record-2026-08-16-v1.json"],
+        "later correction predecessor hash is the reviewed A1 config hash",
+        later_pred,
+    )
+
+
+def verify_no_secrets() -> None:
+    print("\n=== 10. Secret / credential / raw-data / broker-log scan of bound files ===")
+    patterns = [
+        re.compile(r"sk-[A-Za-z0-9]{16,}"),
+        re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----"),
+        re.compile(r"(?i)api[_-]?key\s*[:=]\s*['\"][A-Za-z0-9_\-]{12,}"),
+        re.compile(r"(?i)secret\s*[:=]\s*['\"][^'\"]{8,}"),
+        re.compile(r"(?i)password\s*[:=]\s*['\"][^'\"]+"),
+        re.compile(r"AKIA[0-9A-Z]{16}"),
+    ]
+    hits = []
+    for rel in BOUND:
+        text = (WORKTREE / rel).read_text("utf-8", errors="replace")
+        for pat in patterns:
+            if pat.search(text):
+                hits.append(f"{rel} matched {pat.pattern}")
+    check(hits == [], "no secret/credential material in bound files", str(hits) if hits else "none")
+    # D18 discusses key rotation but must not embed a key.
+    d18 = (WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.json").read_text()
+    check("ROTATE_ALPHA_VANTAGE_KEY" in d18, "D18 discusses rotation (policy, not a secret)")
+
+
+def verify_worktree_still_clean() -> None:
+    print("\n=== 11. Worktree remains unchanged ===")
+    porcelain = git(["status", "--porcelain"])
+    check(porcelain == "", "git status --porcelain empty after independent work", repr(porcelain))
+    head = git(["rev-parse", "HEAD"])
+    tree = git(["rev-parse", "HEAD^{tree}"])
+    check(head == EXPECTED_COMMIT, "HEAD still reviewed commit")
+    check(tree == EXPECTED_TREE, "tree still reviewed tree")
+
+
+def main() -> int:
+    print("Independent A1 recomputation / verification")
+    print(f"worktree={WORKTREE}")
+    print(f"cwd_import_guard: qme not imported; sys.modules qme? {'qme' in sys.modules}")
+    verify_head_and_tree()
+    verify_bound_file_hashes()
+    config = load_json(WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.json")
+    schema = load_json(
+        WORKTREE / "schemas/governance/owner-decision-record-2026-08-16-v1.schema.json"
+    )
+    manifest = load_json(
+        WORKTREE / "configs/governance/owner-decision-record-2026-08-16-v1.hashes.json"
+    )
+    doc_text = (WORKTREE / "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md").read_text(
+        "utf-8"
+    )
+    verify_semantic_and_schema_pin(config, schema)
+    verify_lineage_hashes(config)
+    verify_manifest(manifest)
+    verify_claims(config)
+    verify_eighteen_decisions(config, doc_text)
+    verify_tamper(config)
+    verify_pr26_and_correction()
+    verify_no_secrets()
+    verify_worktree_still_clean()
+    print("\n=== SUMMARY ===")
+    print(f"PASS_COUNT={len(PASSES)}")
+    print(f"FAIL_COUNT={len(FAILURES)}")
+    if FAILURES:
+        print("FAILURES:")
+        for item in FAILURES:
+            print(f"  - {item}")
+        return 1
+    print("ALL_INDEPENDENT_CHECKS_PASSED")
+    print("DISCLOSED_P2_CONFIRMED: A1 lineage does not hash-bind PR #26 owner-selection artifact")
+    print("CORRECTION_RESOLVES_GAP_WITHOUT_CHANGING_FREEZE_V4")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

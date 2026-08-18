@@ -1,0 +1,172 @@
+"""Independent lock-file and wheel-digest checks for A4.
+
+Does not import scripts/verify_lock.py or any qme module.
+"""
+from __future__ import annotations
+
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path("/workspace/QME-external-review/A4")
+WIN = ROOT / "requirements-xnas-calendar-generator.lock"
+LIN = ROOT / "requirements-xnas-calendar-generator-linux.lock"
+INP = ROOT / "requirements-xnas-calendar-generator.in"
+
+# Independently fetched from PyPI JSON on 2026-08-18.
+PYPI = {
+    ("pandas-market-calendars", "5.4.0", "universal"): "bb2b93b2:8d496cab:173b41c7:d120fd5c:d9d506b3:1f3bb0ad:3d1d9f2b:60d9d9e3",
+    ("exchange-calendars", "4.13.2", "universal"): "fc5a2ad0:d61b5c3a:6539a306:1cd4cbb5:5c59f4a9:03455cec:7926e4b7:98919996",
+    ("tzdata", "2026.3", "universal"): "dc096730:c87af6ca:b1b171c9:d532be84:0741ff5d:459015e7:f6947bd7:d7e54931",
+    ("numpy", "2.5.2", "win"): "28ac6347:6ec76514:84215ee7:fa15a1f7:8b57c146:21f01e39:2afe17b9:a1390ce4",
+    ("numpy", "2.5.2", "linux"): "3cdec01f:a790a186:d430433f:dd4d4ffb:70eed6f0:eeb4bf05:c8dbe2dc:e0a9bcb8",
+    ("pandas", "3.0.5", "win"): "80a61106:8e8a3ac2:3f7398c6:c14eb46d:c974e5cc:9997f653:e2dcfd1d:a74edd41",
+    ("pandas", "3.0.5", "linux"): "d373ce03:ffd84010:ed9839fa:73672a9c:82569905:32e15844:0c0085db:7d914b34",
+}
+
+EVIDENCE_GROUPED = {
+    "pandas-market-calendars": "bb2b93b2:8d496cab:173b41c7:d120fd5c:d9d506b3:1f3bb0ad:3d1d9f2b:60d9d9e3",
+    "exchange-calendars": "fc5a2ad0:d61b5c3a:6539a306:1cd4cbb5:5c59f4a9:03455cec:7926e4b7:98919996",
+    "tzdata": "dc096730:c87af6ca:b1b171c9:d532be84:0741ff5d:459015e7:f6947bd7:d7e54931",
+}
+
+
+def group(digest: str) -> str:
+    return ":".join(digest[i : i + 8] for i in range(0, 64, 8))
+
+
+def parse_lock(path: Path) -> dict[str, tuple[str, str]]:
+    text = path.read_text(encoding="utf-8")
+    pins: dict[str, tuple[str, str]] = {}
+    name = version = digest = None
+    for line in text.splitlines():
+        if not line or line.lstrip().startswith("#"):
+            continue
+        m = re.match(r"^([A-Za-z0-9_.-]+)==([^ \\]+)", line)
+        if m:
+            if name is not None:
+                pins[name] = (version, digest or "")
+            name, version = m.group(1), m.group(2)
+            digest = None
+            hm = re.search(r"--hash=sha256:([0-9a-f]{64})", line)
+            if hm:
+                digest = hm.group(1)
+            continue
+        hm = re.search(r"--hash=sha256:([0-9a-f]{64})", line)
+        if hm and name is not None:
+            digest = hm.group(1)
+    if name is not None:
+        pins[name] = (version, digest or "")
+    return pins
+
+
+def main() -> int:
+    failures: list[str] = []
+    win = parse_lock(WIN)
+    lin = parse_lock(LIN)
+    print("== input pins ==")
+    inp = INP.read_text(encoding="utf-8")
+    print(inp.rstrip())
+    for required in (
+        "exchange-calendars==4.13.2",
+        "pandas-market-calendars==5.4.0",
+        "tzdata==2026.3",
+    ):
+        if required not in inp:
+            print(f"FAIL missing input pin {required}")
+            failures.append(required)
+        else:
+            print(f"PASS input contains {required}")
+
+    print()
+    print("== lock parse ==")
+    print(f"windows_packages={len(win)} linux_packages={len(lin)}")
+    for label, pins in (("windows", win), ("linux", lin)):
+        missing_hash = [name for name, (_, digest) in pins.items() if len(digest) != 64]
+        print(f"{label} missing_hash={missing_hash}")
+        if missing_hash:
+            failures.append(f"{label} unhashed {missing_hash}")
+    win_versions = sorted(f"{n}=={v}" for n, (v, _) in win.items())
+    lin_versions = sorted(f"{n}=={v}" for n, (v, _) in lin.items())
+    print("windows", win_versions)
+    print("linux   ", lin_versions)
+    if win_versions != lin_versions:
+        print("FAIL version pins differ")
+        failures.append("version pins")
+    else:
+        print(f"PASS {len(win_versions)} version pins identical across platform locks")
+
+    print()
+    print("== digest comparison windows vs linux ==")
+    for name in sorted(win):
+        wv, wh = win[name]
+        lv, lh = lin[name]
+        same = wh == lh
+        print(f"{name}=={wv} same_digest={same}")
+        print(f"  win   {wh}")
+        print(f"  linux {lh}")
+        if name in {"numpy", "pandas"}:
+            if same:
+                print("  FAIL platform-specific package unexpectedly shares digest")
+                failures.append(f"{name} same digest")
+        else:
+            if not same:
+                print("  FAIL universal package digest differs")
+                failures.append(f"{name} digest differs")
+
+    print()
+    print("== PyPI metadata (fetched 2026-08-18) vs locks and evidence ==")
+    checks = [
+        ("pandas-market-calendars", "5.4.0", "universal", win["pandas-market-calendars"][1], "universal"),
+        ("exchange-calendars", "4.13.2", "universal", win["exchange-calendars"][1], "universal"),
+        ("tzdata", "2026.3", "universal", win["tzdata"][1], "universal"),
+        ("numpy", "2.5.2", "win", win["numpy"][1], "win"),
+        ("numpy", "2.5.2", "linux", lin["numpy"][1], "linux"),
+        ("pandas", "3.0.5", "win", win["pandas"][1], "win"),
+        ("pandas", "3.0.5", "linux", lin["pandas"][1], "linux"),
+    ]
+    for name, version, kind, lock_digest, pypi_kind in checks:
+        pypi = PYPI[(name, version, pypi_kind)]
+        status = "PASS" if lock_digest == pypi else "FAIL"
+        print(f"{status} {name}=={version} {kind} lock==pypi {lock_digest == pypi}")
+        if lock_digest != pypi:
+            print(f"  lock {lock_digest}")
+            print(f"  pypi {pypi}")
+            failures.append(f"pypi {name} {kind}")
+        if name in EVIDENCE_GROUPED:
+            grouped = group(lock_digest)
+            if grouped != EVIDENCE_GROUPED[name]:
+                print(f"FAIL evidence grouped digest for {name}")
+                print(f"  lock-grouped {grouped}")
+                print(f"  evidence     {EVIDENCE_GROUPED[name]}")
+                failures.append(f"evidence digest {name}")
+            else:
+                print(f"PASS evidence grouped digest for {name}")
+
+    print()
+    print("== CR/LF check on generator input and linux workflow ==")
+    for rel in (
+        "requirements-xnas-calendar-generator.in",
+        "requirements-xnas-calendar-generator.lock",
+        "requirements-xnas-calendar-generator-linux.lock",
+        ".github/workflows/xnas-calendar-linux.yml",
+        "scripts/materialize_xnas_calendar_v1.py",
+    ):
+        raw = (ROOT / rel).read_bytes()
+        crlf = b"\r\n" in raw
+        print(f"{'FAIL' if crlf else 'PASS'} crlf={crlf} {rel}")
+        if crlf:
+            failures.append(f"crlf {rel}")
+
+    print()
+    if failures:
+        print(f"RESULT FAIL ({len(failures)})")
+        for item in failures:
+            print(f"  - {item}")
+        return 1
+    print("RESULT PASS lock version-parity, hash completeness, PyPI wheel digests, evidence bindings")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

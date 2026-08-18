@@ -1,0 +1,120 @@
+"""Record independent inspection of protected-main Linux replay evidence.
+
+This script does not call GitHub. It records the facts obtained by the
+reviewer via the GitHub Actions API and a local git byte-identity check
+between the cited run commit and the reviewed commit.
+"""
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path("/workspace/QME-external-review/A4")
+REVIEWED = "d8900788:03c58f3c:a995ff80:004b0255:83fe6b2e"
+RUN_COMMIT = "62351e27:3843a62c:77615f06:4a38c805:0300dc58"
+RUN_ID = "31922669149"
+A4_PATHS = [
+    "configs/governance/xnas-session-calendar-evidence-v1.json",
+    "configs/governance/xnas-session-calendar-evidence-v1.hashes.json",
+    "schemas/governance/xnas-session-calendar-evidence-v1.schema.json",
+    "qme/governance/xnas_calendar_evidence_v1.py",
+    "tests/governance/test_xnas_calendar_evidence_v1.py",
+    "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json",
+    "tests/fixtures/governance/xnas-session-calendar-v1.official-cases.json",
+    "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json",
+    "scripts/materialize_xnas_calendar_v1.py",
+    "requirements-xnas-calendar-generator.in",
+    "requirements-xnas-calendar-generator.lock",
+    "requirements-xnas-calendar-generator-linux.lock",
+    ".github/workflows/xnas-calendar-linux.yml",
+]
+
+
+def git(*args: str) -> str:
+    return subprocess.check_output(["git", *args], cwd=ROOT, text=True).rstrip()
+
+
+def main() -> int:
+    failures: list[str] = []
+    print("== reviewed vs cited Linux-run commit ==")
+    print(f"reviewed_commit={REVIEWED}")
+    print(f"linux_run_id={RUN_ID}")
+    print(f"linux_run_head_sha={RUN_COMMIT}")
+    ancestor = subprocess.call(
+        ["git", "merge-base", "--is-ancestor", RUN_COMMIT, REVIEWED], cwd=ROOT
+    )
+    print(f"linux_run_commit_is_ancestor_of_reviewed={ancestor == 0}")
+    if ancestor != 0:
+        failures.append("run commit is not an ancestor of reviewed commit")
+
+    print()
+    print("== byte identity of A4 files between run commit and reviewed commit ==")
+    for rel in A4_PATHS:
+        rc = subprocess.call(
+            ["git", "diff", "--quiet", RUN_COMMIT, REVIEWED, "--", rel], cwd=ROOT
+        )
+        status = "IDENTICAL" if rc == 0 else "DIFFERENT"
+        print(f"{status}  {rel}")
+        if rc != 0:
+            failures.append(rel)
+
+    print()
+    print("== facts recorded from GitHub Actions API / job logs ==")
+    print("workflow_name=XNAS calendar Linux replay")
+    print("workflow_path=.github/workflows/xnas-calendar-linux.yml")
+    print("event=push")
+    print("head_branch=main")
+    print("run_number=3")
+    print("status=completed")
+    print("conclusion=success")
+    print("job_name=calendar-byte-replay")
+    print("job_id=95104990190")
+    print("runner_labels=ubuntu-latest")
+    print("python_version_requested=3.12.10")
+    print("log: Successfully set up CPython (3.12.10)")
+    print("log: requirements-xnas-calendar-generator-linux.lock: verified")
+    print("log: pinned versions identical across platform locks: 10 packages")
+    print("log: Successfully installed exchange-calendars-4.13.2 ... pandas-market-calendars-5.4.0 ... tzdata-2026.3")
+    print("log: platform: linux")
+    print("log: numpy 2.5.2 pandas 3.0.5")
+    print("log: pandas_market_calendars 5.4.0")
+    print("log: exchange_calendars 4.13.2")
+    print("log: scripts/materialize_xnas_calendar_v1.py --repository-root . --verify  (exit 0)")
+    print("log: Linux byte replay of XNAS calendar candidate and ordered session vector: IDENTICAL")
+    print("log: git diff --exit-code  (exit 0)")
+    print("html_url=https://github.com/neeljaiswal90/quant-stocks/actions/runs/31922669149")
+
+    print()
+    print("== workflow file claims vs evidence flags ==")
+    workflow = (ROOT / ".github/workflows/xnas-calendar-linux.yml").read_text(encoding="utf-8")
+    for needle in (
+        'python-version: "3.12.10"',
+        "--require-hashes --only-binary=:all:",
+        "scripts/materialize_xnas_calendar_v1.py --repository-root . --verify",
+        "git diff --exit-code",
+        "branches: [main]",
+    ):
+        present = needle in workflow
+        print(f"{'PASS' if present else 'FAIL'} workflow contains {needle!r}")
+        if not present:
+            failures.append(needle)
+    print("NOTE a later T0 rebind must cite this run; this review does not flip")
+    print("     linux_generator_hash_lock_available or windows_linux_byte_replay_verified.")
+
+    print()
+    if failures:
+        print(f"RESULT FAIL ({len(failures)})")
+        for item in failures:
+            print(f"  - {item}")
+        return 1
+    print(
+        "RESULT PASS protected-main run 31922669149 succeeded on ancestor "
+        "62351e27; every A4 byte is identical at the reviewed commit. "
+        "Evidence sufficiency for a later flip is supported. Flags remain false."
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

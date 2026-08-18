@@ -1,0 +1,318 @@
+Independent A1 recomputation / verification
+worktree=/workspace/QME-external-review/A1
+cwd_import_guard: qme not imported; sys.modules qme? False
+
+=== 1. HEAD and tree identity ===
+PASS  HEAD equals reviewed commit — d890078803c58f3ca995ff80004b025583fe6b2e
+PASS  HEAD^{tree} equals reviewed tree — 0d00c7b1ac87409c67ec32cbd0cde29c316d8334
+PASS  worktree clean before independent work — ''
+
+=== 2. Independent SHA-256 of packet-listed bound files ===
+PASS  bound hash configs/governance/owner-decision-record-2026-08-16-v1.json — 85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0
+PASS  bound hash schemas/governance/owner-decision-record-2026-08-16-v1.schema.json — 681f6d61:6c77916a:11902d67:dd41d493:f46dc4c0:4a1460ef:6b0946c8:d3b24f3e
+PASS  bound hash configs/governance/owner-decision-record-2026-08-16-v1.hashes.json — 552456b5:924c46bc:5b2b1e5c:58ce4efc:1b4e5303:c77bf607:0590d74f:e457f78c
+PASS  bound hash qme/governance/owner_decision_record.py — c6d17f09:1847c484:da1af481:77ea4c07:7a22c85d:7ef34c55:e5318761:9d7670c0
+PASS  bound hash tests/governance/test_owner_decision_record.py — 2e447524:391b6d2a:bc0bab6a:4f28b71c:c2941b58:59e15d16:314e2ef2:d5a2b903
+PASS  bound hash docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md — 68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662
+
+=== 3. Independent semantic hash and schema const pin ===
+PASS  independently recomputed semantic_sha256 matches pin — f934ba37:c7e86108:a8087074:f4f421e7:aea4e81d:f7530071:63c618f5:0a8c3a82
+PASS  config.semantic_sha256 field equals pin — f934ba37:c7e86108:a8087074:f4f421e7:aea4e81d:f7530071:63c618f5:0a8c3a82
+PASS  schema top-level shape is exact-const pin — ['$id', '$schema', 'const', 'description', 'title', 'type']
+PASS  schema type is object
+PASS  schema.const exact-equals config object
+PASS  schema.const and config serialize identically after independent dumps
+
+=== 4. Independent lineage predecessor hashes ===
+PASS  protected_main_at_authoring matches parent commit grouped prefix
+PASS  parent commit SHA reconstructs protected_main_at_authoring — 900715b367b5b5077a6cea8b8297139c08b416ad -> 900715b3:67b5b507:7a6cea8b:8297139c:08b416ad
+PASS  lineage owner_decision_record_doc docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md — 68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662
+PASS  lineage owner_mandate_supplement_2026_08_13 configs/governance/owner-mandate-supplement-2026-08-13-v1.json — 289aa1f5:5f586142:1730f146:611f42a1:10dab0a3:596294eb:4171b6dd:3acb5ee5
+PASS  lineage ppw_bootstrap_uncertainty_authority configs/governance/ppw-bootstrap-uncertainty-authority-v1.json — 71b22f95:fdf223ba:4ebb0e9e:ee047fd2:61bcb866:0692d8f3:b179ca48:cb8f09d1
+PASS  lineage m0_state_reconciliation_doc docs/governance/M0_STATE_RECONCILIATION_2026-08-16.md — 02175a70:fdcab289:bb646ad3:1996e05f:ffa3fd33:ca949603:17df8279:b7d3dd44
+PASS  lineage nee120_inference_code qme/stats/nee120_inference.py — d3a381a8:f8a7eeb6:c2f7e226:9b378498:eda5dbe7:171710d7:93d863ed:91494cff
+PASS  lineage capacity_solver_code qme/quant/capacity_solver.py — a78bd421:99898fe3:a1000bf8:7ad58363:5adb60fd:a47bf7c2:0c8a79b9:75107487
+PASS  lineage effective_trials_uncertainty_code qme/stats/effective_trials_uncertainty.py — 209a9289:0fdcb191:9eddb077:93ee75e6:258b10af:2f6c5042:31a55874:d33c9f7a
+PASS  lineage tax_lots_code qme/quant/tax_lots.py — 94f5183d:6a3a7fa6:e029c60f:726fad71:a9b6c7aa:8af894ab:e9d7d31c:b650cc93
+PASS  lineage asymmetric_costs_code qme/quant/asymmetric_costs.py — 432d0161:7be92e25:e78da4c1:c3caefbf:2ec7e3e5:5367d865:e47f9732:b98f617e
+PASS  exactly nine path-bound lineage predecessors — 9
+PASS  A1 record does not mention PR #26 owner-selection path
+PASS  A1 lineage object has no ppw_bootstrap_owner_selections key — ['protected_main_at_authoring', 'owner_decision_record_doc', 'owner_mandate_supplement_2026_08_13', 'ppw_bootstrap_uncertainty_authority', 'm0_state_reconciliation_doc', 'nee120_inference_code', 'capacity_solver_code', 'effective_trials_uncertainty_code', 'tax_lots_code', 'asymmetric_costs_code']
+
+=== 5. Independent manifest / reviewed-slice hashes ===
+PASS  manifest top-level shape
+PASS  manifest schema_version
+PASS  manifest artifact_id
+PASS  manifest implementation_status
+PASS  manifest production_status
+PASS  manifest has 5 artifacts
+PASS  manifest row keys configs/governance/owner-decision-record-2026-08-16-v1.json
+PASS  manifest hash configs/governance/owner-decision-record-2026-08-16-v1.json — 85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0
+PASS  manifest row keys docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md
+PASS  manifest hash docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md — 68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662
+PASS  manifest row keys qme/governance/owner_decision_record.py
+PASS  manifest hash qme/governance/owner_decision_record.py — c6d17f09:1847c484:da1af481:77ea4c07:7a22c85d:7ef34c55:e5318761:9d7670c0
+PASS  manifest row keys schemas/governance/owner-decision-record-2026-08-16-v1.schema.json
+PASS  manifest hash schemas/governance/owner-decision-record-2026-08-16-v1.schema.json — 681f6d61:6c77916a:11902d67:dd41d493:f46dc4c0:4a1460ef:6b0946c8:d3b24f3e
+PASS  manifest row keys tests/governance/test_owner_decision_record.py
+PASS  manifest hash tests/governance/test_owner_decision_record.py — 2e447524:391b6d2a:bc0bab6a:4f28b71c:c2941b58:59e15d16:314e2ef2:d5a2b903
+PASS  manifest path order/set exact
+
+=== 6. Claims contract (required-true / forbidden-true) ===
+PASS  required-true owner_decisions_registered is True — True
+PASS  required-true capacity_solver_implemented is True — True
+PASS  required-true nee120_inference_implemented is True — True
+PASS  required-true effective_trials_estimator_implemented is True — True
+PASS  forbidden-true milestone_m0_complete is False — False
+PASS  forbidden-true any_freeze_v4_blocker_cleared is False — False
+PASS  forbidden-true empirical_performance_available is False — False
+PASS  forbidden-true empirical_capacity_available is False — False
+PASS  forbidden-true portfolio_capacity_usd_claimed is False — False
+PASS  forbidden-true alpha_proven is False — False
+PASS  forbidden-true production_ready is False — False
+PASS  forbidden-true production_pit_data_spine_complete is False — False
+PASS  forbidden-true prospective_receipt_verified is False — False
+PASS  forbidden-true data_spine_start_authorized is False — False
+PASS  registration_meaning — DECISIONS_REGISTERED_NOT_BLOCKER_CLEARANCE
+PASS  record status
+PASS  status_transition capacity_solver blocker_cleared is False
+PASS  status_transition nee120_inference blocker_cleared is False
+PASS  nonclaims records Freeze V4 13/0
+PASS  approval_owner
+PASS  approval_date
+PASS  approved_at is null / not inferred
+PASS  approved_at_status
+PASS  empirical_results_used is false
+
+=== 7. Faithfulness of all 18 decisions to bound doc + canonical YAML ===
+PASS  exactly 18 structured decisions present
+PASS  D1 disposition NEW
+PASS  D1 standard matches prose six-element list
+PASS  D1 does_not_require matches prose exclusions
+PASS  D1 YAML engineering_requires_empirical_results false
+PASS  D1 clearable set matches both NEE-122 + capacity + inference
+PASS  D2 disposition NEW
+PASS  D2 date
+PASS  D2 calendar
+PASS  D2 fail-closed no substitution
+PASS  D2 YAML date
+PASS  D2 YAML no substitution
+PASS  D2 prose
+PASS  D3 disposition NEW
+PASS  D3 FIFO
+PASS  D3 HIFO disabled
+PASS  D3 HIFO prerequisites
+PASS  D3 YAML
+PASS  D4 disposition NEW
+PASS  D4 canonical results
+PASS  D4 three ST/LT scenarios
+PASS  D4 no actual liability
+PASS  D4 24% is not actual bracket
+PASS  D4 YAML abbreviated name
+PASS  D4 YAML no actual liability
+PASS  D4 prose rates
+PASS  D4 prose 32/15
+PASS  D5 disposition NEW
+PASS  D5 rounding rule
+PASS  D5 broker rounding deferred
+PASS  D5 fees separate from bps
+PASS  D5 YAML rounding
+PASS  D6 STATUS_TRANSITION
+PASS  D6 method id
+PASS  D6 quantum 100
+PASS  D6 participation 0.01
+PASS  D6 cash buffer 0.01
+PASS  D6 order quantum 1
+PASS  D6 from
+PASS  D6 to
+PASS  D6 no empirical capacity number
+PASS  D6 YAML quantum
+PASS  D6 YAML no claim
+PASS  D6 transition does not clear blocker
+PASS  D7 STATUS_TRANSITION
+PASS  D7 point estimate encodes prose net-log-return delta
+PASS  D7 primary interval
+PASS  D7 B=10000
+PASS  D7 seed
+PASS  D7 selector
+PASS  D7 min block 3
+PASS  D7 max block floor(n/4)
+PASS  D7 min N 12
+PASS  D7 no fallback
+PASS  D7 two-sided diagnostic
+PASS  D7 NW diagnostic only
+PASS  D7 no empirical ledgers
+PASS  D7 YAML B
+PASS  D7 YAML seed
+PASS  D7 YAML no fallback
+PASS  D7 YAML uses LOG_RETURN_DIFFERENCE synonym of prose/JSON delta
+PASS  D7 transition does not clear blocker
+PASS  D8 already registered
+PASS  D8 median 48/49
+PASS  D8 B=2000
+PASS  D8 seed
+PASS  D8 shared months
+PASS  D8 per-replicate steps
+PASS  D8 rank 1950
+PASS  D8 n_eff formula
+PASS  D8 invalidate
+PASS  D8 conservative 96
+PASS  D8 authority config path
+PASS  D8 NEE-204
+PASS  D8 prose aggregation
+PASS  D8 prose rank
+PASS  D9 disposition
+PASS  D9 accept V1
+PASS  D9 flags
+PASS  D9 linux run id
+PASS  D9 no in-place overwrite
+PASS  D9 prose run id
+PASS  D10 disposition NEW
+PASS  D10 $15.00
+PASS  D10 ex
+PASS  D10 record
+PASS  D10 payment
+PASS  D10 superseded ex
+PASS  D10 preserved not deleted
+PASS  D10 YAML ex
+PASS  D10 YAML amount
+PASS  D11 disposition
+PASS  D11 exchange date
+PASS  D11 exchange not terminal
+PASS  D11 terminal date
+PASS  D11 terminal is terminal
+PASS  D11 two-event rule
+PASS  D11 YAML exchange
+PASS  D11 YAML terminal
+PASS  D12 disposition
+PASS  D12 limited claim
+PASS  D12 not authoritative universe
+PASS  D12 not authoritative ndx
+PASS  D12 100% review protocol
+PASS  D12 reviewer independence
+PASS  D12 YAML
+PASS  D12 prose 1724
+PASS  D13 disposition NEW
+PASS  D13 accepted as
+PASS  D13 not complete PIT spine
+PASS  D13 23 pulls
+PASS  D13 prose 23/23
+PASS  D14 disposition
+PASS  D14 GIW
+PASS  D14 announcements
+PASS  D14 QQQ not authority
+PASS  D14 preferred date
+PASS  D14 fallback date
+PASS  D14 pre-first unavailable
+PASS  D14 2026-06-22 changeset
+PASS  D14 GOOG/GOOGL separate
+PASS  D14 not assume 100 rows
+PASS  D14 YAML authority
+PASS  D14 YAML QQQ
+PASS  D15 disposition
+PASS  D15 same-lineage insufficient
+PASS  D15 required fields
+PASS  D15 numerical options
+PASS  D15 YAML
+PASS  D15 YAML oracle
+PASS  D16 disposition
+PASS  D16 keep in progress set
+PASS  D16 NEE-116 in progress
+PASS  D16 branch autoclose not acceptance
+PASS  D16 prose ticket set
+PASS  D17 disposition
+PASS  D17 deferred gates
+PASS  D17 not ceremony
+PASS  D17 preconditions
+PASS  D17 YAML gate 1
+PASS  D17 YAML gate 2
+PASS  D17 YAML m0 false
+PASS  D18 disposition
+PASS  D18 rotate now
+PASS  D18 YAML
+PASS  D18 prose
+PASS  blocker disposition ready-for-successor-freeze
+PASS  blocker disposition after NEE-204
+PASS  blocker disposition bounded fixture
+PASS  blocker disposition owner/data
+PASS  blocker disposition final gates
+PASS  doc freeze 13/0
+PASS  doc m0 false
+
+=== 8. Tamper rejection on copies OUTSIDE the worktree ===
+PASS  tamper: flipped config byte changes SHA-256 vs pin — 2be489e1:da10b685:b844a0ff:08039a5e:abed939f:b8ecbd70:bf165673:f48a90cd
+PASS  tamper: original worktree config bytes unchanged after copy mutation
+PASS  tamper: rewriting only the semantic_sha256 field leaves true digest unchanged — f934ba37:c7e86108:a8087074:f4f421e7:aea4e81d:f7530071:63c618f5:0a8c3a82
+PASS  tamper: forged semantic_sha256 field no longer equals independent digest
+PASS  tamper: setting milestone_m0_complete=True fails claims contract — forbidden claim not False
+PASS  tamper: milestone_m0_complete=True copy hash diverges from pin
+PASS  tamper: setting any_freeze_v4_blocker_cleared=True fails claims contract — forbidden claim not False
+PASS  tamper: any_freeze_v4_blocker_cleared=True copy hash diverges from pin
+PASS  tamper: setting empirical_performance_available=True fails claims contract — forbidden claim not False
+PASS  tamper: empirical_performance_available=True copy hash diverges from pin
+PASS  tamper: setting empirical_capacity_available=True fails claims contract — forbidden claim not False
+PASS  tamper: empirical_capacity_available=True copy hash diverges from pin
+PASS  tamper: setting portfolio_capacity_usd_claimed=True fails claims contract — forbidden claim not False
+PASS  tamper: portfolio_capacity_usd_claimed=True copy hash diverges from pin
+PASS  tamper: setting alpha_proven=True fails claims contract — forbidden claim not False
+PASS  tamper: alpha_proven=True copy hash diverges from pin
+PASS  tamper: setting production_ready=True fails claims contract — forbidden claim not False
+PASS  tamper: production_ready=True copy hash diverges from pin
+PASS  tamper: setting production_pit_data_spine_complete=True fails claims contract — forbidden claim not False
+PASS  tamper: production_pit_data_spine_complete=True copy hash diverges from pin
+PASS  tamper: setting prospective_receipt_verified=True fails claims contract — forbidden claim not False
+PASS  tamper: prospective_receipt_verified=True copy hash diverges from pin
+PASS  tamper: setting data_spine_start_authorized=True fails claims contract — forbidden claim not False
+PASS  tamper: data_spine_start_authorized=True copy hash diverges from pin
+PASS  tamper: setting owner_decisions_registered=False fails claims contract — required claim not True
+PASS  tamper: setting capacity_solver_implemented=False fails claims contract — required claim not True
+PASS  tamper: setting nee120_inference_implemented=False fails claims contract — required claim not True
+PASS  tamper: setting effective_trials_estimator_implemented=False fails claims contract — required claim not True
+PASS  tamper: forged registration_meaning fails claims contract — registration meaning changed
+PASS  tamper: mutated predecessor file hash diverges from A1 lineage pin — e15f2564:c7035584:51521f80:90a09a44:dfa11a68:997185dc:01e628ae:0e4a167d
+PASS  tamper: original predecessor file in worktree unchanged
+PASS  tamper: mutated schema.const no longer exact-pins config
+PASS  tamper: mutated schema hash diverges from pin
+PASS  tamper: forged manifest row no longer matches config bytes
+PASS  tamper: mutated manifest hash diverges from pin
+PASS  tamper setup: invented timestamp present in copy only
+PASS  tamper: worktree approved_at remains null
+PASS  tamper: invented timestamp copy rejected by hash pin
+PASS  tamper copies live only under outputs/A1
+PASS  tamper copies are outside the worktree
+
+=== 9. Disclosed P2 and later correction record ===
+PASS  P2 confirmed: A1 JSON text lacks PR #26 path
+PASS  P2 confirmed: A1 JSON text lacks owner-selections artifact name
+PASS  A1-tree PR #26 owner-selection file hash — 6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6
+PASS  packet correction doc binds PR #26 path + exact grouped SHA-256
+PASS  packet correction states Freeze V4 remains 13 active / 0 resolved
+PASS  packet correction m0 remains false
+PASS  packet correction any_freeze_v4_blocker_cleared remains false
+PASS  packet correction does not claim Freeze V4 clearance
+PASS  packet correction is a versioned successor, not an in-place A1 edit
+PASS  later-commit JSON binds PR #26 by exact grouped SHA-256 — configs/governance/ppw-bootstrap-owner-selections-v1.json 6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6
+PASS  later-commit any_freeze_v4_blocker_cleared is false
+PASS  later-commit milestone_m0_complete is false
+PASS  later-commit registration_meaning unchanged
+PASS  later-commit nonclaims Freeze V4 13/0
+PASS  later-commit record identity
+PASS  later-commit status is registration, not clearance
+PASS  later correction does not change reviewed A1 Freeze-V4-era bytes — 85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0
+PASS  later correction predecessor hash is the reviewed A1 config hash — 85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0
+
+=== 10. Secret / credential / raw-data / broker-log scan of bound files ===
+PASS  no secret/credential material in bound files — none
+PASS  D18 discusses rotation (policy, not a secret)
+
+=== 11. Worktree remains unchanged ===
+PASS  git status --porcelain empty after independent work — ''
+PASS  HEAD still reviewed commit
+PASS  tree still reviewed tree
+
+=== SUMMARY ===
+PASS_COUNT=286
+FAIL_COUNT=0
+ALL_INDEPENDENT_CHECKS_PASSED
+DISCLOSED_P2_CONFIRMED: A1 lineage does not hash-bind PR #26 owner-selection artifact
+CORRECTION_RESOLVES_GAP_WITHOUT_CHANGING_FREEZE_V4

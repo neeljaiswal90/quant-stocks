@@ -1,0 +1,359 @@
+#!/usr/bin/env python3
+"""Production V1/V2 comparison — runs AFTER the independent oracle.
+
+This script is allowed to import run_inference / run_inference_v2. It is
+NOT the independent oracle. It compares production outputs to the oracle
+JSON written by independent_inference_oracle.py.
+
+Also independently confirms:
+    - V2 rejects the registered non-canonical reject list
+    - V1 still accepts value-preserving non-canonical spellings (permissive path)
+    - V2 delegates to V1 on canonical inputs (byte-identical dataclasses)
+    - V1 numerical kernel file is the hash-bound retained module
+    - V2 source only validates then delegates (no reimplemented kernel)
+"""
+
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, "/workspace/QME-external-review/A2-V2")
+
+from qme.stats.nee120_inference import (  # noqa: E402
+    Nee120InferenceError,
+    holm_step_down,
+    run_inference,
+)
+from qme.stats.nee120_inference_v2 import (  # noqa: E402
+    holm_step_down_v2,
+    run_inference_v2,
+)
+
+WORKTREE = Path("/workspace/QME-external-review/A2-V2")
+OUT_DIR = Path("/workspace/QME-external-review/outputs/A2-V2")
+ORACLE_JSON = OUT_DIR / "independent_inference_oracle.json"
+FIXTURE_PATH = WORKTREE / "tests/fixtures/stats/nee120-inference-v1.json"
+
+_REJECT = [
+    "1E-3",
+    "1e-3",
+    "+0.001",
+    " 0.001",
+    "0.001 ",
+    ".5",
+    "5.",
+    "NaN",
+    "Infinity",
+    "-Infinity",
+    "0.00_1",
+    "-0",
+    "-0.0",
+    "0123",
+    "1e999999",
+]
+_VALUE_PRESERVING = [" 0.003970", "+0.003970", "3.970E-3"]
+_ALPHA_OUT = ("2.0", "1", "0", "-12.500")
+_ALPHA_IN = ("0.05", "0.10", "0.005")
+
+REGISTERED_HASHES = {
+    "qme/stats/nee120_inference_v2.py": "4bf93af1:47321f8e:0b2575a4:b49b8a29:c434182b:d4cf29cf:15b67bca:85f9ed31",
+    "qme/stats/nee120_inference.py": "d3a381a8:f8a7eeb6:c2f7e226:9b378498:eda5dbe7:171710d7:93d863ed:91494cff",
+}
+
+
+def _grouped_sha256(path: Path) -> str:
+    h = hashlib.sha256(path.read_bytes()).hexdigest()
+    return ":".join(h[i : i + 8] for i in range(0, 64, 8))
+
+
+def main() -> int:
+    failures: list[str] = []
+    passes = 0
+
+    def check(name: str, cond: bool, detail: str = "") -> None:
+        nonlocal passes
+        if cond:
+            passes += 1
+            print(f"PASS  {name}" + (f"  ({detail})" if detail else ""))
+        else:
+            failures.append(name)
+            print(f"FAIL  {name}" + (f"  ({detail})" if detail else ""))
+
+    print("=" * 72)
+    print("A2-V2 production V1/V2 comparison (AFTER independent oracle)")
+    print("=" * 72)
+
+    oracle = json.loads(ORACLE_JSON.read_text(encoding="utf-8"))
+    fixture = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    series = list(fixture["paired_monthly_log_return_deltas"])
+    expected = fixture["expected"]
+
+    # Confirm oracle did not import production inference
+    check(
+        "oracle_did_not_import_production_inference",
+        oracle["independence"]["forbidden_modules_imported"] == [],
+        str(oracle["independence"]),
+    )
+    check(
+        "oracle_only_loaded_rng_by_file_path",
+        oracle["independence"]["qme_stats_modules_imported"] == []
+        and "file path" in oracle["independence"]["documented_production_import"],
+        str(oracle["independence"]),
+    )
+
+    # --- V2 vs oracle on KAT ---
+    print("\n--- V2 vs independent oracle on KAT fixture ---")
+    v2 = run_inference_v2(series)
+    v1 = run_inference(series)
+    o = oracle["kat"]
+
+    check("v2_equals_v1_dataclass", v2 == v1)
+    check("v2_point_vs_oracle", v2.point_estimate == o["point_estimate"])
+    check("v2_block_vs_oracle", v2.block_selection.common_block_length == o["common_block_length"])
+    check("v2_raw_block_vs_oracle", v2.block_selection.raw_block_length == o["raw_block_length"])
+    check("v2_lag_vs_oracle", v2.block_selection.selected_lag == o["selected_lag"])
+    check("v2_lcb_vs_oracle", v2.one_sided_95_lcb == o["one_sided_95_lcb"])
+    check("v2_interval_low_vs_oracle", v2.two_sided_90_interval[0] == o["two_sided_90_interval"][0])
+    check("v2_interval_high_vs_oracle", v2.two_sided_90_interval[1] == o["two_sided_90_interval"][1])
+    check("v2_hash_vs_oracle", v2.bootstrap_distribution_sha256 == o["bootstrap_distribution_sha256"])
+    check("v2_nw_lag_vs_oracle", v2.newey_west.lag == o["nw_lag"])
+    check("v2_nw_omega_vs_oracle", v2.newey_west.long_run_variance == o["nw_long_run_variance"])
+    check("v2_nw_se_vs_oracle", v2.newey_west.annualized_standard_error == o["nw_annualized_standard_error"])
+    check("v2_nw_t_vs_oracle", v2.newey_west.t_statistic == o["nw_t_statistic"])
+
+    # Byte-identity of every required field V1 vs V2
+    print("\n--- Canonical delegation: V2 byte-identical to V1 ---")
+    check("byte_point_estimate", v2.point_estimate == v1.point_estimate == expected["point_estimate"])
+    check(
+        "byte_block_length",
+        v2.block_selection.common_block_length
+        == v1.block_selection.common_block_length
+        == expected["block_selection"]["common_block_length"],
+    )
+    check(
+        "byte_raw_block",
+        v2.block_selection.raw_block_length == v1.block_selection.raw_block_length,
+    )
+    check(
+        "byte_selected_lag",
+        v2.block_selection.selected_lag == v1.block_selection.selected_lag,
+    )
+    check(
+        "byte_bootstrap_hash",
+        v2.bootstrap_distribution_sha256
+        == v1.bootstrap_distribution_sha256
+        == expected["bootstrap_distribution_sha256"],
+    )
+    check("byte_lcb", v2.one_sided_95_lcb == v1.one_sided_95_lcb == expected["one_sided_95_lcb"])
+    check(
+        "byte_interval",
+        list(v2.two_sided_90_interval)
+        == list(v1.two_sided_90_interval)
+        == expected["two_sided_90_interval"],
+    )
+    check("byte_nw_lag", v2.newey_west.lag == v1.newey_west.lag == expected["newey_west"]["lag"])
+    check(
+        "byte_nw_omega",
+        v2.newey_west.long_run_variance == v1.newey_west.long_run_variance,
+    )
+    check(
+        "byte_nw_se",
+        v2.newey_west.annualized_standard_error == v1.newey_west.annualized_standard_error,
+    )
+    check(
+        "byte_nw_t",
+        v2.newey_west.t_statistic
+        == v1.newey_west.t_statistic
+        == expected["newey_west"]["t_statistic"],
+    )
+
+    # Extra series: V2 vs oracle vs V1
+    print("\n--- Extra series: V1 == V2 == oracle ---")
+    for key, payload in oracle["extra_series"].items():
+        extra = payload["series"]
+        pv2 = run_inference_v2(extra)
+        pv1 = run_inference(extra)
+        check(f"{key}_v2_eq_v1", pv2 == pv1)
+        check(f"{key}_point", pv2.point_estimate == payload["point_estimate"])
+        check(f"{key}_block", pv2.block_selection.common_block_length == payload["common_block_length"])
+        check(f"{key}_hash", pv2.bootstrap_distribution_sha256 == payload["bootstrap_distribution_sha256"])
+        check(f"{key}_lcb", pv2.one_sided_95_lcb == payload["one_sided_95_lcb"])
+        check(
+            f"{key}_interval",
+            list(pv2.two_sided_90_interval) == payload["two_sided_90_interval"],
+        )
+        check(f"{key}_nw_t", pv2.newey_west.t_statistic == payload["nw_t_statistic"])
+
+    # Holm: V2 vs V1 vs oracle
+    print("\n--- Holm: V2 vs V1 vs oracle ---")
+    hk = oracle["holm_kat"]
+    hv2 = holm_step_down_v2(hk["family"], alpha=hk["alpha"])
+    hv1 = holm_step_down(hk["family"], alpha=hk["alpha"])
+    check("holm_v2_eq_v1", hv2 == hv1)
+    check("holm_family_size", hv2.family_size == hk["family_size"])
+    check("holm_ordered", list(hv2.ordered_p_values) == hk["ordered_p_values"])
+    check("holm_thr", list(hv2.adjusted_thresholds) == hk["adjusted_thresholds"])
+    check("holm_rejected", list(hv2.rejected) == hk["rejected"])
+
+    for item in oracle["holm_more"]:
+        a = holm_step_down_v2(item["family"], alpha=item["alpha"])
+        b = holm_step_down(item["family"], alpha=item["alpha"])
+        label = f"holm_m{len(item['family'])}_a{item['alpha']}"
+        check(f"{label}_v2_eq_v1", a == b)
+        check(f"{label}_vs_oracle", list(a.rejected) == item["rejected"])
+        check(f"{label}_thr_vs_oracle", list(a.adjusted_thresholds) == item["adjusted_thresholds"])
+
+    for good in _ALPHA_IN:
+        a = holm_step_down_v2(["0.04", "0.01", "0.03"], alpha=good)
+        b = holm_step_down(["0.04", "0.01", "0.03"], alpha=good)
+        check(f"holm_alpha_{good}_delegates", a == b)
+
+    # V2 reject list
+    print("\n--- V2 rejects non-canonical; V1 remains permissive ---")
+    base = list(series)
+    for bad in _REJECT:
+        injected = list(base)
+        injected[5] = bad
+        try:
+            run_inference_v2(injected)
+            check(f"v2_run_reject {bad!r}", False, "V2 accepted")
+        except Nee120InferenceError as exc:
+            check(f"v2_run_reject {bad!r}", exc.reason == "NO_GO_FAIL_CLOSED", exc.reason)
+        try:
+            holm_step_down_v2([bad])
+            check(f"v2_holm_p_reject {bad!r}", False, "V2 accepted")
+        except Nee120InferenceError as exc:
+            check(f"v2_holm_p_reject {bad!r}", exc.reason == "NO_GO_FAIL_CLOSED", exc.reason)
+        try:
+            holm_step_down_v2(["0.01"], alpha=bad)
+            check(f"v2_holm_alpha_reject {bad!r}", False, "V2 accepted")
+        except Nee120InferenceError as exc:
+            check(
+                f"v2_holm_alpha_reject {bad!r}",
+                exc.reason == "NO_GO_FAIL_CLOSED",
+                exc.reason,
+            )
+
+    for form in _VALUE_PRESERVING:
+        injected = list(base)
+        injected[0] = form
+        try:
+            permissive = run_inference(injected)
+            check(
+                f"v1_still_accepts {form!r}",
+                permissive == v1,
+                "V1 reproduced canonical result",
+            )
+        except Exception as exc:  # noqa: BLE001
+            check(f"v1_still_accepts {form!r}", False, str(exc))
+        try:
+            run_inference_v2(injected)
+            check(f"v2_rejects_value_preserving {form!r}", False, "V2 accepted")
+        except Nee120InferenceError as exc:
+            check(
+                f"v2_rejects_value_preserving {form!r}",
+                exc.reason == "NO_GO_FAIL_CLOSED",
+                exc.reason,
+            )
+
+    for bad_alpha in _ALPHA_OUT:
+        try:
+            holm_step_down_v2(["0.01"], alpha=bad_alpha)
+            check(f"v2_alpha_domain_reject {bad_alpha!r}", False, "accepted")
+        except Nee120InferenceError as exc:
+            check(
+                f"v2_alpha_domain_reject {bad_alpha!r}",
+                exc.reason == "NO_GO_FAIL_CLOSED",
+                exc.detail,
+            )
+
+    # Structural: V1 kernel retained, V2 is adapter only
+    print("\n--- Structural: V1 kernel retained; V2 is adapter only ---")
+    for rel, expected_hash in REGISTERED_HASHES.items():
+        actual = _grouped_sha256(WORKTREE / rel)
+        check(f"hash_{rel}", actual == expected_hash, actual)
+
+    v2_src = (WORKTREE / "qme/stats/nee120_inference_v2.py").read_text(encoding="utf-8")
+    v2_tree = ast.parse(v2_src)
+    func_names = {n.name for n in ast.walk(v2_tree) if isinstance(n, ast.FunctionDef)}
+    check(
+        "v2_public_entrypoints",
+        {"run_inference_v2", "holm_step_down_v2", "_require_canonical_decimal", "_require_canonical_series"}
+        <= func_names,
+        str(sorted(func_names)),
+    )
+    check(
+        "v2_does_not_reimplement_kernel",
+        not func_names & {
+            "select_block_length",
+            "newey_west_diagnostic",
+            "run_inference",
+            "holm_step_down",
+            "_parse_series",
+            "_bootstrap_statistics",
+            "_cube_root",
+        },
+        str(sorted(func_names)),
+    )
+    check("v2_imports_run_inference", "from qme.stats.nee120_inference import" in v2_src)
+    check("v2_delegates_run", "return run_inference(deltas)" in v2_src)
+    check("v2_delegates_holm", "return holm_step_down(" in v2_src)
+    check(
+        "v2_binds_sibling_grammar",
+        "from qme.stats.effective_trials_uncertainty import _DECIMAL_PATTERN" in v2_src,
+    )
+
+    run_fn = next(n for n in ast.walk(v2_tree) if isinstance(n, ast.FunctionDef) and n.name == "run_inference_v2")
+    holm_fn = next(n for n in ast.walk(v2_tree) if isinstance(n, ast.FunctionDef) and n.name == "holm_step_down_v2")
+
+    def _calls_named(fn: ast.FunctionDef, name: str) -> list[ast.Call]:
+        found: list[ast.Call] = []
+        for node in ast.walk(fn):
+            if isinstance(node, ast.Call):
+                callee = node.func
+                if isinstance(callee, ast.Name) and callee.id == name:
+                    found.append(node)
+                elif isinstance(callee, ast.Attribute) and callee.attr == name:
+                    found.append(node)
+        return found
+
+    check("v2_run_has_no_Decimal_call", _calls_named(run_fn, "Decimal") == [])
+    holm_decimal_calls = _calls_named(holm_fn, "Decimal")
+    check("v2_holm_has_exactly_one_Decimal_call", len(holm_decimal_calls) == 1)
+    check(
+        "v2_holm_Decimal_only_after_grammar",
+        any(
+            isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "checked_alpha" for t in n.targets)
+            and isinstance(n.value, ast.Call)
+            and isinstance(n.value.func, ast.Name)
+            and n.value.func.id == "_require_canonical_decimal"
+            for n in ast.walk(holm_fn)
+        )
+        and any(
+            isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "alpha_value" for t in n.targets)
+            and isinstance(n.value, ast.Call)
+            and isinstance(n.value.func, ast.Name)
+            and n.value.func.id == "Decimal"
+            for n in ast.walk(holm_fn)
+        ),
+    )
+
+    print("\n" + "=" * 72)
+    print(f"RESULT  passes={passes}  failures={len(failures)}")
+    if failures:
+        print("FAILED CHECKS:")
+        for name in failures:
+            print(f"  - {name}")
+        return 1
+    print("ALL PRODUCTION COMPARISON CHECKS PASSED")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
