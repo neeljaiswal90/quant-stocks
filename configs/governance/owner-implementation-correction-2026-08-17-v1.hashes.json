@@ -1,0 +1,13 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "OWNER-IMPLEMENTATION-CORRECTION-2026-08-17-V1",
+  "implementation_status": "IMPLEMENTATION_CORRECTIONS_REGISTERED_NOT_AUTHORITY_TO_CLEAR_BLOCKERS",
+  "production_status": "NO_OPERATIONAL_CONTRACT_OR_PRODUCTION_EVIDENCE",
+  "artifacts": [
+    {"path": "configs/governance/owner-implementation-correction-2026-08-17-v1.json", "sha256": "bbf6e881:5bfd8278:cb39956e:0164a218:a81efd93:628d281d:db2e4f94:91d3aa1c"},
+    {"path": "docs/governance/OWNER_IMPLEMENTATION_CORRECTION_2026_08_17_V1.md", "sha256": "a38f4d85:edbc10e7:a85ad01c:da7383f9:578ad7a6:d12001ad:4ec6e82f:fbe301fd"},
+    {"path": "qme/governance/owner_implementation_correction.py", "sha256": "e0868be2:03e8bbd8:c0ba906e:af09d09d:e336d43e:2f2dd630:55803183:17a93d74"},
+    {"path": "schemas/governance/owner-implementation-correction-2026-08-17-v1.schema.json", "sha256": "9b6b9db5:9e8d38d7:0e397a01:57b331c3:bc512159:ec3d3e0e:4b19d9a0:8bbb473a"},
+    {"path": "tests/governance/test_owner_implementation_correction.py", "sha256": "65b4c5a9:1cf2192a:9d12d248:3118ec24:7afeb674:0cce8199:3b02cb2b:e0e114a7"}
+  ]
+}
