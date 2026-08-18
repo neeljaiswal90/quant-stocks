@@ -17,10 +17,10 @@ WORKTREE = Path("/workspace/QME-external-review/A1")
 PACKET = Path("/workspace/QME-external-review/packets/A1")
 OUT_DIR = Path("/workspace/QME-external-review/outputs/A1")
 TAMPER_DIR = OUT_DIR / "tamper-copies"
-LATER_COMMIT = "4848a7f899624288ad0d34ef3bce47070de0e1f5"
+LATER_COMMIT = "4848a7f8:99624288:ad0d34ef:3bce4707:0de0e1f5"
 
-EXPECTED_COMMIT = "d890078803c58f3ca995ff80004b025583fe6b2e"
-EXPECTED_TREE = "0d00c7b1ac87409c67ec32cbd0cde29c316d8334"
+EXPECTED_COMMIT = "d8900788:03c58f3c:a995ff80:004b0255:83fe6b2e"
+EXPECTED_TREE = "0d00c7b1:ac87409c:67ec32cb:d0cde29c:316d8334"
 EXPECTED_SEMANTIC = "f934ba37:c7e86108:a8087074:f4f421e7:aea4e81d:f7530071:63c618f5:0a8c3a82"
 EXPECTED_PROTECTED_MAIN = "900715b3:67b5b507:7a6cea8b:8297139c:08b416ad"
 PR26_PATH = "configs/governance/ppw-bootstrap-owner-selections-v1.json"

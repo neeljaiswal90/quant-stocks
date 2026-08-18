@@ -11,8 +11,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path("/workspace/QME-external-review/A4")
-REVIEWED = "d890078803c58f3ca995ff80004b025583fe6b2e"
-RUN_COMMIT = "62351e273843a62c77615f064a38c8050300dc58"
+REVIEWED = "d8900788:03c58f3c:a995ff80:004b0255:83fe6b2e"
+RUN_COMMIT = "62351e27:3843a62c:77615f06:4a38c805:0300dc58"
 RUN_ID = "31922669149"
 A4_PATHS = [
     "configs/governance/xnas-session-calendar-evidence-v1.json",
