@@ -205,12 +205,43 @@ by `configs/governance/specification-freeze-v5.hashes.json`.
 
 ## Verification boundary
 
-`qme/governance/specification_freeze_v5.py` executes both
-`qme/governance/specification_freeze_v4.py` and
-`qme/governance/nee120_successor_freeze_candidate.py` from their hash-verified source
-bytes under private module names, never from ambient imported modules, and proves the
-13-to-12 delta against the predecessor's own verified result rather than against a
+`qme/governance/specification_freeze_v5.py` executes
+`qme/governance/nee120_successor_freeze_candidate.py` from its hash-verified source bytes
+under a private module name, never from an ambient imported module, and proves the
+13-to-12 delta against the predecessor's own pinned documents rather than against a
 restated list. The candidate is verified against Freeze V4 — which remains byte-identical
 — and therefore still reports `target_blocker_cleared` false and
 `successor_freeze_published` false. That is by design: the candidate is historical, and
 only this receipt performs the transition.
+
+### Freeze V4 is pinned here, not re-executed
+
+This receipt's verifier does not run the Freeze V4 verifier, and says so in the policy
+rather than leaving it implicit.
+
+| field | value |
+| --- | --- |
+| `predecessor_verification_mode` | `V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_V4_NATIVE_VERIFICATION_RUNS_IN_V4_PINNED_TESTS_IN_THE_SAME_CI_RUN` |
+| rationale | `qme-ci` job `timeout-minutes` 30 is frozen (`ci.yml` is hash-pinned by the V4 manifest); V4 native re-execution measures ~186 s and exceeds the remaining CI budget |
+| decision | owner decision 2026-08-19, pin-not-reexecute |
+
+V4's native verification is relocated, not dropped. It runs in the same CI run from
+`tests/governance/test_specification_freeze_v4.py`, whose
+`test_v4_full_native_verification_ignores_poisoned_public_modules` executes the V4
+verifier from protected bytes. This package pins the exact bytes of both that test file
+and the loader it exercises — `EXPECTED_V4_TESTS_SHA256` and `EXPECTED_V4_LOADER_SHA256`,
+which are also rows of the replayed eleven-path V4 manifest — so the Freeze V4 verified
+natively over there is byte-for-byte the Freeze V4 relied on here.
+
+What the pin establishes before the 13-row baseline is built: the V4 policy, V4 policy
+schema, export V3, and export V3 schema re-hashed against `supersedes`; the V4 loader and
+V4 test file re-hashed against their two constants; all eleven ordered rows of
+`configs/governance/specification-freeze-v4.hashes.json` replayed and every leaf hashed;
+the V4 policy and export V3 strict-JSON loaded with duplicate-key and nonfinite rejection;
+and V4's own `semantic_sha256` and export V3's own `derived_evidence_sha256` recomputed
+with the same private frozen canonicaliser that produces the V5 policy digest. Every
+predecessor assertion this receipt makes — 13 active rows, the resolved
+`NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION` row, `accepted` false,
+`milestone_m0_complete` false, the inherited bindings, the claims block — is then checked
+against that pinned record. The export check `PREDECESSOR_FREEZE_V4` stays `PASS`, and
+that is now what it means.

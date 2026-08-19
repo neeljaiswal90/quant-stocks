@@ -3,12 +3,10 @@ from __future__ import annotations
 import copy
 import dataclasses
 import hashlib
-import importlib
 import json
 import shutil
-import sys
+from collections.abc import Iterator
 from pathlib import Path
-from types import ModuleType
 from typing import Any
 
 import pytest
@@ -27,10 +25,61 @@ def _load(path: Path, root: Path = ROOT) -> dict[str, Any]:
     return value
 
 
-def _copy_repository(tmp_path: Path) -> Path:
-    for relative in (".github", "configs", "docs", "qme", "schemas", "scripts", "tests"):
-        shutil.copytree(ROOT / relative, tmp_path / relative, dirs_exist_ok=True)
-    return tmp_path
+# Every path any V5 verification reads — including the leaves the candidate verifier
+# re-hashes — lives under one of these trees. Copying only them keeps each attack test's
+# private repository cheap enough to rebuild a hundred times;
+# `test_repository_copy_is_a_complete_verifiable_root` fails loudly if the set ever
+# becomes incomplete, so no attack can pass vacuously on a missing file.
+_COPIED_TREES = (
+    ".github/workflows",
+    "configs/governance",
+    "docs/governance",
+    "docs/quant",
+    "qme/governance",
+    "qme/stats",
+    "schemas/governance",
+    "tests/fixtures/stats",
+    "tests/governance",
+    "tests/stats",
+)
+
+
+def _copy_repository(destination: Path) -> Path:
+    ignore = shutil.ignore_patterns("__pycache__")
+    for relative in _COPIED_TREES:
+        shutil.copytree(ROOT / relative, destination / relative, dirs_exist_ok=True, ignore=ignore)
+    return destination
+
+
+@pytest.fixture(scope="session")
+def _session_repository(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    return _copy_repository(tmp_path_factory.mktemp("freeze-v5"))
+
+
+@pytest.fixture(scope="session")
+def _pristine_bytes(_session_repository: Path) -> dict[Path, bytes]:
+    return {
+        path: path.read_bytes() for path in _session_repository.rglob("*") if path.is_file()
+    }
+
+
+@pytest.fixture
+def repository(_session_repository: Path, _pristine_bytes: dict[Path, bytes]) -> Iterator[Path]:
+    """One private repository root, restored byte for byte after every test.
+
+    Building it once rather than ~110 times is what keeps this file inside the frozen CI
+    budget. Isolation is not weakened: teardown deletes every file a test added and
+    rewrites every file whose bytes differ, so each test still starts from the same
+    pristine copy that `test_repository_copy_is_a_complete_verifiable_root` verifies.
+    """
+    yield _session_repository
+    for path in _session_repository.rglob("*"):
+        if path.is_file() and path not in _pristine_bytes:
+            path.unlink()
+    for path, raw in _pristine_bytes.items():
+        if not path.is_file() or path.read_bytes() != raw:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
 
 
 def _group(value: str) -> str:
@@ -50,13 +99,19 @@ def _refresh_digest(document: dict[str, Any], field: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def native_predecessor() -> Any:
-    """Freeze V4 is immutable, so its native verification is computed once per session."""
-    return v5._private_v4_verification(ROOT)
+def pinned_predecessor() -> Any:
+    """Freeze V4 is immutable, so its pinned record is built once and reused.
+
+    Reusing it only short-circuits the V4 manifest replay and the V4 loader/test-file
+    pins. Everything ``_verify_predecessor_result`` asserts — including the five
+    predecessor files' bytes — is still re-checked against the attack's own repository
+    copy, and the tests that attack V4 itself deliberately do not take this shortcut.
+    """
+    return v5._pinned_predecessor(ROOT)
 
 
 def _fast_predecessor(monkeypatch: pytest.MonkeyPatch, predecessor: Any) -> None:
-    monkeypatch.setattr(v5, "_private_v4_verification", lambda _: predecessor)
+    monkeypatch.setattr(v5, "_pinned_predecessor", lambda _: predecessor)
 
 
 def _full_repin(
@@ -103,39 +158,28 @@ def _verify(root: Path) -> Any:
 
 
 # ---------------------------------------------------------------------------
-# native verification
+# full verification and the pinned predecessor
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.slow
-def test_v5_full_native_verification_ignores_poisoned_public_modules(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    fake_foundation = ModuleType("qme.foundation")
-    fake_foundation.canonical_json_bytes = lambda _: b"poison\n"  # type: ignore[attr-defined]
-    fake_candidate = ModuleType("qme.governance.nee120_successor_freeze_candidate")
-    fake_candidate.verify_nee120_successor_freeze_candidate = lambda *_: object()  # type: ignore[attr-defined]
-    fake_candidate.verify_nee120_successor_freeze_candidate_manifest = lambda *_: None  # type: ignore[attr-defined]
-    fake_v4 = ModuleType("qme.governance.specification_freeze_v4")
-    fake_v4.verify_specification_freeze_v4 = lambda *_, **__: object()  # type: ignore[attr-defined]
-    fake_v4.verify_specification_freeze_v4_manifest = lambda *_: None  # type: ignore[attr-defined]
-    monkeypatch.setitem(sys.modules, "qme.foundation", fake_foundation)
-    monkeypatch.setitem(
-        sys.modules, "qme.governance.nee120_successor_freeze_candidate", fake_candidate
-    )
-    monkeypatch.setitem(sys.modules, "qme.governance.specification_freeze_v4", fake_v4)
-    monkeypatch.delitem(sys.modules, "qme.governance.specification_freeze_v5")
-    fresh = importlib.import_module("qme.governance.specification_freeze_v5")
-    verified = fresh.verify_specification_freeze_v5(repository_root=ROOT)
-    assert verified.resolved_target == fresh.TARGET_BLOCKER
+def test_v5_full_verification() -> None:
+    verified = v5.verify_specification_freeze_v5(repository_root=ROOT)
+    assert verified.resolved_target == v5.TARGET_BLOCKER
     assert verified.active_blocker_count == 12
     assert len(verified.active_blocker_codes) == 12
-    assert fresh.TARGET_BLOCKER not in verified.active_blocker_codes
+    assert v5.TARGET_BLOCKER not in verified.active_blocker_codes
     assert verified.accepted is False
     assert verified.milestone_m0_complete is False
-    assert verified.predecessor.resolved_blocker_code == "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"
-    assert len(verified.predecessor.active_blocker_codes) == 13
-    assert verified.predecessor.milestone_m0_complete is False
+    predecessor = verified.predecessor
+    assert type(predecessor) is v5.PinnedPredecessorV4
+    assert len(predecessor.active_blocker_codes) == 13
+    assert v5.TARGET_BLOCKER in predecessor.active_blocker_codes
+    assert predecessor.resolved_blocker_code == "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"
+    assert predecessor.accepted is False
+    assert predecessor.milestone_m0_complete is False
+    assert predecessor.verification_mode == (
+        "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED"
+    )
     assert verified.candidate.candidate_registered is True
     assert verified.candidate.target_blocker_cleared is False
     assert verified.candidate.any_freeze_v4_blocker_cleared is False
@@ -145,6 +189,17 @@ def test_v5_full_native_verification_ignores_poisoned_public_modules(
         verified.export["closure"] = {}
 
 
+def test_repository_copy_is_a_complete_verifiable_root(repository: Path) -> None:
+    """An unmutated attack copy must itself verify, or a mutation could pass vacuously."""
+    root = repository
+    verified = _verify(root)
+    assert verified.active_blocker_count == 12
+    assert verified.predecessor.verification_mode == (
+        "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED"
+    )
+    v5.verify_specification_freeze_v5_manifest(root / v5.MANIFEST_PATH, root)
+
+
 def test_predecessor_freeze_v4_bytes_are_untouched() -> None:
     for prefix in ("policy", "schema", "manifest", "export", "export_schema"):
         relative = v5._PREDECESSOR[f"{prefix}_path"]
@@ -152,6 +207,68 @@ def test_predecessor_freeze_v4_bytes_are_untouched() -> None:
     assert _load(Path(v5._PREDECESSOR["policy_path"]))["policy_status"] == (
         "BLOCKED_13_ACTIVE_GOVERNANCE_EVIDENCE_AND_ENGINEERING"
     )
+
+
+def test_predecessor_is_pinned_not_reexecuted() -> None:
+    """V4's loader and its own test file are pinned twice: as constants and as manifest rows."""
+    assert not hasattr(v5, "_private_v4_verification")
+    loader = v5._PREDECESSOR_RUNTIME["source_path"]
+    tests = v5._PREDECESSOR_RUNTIME["tests_path"]
+    assert loader == "qme/governance/specification_freeze_v4.py"
+    assert tests == "tests/governance/test_specification_freeze_v4.py"
+    assert _sha(ROOT / loader) == v5.EXPECTED_V4_LOADER_SHA256
+    assert _sha(ROOT / tests) == v5.EXPECTED_V4_TESTS_SHA256
+    manifest = _load(Path(v5._PREDECESSOR["manifest_path"]))
+    rows = {row["path"]: row["sha256"] for row in manifest["artifacts"]}
+    assert rows[loader] == v5.EXPECTED_V4_LOADER_SHA256
+    assert rows[tests] == v5.EXPECTED_V4_TESTS_SHA256
+    assert set(rows) == set(v5._V4_MANIFEST_PATHS) and len(v5._V4_MANIFEST_PATHS) == 11
+    assert v5._PREDECESSOR_RUNTIME["verification_mode"] == (
+        "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED"
+    )
+    assert v5._PREDECESSOR_RUNTIME["native_verification_runs_in"] == tests
+
+
+def test_policy_records_the_pinned_predecessor_verification_mode() -> None:
+    """The boundary is published in the policy, not only implemented in the verifier."""
+    receipt = _load(v5.POLICY_PATH)["accepted_inference_evidence"]["receipt"]
+    assert receipt["predecessor_verification_mode"] == (
+        "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_"
+        "V4_NATIVE_VERIFICATION_RUNS_IN_V4_PINNED_TESTS_IN_THE_SAME_CI_RUN"
+    )
+    assert receipt["predecessor_verification_rationale"] == (
+        "qme-ci job timeout-minutes 30 is frozen (ci.yml hash-pinned by the V4 manifest); "
+        "V4 native re-execution measures ~186 s and exceeds the remaining CI budget; "
+        "owner decision 2026-08-19 pin-not-reexecute"
+    )
+    assert receipt["predecessor_verification_mode"] == (
+        v5._RECEIPT_PREDECESSOR_VERIFICATION_MODE
+    )
+    assert receipt["predecessor_verification_rationale"] == (
+        v5._RECEIPT_PREDECESSOR_VERIFICATION_RATIONALE
+    )
+    checks = {row["check_id"]: row["status"] for row in _load(v5.EXPORT_PATH)["verification_checks"]}
+    assert checks["PREDECESSOR_FREEZE_V4"] == "PASS"
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "configs/governance/specification-freeze-policy-v4.json",
+        "qme/governance/specification_freeze_v4.py",
+        "tests/governance/test_specification_freeze_v4.py",
+    ],
+)
+def test_v5_rejects_v4_byte_drift(repository: Path, relative: str) -> None:
+    """Pinning replaces re-execution, so one drifted byte in V4 must fail the whole verify."""
+    root = repository
+    path = root / relative
+    raw = bytearray(path.read_bytes())
+    index = len(raw) // 2
+    raw[index] ^= 0x20
+    path.write_bytes(bytes(raw))
+    with pytest.raises(v5.SpecificationFreezeV5Error, match="predecessor bytes changed"):
+        _verify(root)
 
 
 # ---------------------------------------------------------------------------
@@ -280,9 +397,9 @@ def test_grouped_parsers_reject_contiguous_and_short_digests() -> None:
     ],
 )
 def test_blocker_delta_attacks_fail_after_full_local_repin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     blockers = policy["unresolved_blockers"]
@@ -314,19 +431,19 @@ def test_blocker_delta_attacks_fail_after_full_local_repin(
     else:
         policy["resolved_or_superseded_blocker_codes"][-1] = "NEE-116-CAPACITY-SOLVER"
     export["active_blocker_codes"] = [row["blocker_code"] for row in blockers]
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error):
         _verify(root)
 
 
 def test_target_row_relabel_cannot_pass_as_the_authorized_delta(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     policy["accepted_inference_evidence"]["original_v4_blocker_row"]["description"] = "Different."
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="original V4 target blocker"):
         _verify(root)
 
@@ -369,6 +486,8 @@ def test_target_row_relabel_cannot_pass_as_the_authorized_delta(
         "receipt_identity",
         "receipt_may_add",
         "receipt_economic_binding",
+        "receipt_predecessor_mode",
+        "receipt_predecessor_rationale",
         "merge_ci_conclusion",
         "merge_ci_status",
         "merge_tested_commit",
@@ -385,9 +504,9 @@ def test_target_row_relabel_cannot_pass_as_the_authorized_delta(
     ],
 )
 def test_acceptance_authority_survives_full_local_repin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     evidence = policy["accepted_inference_evidence"]
@@ -460,6 +579,11 @@ def test_acceptance_authority_survives_full_local_repin(
         evidence["receipt"]["may_add_only"].append("a claims-block change")
     elif mutation == "receipt_economic_binding":
         evidence["receipt"]["economic_method_or_evidence_binding_changed"] = True
+    elif mutation == "receipt_predecessor_mode":
+        # Overstating the predecessor check — claiming a native replay — must fail closed.
+        evidence["receipt"]["predecessor_verification_mode"] = "V4_NATIVELY_REEXECUTED"
+    elif mutation == "receipt_predecessor_rationale":
+        evidence["receipt"]["predecessor_verification_rationale"] = "no reason recorded"
     elif mutation == "merge_ci_conclusion":
         evidence["candidate_pull_request"]["checks"][0]["run_conclusion"] = "failure"
     elif mutation == "merge_ci_status":
@@ -486,17 +610,17 @@ def test_acceptance_authority_survives_full_local_repin(
         evidence["candidate_pull_request"].pop("protected_main_tree")
     else:
         evidence["unexpected"] = False
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error):
         _verify(root)
 
 
 @pytest.mark.parametrize("artifact", ["verdict", "statement", "receipt"])
 def test_receipt_byte_swap_still_fails_on_the_reviewed_constant(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, artifact: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, artifact: str, pinned_predecessor: Any
 ) -> None:
     """Altering a receipt file and repinning its recorded hash must still fail."""
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     evidence = policy["accepted_inference_evidence"]
@@ -510,17 +634,17 @@ def test_receipt_byte_swap_still_fails_on_the_reviewed_constant(
     evidence[container][key] = _sha(path)
     if artifact == "verdict":
         export["accepted_inference_evidence"]["delta_review_verdict_sha256"] = _sha(path)
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="reviewed one"):
         _verify(root)
 
 
 @pytest.mark.parametrize("artifact", ["verdict", "statement", "receipt", "prompt"])
 def test_receipt_leaf_mutation_without_repin_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, artifact: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, artifact: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
-    _fast_predecessor(monkeypatch, native_predecessor)
+    root = repository
+    _fast_predecessor(monkeypatch, pinned_predecessor)
     relative = {
         "verdict": "DELTA-REVIEW-VERDICT.md",
         "statement": "OWNER-SIGNOFF.md",
@@ -550,18 +674,18 @@ def _repin_verdict(
 
 @pytest.mark.parametrize("required", ["DISPOSITION_GO", "FORMAL_EXTERNAL_DELTA_REVIEW_PR52"])
 def test_delta_verdict_must_carry_the_published_go_lines(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, required: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, required: str, pinned_predecessor: Any
 ) -> None:
     """Each pin must be its own exact line: a prose mention of the token is not enough."""
     assert required in v5._DELTA_VERDICT_REQUIRED_LINES
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     lines = (root / RECEIPT_DIR / "DELTA-REVIEW-VERDICT.md").read_text("utf-8").split("\n")
     assert lines.count(required) == 1
     lines[lines.index(required)] = f"{required}_WITHDRAWN"
     _repin_verdict(root, "\n".join(lines), policy, export, monkeypatch)
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="GO disposition"):
         _verify(root)
 
@@ -571,10 +695,10 @@ def test_delta_verdict_must_carry_the_published_go_lines(
     ["reviewed_head_commit", "reviewed_tree", "cited_verdict_hash", "cited_metadata_hash"],
 )
 def test_delta_verdict_must_name_the_reviewed_bytes_and_cited_hashes(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pin: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, pin: str, pinned_predecessor: Any
 ) -> None:
     """The published body must itself name what the policy says it reviewed and cited."""
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     review = _load(v5.POLICY_PATH, root)["accepted_inference_evidence"]["candidate_delta_review"]
@@ -588,7 +712,7 @@ def test_delta_verdict_must_name_the_reviewed_bytes_and_cited_hashes(
     text = (root / RECEIPT_DIR / "DELTA-REVIEW-VERDICT.md").read_text("utf-8")
     assert needle in text
     _repin_verdict(root, text.replace(needle, "REDACTED_BY_TEST"), policy, export, monkeypatch)
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="no longer names"):
         _verify(root)
 
@@ -641,9 +765,9 @@ def test_published_verdict_body_is_bound_exactly_as_published() -> None:
 
 
 def test_owner_statement_must_bound_itself(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     path = root / RECEIPT_DIR / "OWNER-SIGNOFF.md"
@@ -654,7 +778,7 @@ def test_owner_statement_must_bound_itself(
     )
     policy["accepted_inference_evidence"]["owner_exact_byte_signoff"]["statement_sha256"] = _sha(path)
     monkeypatch.setattr(v5, "EXPECTED_SIGNOFF_STATEMENT_SHA256", _sha(path))
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="bounds itself"):
         _verify(root)
 
@@ -669,9 +793,9 @@ def test_owner_statement_must_bound_itself(
     ["remove", "add", "wrong_type", "promote", "promote_inference", "promote_m0"],
 )
 def test_claim_inventory_survives_full_local_repin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     claims = policy["claims"]
@@ -688,7 +812,7 @@ def test_claim_inventory_survives_full_local_repin(
         claims["inference_implementation_available"] = True
     else:
         claims["milestone_m0_complete"] = True
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="claims"):
         _verify(root)
 
@@ -698,9 +822,9 @@ def test_claim_inventory_survives_full_local_repin(
     ["closure", "closure_m0", "checks", "check_promote", "projection", "acceptance", "active", "policy_pointer"],
 )
 def test_export_attacks_fail_after_full_local_repin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     if mutation == "closure":
@@ -721,7 +845,7 @@ def test_export_attacks_fail_after_full_local_repin(
         export["active_blocker_codes"].pop()
     else:
         export["policy"]["policy_id"] = "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V4"
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error):
         _verify(root)
 
@@ -731,9 +855,9 @@ def test_export_attacks_fail_after_full_local_repin(
     ["policy_id", "policy_status", "policy_extra", "supersedes", "export_id", "export_status", "schema_version"],
 )
 def test_root_identity_attacks_fail_after_full_local_repin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
+    root = repository
     policy = copy.deepcopy(_load(v5.POLICY_PATH, root))
     export = copy.deepcopy(_load(v5.EXPORT_PATH, root))
     if mutation == "policy_id":
@@ -750,17 +874,17 @@ def test_root_identity_attacks_fail_after_full_local_repin(
         export["export_status"] = "ACCEPTED"
     else:
         policy["schema_version"] = "qme.specification_freeze_policy.v4"
-    _full_repin(root, policy, export, monkeypatch, native_predecessor)
+    _full_repin(root, policy, export, monkeypatch, pinned_predecessor)
     with pytest.raises(v5.SpecificationFreezeV5Error, match="identity|lineage|shape"):
         _verify(root)
 
 
 @pytest.mark.parametrize("mutation", ["title", "description", "extra", "id"])
 def test_schema_metadata_attacks_fail_with_raw_schema_repin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
-    _fast_predecessor(monkeypatch, native_predecessor)
+    root = repository
+    _fast_predecessor(monkeypatch, pinned_predecessor)
     schema_path = root / v5.POLICY_SCHEMA_PATH
     schema = _load(v5.POLICY_SCHEMA_PATH, root)
     if mutation == "title":
@@ -786,29 +910,25 @@ def test_schema_metadata_attacks_fail_with_raw_schema_repin(
         "docs/governance/NEE_120_SUCCESSOR_FREEZE_CANDIDATE_V1.md",
     ],
 )
-def test_transitive_leaf_mutation_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, relative: str, native_predecessor: Any
-) -> None:
-    root = _copy_repository(tmp_path)
-    _fast_predecessor(monkeypatch, native_predecessor)
+def test_transitive_leaf_mutation_fails(repository: Path, relative: str) -> None:
+    root = repository
     path = root / relative
     path.write_bytes(path.read_bytes() + b"\n")
     with pytest.raises(v5.SpecificationFreezeV5Error):
         _verify(root)
 
 
-def test_predecessor_source_substitution_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    root = _copy_repository(tmp_path)
+def test_predecessor_source_append_fails(repository: Path) -> None:
+    """An appended byte in the V4 loader is caught by the pin, with no execution involved."""
+    root = repository
     path = root / v5._PREDECESSOR_RUNTIME["source_path"]
     path.write_bytes(path.read_bytes() + b"\n")
-    with pytest.raises(v5.SpecificationFreezeV5Error, match="source bytes changed"):
-        v5._private_v4_verification(root)
+    with pytest.raises(v5.SpecificationFreezeV5Error, match="predecessor bytes changed"):
+        v5._pinned_predecessor(root)
 
 
-def test_candidate_source_substitution_fails(tmp_path: Path) -> None:
-    root = _copy_repository(tmp_path)
+def test_candidate_source_substitution_fails(repository: Path) -> None:
+    root = repository
     path = root / v5._CANDIDATE_BINDING["runtime_path"]
     path.write_bytes(path.read_bytes() + b"\n")
     with pytest.raises(v5.SpecificationFreezeV5Error, match="source bytes changed"):
@@ -816,10 +936,10 @@ def test_candidate_source_substitution_fails(tmp_path: Path) -> None:
 
 
 def test_duplicate_nonfinite_and_escape_fail_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
-    _fast_predecessor(monkeypatch, native_predecessor)
+    root = repository
+    _fast_predecessor(monkeypatch, pinned_predecessor)
     policy_path = root / v5.POLICY_PATH
     raw = policy_path.read_text("utf-8").replace(
         '"schema_version": "qme.specification_freeze_policy.v5",',
@@ -837,10 +957,10 @@ def test_duplicate_nonfinite_and_escape_fail_closed(
 
 
 def test_serializer_revalidates_forged_and_mutated_results(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native_predecessor: Any
+    repository: Path, monkeypatch: pytest.MonkeyPatch, pinned_predecessor: Any
 ) -> None:
-    root = _copy_repository(tmp_path)
-    _fast_predecessor(monkeypatch, native_predecessor)
+    root = repository
+    _fast_predecessor(monkeypatch, pinned_predecessor)
     verified = _verify(root)
     assert verified.active_blocker_count == 12
     assert v5.specification_freeze_v5_export_bytes(verified) == (root / v5.EXPORT_PATH).read_bytes()
@@ -902,6 +1022,14 @@ def test_documentation_preserves_bounded_transition_boundary() -> None:
         "must not be reconstructed",
         "There is no `DELTA-REVIEW-METADATA.md`",
         "fourteen ordered paths",
+        "The V5 verifier does not execute the Freeze V4 verifier",
+        "pin-not-reexecute",
+        "tests/governance/test_specification_freeze_v4.py",
+        "EXPECTED_V4_LOADER_SHA256",
+        "EXPECTED_V4_TESTS_SHA256",
+        "about 186 s",
+        "still runs in the same CI run",
+        "`PREDECESSOR_FREEZE_V4` remains `PASS`",
     ):
         assert statement in text, statement
 
@@ -920,6 +1048,11 @@ def test_receipt_document_preserves_the_transition_boundary() -> None:
         "never delivered to this repository",
         "must not be reconstructed",
         "There is no `DELTA-REVIEW-METADATA.md`",
+        "does not run the Freeze V4 verifier",
+        "owner decision 2026-08-19, pin-not-reexecute",
+        "relocated, not dropped",
+        "test_v4_full_native_verification_ignores_poisoned_public_modules",
+        "~186 s",
     ):
         assert statement in text, statement
     # Assembled at runtime so this file never itself carries an unfilled-token literal.
@@ -937,8 +1070,8 @@ def test_freeze_v5_manifest_binds_exact_ordered_paths() -> None:
 @pytest.mark.parametrize(
     "mutation", ["reorder", "extra_root", "bad_digest", "duplicate_path", "status", "artifact_id"]
 )
-def test_freeze_v5_manifest_attacks_fail(tmp_path: Path, mutation: str) -> None:
-    root = _copy_repository(tmp_path)
+def test_freeze_v5_manifest_attacks_fail(repository: Path, mutation: str) -> None:
+    root = repository
     manifest_path = root / v5.MANIFEST_PATH
     manifest = _load(v5.MANIFEST_PATH, root)
     rows = manifest["artifacts"]

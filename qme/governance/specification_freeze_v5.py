@@ -4,9 +4,21 @@ V5 is the receipt for exactly one Freeze V4 blocker transition
 (``NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE``: 13 active -> 12 active, 0 -> 1
 newly resolved). It publishes a new freeze version; Freeze V4 stays byte
 identical as immutable historical authority. The verifier proves the delta from
-the predecessor's own verified result, executes both the V4 verifier and the
-NEE-120 candidate verifier from hash-verified source bytes under private module
-names, and refuses every acceptance, claim, or closure promotion.
+the predecessor's own pinned documents, executes the NEE-120 candidate verifier
+from hash-verified source bytes under a private module name, and refuses every
+acceptance, claim, or closure promotion.
+
+Freeze V4 is pinned here, not re-executed. Its loader, its own test file, its
+policy, schema, export V3, and export schema are re-hashed against reviewed
+constants, every row of its eleven-path manifest is replayed leaf by leaf, and
+its policy semantic digest and export derived-evidence digest are recomputed
+with this module's own frozen canonicaliser. V4's native verification still runs
+in the same CI job, driven by the byte-pinned
+``tests/governance/test_specification_freeze_v4.py``. The owner decision of
+2026-08-19 (pin-not-reexecute) records why the replay does not happen twice: the
+frozen ``qme-ci`` job budget cannot absorb a second ~186 s native V4 execution,
+and ``.github/workflows/ci.yml`` is itself hash-pinned by the V4 manifest, so its
+``timeout-minutes`` cannot be raised.
 """
 
 from __future__ import annotations
@@ -31,12 +43,12 @@ EXPORT_PATH = Path("configs/governance/specification-freeze-export-v4.json")
 EXPORT_SCHEMA_PATH = Path("schemas/governance/specification-freeze-export-v4.schema.json")
 MANIFEST_PATH = Path("configs/governance/specification-freeze-v5.hashes.json")
 
-EXPECTED_POLICY_SHA256 = "59a0200e:bb48aea8:428233c1:3ad7a9fa:fbd469ff:a8709e61:ab9fd49e:afa70b1c"
-EXPECTED_POLICY_SCHEMA_SHA256 = "bf7f5936:06fd7523:4d2d2410:b6b9e5bc:7de530ad:72bb9886:33e3dc10:7615ef08"
-EXPECTED_EXPORT_SHA256 = "70beb662:d907d726:43b64de6:8510e0d2:0b6edea7:16048144:26cbe958:ef4b3192"
-EXPECTED_EXPORT_SCHEMA_SHA256 = "71387190:c449623f:4315024d:fe22fe6d:4488cac9:707440a0:8c94ebbb:c7d15b4f"
-EXPECTED_POLICY_SEMANTIC_SHA256 = "cfed55c8:5a3cb83a:007dad5e:39526849:dc2d4e0a:ee658498:e7b097d4:7ae56688"
-EXPECTED_DERIVED_EVIDENCE_SHA256 = "8da8742d:17c9826e:52d806ab:4d89c107:306bf838:6701ad69:d0f203dc:e2fce7c9"
+EXPECTED_POLICY_SHA256 = "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840"
+EXPECTED_POLICY_SCHEMA_SHA256 = "e30a678e:90e4a98e:39366d5d:0ad580c5:738cd7fa:c86707a3:a1da07db:118643fd"
+EXPECTED_EXPORT_SHA256 = "de559315:30491c9f:a3a3a7de:81f7dcc2:302c2333:f6976091:101adc13:2e18b2be"
+EXPECTED_EXPORT_SCHEMA_SHA256 = "6cc775fc:d320a37e:a5890e55:d8c812fe:efc361b1:cd9bccba:bdcade21:5628fb81"
+EXPECTED_POLICY_SEMANTIC_SHA256 = "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3"
+EXPECTED_DERIVED_EVIDENCE_SHA256 = "13b09b7e:b93df675:c7455695:fd7503f8:63ce96ce:1993e30e:e23c8545:94c77001"
 
 TARGET_BLOCKER = "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE"
 POLICY_ID = "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5"
@@ -57,7 +69,7 @@ DELTA_VERDICT_PATH = RECEIPT_DIR + "DELTA-REVIEW-VERDICT.md"
 DELTA_PROMPT_PATH = RECEIPT_DIR + "DELTA-REVIEW-PROMPT.md"
 SIGNOFF_PATH = RECEIPT_DIR + "OWNER-SIGNOFF.md"
 
-EXPECTED_RECEIPT_SHA256 = "d4eb9c1f:365e2216:cadc4761:9d7f7b2c:03e362a9:4b1f11b5:febafb0f:8e63d584"
+EXPECTED_RECEIPT_SHA256 = "6345626d:a988b563:851c173d:9c93f48f:62df5e60:a0892408:0a49c782:e25c216e"
 EXPECTED_DELTA_VERDICT_SHA256 = "86d02dff:3620e34e:1b494f5a:977199aa:af8c3b60:fbfd8804:af6d239e:0b91cdcf"
 EXPECTED_DELTA_PROMPT_SHA256 = "ae8d2e2e:a90d2d6c:843041b5:7bdc40c7:c8024c28:e429f436:50d40140:5ebd1340"
 EXPECTED_SIGNOFF_STATEMENT_SHA256 = "f473e34d:548d8bdc:dc42d031:80986680:b92bf07f:38027dd8:1782317a:a266eb0d"
@@ -98,11 +110,22 @@ _PREDECESSOR_DERIVED_EVIDENCE_SHA256 = (
 _PREDECESSOR_TARGET_BLOCKER = "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION"
 _PREDECESSOR_ACTIVE_BLOCKER_COUNT = 13
 _PREDECESSOR_RESOLVED_COUNT = 17
+
+# Freeze V4's own loader and its own test file. Both digests are also rows of the V4
+# manifest replayed below; they are pinned again as explicit constants because they are
+# what anchors the guarantee this receipt records: V4's native verification is not run
+# from here, it is run by that exact pinned test file in the same CI job.
+EXPECTED_V4_LOADER_SHA256 = "575d85c3:d90ebd39:20ec1d9a:cc98efa8:0ad5acfc:ec289cf9:42453ea0:1f33ff6e"
+EXPECTED_V4_TESTS_SHA256 = "fd7cf46e:43d4785c:b8f1a435:9bbd89e9:2a1f56f4:404a7bfb:30ae4008:76f34d85"
+
+_PREDECESSOR_VERIFICATION_MODE = "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED"
 _PREDECESSOR_RUNTIME: dict[str, str] = {
     "source_path": "qme/governance/specification_freeze_v4.py",
-    "source_sha256": "575d85c3:d90ebd39:20ec1d9a:cc98efa8:0ad5acfc:ec289cf9:42453ea0:1f33ff6e",
-    "private_module_name": "_qme_nee120_specification_freeze_v4",
-    "execution_rule": "STRICT_UTF8_VERIFIED_CAPTURED_BYTES_DIRECT_PRIVATE_EXEC_NO_AMBIENT_MODULE_CACHE",
+    "source_sha256": EXPECTED_V4_LOADER_SHA256,
+    "tests_path": "tests/governance/test_specification_freeze_v4.py",
+    "tests_sha256": EXPECTED_V4_TESTS_SHA256,
+    "verification_mode": _PREDECESSOR_VERIFICATION_MODE,
+    "native_verification_runs_in": "tests/governance/test_specification_freeze_v4.py",
 }
 
 _PRIVATE_CANDIDATE_MODULE = "_qme_nee120_successor_freeze_candidate"
@@ -233,6 +256,17 @@ _RECEIPT_MAY_ADD_ONLY = [
     "new freeze version identity",
     "exact one-blocker transition",
 ]
+# How this receipt verifies its predecessor, recorded in the policy so the boundary is
+# published rather than only implemented, and pinned here so the policy cannot soften it.
+_RECEIPT_PREDECESSOR_VERIFICATION_MODE = (
+    "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_V4_NATIVE_VERIFICATION_RUNS_IN_"
+    "V4_PINNED_TESTS_IN_THE_SAME_CI_RUN"
+)
+_RECEIPT_PREDECESSOR_VERIFICATION_RATIONALE = (
+    "qme-ci job timeout-minutes 30 is frozen (ci.yml hash-pinned by the V4 manifest); V4 "
+    "native re-execution measures ~186 s and exceeds the remaining CI budget; owner "
+    "decision 2026-08-19 pin-not-reexecute"
+)
 
 _INFERENCE_EVIDENCE_SCOPE = (
     "INFERENCE_EXECUTABLE_CONFORMANCE_EVIDENCE_ONLY_NO_EMPIRICAL_PERFORMANCE_CLAIM"
@@ -362,6 +396,27 @@ MANIFEST_PATHS = (
 
 class SpecificationFreezeV5Error(ValueError):
     """Raised when the reviewed V5 delta, receipt, evidence, or lineage differs."""
+
+
+@dataclass(frozen=True, slots=True)
+class PinnedPredecessorV4:
+    """Freeze V4 as pinned bytes and a replayed manifest, never as a re-execution.
+
+    Field order and meaning mirror ``VerifiedSpecificationFreezeV4`` so every predecessor
+    check this module already made keeps making the same assertion about the same value.
+    ``verification_mode`` is the one field the native result does not carry: it states, in
+    the record itself, that nothing here executed V4.
+    """
+
+    policy: Mapping[str, Any]
+    export: Mapping[str, Any]
+    policy_sha256: str
+    export_sha256: str
+    active_blocker_codes: tuple[str, ...]
+    resolved_blocker_code: str
+    accepted: bool
+    milestone_m0_complete: bool
+    verification_mode: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -585,35 +640,6 @@ def _require_private_api(module: ModuleType, error_name: str, *functions: str) -
     return resolved
 
 
-def _private_v4_verification(root: Path) -> Any:
-    module: ModuleType | None = None
-    try:
-        module = _execute_private_module(
-            root,
-            _PREDECESSOR_RUNTIME["source_path"],
-            _PREDECESSOR_RUNTIME["source_sha256"],
-            _PREDECESSOR_RUNTIME["private_module_name"],
-        )
-        verify, verify_manifest = _require_private_api(
-            module,
-            "SpecificationFreezeV4Error",
-            "verify_specification_freeze_v4",
-            "verify_specification_freeze_v4_manifest",
-        )
-        if getattr(module, "TARGET_BLOCKER", None) != _PREDECESSOR_TARGET_BLOCKER:
-            raise SpecificationFreezeV5Error("private V4 verifier target blocker changed")
-        result = verify(repository_root=root)
-        verify_manifest(root / Path(_PREDECESSOR["manifest_path"]), root)
-        return result
-    except SpecificationFreezeV5Error:
-        raise
-    except Exception as exc:
-        raise SpecificationFreezeV5Error("private V4 verification failed") from exc
-    finally:
-        if module is not None and sys.modules.get(module.__name__) is module:
-            del sys.modules[module.__name__]
-
-
 def _private_candidate_import() -> Any:
     def guarded_import(
         name: str,
@@ -759,6 +785,77 @@ def _replay_manifest(
         raise SpecificationFreezeV5Error("transitive manifest order changed")
 
 
+def _pinned_predecessor(root: Path) -> PinnedPredecessorV4:
+    """Pin Freeze V4 by exact bytes and replay its manifest instead of re-executing it.
+
+    V4's native verification is not skipped, it is relocated: it runs in the same CI job
+    from ``tests/governance/test_specification_freeze_v4.py``, whose bytes are pinned here
+    together with the V4 loader those tests exercise. What this function establishes is
+    that the V4 this receipt reasons about is exactly the V4 that native run verified —
+    every path of the eleven-row V4 manifest re-hashed, the four lineage documents pinned
+    byte for byte, and V4's own semantic and derived-evidence digests recomputed with the
+    same frozen canonicaliser that produces the V5 policy digest, never merely re-read.
+    """
+    digests: dict[str, str] = {}
+    for prefix in ("policy", "schema", "export", "export_schema"):
+        digests[prefix] = _sha(Path(_PREDECESSOR[f"{prefix}_path"]), root)
+        if digests[prefix] != _normal(
+            _PREDECESSOR[f"{prefix}_sha256"], f"predecessor {prefix} hash"
+        ):
+            raise SpecificationFreezeV5Error("predecessor bytes changed")
+    for path, expected, label in (
+        (_PREDECESSOR_RUNTIME["source_path"], EXPECTED_V4_LOADER_SHA256, "loader"),
+        (_PREDECESSOR_RUNTIME["tests_path"], EXPECTED_V4_TESTS_SHA256, "tests"),
+    ):
+        if _sha(Path(path), root) != _normal(expected, f"predecessor {label} hash"):
+            raise SpecificationFreezeV5Error("predecessor bytes changed")
+    _replay_manifest(
+        root,
+        Path(_PREDECESSOR["manifest_path"]),
+        _PREDECESSOR["manifest_sha256"],
+        {
+            "schema_version": "qme.hash_manifest.v1",
+            "artifact_id": _PREDECESSOR_POLICY_ID,
+            "status": "BLOCKED_13_ACTIVE",
+        },
+        _V4_MANIFEST_PATHS,
+    )
+    policy = _load(Path(_PREDECESSOR["policy_path"]), root)
+    export = _load(Path(_PREDECESSOR["export_path"]), root)
+    if _digest_without(policy, "semantic_sha256") != _normal(
+        _PREDECESSOR_SEMANTIC_SHA256, "expected predecessor semantic hash"
+    ) or _digest_without(export, "derived_evidence_sha256") != _normal(
+        _PREDECESSOR_DERIVED_EVIDENCE_SHA256, "expected predecessor derived evidence hash"
+    ):
+        raise SpecificationFreezeV5Error("predecessor semantic lineage changed")
+    rows = policy.get("unresolved_blockers")
+    if type(rows) is not list or len(rows) != _PREDECESSOR_ACTIVE_BLOCKER_COUNT:
+        raise SpecificationFreezeV5Error("predecessor active blocker set changed")
+    codes = tuple(
+        _text(
+            _mapping(row, "predecessor blocker row").get("blocker_code"),
+            "predecessor blocker code",
+        )
+        for row in rows
+    )
+    access = _mapping(
+        policy.get("accepted_access_chain_evidence"), "predecessor access-chain evidence"
+    )
+    claims = _mapping(policy.get("claims"), "predecessor claims")
+    closure = _mapping(export.get("closure"), "predecessor export closure")
+    return PinnedPredecessorV4(
+        cast(Mapping[str, Any], _freeze(copy.deepcopy(policy))),
+        cast(Mapping[str, Any], _freeze(copy.deepcopy(export))),
+        digests["policy"],
+        digests["export"],
+        codes,
+        cast(str, access.get("resolved_blocker_code")),
+        cast(bool, closure.get("accepted")),
+        cast(bool, claims.get("milestone_m0_complete")),
+        _PREDECESSOR_VERIFICATION_MODE,
+    )
+
+
 def _verify_predecessor_result(root: Path, predecessor: Any) -> Mapping[str, Any]:
     policy = _mapping(getattr(predecessor, "policy", None), "predecessor policy")
     export = _mapping(getattr(predecessor, "export", None), "predecessor export")
@@ -782,6 +879,7 @@ def _verify_predecessor_result(root: Path, predecessor: Any) -> Mapping[str, Any
         or getattr(predecessor, "resolved_blocker_code", None) != _PREDECESSOR_TARGET_BLOCKER
         or getattr(predecessor, "accepted", None) is not False
         or getattr(predecessor, "milestone_m0_complete", None) is not False
+        or getattr(predecessor, "verification_mode", None) != _PREDECESSOR_VERIFICATION_MODE
     ):
         raise SpecificationFreezeV5Error("predecessor identity or closure changed")
     active = getattr(predecessor, "active_blocker_codes", None)
@@ -1086,6 +1184,8 @@ def _verify_receipt(root: Path, receipt: Mapping[str, Any]) -> None:
         "new_freeze_version_identity",
         "may_add_only",
         "economic_method_or_evidence_binding_changed",
+        "predecessor_verification_mode",
+        "predecessor_verification_rationale",
     }:
         raise SpecificationFreezeV5Error("receipt shape changed")
     if (
@@ -1105,6 +1205,13 @@ def _verify_receipt(root: Path, receipt: Mapping[str, Any]) -> None:
         raise SpecificationFreezeV5Error("the receipt append-only allowance changed")
     if receipt.get("economic_method_or_evidence_binding_changed") is not False:
         raise SpecificationFreezeV5Error("the receipt changed an economic method or evidence binding")
+    if receipt.get("predecessor_verification_mode") != _RECEIPT_PREDECESSOR_VERIFICATION_MODE:
+        raise SpecificationFreezeV5Error("the recorded predecessor verification mode changed")
+    if (
+        receipt.get("predecessor_verification_rationale")
+        != _RECEIPT_PREDECESSOR_VERIFICATION_RATIONALE
+    ):
+        raise SpecificationFreezeV5Error("the recorded predecessor verification rationale changed")
 
 
 def _verify_inference_evidence(root: Path, evidence: Mapping[str, Any]) -> tuple[str, str]:
@@ -1189,21 +1296,10 @@ def verify_specification_freeze_v5(
     _verify_exact_schema(_load(POLICY_SCHEMA_PATH, root), policy, policy=True)
     _verify_exact_schema(_load(EXPORT_SCHEMA_PATH, root), export, policy=False)
 
-    predecessor = _private_v4_verification(root)
+    predecessor = _pinned_predecessor(root)
     predecessor_policy = _verify_predecessor_result(root, predecessor)
     predecessor_export = _mapping(getattr(predecessor, "export", None), "predecessor export")
     candidate = _private_candidate_verification(root)
-    _replay_manifest(
-        root,
-        Path(_PREDECESSOR["manifest_path"]),
-        _PREDECESSOR["manifest_sha256"],
-        {
-            "schema_version": "qme.hash_manifest.v1",
-            "artifact_id": _PREDECESSOR_POLICY_ID,
-            "status": "BLOCKED_13_ACTIVE",
-        },
-        _V4_MANIFEST_PATHS,
-    )
     _replay_manifest(
         root,
         Path(cast(str, _CANDIDATE_BINDING["manifest_path"])),
@@ -1450,6 +1546,7 @@ __all__ = [
     "MANIFEST_PATH",
     "POLICY_PATH",
     "POLICY_SCHEMA_PATH",
+    "PinnedPredecessorV4",
     "SpecificationFreezeV5Error",
     "TARGET_BLOCKER",
     "VerifiedSpecificationFreezeV5",

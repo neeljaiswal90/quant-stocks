@@ -319,7 +319,7 @@
       "receipt_created_utc": "2026-08-19T06:25:43Z",
       "receipt_branch": "claude/qme-inference-evidence-receipt",
       "receipt_path": "docs/governance/blocker-transition-receipts/nee120-inference-evidence/RECEIPT.md",
-      "receipt_sha256": "d4eb9c1f:365e2216:cadc4761:9d7f7b2c:03e362a9:4b1f11b5:febafb0f:8e63d584",
+      "receipt_sha256": "6345626d:a988b563:851c173d:9c93f48f:62df5e60:a0892408:0a49c782:e25c216e",
       "new_freeze_version_identity": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
       "may_add_only": [
         "candidate merge SHA",
@@ -330,7 +330,9 @@
         "new freeze version identity",
         "exact one-blocker transition"
       ],
-      "economic_method_or_evidence_binding_changed": false
+      "economic_method_or_evidence_binding_changed": false,
+      "predecessor_verification_mode": "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_V4_NATIVE_VERIFICATION_RUNS_IN_V4_PINNED_TESTS_IN_THE_SAME_CI_RUN",
+      "predecessor_verification_rationale": "qme-ci job timeout-minutes 30 is frozen (ci.yml hash-pinned by the V4 manifest); V4 native re-execution measures ~186 s and exceeds the remaining CI budget; owner decision 2026-08-19 pin-not-reexecute"
     },
     "resolution": {
       "previous_active_blockers": 13,
@@ -405,5 +407,5 @@
     "live_order_authority": false
   },
   "blocked_downstream_issue_ids": ["NEE-114", "NEE-123", "NEE-124", "NEE-125", "NEE-126", "NEE-127", "NEE-128"],
-  "semantic_sha256": "cfed55c8:5a3cb83a:007dad5e:39526849:dc2d4e0a:ee658498:e7b097d4:7ae56688"
+  "semantic_sha256": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3"
 }

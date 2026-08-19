@@ -11,8 +11,8 @@
     "policy": {
       "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
       "path": "configs/governance/specification-freeze-policy-v5.json",
-      "sha256": "59a0200e:bb48aea8:428233c1:3ad7a9fa:fbd469ff:a8709e61:ab9fd49e:afa70b1c",
-      "semantic_sha256": "cfed55c8:5a3cb83a:007dad5e:39526849:dc2d4e0a:ee658498:e7b097d4:7ae56688"
+      "sha256": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840",
+      "semantic_sha256": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3"
     },
     "bundle": {
       "bundle_id": "NEE-172-OPERATIONAL-V2-BUNDLE-V1",
@@ -200,6 +200,6 @@
       "final_freeze_receipt_verified": false,
       "prospective_observations_consumable": false
     },
-    "derived_evidence_sha256": "8da8742d:17c9826e:52d806ab:4d89c107:306bf838:6701ad69:d0f203dc:e2fce7c9"
+    "derived_evidence_sha256": "13b09b7e:b93df675:c7455695:fd7503f8:63ce96ce:1993e30e:e23c8545:94c77001"
   }
 }

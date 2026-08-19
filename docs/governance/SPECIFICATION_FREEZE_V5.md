@@ -50,22 +50,66 @@ claims-block change, so the receipt makes none.
 
 ## Verification boundary
 
-The V5 verifier calls the native Specification Freeze V4 verifier and the native NEE-120
-candidate verifier, plus their manifest verifiers, from their exact protected source
-bytes rather than from ambient imported modules. `specification_freeze_v4.py` and
-`nee120_successor_freeze_candidate.py` are strict UTF-8 decoded, compiled with
-`dont_inherit=True` and `optimize=0`, and executed under fixed private module names
-(`_qme_nee120_specification_freeze_v4`, `_qme_nee120_successor_freeze_candidate`) with no
+### Freeze V4 is pinned, not re-executed
+
+The V5 verifier does not execute the Freeze V4 verifier. It pins it. That is the owner
+decision of 2026-08-19 — pin-not-reexecute — and the cause is operational rather than
+evidential: `qme-ci` declares `timeout-minutes: 30` on its single job,
+`.github/workflows/ci.yml` is hash-pinned by the Freeze V4 manifest and therefore cannot
+be edited by this package, and a native V4 replay measures about 186 s, which the
+remaining budget of that already long job cannot absorb a second time.
+
+Nothing is thereby skipped, because V4's native verification still runs in the same CI
+run, where it has always run: `tests/governance/test_specification_freeze_v4.py`, whose
+`test_v4_full_native_verification_ignores_poisoned_public_modules` executes the V4
+verifier from protected bytes against poisoned public modules. What this package adds is
+the guarantee that the Freeze V4 that native run verified is byte-for-byte the Freeze V4
+this receipt reasons about. Both files are pinned as explicit module constants —
+`EXPECTED_V4_LOADER_SHA256` for `qme/governance/specification_freeze_v4.py` and
+`EXPECTED_V4_TESTS_SHA256` for `tests/governance/test_specification_freeze_v4.py` — and
+both are also rows of the eleven-path V4 manifest this verifier replays leaf by leaf, so
+neither the verifier nor the test that exercises it can drift without failing here.
+
+Concretely, `_pinned_predecessor` re-hashes the V4 policy, the V4 policy schema, export
+V3, and the export V3 schema against the `supersedes` block; re-hashes the V4 loader and
+the V4 test file against those two constants; replays all eleven ordered rows of
+`configs/governance/specification-freeze-v4.hashes.json`, hashing every leaf; strict-JSON
+loads the V4 policy and export V3 under the same duplicate-key and nonfinite rejection as
+every other document here; and recomputes V4's own `semantic_sha256` and export V3's own
+`derived_evidence_sha256` with the private frozen canonicaliser that produces the V5
+policy digest, rather than reading either value back as an assertion about itself. Only
+then is the 13-row baseline built. Every predecessor check this verifier previously made
+against a native result is made against that pinned record: recorded policy and export
+hashes, semantic and derived lineage, policy identity and status, the resolved
+`NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION` row, `accepted` false,
+`milestone_m0_complete` false, the thirteen-code active set, and the per-file bytes.
+
+The policy publishes this boundary rather than leaving it to the implementation.
+`accepted_inference_evidence.receipt.predecessor_verification_mode` is
+`V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_V4_NATIVE_VERIFICATION_RUNS_IN_V4_PINNED_TESTS_IN_THE_SAME_CI_RUN`,
+and `predecessor_verification_rationale` records the frozen CI budget, the measured 186 s,
+and the owner decision. Both are pinned against reviewed module constants, so a later edit
+cannot quietly restate the boundary as a native replay. The export check
+`PREDECESSOR_FREEZE_V4` remains `PASS` and now means exactly that: pinned bytes plus a
+replayed manifest here, verified natively elsewhere in the same run.
+
+### The candidate verifier is executed
+
+The NEE-120 candidate verifier and its manifest verifier are still called from their exact
+protected source bytes rather than from ambient imported modules; that replay costs well
+under a second, so nothing about it changes. `nee120_successor_freeze_candidate.py` is
+strict UTF-8 decoded, compiled with `dont_inherit=True` and `optimize=0`, and executed
+under the fixed private module name `_qme_nee120_successor_freeze_candidate` with no
 ambient module cache. The candidate source receives one guarded exact import: a private
 frozen canonical JSON callable with
 `JSON_DUMPS_ENSURE_ASCII_FALSE_ALLOW_NAN_FALSE_SORT_KEYS_TRUE_COMPACT_SEPARATORS_UTF8_PLUS_LF`
 semantics. Any other import shape for `qme.foundation` is refused. Preloaded or
-substituted `qme.foundation`, `qme.governance.specification_freeze_v4`, and
-`qme.governance.nee120_successor_freeze_candidate` modules carry no authority. The V4
-source in turn executes V3 and the NEE-176 verifier under its own private names, so the
-whole lineage is replayed natively.
+substituted `qme.foundation` and `qme.governance.nee120_successor_freeze_candidate`
+modules carry no authority.
 
-The 13-to-12 delta is proven against the predecessor's own verified result — its
+### The delta
+
+The 13-to-12 delta is proven against the predecessor's own pinned documents — its
 `unresolved_blockers`, `resolved_or_superseded_blocker_codes`, `claims`, and
 `blocked_downstream_issue_ids` — not against a restated list. The complete original
 Freeze V4 target row (blocker code, ticket, category, description) is quoted verbatim in
@@ -174,15 +218,15 @@ All digests are SHA-256 written as eight lowercase eight-hex groups.
 
 | artifact | sha256 |
 | --- | --- |
-| `configs/governance/specification-freeze-policy-v5.json` | `59a0200e:bb48aea8:428233c1:3ad7a9fa:fbd469ff:a8709e61:ab9fd49e:afa70b1c` |
-| policy semantic digest | `cfed55c8:5a3cb83a:007dad5e:39526849:dc2d4e0a:ee658498:e7b097d4:7ae56688` |
-| `schemas/governance/specification-freeze-policy-v5.schema.json` | `bf7f5936:06fd7523:4d2d2410:b6b9e5bc:7de530ad:72bb9886:33e3dc10:7615ef08` |
-| `configs/governance/specification-freeze-export-v4.json` | `70beb662:d907d726:43b64de6:8510e0d2:0b6edea7:16048144:26cbe958:ef4b3192` |
-| export derived-evidence digest | `8da8742d:17c9826e:52d806ab:4d89c107:306bf838:6701ad69:d0f203dc:e2fce7c9` |
-| `schemas/governance/specification-freeze-export-v4.schema.json` | `71387190:c449623f:4315024d:fe22fe6d:4488cac9:707440a0:8c94ebbb:c7d15b4f` |
-| `qme/governance/specification_freeze_v5.py` | `f9a76afa:8a52e704:d669fd86:d959c83f:d0eda080:a05b682b:654d8d88:0d166fbe` |
-| `tests/governance/test_specification_freeze_v5.py` | `2868ae02:9a006449:3b5eadba:c0787f4e:f0628717:ce8b3c48:8cd7a6c5:5b878e32` |
-| `docs/.../nee120-inference-evidence/RECEIPT.md` | `d4eb9c1f:365e2216:cadc4761:9d7f7b2c:03e362a9:4b1f11b5:febafb0f:8e63d584` |
+| `configs/governance/specification-freeze-policy-v5.json` | `054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840` |
+| policy semantic digest | `85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3` |
+| `schemas/governance/specification-freeze-policy-v5.schema.json` | `e30a678e:90e4a98e:39366d5d:0ad580c5:738cd7fa:c86707a3:a1da07db:118643fd` |
+| `configs/governance/specification-freeze-export-v4.json` | `de559315:30491c9f:a3a3a7de:81f7dcc2:302c2333:f6976091:101adc13:2e18b2be` |
+| export derived-evidence digest | `13b09b7e:b93df675:c7455695:fd7503f8:63ce96ce:1993e30e:e23c8545:94c77001` |
+| `schemas/governance/specification-freeze-export-v4.schema.json` | `6cc775fc:d320a37e:a5890e55:d8c812fe:efc361b1:cd9bccba:bdcade21:5628fb81` |
+| `qme/governance/specification_freeze_v5.py` | `61c3012e:07b4cf80:042074c6:baafea66:0ab1ea49:03e2d8c8:d67fd9f7:6cc0f2cf` |
+| `tests/governance/test_specification_freeze_v5.py` | `bac4be57:f5a7424d:598a8efd:33875225:780a7ea7:989b41f6:f5ac67b5:7cc87dba` |
+| `docs/.../nee120-inference-evidence/RECEIPT.md` | `6345626d:a988b563:851c173d:9c93f48f:62df5e60:a0892408:0a49c782:e25c216e` |
 | `docs/.../nee120-inference-evidence/DELTA-REVIEW-VERDICT.md` (published comment body) | `86d02dff:3620e34e:1b494f5a:977199aa:af8c3b60:fbfd8804:af6d239e:0b91cdcf` |
 | `docs/.../nee120-inference-evidence/DELTA-REVIEW-PROMPT.md` | `ae8d2e2e:a90d2d6c:843041b5:7bdc40c7:c8024c28:e429f436:50d40140:5ebd1340` |
 | `docs/.../nee120-inference-evidence/OWNER-SIGNOFF.md` | `f473e34d:548d8bdc:dc42d031:80986680:b92bf07f:38027dd8:1782317a:a266eb0d` |
@@ -198,7 +242,8 @@ All digests are SHA-256 written as eight lowercase eight-hex groups.
 | Freeze V4 semantic digest | `90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771` |
 | `configs/governance/specification-freeze-v4.hashes.json` | `a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42` |
 | `configs/governance/specification-freeze-export-v3.json` | `e1591734:256318ed:d82c6969:6eef1b9d:de418f2b:7f26b41f:684c4038:c6a86f41` |
-| `qme/governance/specification_freeze_v4.py` | `575d85c3:d90ebd39:20ec1d9a:cc98efa8:0ad5acfc:ec289cf9:42453ea0:1f33ff6e` |
+| `qme/governance/specification_freeze_v4.py` (pinned, not executed) | `575d85c3:d90ebd39:20ec1d9a:cc98efa8:0ad5acfc:ec289cf9:42453ea0:1f33ff6e` |
+| `tests/governance/test_specification_freeze_v4.py` (runs V4 natively in the same CI run) | `fd7cf46e:43d4785c:b8f1a435:9bbd89e9:2a1f56f4:404a7bfb:30ae4008:76f34d85` |
 
 The two digests below are recorded citations, not bindings. They are the reviewer's own
 statement about its own two files, quoted from the published verdict body. No file in this
