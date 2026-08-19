@@ -162,24 +162,27 @@ lineage entry:
 | `A2-V2/A2-V2-VERDICT.md` | `ec9a1c44:a886e530:a1a4ca27:525d7fdd:e6238280:c1d60246:f3d0c9d1:631e034f` |
 | `A2-V2/METADATA.md` | `eef89f74:b2280bf5:6400f88d:fbcd82d3:1c8898b2:ecb7cfd6:7e8ad115:1a34cde8` |
 | `A2-V2/REVIEW-PROMPT.md` | `d1686ff2:5df07ad5:0659e035:e316b660:fd6022ad:a3d97dfe:e1f04333:f9d7541f` |
-| `A2-V2/independent_inference_oracle.py.txt` | `b2e3291b:7b8558f4:a0c4bfa4:411843f6:55b33515:30e289e1:3a7c7a48:b27276a7` |
-| `A2-V2/independent_inference_oracle.output.txt` | `a169b50d:baf0dd5e:b3929f25:ad840ea0:dfab7fa0:4c7dc048:ff2a2a49:dc12318e` |
+| `A2-V2/independent_inference_oracle.py.txt` | `f6f1d42f:fbb9adc2:055fd10b:738596d4:8a32dd4d:8e72f6c1:a2ceab19:54938196` |
+| `A2-V2/independent_inference_oracle.output.txt` | `749f441e:d70e379a:1eaced8a:ac3557b5:8713e07c:fb6b778c:67097789:408ba685` |
 | `A2-V2/independent_inference_oracle.json` | `55cefd32:3767d692:a33676db:4419ff4a:6d1938c7:8dc57ee8:06bbde05:ce2a0d3d` |
+| `A2-V2/.gitattributes` (LF checkout rules) | `1b7e01ca:fb9efa7f:0edd0c28:da2dbef0:2f83dd37:89552cd6:5f328876:6d07fd0c` |
 | `INDEX.md` (PR `#50` index) | `abf94925:1fa9e270:29f4c276:4cdaca67:ea6ae9fe:8f0f5424:64419c10:dc859a80` |
 
-All ten live under `docs/governance/external-review-results-2026-08-18/`.
-Published on protected main by PR `#50` (merge
+All eleven live under `docs/governance/external-review-results-2026-08-18/`.
+The ten review artifacts were published on protected main by PR `#50` (merge
 `e64307d3:d0105da4:eb121c5e:a0224d86:ae8bfb29`, protected-main CI run
-`32177250528`, conclusion `success`).
+`32177250528`, conclusion `success`); the eleventh, `A2-V2/.gitattributes`, is
+added by this candidate branch (see *Checkout normalization repair* below) and
+changes no review byte.
 
-**Each of those ten hashes is also a reviewed constant inside the loader.**
+**Each of those eleven hashes is also a reviewed constant inside the loader.**
 Re-hashing a file against the config only proves the config is *self-consistent*:
 a re-forge that regenerated the config, the schema `const`, the semantic pin, and
-the manifest in one diff would still verify. The loader therefore anchors all ten
-artifacts independently (`EXPECTED_EXTERNAL_REVIEW_SHA256`) and fails with
+the manifest in one diff would still verify. The loader therefore anchors all
+eleven artifacts independently (`EXPECTED_EXTERNAL_REVIEW_SHA256`) and fails with
 `REFERENCED_EXTERNAL_VERDICT_BYTES_CHANGED: <path> is not the reviewed hash` if a
 recorded hash drifts from the bytes the owner and the external reviewers actually
-saw. It also requires the bound artifact set to be exactly those ten.
+saw. It also requires the bound artifact set to be exactly those eleven.
 
 **The reviewed commit and tree of each verdict are pinned, not merely
 format-checked.** `A1_REVIEWED_COMMIT` / `A1_REVIEWED_TREE` /
@@ -214,6 +217,77 @@ performance, production capacity, production readiness, or live-order authority.
 candidate: `not_bound_as_acceptance_dependency = ["A3-V2", "A4"]`. The loader
 rejects any lineage entry or `external_review` field whose path sits under the
 `A3-V2/` or `A4/` directories.
+
+## Checkout normalization repair (formal external NO_GO on head `7fd19896:f635e228:7a9bc717:4c9df0c1:4e64e3f0`)
+
+**What was wrong.** Candidate head `7fd19896:f635e228:7a9bc717:4c9df0c1:4e64e3f0`
+pinned `A2-V2/independent_inference_oracle.py.txt` and
+`A2-V2/independent_inference_oracle.output.txt` at their **Windows CRLF checkout
+bytes**. Both paths were `text=auto`, so git checks the identical stored blobs out
+as CRLF on Windows and as LF on Linux. The two recorded SHA-256 values therefore
+described one platform's working tree, not the committed content: a Linux clone of
+the very same commit hashed the same files differently and the verifier failed
+closed there. That is a genuine P0 — an evidence pin that is not reproducible off
+one machine is not a pin — and it earned a formal external **NO_GO**.
+
+**What changed.** A **new** file,
+`docs/governance/external-review-results-2026-08-18/A2-V2/.gitattributes`
+(100 bytes, `1b7e01ca:fb9efa7f:0edd0c28:da2dbef0:2f83dd37:89552cd6:5f328876:6d07fd0c`),
+holds exactly two exact-path rules and nothing wider:
+
+```
+independent_inference_oracle.py.txt text eol=lf
+independent_inference_oracle.output.txt text eol=lf
+```
+
+Both files were then re-checked-out under those rules, so every clone — Windows,
+Linux, or macOS — materialises the same LF bytes. The two pins now equal those
+committed LF bytes:
+
+| bound artifact | bytes | grouped sha256 |
+|---|---|---|
+| `A2-V2/independent_inference_oracle.py.txt` | 34967 | `f6f1d42f:fbb9adc2:055fd10b:738596d4:8a32dd4d:8e72f6c1:a2ceab19:54938196` |
+| `A2-V2/independent_inference_oracle.output.txt` | 8075 | `749f441e:d70e379a:1eaced8a:ac3557b5:8713e07c:fb6b778c:67097789:408ba685` |
+
+**Why a subdirectory file and not the root one.** The **root `.gitattributes` is
+untouched, by design.** It is itself hash-bound by the XNAS calendar evidence V1
+manifest; editing it would break that registered artifact. Scoping the repair to a
+new file inside `A2-V2/` fixes exactly the two defective paths and leaves every
+other artifact's end-of-line handling — and every other hash pin in the repository
+— exactly as reviewed. `root_gitattributes_unchanged` is recorded as `true` and the
+XNAS calendar evidence tests prove it on every run.
+
+**Linux/Windows hash parity.** For both bound `.txt` artifacts the loader now
+requires, in `_check_external_review` → `_check_checkout_normalization`:
+
+1. the bound `A2-V2/.gitattributes` decodes as strict UTF-8, contains no carriage
+   return, and its non-empty lines are **exactly** the two rules above (set
+   equality — a widened `*` rule or a dropped rule fails);
+2. the raw bytes of each bound oracle `.txt` contain no `\r` — otherwise
+   `REFERENCED_EXTERNAL_VERDICT_BYTES_CHANGED: <path> contains carriage returns
+   (CRLF checkout)`;
+3. `LINUX_WINDOWS_HASH_PARITY`: `sha256(raw) == sha256(raw with CRLF→LF) ==
+   recorded` — the standing invariant that every pin is end-of-line-invariant, so a
+   self-consistent CRLF re-pin cannot survive even if check 2 were bypassed
+   (a CRLF checkout re-pinned in the config is reported by check 2, which runs
+   first and names the carriage returns that caused it);
+4. `external_review.a2_v2.checkout_normalization` agrees with the lineage entry
+   (`eol_attributes_path`, `eol_attributes_sha256`), records the two rules verbatim,
+   asserts `committed_bytes_are_lf`, `bound_oracle_txt_contains_no_carriage_return`,
+   `linux_windows_hash_parity`, and `root_gitattributes_unchanged` all `true` (every
+   boolean in the block must be `true`), and carries a `repair_basis` that begins
+   `formal external NO_GO on candidate head 7fd19896:`.
+
+The `.gitattributes` file is also an eleventh reviewed-hash anchor in
+`EXPECTED_EXTERNAL_REVIEW_SHA256`, so it cannot be re-pinned through a
+self-consistent rewrite of the candidate.
+
+**What this repair does not do.** It changes no review byte, no verdict, no
+reviewed commit or tree, no freeze row, and no claim. Freeze V4 remains **13 active
+/ 0 resolved** and byte-identical; `milestone_m0_complete` stays `false`; the
+delta review of this candidate remains `NOT_YET_PERFORMED`; no blocker transitions.
+The only content that moved is two SHA-256 pins that now describe the committed
+bytes instead of one platform's checkout.
 
 ## NEE-122 / NEE-204 boundary
 
@@ -377,10 +451,11 @@ result.
 
 ## Bound artifacts (config lineage — exact bytes)
 
-Each row is re-hashed by the loader against its stored grouped SHA-256; any drift
-fails closed. Hashes are quoted verbatim from the config — none invented here.
-The ten external-review artifacts are listed in the binding section above; the
-remaining bound artifacts are:
+The config binds **24** lineage artifacts. Each row is re-hashed by the loader
+against its stored grouped SHA-256; any drift fails closed. Hashes are quoted
+verbatim from the config — none invented here. The eleven external-review
+artifacts (ten review files plus `A2-V2/.gitattributes`) are listed in the binding
+section above; the remaining thirteen bound artifacts are:
 
 | role | path | grouped sha256 |
 |---|---|---|
@@ -420,11 +495,12 @@ remaining bound artifacts are:
 in order: candidate byte pin → identity / status / kind and incapability →
 authority → semantic hash pin → schema byte pin, shape, and `const` equality →
 commit provenance (five-group parser on every commit and tree) → lineage re-hash
-of all twenty-three bound artifacts → pre-state (protected main + Freeze V4 rows,
-counts, order) → target → proposed transition → external review (exact bytes, the
-ten reviewed-hash anchors, pinned reviewed commit/tree cross-checked against the
-reviewer metadata, GO disposition line, owner disposition, delta-review status) →
-NEE-122 boundary → claims keyset and values → non-claims.
+of all twenty-four bound artifacts → pre-state (protected main + Freeze V4 rows,
+counts, order) → target → proposed transition → external review (exact bytes,
+checkout normalization, the eleven reviewed-hash anchors, pinned reviewed
+commit/tree cross-checked against the reviewer metadata, GO disposition line, owner
+disposition, delta-review status) → NEE-122 boundary → claims keyset and values →
+non-claims.
 
 `_check_commit_provenance` additionally pins each verdict's reviewed commit and
 tree, so a rebase or a copied verdict cannot be presented as this review.
@@ -448,13 +524,13 @@ row leaves `unresolved_blockers`, this candidate stops verifying — by design.
 
 | file | grouped sha256 |
 |---|---|
-| `configs/governance/nee120-successor-freeze-candidate-v1.json` | `e8ef9bf9:7fdf277c:322e12d2:4b2e31ba:ce97fdd2:4183ad69:8f1d0bc3:c142c9e6` |
-| `schemas/governance/nee120-successor-freeze-candidate-v1.schema.json` | `0fd7b6a8:76359dcf:e0f2b7e8:dafd1455:530ecfed:d1b8ad12:35ae96e4:9b424782` |
-| `qme/governance/nee120_successor_freeze_candidate.py` | `bba14e0f:2d3c3b8d:e9a17431:2f279da8:4c724845:09f28b8b:c9c79d2a:f85f2e05` |
-| `tests/governance/test_nee120_successor_freeze_candidate.py` | `2159d8ea:b706d1e1:9068072b:e79da77f:413118fb:9aaaa3c3:3343d62a:d2211c70` |
+| `configs/governance/nee120-successor-freeze-candidate-v1.json` | `e756a44e:e27eb0a0:c047535f:eddb83cb:2394b7ba:156ccdb9:eba8341d:83cb308b` |
+| `schemas/governance/nee120-successor-freeze-candidate-v1.schema.json` | `ab1dfb50:49ead027:0d1a17c0:e93d8c03:d35859cc:fca328aa:16a2b70e:f06783b6` |
+| `qme/governance/nee120_successor_freeze_candidate.py` | `94c6a5dd:25da0208:f10a398d:66fefe7f:b5209a10:d5b76ed0:686ea2e9:1e09b635` |
+| `tests/governance/test_nee120_successor_freeze_candidate.py` | `e2dc9b56:3b4d47f9:fe4e10d9:71d0d7ba:456db318:a7eeda68:f53df47b:c9b83125` |
 
 Config `semantic_sha256`:
-`cbb97017:de0c1dbe:31acfaae:2d0fdf59:479e05ee:773d0e0c:63191133:12cda145`.
+`931975d5:3d6a6b10:bf84e15d:18acaabd:cee7b9b3:cb30ecc8:80c0b713:38ecaedf`.
 
 The **authoritative** list of this candidate's reviewed bytes is the manifest
 `configs/governance/nee120-successor-freeze-candidate-v1.hashes.json`, which

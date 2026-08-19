@@ -17,6 +17,8 @@ from qme.governance.nee120_successor_freeze_candidate import (
     A2_V2_REVIEWED_TREE,
     CANDIDATE_KIND,
     DELTA_REVIEW_GO_MUST_CONFIRM,
+    EOL_ATTRIBUTE_RULES,
+    EOL_ATTRIBUTES_PATH,
     EXPECTED_EXTERNAL_REVIEW_SHA256,
     EXTERNAL_REVIEW_DIR,
     RECEIPT_MAY_ADD_ONLY,
@@ -81,6 +83,20 @@ EXTERNAL_REVIEW_ARTIFACTS = (
     "A2-V2/independent_inference_oracle.py.txt",
     "A2-V2/independent_inference_oracle.output.txt",
     "A2-V2/independent_inference_oracle.json",
+    "A2-V2/.gitattributes",
+)
+# The two bound oracle .txt artifacts the subdirectory .gitattributes pins to LF.
+EOL_NORMALIZED_ORACLE_FILES = (
+    (
+        "external_review_a2_v2_oracle_script",
+        "A2-V2/independent_inference_oracle.py.txt",
+        "independent_oracle_script_sha256",
+    ),
+    (
+        "external_review_a2_v2_oracle_output",
+        "A2-V2/independent_inference_oracle.output.txt",
+        "independent_oracle_output_sha256",
+    ),
 )
 A3_V2_VERDICT = f"{EXTERNAL_REVIEW_DIR}A3-V2/A3-V2-VERDICT.md"
 # lineage binding key -> (file under the review directory, external_review pointer).
@@ -112,6 +128,9 @@ ANCHORED_ARTIFACTS = (
     ),
     ("external_review_index", "INDEX.md", ("index", "sha256")),
 )
+# The end-of-line attribute file is anchored too, but its config pointer sits inside
+# external_review.a2_v2.checkout_normalization rather than at the verdict top level.
+EOL_ATTRIBUTES_BINDING_KEY = "external_review_a2_v2_eol_attributes"
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -406,17 +425,170 @@ def test_unaltered_external_review_root_passes(tmp_path: Path) -> None:
     _check_external_review(_load(CONFIG), _review_root(tmp_path))
 
 
-def test_every_bound_external_review_artifact_is_anchored() -> None:
-    """All ten bound artifacts carry a reviewed-hash constant, matching the config."""
+def test_bound_eol_attributes_hold_the_two_exact_path_lf_rules() -> None:
+    """The repair is exactly two exact-path `text eol=lf` rules and nothing wider."""
 
-    assert len(EXPECTED_EXTERNAL_REVIEW_SHA256) == 10
-    assert set(EXPECTED_EXTERNAL_REVIEW_SHA256) == {row[0] for row in ANCHORED_ARTIFACTS}
+    raw = (ROOT / EOL_ATTRIBUTES_PATH).read_bytes()
+    assert b"\r" not in raw
+    rules = {line.strip() for line in raw.decode("utf-8").splitlines() if line.strip()}
+    assert rules == {
+        "independent_inference_oracle.py.txt text eol=lf",
+        "independent_inference_oracle.output.txt text eol=lf",
+    }
+    assert set(EOL_ATTRIBUTE_RULES) == rules
+    # The repair lives in a NEW subdirectory file; the root .gitattributes is bound by
+    # the XNAS calendar evidence manifest and is never touched by this candidate.
+    assert f"{EXTERNAL_REVIEW_DIR}A2-V2/.gitattributes" == EOL_ATTRIBUTES_PATH
+    lineage_paths = {
+        binding["path"]
+        for binding in _load(CONFIG)["lineage"].values()
+        if isinstance(binding, dict)
+    }
+    assert ".gitattributes" not in lineage_paths
+
+    normalization = _load(CONFIG)["external_review"]["a2_v2"]["checkout_normalization"]
+    assert normalization["eol_attributes_path"] == EOL_ATTRIBUTES_PATH
+    assert normalization["eol_attributes_sha256"] == _digest(ROOT / EOL_ATTRIBUTES_PATH)
+    assert normalization["rules"] == list(EOL_ATTRIBUTE_RULES)
+    for field in (
+        "committed_bytes_are_lf",
+        "bound_oracle_txt_contains_no_carriage_return",
+        "linux_windows_hash_parity",
+        "root_gitattributes_unchanged",
+    ):
+        assert normalization[field] is True, field
+    assert normalization["repair_basis"].startswith(
+        "formal external NO_GO on candidate head 7fd19896:"
+    )
+
+
+def test_bound_oracle_txt_pins_are_end_of_line_invariant() -> None:
+    """A Linux (LF) and a Windows checkout of the pinned bytes hash identically."""
+
+    config = _load(CONFIG)
+    lineage = config["lineage"]
+    verdict = config["external_review"]["a2_v2"]
+    for binding_key, relative, field in EOL_NORMALIZED_ORACLE_FILES:
+        raw = (ROOT / EXTERNAL_REVIEW_DIR / relative).read_bytes()
+        assert b"\r" not in raw, relative
+        recorded = lineage[binding_key]["sha256"]
+        assert verdict[field] == recorded, relative
+        assert _grouped(hashlib.sha256(raw).hexdigest()) == recorded, relative
+        assert (
+            _grouped(hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()) == recorded
+        ), relative
+
+
+@pytest.mark.parametrize(
+    ("binding_key", "relative", "field"), EOL_NORMALIZED_ORACLE_FILES
+)
+def test_crlf_checkout_of_a_bound_oracle_file_fails_closed(
+    binding_key: str, relative: str, field: str, tmp_path: Path
+) -> None:
+    """The head-7fd19896 defect itself: a CRLF checkout must never verify."""
+
+    original = (ROOT / EXTERNAL_REVIEW_DIR / relative).read_bytes()
+    crlf = original.replace(b"\n", b"\r\n")
+    assert crlf != original and b"\r" in crlf
+    root = _review_root(tmp_path, {relative: crlf})
+
+    # The recorded LF pin simply does not match CRLF bytes.
+    with pytest.raises(
+        Nee120SuccessorFreezeCandidateError,
+        match="REFERENCED_EXTERNAL_VERDICT_BYTES_CHANGED",
+    ):
+        _check_external_review(_load(CONFIG), root)
+
+    # Re-pinning the CRLF bytes in the config does not launder them: that is exactly
+    # what head 7fd19896 did, and the carriage-return check now refuses it.
+    forged = _load(CONFIG)
+    digest = _grouped(hashlib.sha256(crlf).hexdigest())
+    forged["lineage"][binding_key]["sha256"] = digest
+    forged["external_review"]["a2_v2"][field] = digest
+    with pytest.raises(
+        Nee120SuccessorFreezeCandidateError,
+        match=r"contains carriage returns \(CRLF checkout\)",
+    ):
+        _check_external_review(forged, root)
+
+
+def test_altered_eol_attributes_fail_closed(tmp_path: Path) -> None:
+    """Removing, widening, or re-pinning the LF rules all fail closed."""
+
+    relative = "A2-V2/.gitattributes"
+    original = (ROOT / EOL_ATTRIBUTES_PATH).read_bytes()
+
+    root = _review_root(tmp_path / "appended", {relative: original + b"\n"})
+    with pytest.raises(
+        Nee120SuccessorFreezeCandidateError,
+        match="REFERENCED_EXTERNAL_VERDICT_BYTES_CHANGED",
+    ):
+        _check_external_review(_load(CONFIG), root)
+
+    # A same-diff re-forge that re-pins the altered attribute file still misses the
+    # reviewed anchor.
+    forged = _load(CONFIG)
+    digest = _grouped(hashlib.sha256(original + b"\n").hexdigest())
+    forged["lineage"][EOL_ATTRIBUTES_BINDING_KEY]["sha256"] = digest
+    forged["external_review"]["a2_v2"]["checkout_normalization"][
+        "eol_attributes_sha256"
+    ] = digest
+    with pytest.raises(
+        Nee120SuccessorFreezeCandidateError, match="is not the reviewed hash"
+    ):
+        _check_external_review(forged, root)
+
+    # A dropped rule fails on the exact rule set, before any anchor is consulted.
+    dropped = EOL_ATTRIBUTE_RULES[0].encode("utf-8") + b"\n"
+    dropped_root = _review_root(tmp_path / "dropped", {relative: dropped})
+    dropped_forged = _load(CONFIG)
+    dropped_digest = _grouped(hashlib.sha256(dropped).hexdigest())
+    dropped_forged["lineage"][EOL_ATTRIBUTES_BINDING_KEY]["sha256"] = dropped_digest
+    dropped_forged["external_review"]["a2_v2"]["checkout_normalization"][
+        "eol_attributes_sha256"
+    ] = dropped_digest
+    with pytest.raises(
+        Nee120SuccessorFreezeCandidateError, match="exactly the two exact-path"
+    ):
+        _check_external_review(dropped_forged, dropped_root)
+
+
+def test_checkout_normalization_repair_moves_no_freeze_row_or_claim() -> None:
+    """The end-of-line repair is byte-level only: no row, count, or claim moves."""
+
+    config = _load(CONFIG)
+    freeze = _load(FREEZE)
+    active = config["pre_state"]["active_freeze"]
+    assert active["active_blocker_count"] == 13
+    assert active["resolved_blocker_count"] == 0
+    assert active["bytes_unchanged"] is True
+    assert len(freeze["unresolved_blockers"]) == 13
+    assert dict(TARGET_BLOCKER_ROW) in freeze["unresolved_blockers"]
+    assert config["target"]["freeze_state_at_candidate"] == {"active": 13, "resolved": 0}
+    assert config["target"]["transition_performed_by_this_candidate"] is False
+    assert config["candidate_incapability"]["can_change_active_freeze"] is False
+    for key in REQUIRED_FALSE_CLAIMS:
+        assert config["claims"][key] is False, key
+    assert config["external_review"]["delta_review_status"] == "NOT_YET_PERFORMED"
+
+
+def test_every_bound_external_review_artifact_is_anchored() -> None:
+    """All eleven bound artifacts carry a reviewed-hash constant, matching the config."""
+
+    assert len(EXPECTED_EXTERNAL_REVIEW_SHA256) == 11
+    assert set(EXPECTED_EXTERNAL_REVIEW_SHA256) == {row[0] for row in ANCHORED_ARTIFACTS} | {
+        EOL_ATTRIBUTES_BINDING_KEY
+    }
     lineage = _load(CONFIG)["lineage"]
     for binding_key, relative, _pointer in ANCHORED_ARTIFACTS:
         anchor = EXPECTED_EXTERNAL_REVIEW_SHA256[binding_key]
         assert lineage[binding_key]["path"] == f"{EXTERNAL_REVIEW_DIR}{relative}"
         assert lineage[binding_key]["sha256"] == anchor, binding_key
         assert _digest(ROOT / EXTERNAL_REVIEW_DIR / relative) == anchor, binding_key
+    eol_anchor = EXPECTED_EXTERNAL_REVIEW_SHA256[EOL_ATTRIBUTES_BINDING_KEY]
+    assert lineage[EOL_ATTRIBUTES_BINDING_KEY]["path"] == EOL_ATTRIBUTES_PATH
+    assert lineage[EOL_ATTRIBUTES_BINDING_KEY]["sha256"] == eol_anchor
+    assert _digest(ROOT / EOL_ATTRIBUTES_PATH) == eol_anchor
 
 
 @pytest.mark.parametrize(("binding_key", "relative", "pointer"), ANCHORED_ARTIFACTS)
@@ -858,7 +1030,7 @@ def test_all_bound_lineage_hashes_match_exact_bytes() -> None:
         observed = hashlib.sha256((ROOT / binding["path"]).read_bytes()).hexdigest()
         assert observed == normalize_grouped_sha256(binding["sha256"], binding["path"])
         checked += 1
-    assert checked == 23
+    assert checked == 24
 
 
 @pytest.mark.parametrize(

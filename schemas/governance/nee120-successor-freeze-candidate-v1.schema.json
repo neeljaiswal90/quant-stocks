@@ -10,7 +10,7 @@
     "candidate_id": "NEE-120-INFERENCE-EVIDENCE-SUCCESSOR-FREEZE-CANDIDATE-V1",
     "candidate_kind": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
     "status": "CANDIDATE_PR_OPEN_BLOCKER_REMAINS_ACTIVE_PENDING_EXTERNAL_DELTA_REVIEW_OWNER_SIGNOFF_AND_RECEIPT",
-    "semantic_sha256": "cbb97017:de0c1dbe:31acfaae:2d0fdf59:479e05ee:773d0e0c:63191133:12cda145",
+    "semantic_sha256": "931975d5:3d6a6b10:bf84e15d:18acaabd:cee7b9b3:cb30ecc8:80c0b713:38ecaedf",
     "authority": {
       "approval_owner": "neeljaiswal90",
       "candidate_date": "2026-08-18",
@@ -260,18 +260,23 @@
       },
       "external_review_a2_v2_oracle_script": {
         "path": "docs/governance/external-review-results-2026-08-18/A2-V2/independent_inference_oracle.py.txt",
-        "sha256": "b2e3291b:7b8558f4:a0c4bfa4:411843f6:55b33515:30e289e1:3a7c7a48:b27276a7",
+        "sha256": "f6f1d42f:fbb9adc2:055fd10b:738596d4:8a32dd4d:8e72f6c1:a2ceab19:54938196",
         "role": "A2_V2_INDEPENDENT_ORACLE_SCRIPT"
       },
       "external_review_a2_v2_oracle_output": {
         "path": "docs/governance/external-review-results-2026-08-18/A2-V2/independent_inference_oracle.output.txt",
-        "sha256": "a169b50d:baf0dd5e:b3929f25:ad840ea0:dfab7fa0:4c7dc048:ff2a2a49:dc12318e",
+        "sha256": "749f441e:d70e379a:1eaced8a:ac3557b5:8713e07c:fb6b778c:67097789:408ba685",
         "role": "A2_V2_INDEPENDENT_ORACLE_OUTPUT"
       },
       "external_review_a2_v2_oracle_json": {
         "path": "docs/governance/external-review-results-2026-08-18/A2-V2/independent_inference_oracle.json",
         "sha256": "55cefd32:3767d692:a33676db:4419ff4a:6d1938c7:8dc57ee8:06bbde05:ce2a0d3d",
         "role": "A2_V2_INDEPENDENT_ORACLE_JSON"
+      },
+      "external_review_a2_v2_eol_attributes": {
+        "path": "docs/governance/external-review-results-2026-08-18/A2-V2/.gitattributes",
+        "sha256": "1b7e01ca:fb9efa7f:0edd0c28:da2dbef0:2f83dd37:89552cd6:5f328876:6d07fd0c",
+        "role": "EXACT_PATH_LF_CHECKOUT_RULES_FOR_BOUND_ORACLE_TXT_LINUX_WINDOWS_HASH_PARITY"
       }
     },
     "external_review": {
@@ -310,9 +315,22 @@
         "prompt_sha256": "d1686ff2:5df07ad5:0659e035:e316b660:fd6022ad:a3d97dfe:e1f04333:f9d7541f",
         "verdict_sha256": "ec9a1c44:a886e530:a1a4ca27:525d7fdd:e6238280:c1d60246:f3d0c9d1:631e034f",
         "metadata_sha256": "eef89f74:b2280bf5:6400f88d:fbcd82d3:1c8898b2:ecb7cfd6:7e8ad115:1a34cde8",
-        "independent_oracle_script_sha256": "b2e3291b:7b8558f4:a0c4bfa4:411843f6:55b33515:30e289e1:3a7c7a48:b27276a7",
-        "independent_oracle_output_sha256": "a169b50d:baf0dd5e:b3929f25:ad840ea0:dfab7fa0:4c7dc048:ff2a2a49:dc12318e",
+        "independent_oracle_script_sha256": "f6f1d42f:fbb9adc2:055fd10b:738596d4:8a32dd4d:8e72f6c1:a2ceab19:54938196",
+        "independent_oracle_output_sha256": "749f441e:d70e379a:1eaced8a:ac3557b5:8713e07c:fb6b778c:67097789:408ba685",
         "independent_oracle_json_sha256": "55cefd32:3767d692:a33676db:4419ff4a:6d1938c7:8dc57ee8:06bbde05:ce2a0d3d",
+        "checkout_normalization": {
+          "eol_attributes_path": "docs/governance/external-review-results-2026-08-18/A2-V2/.gitattributes",
+          "eol_attributes_sha256": "1b7e01ca:fb9efa7f:0edd0c28:da2dbef0:2f83dd37:89552cd6:5f328876:6d07fd0c",
+          "rules": [
+            "independent_inference_oracle.py.txt text eol=lf",
+            "independent_inference_oracle.output.txt text eol=lf"
+          ],
+          "committed_bytes_are_lf": true,
+          "bound_oracle_txt_contains_no_carriage_return": true,
+          "linux_windows_hash_parity": true,
+          "root_gitattributes_unchanged": true,
+          "repair_basis": "formal external NO_GO on candidate head 7fd19896:f635e228:7a9bc717:4c9df0c1:4e64e3f0 (P0): that head pinned Windows CRLF checkout bytes of these two text=auto files; pins now equal the committed LF bytes"
+        },
         "reviewed_commit": "4848a7f8:99624288:ad0d34ef:3bce4707:0de0e1f5",
         "reviewed_tree": "d911bf58:3c748aac:9aba76bb:5c69045a:08f17564",
         "review_window_utc": "2026-08-18T17:29:45Z..2026-08-18T17:36:17Z",

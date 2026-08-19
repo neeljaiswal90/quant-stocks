@@ -60,13 +60,13 @@ MANIFEST_ARTIFACT_PATHS = (
     "tests/governance/test_nee120_successor_freeze_candidate.py",
 )
 EXPECTED_CONFIG_SHA256 = (
-    "e8ef9bf9:7fdf277c:322e12d2:4b2e31ba:ce97fdd2:4183ad69:8f1d0bc3:c142c9e6"
+    "e756a44e:e27eb0a0:c047535f:eddb83cb:2394b7ba:156ccdb9:eba8341d:83cb308b"
 )
 EXPECTED_SCHEMA_SHA256 = (
-    "0fd7b6a8:76359dcf:e0f2b7e8:dafd1455:530ecfed:d1b8ad12:35ae96e4:9b424782"
+    "ab1dfb50:49ead027:0d1a17c0:e93d8c03:d35859cc:fca328aa:16a2b70e:f06783b6"
 )
 EXPECTED_SEMANTIC_SHA256 = (
-    "cbb97017:de0c1dbe:31acfaae:2d0fdf59:479e05ee:773d0e0c:63191133:12cda145"
+    "931975d5:3d6a6b10:bf84e15d:18acaabd:cee7b9b3:cb30ecc8:80c0b713:38ecaedf"
 )
 APPROVAL_OWNER = "neeljaiswal90"
 CANDIDATE_DATE = "2026-08-18"
@@ -212,11 +212,12 @@ EXTERNAL_REVIEW_LINEAGE_BINDINGS: Mapping[str, Mapping[str, str]] = MappingProxy
 )
 EXTERNAL_REVIEW_INDEX_BINDING = "external_review_index"
 
-# Reviewed-byte anchors for the ten bound external-review artifacts. These are
+# Reviewed-byte anchors for the eleven bound external-review artifacts. These are
 # independent of EXPECTED_CONFIG_SHA256 / EXPECTED_SCHEMA_SHA256 / the semantic pin:
 # a re-forge that regenerates the config, schema, and manifest in one diff still has
-# to match these, so a swapped verdict, prompt, metadata, oracle, or index file
-# cannot be laundered through a self-consistent rewrite of the candidate.
+# to match these, so a swapped verdict, prompt, metadata, oracle, end-of-line
+# attribute, or index file cannot be laundered through a self-consistent rewrite of
+# the candidate.
 EXPECTED_A1_VERDICT_SHA256 = (
     "ca1177b9:4a05a2ea:bbf48c20:60f68eb2:918777dd:f4a6e3ef:e01e9518:503b5aa1"
 )
@@ -236,13 +237,16 @@ EXPECTED_A2_V2_PROMPT_SHA256 = (
     "d1686ff2:5df07ad5:0659e035:e316b660:fd6022ad:a3d97dfe:e1f04333:f9d7541f"
 )
 EXPECTED_A2_V2_ORACLE_SCRIPT_SHA256 = (
-    "b2e3291b:7b8558f4:a0c4bfa4:411843f6:55b33515:30e289e1:3a7c7a48:b27276a7"
+    "f6f1d42f:fbb9adc2:055fd10b:738596d4:8a32dd4d:8e72f6c1:a2ceab19:54938196"
 )
 EXPECTED_A2_V2_ORACLE_OUTPUT_SHA256 = (
-    "a169b50d:baf0dd5e:b3929f25:ad840ea0:dfab7fa0:4c7dc048:ff2a2a49:dc12318e"
+    "749f441e:d70e379a:1eaced8a:ac3557b5:8713e07c:fb6b778c:67097789:408ba685"
 )
 EXPECTED_A2_V2_ORACLE_JSON_SHA256 = (
     "55cefd32:3767d692:a33676db:4419ff4a:6d1938c7:8dc57ee8:06bbde05:ce2a0d3d"
+)
+EXPECTED_A2_V2_EOL_ATTRIBUTES_SHA256 = (
+    "1b7e01ca:fb9efa7f:0edd0c28:da2dbef0:2f83dd37:89552cd6:5f328876:6d07fd0c"
 )
 EXPECTED_EXTERNAL_REVIEW_INDEX_SHA256 = (
     "abf94925:1fa9e270:29f4c276:4cdaca67:ea6ae9fe:8f0f5424:64419c10:dc859a80"
@@ -258,9 +262,38 @@ EXPECTED_EXTERNAL_REVIEW_SHA256: Mapping[str, str] = MappingProxyType(
         "external_review_a2_v2_oracle_script": EXPECTED_A2_V2_ORACLE_SCRIPT_SHA256,
         "external_review_a2_v2_oracle_output": EXPECTED_A2_V2_ORACLE_OUTPUT_SHA256,
         "external_review_a2_v2_oracle_json": EXPECTED_A2_V2_ORACLE_JSON_SHA256,
+        "external_review_a2_v2_eol_attributes": EXPECTED_A2_V2_EOL_ATTRIBUTES_SHA256,
         EXTERNAL_REVIEW_INDEX_BINDING: EXPECTED_EXTERNAL_REVIEW_INDEX_SHA256,
     }
 )
+
+# Checkout-normalization repair. The formal external NO_GO on candidate head
+# 7fd19896:f635e228:7a9bc717:4c9df0c1:4e64e3f0 (P0) found that the two bound oracle
+# .txt artifacts had been pinned at their Windows CRLF *checkout* bytes: both were
+# `text=auto`, so a Linux clone of the same commit checks the identical blobs out as
+# LF, hashes them differently, and this verifier could never pass there. The repair is
+# a NEW subdirectory .gitattributes carrying exactly two exact-path `text eol=lf`
+# rules. The ROOT .gitattributes is deliberately left untouched: it is hash-bound by
+# the XNAS calendar evidence V1 manifest and editing it would break that artifact.
+EOL_ATTRIBUTES_BINDING = "external_review_a2_v2_eol_attributes"
+EOL_ATTRIBUTES_PATH = f"{EXTERNAL_REVIEW_DIR}A2-V2/.gitattributes"
+EOL_ATTRIBUTE_RULES = (
+    "independent_inference_oracle.py.txt text eol=lf",
+    "independent_inference_oracle.output.txt text eol=lf",
+)
+EOL_NORMALIZED_ORACLE_BINDINGS = (
+    "external_review_a2_v2_oracle_script",
+    "external_review_a2_v2_oracle_output",
+)
+CHECKOUT_NORMALIZATION_BOOLEANS = (
+    "committed_bytes_are_lf",
+    "bound_oracle_txt_contains_no_carriage_return",
+    "linux_windows_hash_parity",
+    "root_gitattributes_unchanged",
+)
+CHECKOUT_REPAIR_BASIS_PREFIX = "formal external NO_GO on candidate head 7fd19896:"
+CARRIAGE_RETURN_FAILURE = "contains carriage returns (CRLF checkout)"
+HASH_PARITY_FAILURE = "LINUX_WINDOWS_HASH_PARITY"
 
 # The exact commit and tree each external reviewer read, pinned rather than merely
 # format-checked, and cross-checked against the reviewer's own METADATA.md bytes.
@@ -922,6 +955,111 @@ def _check_proposed_transition(document: dict[str, Any]) -> None:
     )
 
 
+def _check_checkout_normalization(
+    external_review: Mapping[str, Any],
+    lineage: Mapping[str, Any],
+    root: Path,
+    eol_relative: str,
+    eol_recorded: str,
+) -> None:
+    """The bound oracle .txt pins must be the LF bytes any clone checks out.
+
+    Candidate head 7fd19896:f635e228:7a9bc717:4c9df0c1:4e64e3f0 pinned the Windows
+    CRLF checkout of two ``text=auto`` artifacts, so the same commit verified on
+    Windows and failed on Linux; that earned a formal external NO_GO. The bound
+    subdirectory ``.gitattributes`` now pins both paths to ``text eol=lf``, and this
+    check refuses any pin that is not carriage-return-free and end-of-line-invariant.
+    """
+
+    changed = "REFERENCED_EXTERNAL_VERDICT_BYTES_CHANGED"
+    _require(
+        eol_relative == EOL_ATTRIBUTES_PATH,
+        f"{changed}: end-of-line attribute path changed: {eol_relative}",
+    )
+    attributes_raw = _read_bytes(root / eol_relative, root)
+    _require(
+        b"\r" not in attributes_raw,
+        f"{changed}: {eol_relative} {CARRIAGE_RETURN_FAILURE}",
+    )
+    try:
+        attributes_text = attributes_raw.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise Nee120SuccessorFreezeCandidateError(
+            f"{changed}: {eol_relative} is not strict UTF-8"
+        ) from exc
+    observed_rules = {
+        line.strip() for line in attributes_text.splitlines() if line.strip()
+    }
+    _require(
+        observed_rules == set(EOL_ATTRIBUTE_RULES),
+        f"{changed}: {eol_relative} no longer holds exactly the two exact-path "
+        "text eol=lf rules",
+    )
+
+    for binding_key in EOL_NORMALIZED_ORACLE_BINDINGS:
+        binding = lineage.get(binding_key)
+        if not isinstance(binding, dict):
+            raise Nee120SuccessorFreezeCandidateError(
+                f"external review lineage binding missing: {binding_key}"
+            )
+        relative = cast(dict[str, Any], binding).get("path")
+        if not isinstance(relative, str):
+            raise Nee120SuccessorFreezeCandidateError(
+                f"external review lineage path must be a string: {binding_key}"
+            )
+        recorded = normalize_grouped_sha256(
+            cast(dict[str, Any], binding).get("sha256"), f"lineage.{binding_key}.sha256"
+        )
+        raw = _read_bytes(root / relative, root)
+        _require(
+            b"\r" not in raw, f"{changed}: {relative} {CARRIAGE_RETURN_FAILURE}"
+        )
+        observed = hashlib.sha256(raw).hexdigest()
+        normalized = hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
+        _require(
+            observed == normalized == recorded,
+            f"{changed}: {HASH_PARITY_FAILURE} failed for {relative}: the recorded "
+            "pin is not the end-of-line-invariant hash of the bound bytes",
+        )
+
+    verdict = _child(external_review, "a2_v2", "external_review.a2_v2")
+    normalization = _child(
+        verdict, "checkout_normalization", "external_review.a2_v2.checkout_normalization"
+    )
+    _require(
+        normalization.get("eol_attributes_path") == eol_relative,
+        f"{changed}: the recorded end-of-line attribute path differs from the bound "
+        "lineage entry",
+    )
+    _require(
+        normalize_grouped_sha256(
+            normalization.get("eol_attributes_sha256"),
+            "external_review.a2_v2.checkout_normalization.eol_attributes_sha256",
+        )
+        == eol_recorded,
+        f"{changed}: {eol_relative}",
+    )
+    _require(
+        normalization.get("rules") == list(EOL_ATTRIBUTE_RULES),
+        f"{changed}: the recorded end-of-line rules changed",
+    )
+    for field in CHECKOUT_NORMALIZATION_BOOLEANS:
+        _require(
+            normalization.get(field) is True,
+            f"{changed}: checkout normalization no longer asserts {field}",
+        )
+    for field, value in normalization.items():
+        _require(
+            not isinstance(value, bool) or value is True,
+            f"{changed}: checkout normalization no longer asserts {field}",
+        )
+    basis = normalization.get("repair_basis")
+    _require(
+        isinstance(basis, str) and basis.startswith(CHECKOUT_REPAIR_BASIS_PREFIX),
+        f"{changed}: the recorded checkout-normalization repair basis changed",
+    )
+
+
 def _check_external_review(document: dict[str, Any], root: Path) -> None:
     """Bind only the two NEE-120-relevant verdicts, by exact bytes, with no reuse."""
 
@@ -1033,6 +1171,15 @@ def _check_external_review(document: dict[str, Any], root: Path) -> None:
                 f"{REVIEWED_IDENTITY_SUBSTITUTED}: {name}.{field} is absent from "
                 f"{metadata_relative}",
             )
+
+    # The two bound oracle .txt artifacts must be pinned at their end-of-line-invariant
+    # bytes, backed by the exact-path rules of the bound subdirectory .gitattributes.
+    # This runs before the reviewed-hash anchors so that a CRLF checkout re-pinned in
+    # the config reports the carriage returns that caused it, not a generic anchor miss.
+    eol_relative, eol_recorded = bound_digest(EOL_ATTRIBUTES_BINDING)
+    _check_checkout_normalization(
+        external_review, lineage, root, eol_relative, eol_recorded
+    )
 
     index = _child(external_review, "index", "external_review.index")
     index_relative, index_recorded = bound_digest(EXTERNAL_REVIEW_INDEX_BINDING)
