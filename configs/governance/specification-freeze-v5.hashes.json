@@ -1,0 +1,21 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
+  "status": "BLOCKED_12_ACTIVE",
+  "artifacts": [
+    {"path":".github/workflows/ci.yml","sha256":"a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"},
+    {"path":"configs/governance/nee120-successor-freeze-candidate-v1.hashes.json","sha256":"a663d4cd:39719319:655e4615:4d3f6c6f:220e0f37:834943fd:089f1b1a:7758a8cf"},
+    {"path":"configs/governance/specification-freeze-v4.hashes.json","sha256":"a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42"},
+    {"path":"configs/governance/specification-freeze-export-v4.json","sha256":"70beb662:d907d726:43b64de6:8510e0d2:0b6edea7:16048144:26cbe958:ef4b3192"},
+    {"path":"configs/governance/specification-freeze-policy-v5.json","sha256":"59a0200e:bb48aea8:428233c1:3ad7a9fa:fbd469ff:a8709e61:ab9fd49e:afa70b1c"},
+    {"path":"docs/governance/blocker-transition-receipts/nee120-inference-evidence/DELTA-REVIEW-PROMPT.md","sha256":"ae8d2e2e:a90d2d6c:843041b5:7bdc40c7:c8024c28:e429f436:50d40140:5ebd1340"},
+    {"path":"docs/governance/blocker-transition-receipts/nee120-inference-evidence/DELTA-REVIEW-VERDICT.md","sha256":"86d02dff:3620e34e:1b494f5a:977199aa:af8c3b60:fbfd8804:af6d239e:0b91cdcf"},
+    {"path":"docs/governance/blocker-transition-receipts/nee120-inference-evidence/OWNER-SIGNOFF.md","sha256":"f473e34d:548d8bdc:dc42d031:80986680:b92bf07f:38027dd8:1782317a:a266eb0d"},
+    {"path":"docs/governance/blocker-transition-receipts/nee120-inference-evidence/RECEIPT.md","sha256":"d4eb9c1f:365e2216:cadc4761:9d7f7b2c:03e362a9:4b1f11b5:febafb0f:8e63d584"},
+    {"path":"docs/governance/SPECIFICATION_FREEZE_V5.md","sha256":"f609ce47:0726d269:0f525bea:642094a0:8a70dd1f:69cc787c:cbfe51fb:6b1ff2f6"},
+    {"path":"qme/governance/specification_freeze_v5.py","sha256":"f9a76afa:8a52e704:d669fd86:d959c83f:d0eda080:a05b682b:654d8d88:0d166fbe"},
+    {"path":"schemas/governance/specification-freeze-export-v4.schema.json","sha256":"71387190:c449623f:4315024d:fe22fe6d:4488cac9:707440a0:8c94ebbb:c7d15b4f"},
+    {"path":"schemas/governance/specification-freeze-policy-v5.schema.json","sha256":"bf7f5936:06fd7523:4d2d2410:b6b9e5bc:7de530ad:72bb9886:33e3dc10:7615ef08"},
+    {"path":"tests/governance/test_specification_freeze_v5.py","sha256":"2868ae02:9a006449:3b5eadba:c0787f4e:f0628717:ce8b3c48:8cd7a6c5:5b878e32"}
+  ]
+}
