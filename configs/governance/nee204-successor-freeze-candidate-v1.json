@@ -1,0 +1,257 @@
+{
+  "$schema": "../../schemas/governance/nee204-successor-freeze-candidate-v1.schema.json",
+  "schema_version": "qme.nee204_successor_freeze_candidate.v1",
+  "candidate_id": "NEE-204-SELECTION-009-SUCCESSOR-FREEZE-CANDIDATE-V1",
+  "candidate_kind": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
+  "status": "CANDIDATE_UNREVIEWED_FREEZE_V5_UNCHANGED_PENDING_DELTA_REVIEW_EXACT_BYTE_OWNER_SIGNOFF_AND_RECEIPT",
+  "semantic_sha256": "eb441df6:cf49748e:0890e459:cca31445:931f9d6b:a73aff1d:909bc4d6:75c87871",
+  "authority": {
+    "approval_owner": "neeljaiswal90",
+    "candidate_date": "2026-08-20",
+    "protected_main": {
+      "commit": "a7ee2f5a:75d58cbe:6bc88cf4:e5d17763:9b56aecd",
+      "tree": "497e5702:cd46ade4:9f4e7120:eaf6f9fe:aab38bf3",
+      "qme_ci_workflow_path": ".github/workflows/ci.yml",
+      "qme_ci_workflow_sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
+      "push_run": "32346828082",
+      "push_job": "96357230515",
+      "event": "push",
+      "conclusion": "success"
+    },
+    "independent_review_receipt": {
+      "source_system": "LINEAR",
+      "source_issue_id": "NEE-204",
+      "source_comment_id": "e306099c-8dc0-4699-915c-1fd3ca9e5d29",
+      "source_created_at": "2026-08-20T14:19:13.105Z",
+      "source_updated_at": "2026-08-20T14:19:13.027Z",
+      "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+      "source_author_name": "Neel Jaiswal",
+      "source_body_bytes": 3113,
+      "source_body_sha256": "81ff408a:dd01c3ea:fdc91b0c:c03b177f:92f13d3f:6523a29e:b7d1baf2:4162a359",
+      "source_body_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+      "source_body": "## Independent frozen-byte review gate — PASS for explicit owner decision only\n\n**Disposition:** `SUFFICIENT_FOR_EXPLICIT_OWNER_SELECTION_009_DECISION`.\n\nThis review does **not** accept selection 009, authorize Freeze V6, clear any blocker, complete M0, authorize production, or grant live-order authority.\n\n### Findings\n- P0: none\n- P1: none\n- P2: none\n\n### Exact reviewed identity\n- detached clean checkout commit: `a7ee2f5a75d58cbe6bc88cf4e5d177639b56aecd`\n- tree: `497e5702cd46ade49f4e7120eaf6f9feaab38bf3`\n- protected push CI: https://github.com/neeljaiswal90/quant-stocks/actions/runs/32346828082\n- protected foundation job `96357230515`: success, 1,815 tests passed\n- all 58 direct artifact entries across the seven packet, predecessor, Freeze, seeded-evidence, and deterministic-kernel manifests rehashed exactly\n- focused packet/Freeze verification: 150 passed\n\n### Packet verification\n- config raw: `7d94db3d1c9a2c1a7812166c86b5294c7cad25e1f9666cc519490317c10fb33f`\n- independently recomputed semantic: `810dc6317cf49043ebf02f433a20b0f1d8b7b9f8f13a7389f951fa246eb4cbf3`\n- verifier raw: `fdccecc3c98fa335b9d400fd70e0cc766d62b7c6e6ad9a087ab3429acfb51f31`\n- verifier normalized: `1239271ddf509cede0389a9e192481b479ecb5665dc6c4af1be6a58f2e279b6d`\n- all 23 applicable schema const bindings matched\n- the five selection-004 terminals matched predecessor authority exactly\n- all three engineering terminals were registered exactly\n- production implementation and owner-selection bytes were unchanged\n\n### Independent numeric replay\n- SHORT → `PPW_SERIES_TOO_SHORT`\n- CONSTANT → `PPW_CONSTANT_COLUMN`\n- IID → raw `1.359388032397440740176305835019253713`, block `3`\n- NEGATIVELY_CORRELATED → `PPW_NO_INSIGNIFICANT_RUN`\n- ZERO_NEGATIVE_INTERMEDIATE → raw `8.892855503530100958894110173893287925`, block `9`, negative `G_hat`\n- FLOOR → raw `0.883774970536963853835130155921978793`, block `3`\n- CAP → raw `71.181228566448781444497445875536853141`, block `15`\n- INTEGER_BOUNDARY → raw `3.001401156735570409247720827280170906`, block `4`\n- 96-column positions 48/49: `2.943145705181627079867300398945819185` / `3.030348788731192363172632772186445489`; mean `2.986747246956409721519966585566132337`; one ceiling → block `3`\n\n### Independent 2,000-replicate replay\n- index-stream SHA-256: `e5f8ac977cbd6c5e6de09048c86b4d7dc9351b898a2e6875d9057860f18a1640`\n- distribution SHA-256: `e90ba0e3da74fa34bbeaddab01e0d8a1137702a18fc8de7361f48b01faf95bcf`\n- rank 1950: `1.928085337475850467660159735112550709`\n- candidate arithmetic: `N_eff_used = min(96, ceil(rank-1950)) = 2`\n- seeded evidence bytes remained unchanged from protected Linux replay 31849090563\n\n### Binding boundary\n- `selection_009_accepted=false` remains unchanged\n- Freeze V5 remains exactly 12 active blockers and zero new resolutions\n- NEE-204 remains In Progress with `completedAt=null`\n- NEE-122 remains In Progress with `completedAt=null` and remains blocked by NEE-204 and its other dependencies\n- the next permitted action is an **explicit owner selection-009 decision**; no successor-freeze work is authorized by this review alone"
+    },
+    "owner_selection_009_decision_receipt": {
+      "source_system": "LINEAR",
+      "source_issue_id": "NEE-204",
+      "source_comment_id": "261dee73-a885-4297-922a-3bd67a9e55fb",
+      "source_created_at": "2026-08-20T14:20:47.459Z",
+      "source_updated_at": "2026-08-20T14:20:47.367Z",
+      "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+      "source_author_name": "Neel Jaiswal",
+      "source_body_bytes": 2633,
+      "source_body_sha256": "65ea4e97:a1c626ab:a677d9bc:f82fcecf:3d8f57f6:9d4fa3ef:d6a6e024:3f09b05e",
+      "source_body_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+      "source_body": "## Explicit owner decision — selection 009 accepted\n\n**Owner decision:** I accept selection 009 for the exact independently reviewed evidence identified below.\n\n### Accepted evidence identity\n- protected commit / tree: `a7ee2f5a75d58cbe6bc88cf4e5d177639b56aecd` / `497e5702cd46ade49f4e7120eaf6f9feaab38bf3`\n- independent review comment: `e306099c-8dc0-4699-915c-1fd3ca9e5d29`\n- review disposition: `SUFFICIENT_FOR_EXPLICIT_OWNER_SELECTION_009_DECISION`; P0/P1/P2 none\n- protected qme-ci: run `32346828082`, job `96357230515`, event `push`, exact head, conclusion `success`\n- protected Linux seeded replay lineage: run `31849090563`\n- vector-KAT config raw / semantic:\n  - `7d94db3d1c9a2c1a7812166c86b5294c7cad25e1f9666cc519490317c10fb33f`\n  - `810dc6317cf49043ebf02f433a20b0f1d8b7b9f8f13a7389f951fa246eb4cbf3`\n- verifier raw / normalized:\n  - `fdccecc3c98fa335b9d400fd70e0cc766d62b7c6e6ad9a087ab3429acfb51f31`\n  - `1239271ddf509cede0389a9e192481b479ecb5665dc6c4af1be6a58f2e279b6d`\n\n### Accepted selection-009 outputs\n- registered numeric classes: short, constant, IID, negatively correlated, zero/negative intermediate, floor, cap, integer boundary, and 96-column aggregation\n- index-stream SHA-256: `e5f8ac977cbd6c5e6de09048c86b4d7dc9351b898a2e6875d9057860f18a1640`\n- 2,000-replicate distribution SHA-256: `e90ba0e3da74fa34bbeaddab01e0d8a1137702a18fc8de7361f48b01faf95bcf`\n- one-based rank 1950: `1.928085337475850467660159735112550709`\n- valid-distribution result: `N_eff_used = min(96, ceil(rank-1950)) = 2`\n- the existing selection-008 invalid-distribution fallback remains distinct and unchanged: `N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96`\n- the five selection-004 terminals, three registered engineering terminals, selections 001–008, production implementation bytes, and all statistical rules remain unchanged\n\n### Authorization boundary\nThis decision satisfies the owner-decision gate for selection 009 and authorizes preparation of a **versioned successor Freeze V6 candidate** that binds this decision and the reviewed evidence.\n\nIt does **not** itself:\n- accept or merge a Freeze V6 candidate\n- clear or resolve any Freeze V5 blocker\n- authorize changing Freeze V5 in place\n- complete NEE-204, NEE-122, or M0\n- establish DSR/Holm, empirical or production inference, alpha, production readiness, or live-order authority\n\nUntil a successor freeze is separately implemented, independently audited, merged with protected exact-SHA CI, and followed by the required receipt sequence:\n- Freeze V5 remains exactly 12 active blockers\n- NEE-204 remains In Progress and continues to block NEE-122\n- NEE-122 remains In Progress"
+    },
+    "owner_selection_009_decision_meaning": "ACCEPTS_EXACT_REVIEWED_SYNTHETIC_SELECTION_009_EVIDENCE_AND_AUTHORIZES_SUCCESSOR_CANDIDATE_PREPARATION_ONLY",
+    "empirical_results_used": false
+  },
+  "candidate_incapability": {
+    "can_change_active_freeze": false,
+    "transition_ladder": [
+      "candidate created != blocker cleared",
+      "candidate independently reviewed != blocker cleared",
+      "owner signs exact candidate bytes != blocker cleared",
+      "candidate merged and protected CI passes != blocker cleared",
+      "separate receipt publishes a new successor freeze and protected CI passes = blocker transition"
+    ]
+  },
+  "lineage_manifests": [
+    {
+      "path": "configs/governance/specification-freeze-v4.hashes.json",
+      "sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42",
+      "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V4",
+      "role": "IMMUTABLE_PREDECESSOR_FREEZE"
+    },
+    {
+      "path": "configs/governance/specification-freeze-v5.hashes.json",
+      "sha256": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548",
+      "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
+      "role": "CURRENT_ACTIVE_FREEZE"
+    },
+    {
+      "path": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.hashes.json",
+      "sha256": "464066ca:0595defa:64036b7b:53047d25:fce6ab1c:ee2a30fb:c6c5742f:45c7d12b",
+      "artifact_id": "QME-PPW-BOOTSTRAP-UNCERTAINTY-AUTHORITY-V1",
+      "role": "SOURCE_EQUATION_AUTHORITY"
+    },
+    {
+      "path": "configs/governance/ppw-bootstrap-owner-selections-v1.hashes.json",
+      "sha256": "e325adbc:2f4d8f8e:4e8034c0:f74ca022:d4f2e2cc:54ca0226:d9e31cdc:b38de58f",
+      "artifact_id": "QME-PPW-BOOTSTRAP-OWNER-SELECTIONS-V1",
+      "role": "OWNER_SELECTIONS_001_THROUGH_008"
+    },
+    {
+      "path": "configs/governance/effective-trials-point-evidence-v1.hashes.json",
+      "sha256": "121db413:12c69c5a:30ac31ce:cb116c75:83e68636:afed78f7:91c34269:f995edd5",
+      "artifact_id": "NEE-175-EFFECTIVE-TRIALS-POINT-EVIDENCE-V1",
+      "role": "DETERMINISTIC_POINT_KERNEL_AND_ANALYTIC_FIXTURES"
+    },
+    {
+      "path": "configs/governance/effective-trials-uncertainty-v1.hashes.json",
+      "sha256": "01faf91e:6601b8c7:085aaadd:7d4decc3:7adcca5b:a78bf34a:a1a6536d:1a387864",
+      "artifact_id": "QME-EFFECTIVE-TRIALS-UNCERTAINTY-V1",
+      "role": "SEEDED_2000_REPLICATE_IMPLEMENTATION_AND_KAT"
+    },
+    {
+      "path": "configs/governance/ppw-independent-vector-kats-v1.hashes.json",
+      "sha256": "f1a86a1e:7fc7f1a5:6a161d8b:49977253:9c8503cc:5a5e2416:3fff09c6:36fa6acd",
+      "artifact_id": "QME-PPW-INDEPENDENT-VECTOR-KATS-V1",
+      "role": "INDEPENDENT_NUMERIC_SELECTION_009_PACKET"
+    }
+  ],
+  "selection_009": {
+    "owner_decision_accepted": true,
+    "evidence_scope": "SYNTHETIC_DETERMINISTIC_KAT_ONLY",
+    "index_stream_sha256": "e5f8ac97:7cbd6c5e:6de09048:c86b4d7d:c9351b89:8a2e6875:d9057860:f18a1640",
+    "bootstrap_distribution_sha256": "e90ba0e3:da74fa34:bbeaddab:01e0d8a1:137702a1:8fc8de73:61f48b01:faf95bcf",
+    "one_based_rank": 1950,
+    "rank_value": "1.928085337475850467660159735112550709",
+    "n_eff_used": 2,
+    "valid_distribution_reason": "N_EFF_BOOTSTRAP_UPPER_QUANTILE",
+    "invalid_distribution_fallback_reason_unchanged": "N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96",
+    "predecessor_selection_009_accepted_fields_remain_false": true,
+    "statistical_rule_changed": false,
+    "production_n_eff_available": false
+  },
+  "current_freeze": {
+    "policy_path": "configs/governance/specification-freeze-policy-v5.json",
+    "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
+    "policy_sha256": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840",
+    "semantic_sha256": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3",
+    "manifest_path": "configs/governance/specification-freeze-v5.hashes.json",
+    "manifest_sha256": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548",
+    "policy_status": "BLOCKED_12_ACTIVE_GOVERNANCE_EVIDENCE_AND_ENGINEERING",
+    "active_blocker_count": 12,
+    "historical_resolved_or_superseded_count": 18,
+    "bytes_unchanged": true,
+    "claims_unchanged": true,
+    "milestone_m0_complete": false
+  },
+  "target": {
+    "scope": "TWO_EXACT_FREEZE_V5_ENGINEERING_EVIDENCE_ROWS_NOT_THE_LINEAR_ISSUES",
+    "blocker_rows_verbatim": [
+      {
+        "blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."
+      },
+      {
+        "blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "The registered estimator and bootstrap uncertainty procedure are not implemented."
+      }
+    ],
+    "transition_count": 2,
+    "transition_performed_by_this_candidate": false,
+    "transition_performed_only_by": "SEPARATE_APPEND_ONLY_RECEIPT_PR_PUBLISHING_NEW_FREEZE_AFTER_DELTA_REVIEW_EXACT_BYTE_OWNER_SIGNOFF_MERGE_AND_PROTECTED_CI"
+  },
+  "proposed_transition": {
+    "removes_exactly": [
+      "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"
+    ],
+    "retains_every_other_active_blocker": true,
+    "retained_blocker_order_unchanged": true,
+    "retained_active_blocker_codes_in_order": [
+      "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "NEE-116-ASYMMETRIC-COST-METHOD",
+      "NEE-116-CAPACITY-SOLVER",
+      "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "NEE-116-PRODUCTION-PIT-DATA",
+      "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "NEE-119-AV-PROXY-EVIDENCE",
+      "NEE-121-CALENDAR-SESSION-REGISTRATION",
+      "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP"
+    ],
+    "resolution_basis": "PROTECTED_DETERMINISTIC_PPW_BOOTSTRAP_IMPLEMENTATION_INDEPENDENT_VECTOR_AND_2000_REPLICATE_EVIDENCE_AND_EXPLICIT_OWNER_SELECTION_009_DECISION",
+    "freeze_state_at_candidate": {
+      "active": 12,
+      "historical_resolved_or_superseded": 18
+    },
+    "freeze_state_after_receipt_if_separately_accepted": {
+      "active": 10,
+      "historical_resolved_or_superseded": 20
+    },
+    "successor_freeze_claims_block": "NO_CHANGE_PROPOSED_BY_THIS_CANDIDATE",
+    "milestone_m0_complete_after_transition": false,
+    "production_ready_after_transition": false,
+    "empirical_performance_available_after_transition": false,
+    "publication_mode": "NEW_FREEZE_VERSION_NO_OVERWRITE_OF_V5",
+    "freeze_v5_after_transition": "IMMUTABLE_HISTORICAL_AUTHORITY_UNCHANGED",
+    "receipt_may_add_only": [
+      "candidate merge commit and tree",
+      "candidate protected-main CI identities",
+      "fresh independent delta-review receipt",
+      "owner exact-byte signoff receipt",
+      "successor-freeze receipt PR and protected-main CI identities",
+      "causally later observation timestamps"
+    ],
+    "receipt_may_not_change_without_new_delta_review_and_owner_signoff": [
+      "target blocker rows",
+      "retained blocker rows or order",
+      "evidence bindings",
+      "selection 009 outputs",
+      "claims or nonclaims",
+      "resolution meaning"
+    ]
+  },
+  "issue_state_boundary": {
+    "nee204_status": "IN_PROGRESS",
+    "nee204_completed_at": null,
+    "nee204_blocks": ["NEE-122"],
+    "nee122_status": "IN_PROGRESS",
+    "nee122_completed_at": null,
+    "candidate_may_change_issue_status_or_relations": false,
+    "done_allowed_only_after_successor_freeze_receipt_and_protected_ci": true
+  },
+  "required_next_gates": {
+    "fresh_independent_delta_review": "PENDING",
+    "owner_exact_byte_signoff_on_candidate": "PENDING",
+    "candidate_merge_and_protected_ci": "PENDING",
+    "separate_successor_freeze_receipt_pr": "PENDING",
+    "receipt_protected_ci_and_readback": "PENDING"
+  },
+  "claims": {
+    "successor_freeze_candidate_registered": true,
+    "independent_review_receipt_bound": true,
+    "owner_selection_009_decision_bound": true,
+    "selection_009_synthetic_evidence_accepted_by_owner": true,
+    "lineage_manifests_replayed": true,
+    "fresh_candidate_delta_review_required": true,
+    "owner_exact_byte_signoff_required": true,
+    "separate_receipt_required": true,
+    "target_blockers_cleared": false,
+    "any_freeze_v5_blocker_cleared": false,
+    "successor_freeze_published": false,
+    "receipt_published": false,
+    "candidate_delta_review_satisfied": false,
+    "owner_candidate_signoff_recorded": false,
+    "nee204_linear_issue_complete": false,
+    "nee122_linear_issue_complete": false,
+    "production_n_eff_available": false,
+    "dsr_computable": false,
+    "holm_execution_accepted": false,
+    "empirical_performance_available": false,
+    "alpha_proven": false,
+    "production_ready": false,
+    "milestone_m0_complete": false,
+    "live_order_authority": false
+  },
+  "nonclaims": [
+    "THIS_CANDIDATE_PROPOSES_BUT_DOES_NOT_PERFORM_A_TWO_ROW_BLOCKER_TRANSITION",
+    "FREEZE_V5_REMAINS_BYTE_IDENTICAL_WITH_12_ACTIVE_BLOCKERS",
+    "OWNER_SELECTION_009_ACCEPTANCE_IS_LIMITED_TO_THE_EXACT_SYNTHETIC_REVIEWED_EVIDENCE",
+    "PREDECESSOR_SELECTION_009_ACCEPTED_FALSE_FIELDS_REMAIN_IMMUTABLE_HISTORICAL_FACTS",
+    "NO_DSR_OR_HOLM_ACCEPTANCE",
+    "NO_EMPIRICAL_OR_PRODUCTION_EFFECTIVE_TRIAL_RESULT",
+    "NO_ALPHA_OR_PRODUCTION_READINESS_CLAIM",
+    "NO_M0_COMPLETION_OR_FINAL_FREEZE_CLAIM",
+    "NO_LIVE_ORDER_AUTHORITY",
+    "NEE204_AND_NEE122_REMAIN_IN_PROGRESS_PENDING_THE_FULL_SUCCESSOR_SEQUENCE"
+  ]
+}

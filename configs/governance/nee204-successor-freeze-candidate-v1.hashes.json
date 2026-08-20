@@ -1,0 +1,27 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-204-SELECTION-009-SUCCESSOR-FREEZE-CANDIDATE-V1",
+  "status": "CANDIDATE_UNREVIEWED_FREEZE_V5_UNCHANGED_PENDING_DELTA_REVIEW_EXACT_BYTE_OWNER_SIGNOFF_AND_RECEIPT",
+  "artifacts": [
+    {
+      "path": "configs/governance/nee204-successor-freeze-candidate-v1.json",
+      "sha256": "5450c34d:ee31729c:533f6422:773fa69a:0e75b400:b4def0a1:f7c15495:fb031dc1"
+    },
+    {
+      "path": "docs/governance/NEE_204_SUCCESSOR_FREEZE_CANDIDATE_V1.md",
+      "sha256": "d23ad553:dec0ff0b:db86a9c9:ee864944:d8f9bb83:108d7fac:a4b774da:a3c66779"
+    },
+    {
+      "path": "qme/governance/nee204_successor_freeze_candidate.py",
+      "sha256": "4c714e8e:de3e5674:b7c8d979:25b0c082:37200c2a:966538e8:f8f17d1a:a3105658"
+    },
+    {
+      "path": "schemas/governance/nee204-successor-freeze-candidate-v1.schema.json",
+      "sha256": "6517d0b0:9b25fb36:5899a542:173a97e5:85360add:47733b76:018c9452:2edffeb7"
+    },
+    {
+      "path": "tests/governance/test_nee204_successor_freeze_candidate.py",
+      "sha256": "0462b78e:aedaf6ac:1245c452:f25a4208:1b8484fa:e5ad9ed5:cb140439:29356d36"
+    }
+  ]
+}
