@@ -1,0 +1,295 @@
+{
+  "schema_version": "qme.ppw_independent_vector_kats_fixture.v1",
+  "fixture_id": "QME-PPW-INDEPENDENT-VECTOR-KATS-V1",
+  "ticket_id": "NEE-204",
+  "status": "INDEPENDENT_NUMERIC_KATS_NOT_SELECTION_009_ACCEPTANCE",
+  "selection_009_accepted": false,
+  "authority_labels_remain_typed_unresolved": [
+    "IID_SERIES_TYPED_UNRESOLVED",
+    "NEGATIVE_CORRELATION_TYPED_UNRESOLVED",
+    "SHORT_SERIES_TYPED_UNRESOLVED",
+    "NINETY_SIX_COLUMN_AGGREGATION_TYPED_UNRESOLVED"
+  ],
+  "cases": [
+    {
+      "case_id": "SHORT",
+      "vector_class": "short",
+      "authority_label": "SHORT_SERIES_TYPED_UNRESOLVED",
+      "authority_label_status": "TYPED_UNRESOLVED",
+      "construction": {
+        "kind": "constant_fill",
+        "rows": 59,
+        "columns": 96,
+        "value": "1"
+      },
+      "matrix_sha256": "67995acb:dddacfda:34115d55:acd8a2b4:bb6fac7d:026511ec:3ac1b818:fd1c633e",
+      "expected": {
+        "kind": "TYPED_FAILURE",
+        "failure_code": "PPW_SERIES_TOO_SHORT",
+        "failure_detail_contains": "n_common must be at least 60"
+      }
+    },
+    {
+      "case_id": "CONSTANT",
+      "vector_class": "constant",
+      "authority_label": null,
+      "authority_label_status": "NUMERIC_KAT_ONLY",
+      "construction": {
+        "kind": "constant_fill",
+        "rows": 60,
+        "columns": 96,
+        "value": "1"
+      },
+      "matrix_sha256": "54d34685:9698f313:82872939:8428e8ea:bb3ba8a4:a3d33168:a3742718:31f07dde",
+      "expected": {
+        "kind": "TYPED_FAILURE",
+        "failure_code": "PPW_CONSTANT_COLUMN",
+        "failure_detail_contains": "gamma_hat(0) is exactly zero"
+      }
+    },
+    {
+      "case_id": "IID",
+      "vector_class": "IID",
+      "authority_label": "IID_SERIES_TYPED_UNRESOLVED",
+      "authority_label_status": "TYPED_UNRESOLVED",
+      "construction": {
+        "kind": "lcg_repeated_column",
+        "n": 60,
+        "a": 17,
+        "c": 5,
+        "m": 103,
+        "x0": 1,
+        "columns": 96
+      },
+      "matrix_sha256": "e7fee604:fa8a4cd2:35956257:b34eabd0:6d6a50de:ab628500:a3d65df6:34079016",
+      "expected": {
+        "kind": "SUCCESS",
+        "common_month_count": 60,
+        "common_block_length": 3,
+        "aggregate_raw": "1.359388032397440740176305835019253713",
+        "column_raw_outputs_sha256": "cbcb36b6:2a0ac8bd:384c2f08:928dc79d:750a0798:c2fc20fb:2c6bde16:18349270",
+        "column_m_hat_unique_values": [
+          1
+        ],
+        "overlay": "FLOOR_MIN_3_BECAUSE_RAW_LT_3"
+      }
+    },
+    {
+      "case_id": "NEGATIVELY_CORRELATED",
+      "vector_class": "negatively_correlated",
+      "authority_label": "NEGATIVE_CORRELATION_TYPED_UNRESOLVED",
+      "authority_label_status": "TYPED_UNRESOLVED",
+      "construction": {
+        "kind": "alternating_sign",
+        "n": 60,
+        "columns": 96,
+        "positive_first": true
+      },
+      "matrix_sha256": "5c77f8c9:10bb6a1d:603a0371:b784387d:0a523ffd:4fed4c0d:bf24d37d:a4f1036f",
+      "expected": {
+        "kind": "TYPED_FAILURE",
+        "failure_code": "PPW_NO_INSIGNIFICANT_RUN",
+        "failure_detail_contains": "no full K_N autocorrelation window is strictly insignificant"
+      }
+    },
+    {
+      "case_id": "ZERO_NEGATIVE_INTERMEDIATE",
+      "vector_class": "zero_negative_intermediate",
+      "authority_label": null,
+      "authority_label_status": "NUMERIC_KAT_ONLY",
+      "construction": {
+        "kind": "integer_ar",
+        "n": 60,
+        "phi_numerator": 1,
+        "phi_denominator": 4,
+        "innovation_mul": 17,
+        "innovation_add": 5,
+        "innovation_mod": 11,
+        "innovation_shift": 5,
+        "columns": 96
+      },
+      "matrix_sha256": "cffeb484:85729ac8:fffe6ed8:93e4c783:7742169e:8cb54e7d:50874074:5b2e876f",
+      "expected": {
+        "kind": "SUCCESS",
+        "common_month_count": 60,
+        "common_block_length": 9,
+        "aggregate_raw": "8.892855503530100958894110173893287925",
+        "column_raw_outputs_sha256": "f15187da:bf4e5cea:5a3213be:3aeaa189:184e3abd:13e39490:a61f267f:996168ff",
+        "column_m_hat_unique_values": [
+          3
+        ],
+        "weighted_lag_moment_G_hat": "-15.524703703703703703703703703703703704",
+        "G_hat_sign": "NEGATIVE",
+        "spectral_g_hat_0": "4.534580246913580246913580246913580247"
+      }
+    },
+    {
+      "case_id": "FLOOR",
+      "vector_class": "floor",
+      "authority_label": null,
+      "authority_label_status": "NUMERIC_KAT_ONLY",
+      "construction": {
+        "kind": "lcg_repeated_column",
+        "n": 60,
+        "a": 21,
+        "c": 1,
+        "m": 97,
+        "x0": 3,
+        "columns": 96
+      },
+      "matrix_sha256": "eb78c071:730701f2:cb64c39a:a0acc073:91cde3de:e13d1bb0:aed8a531:6b272e2c",
+      "expected": {
+        "kind": "SUCCESS",
+        "common_month_count": 60,
+        "common_block_length": 3,
+        "aggregate_raw": "0.883774970536963853835130155921978793",
+        "column_raw_outputs_sha256": "5ae63300:f43b821c:164344a4:b82fe1bc:f48e0f02:c90f98bc:bfd8cce6:1b8793b4",
+        "column_m_hat_unique_values": [
+          1
+        ],
+        "overlay": "FLOOR_MIN_3_BECAUSE_CEIL_RAW_LT_3"
+      }
+    },
+    {
+      "case_id": "CAP",
+      "vector_class": "cap",
+      "authority_label": null,
+      "authority_label_status": "NUMERIC_KAT_ONLY",
+      "construction": {
+        "kind": "lcg_repeated_column",
+        "n": 60,
+        "a": 13,
+        "c": 7,
+        "m": 101,
+        "x0": 2,
+        "columns": 96
+      },
+      "matrix_sha256": "2fcdc600:60972b43:78edcbbf:470a40c9:d720eb3c:31261697:79449d5e:21390553",
+      "expected": {
+        "kind": "SUCCESS",
+        "common_month_count": 60,
+        "common_block_length": 15,
+        "aggregate_raw": "71.181228566448781444497445875536853141",
+        "column_raw_outputs_sha256": "51de3bf2:3a530e4c:1bb82a8a:14356211:28908bde:30399f89:24da912d:6f5bae9a",
+        "column_m_hat_unique_values": [
+          6
+        ],
+        "overlay": "CAP_FLOOR_N_OVER_4_EQUALS_15"
+      }
+    },
+    {
+      "case_id": "INTEGER_BOUNDARY",
+      "vector_class": "integer_boundary",
+      "authority_label": null,
+      "authority_label_status": "NUMERIC_KAT_ONLY",
+      "construction": {
+        "kind": "lcg_repeated_column",
+        "n": 60,
+        "a": 30,
+        "c": 1,
+        "m": 97,
+        "x0": 9,
+        "columns": 96
+      },
+      "matrix_sha256": "4732122e:d708050f:4b08f682:56a9be0f:51307870:fc5e59cb:552ecc67:8dbaefaa",
+      "expected": {
+        "kind": "SUCCESS",
+        "common_month_count": 60,
+        "common_block_length": 4,
+        "aggregate_raw": "3.001401156735570409247720827280170906",
+        "column_raw_outputs_sha256": "09ef46e5:9205ccd5:b0c0be4f:149d6ac9:85cfba3b:90eba998:3481d9d9:4907c842",
+        "column_m_hat_unique_values": [
+          1
+        ],
+        "overlay": "CEILING_JUST_ABOVE_3_YIELDS_4"
+      }
+    },
+    {
+      "case_id": "NINETY_SIX_COLUMN_AGGREGATION",
+      "vector_class": "96_column_aggregation",
+      "authority_label": "NINETY_SIX_COLUMN_AGGREGATION_TYPED_UNRESOLVED",
+      "authority_label_status": "TYPED_UNRESOLVED",
+      "construction": {
+        "kind": "lcg_per_column",
+        "n": 60,
+        "a": 23,
+        "c": 1,
+        "m": 109,
+        "x0_start": 1,
+        "columns": 96
+      },
+      "matrix_sha256": "4ef205ae:7d0baa72:56951795:bf5eca9f:94397ba2:eb8d6f5e:fb57609c:1f18cc85",
+      "expected": {
+        "kind": "SUCCESS",
+        "common_month_count": 60,
+        "common_block_length": 3,
+        "aggregate_raw": "2.986747246956409721519966585566132337",
+        "column_raw_outputs_sha256": "565064e0:4e7495b4:c73afdf1:affdf0cd:6bdce2ae:7ef84aa5:06561f8a:f2e888be",
+        "column_m_hat_unique_values": [
+          1,
+          3,
+          6
+        ],
+        "distinct_raw_column_count": 78,
+        "order_statistic_48": "2.943145705181627079867300398945819185",
+        "order_statistic_49": "3.030348788731192363172632772186445489",
+        "aggregation": "ARITHMETIC_MEAN_OF_ASCENDING_ONE_BASED_ORDER_STATISTICS_48_AND_49"
+      }
+    },
+    {
+      "case_id": "ENGINEERING_INVALID_MATRIX_SHAPE",
+      "vector_class": "engineering_terminal",
+      "authority_label": null,
+      "authority_label_status": "ENGINEERING_TERMINAL_REGISTRATION",
+      "construction": {
+        "kind": "constant_fill",
+        "rows": 60,
+        "columns": 95,
+        "value": "1"
+      },
+      "matrix_sha256": "4c12cd6e:cc8c3e9d:9993144c:7c50a0d2:75544768:385e72dd:c6a81607:caf6320f",
+      "expected": {
+        "kind": "TYPED_FAILURE",
+        "failure_code": "PPW_INVALID_MATRIX_SHAPE",
+        "failure_detail_contains": "row 0 must contain exactly 96 values"
+      }
+    },
+    {
+      "case_id": "ENGINEERING_INVALID_CANONICAL_DECIMAL",
+      "vector_class": "engineering_terminal",
+      "authority_label": null,
+      "authority_label_status": "ENGINEERING_TERMINAL_REGISTRATION",
+      "construction": {
+        "kind": "constant_fill",
+        "rows": 60,
+        "columns": 96,
+        "value": "01"
+      },
+      "matrix_sha256": "c41a2841:63c82c42:446e731d:9cf58178:dcbaee5f:3f7eff19:a5f727f6:3fb0d0be",
+      "expected": {
+        "kind": "TYPED_FAILURE",
+        "failure_code": "PPW_INVALID_CANONICAL_DECIMAL",
+        "failure_detail_contains": "must be a bounded canonical decimal string"
+      }
+    },
+    {
+      "case_id": "SELECTION_004_NONFINITE",
+      "vector_class": "nonfinite",
+      "authority_label": null,
+      "authority_label_status": "NUMERIC_KAT_ONLY",
+      "construction": {
+        "kind": "nonfinite_first_cell",
+        "rows": 60,
+        "columns": 96,
+        "value": "NaN",
+        "fill": "1"
+      },
+      "matrix_sha256": "72c7aec9:b674e3fb:d917556d:6d8bde1d:6cb67dff:8d0d84ce:8ea3c524:b8368809",
+      "expected": {
+        "kind": "TYPED_FAILURE",
+        "failure_code": "PPW_NONFINITE_INPUT",
+        "failure_detail_contains": "is nonfinite"
+      }
+    }
+  ]
+}

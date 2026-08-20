@@ -1,0 +1,237 @@
+{
+  "$schema": "../../schemas/governance/ppw-independent-vector-kats-v1.schema.json",
+  "schema_version": "qme.ppw_independent_vector_kats.v1",
+  "artifact_id": "QME-PPW-INDEPENDENT-VECTOR-KATS-V1",
+  "ticket_id": "NEE-204",
+  "status": "INDEPENDENT_NUMERIC_KATS_REGISTERED_SELECTION_009_UNACCEPTED_TYPED_UNRESOLVED_LABELS_UNCHANGED",
+  "semantic_sha256": "810dc631:7cf49043:ebf02f43:3a20b0f1:d8b7b9f8:f13a7389:f951fa24:6eb4cbf3",
+  "authority": {
+    "protected_main": {
+      "commit": "bfc3df10:9b0b572d:18be6160:f2f4d61c:f031988e",
+      "tree": "a9de2854:77e2e7f1:e2b5c42b:6be4949f:bc9a20a6"
+    },
+    "predecessor_authority": {
+      "config_path": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.json",
+      "config_sha256": "71b22f95:fdf223ba:4ebb0e9e:ee047fd2:61bcb866:0692d8f3:b179ca48:cb8f09d1",
+      "semantic_sha256": "cc6dd002:b5c44722:75e953a3:b364a0b0:638a2b96:342cd6d9:8dc18162:63ca798c",
+      "source_equations_path": "tests/fixtures/governance/ppw-bootstrap-source-equations-v1.json",
+      "source_equations_sha256": "2ef0e4c9:a760cb2c:c1627c99:b3887068:a3c15aa3:555f2b0a:c4a3c477:87853820"
+    },
+    "predecessor_owner_selections": {
+      "path": "configs/governance/ppw-bootstrap-owner-selections-v1.json",
+      "sha256": "6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6",
+      "semantic_sha256": "7a51a7da:182354b0:5d96ad77:f08a7513:8a7d41ef:c918d11d:bf5f242e:9bb5f743",
+      "manifest_path": "configs/governance/ppw-bootstrap-owner-selections-v1.hashes.json",
+      "manifest_sha256": "e325adbc:2f4d8f8e:4e8034c0:f74ca022:d4f2e2cc:54ca0226:d9e31cdc:b38de58f"
+    },
+    "implementation": {
+      "runtime_path": "qme/stats/effective_trials_uncertainty.py",
+      "runtime_sha256": "209a9289:0fdcb191:9eddb077:93ee75e6:258b10af:2f6c5042:31a55874:d33c9f7a",
+      "config_path": "configs/governance/effective-trials-uncertainty-v1.json",
+      "config_sha256": "e3884ae8:6dd62bf5:a86abd6e:fb68b6d6:9febf45c:5c3c487b:2d5e3bf0:36d1391e"
+    },
+    "freeze_v4": {
+      "path": "configs/governance/specification-freeze-policy-v4.json",
+      "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458",
+      "semantic_sha256": "90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771",
+      "manifest_path": "configs/governance/specification-freeze-v4.hashes.json",
+      "manifest_sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42",
+      "active_blocker_count": 13
+    },
+    "freeze_v5": {
+      "path": "configs/governance/specification-freeze-policy-v5.json",
+      "sha256": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840",
+      "semantic_sha256": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3",
+      "manifest_path": "configs/governance/specification-freeze-v5.hashes.json",
+      "manifest_sha256": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548",
+      "active_blocker_count": 12,
+      "resolved_since_v4": [
+        "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE"
+      ]
+    },
+    "coordinator_correction": {
+      "source_system": "LINEAR",
+      "source_issue_id": "NEE-204",
+      "source_comment_id": "40b5e5c2-0908-4be8-b23a-2edd4ed9be6e",
+      "source_created_at": "2026-08-16T00:42:30.172Z",
+      "source_updated_at": "2026-08-16T00:42:30.159Z",
+      "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+      "source_author_name": "Neel Jaiswal",
+      "source_body_bytes": 446,
+      "source_body_sha256": "6329e0be:18eb222d:27be20c9:74205e3e:f2b9dd00:8964441a:b1b961c1:b56d77fb",
+      "source_body_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+      "source_body": "Coordinator correction (2026-08-15): Claude withdrew PASS_FOR_SUCCESSOR_FREEZE. New verdict = FAIL on the successor-freeze gate. Requirement 8 numeric KATs are not in versioned artifacts; selection_009_accepted remains false; extra selector terminals need register-or-remove. Successor-freeze PR is not authorized. Next implementation: versioned independent KAT classes + extra-terminal disposition. Freeze V4 unchanged. Ticket stays In Progress.",
+      "authorized_next_implementation": "VERSIONED_INDEPENDENT_KAT_CLASSES_AND_EXTRA_TERMINAL_DISPOSITION",
+      "successor_freeze_authorized": false
+    },
+    "empirical_results_used": false
+  },
+  "typed_unresolved_labels_unchanged": {
+    "source_fixture_path": "tests/fixtures/governance/ppw-bootstrap-source-equations-v1.json",
+    "source_fixture_sha256": "2ef0e4c9:a760cb2c:c1627c99:b3887068:a3c15aa3:555f2b0a:c4a3c477:87853820",
+    "labels": [
+      "IID_SERIES_TYPED_UNRESOLVED",
+      "NEGATIVE_CORRELATION_TYPED_UNRESOLVED",
+      "SHORT_SERIES_TYPED_UNRESOLVED",
+      "NINETY_SIX_COLUMN_AGGREGATION_TYPED_UNRESOLVED"
+    ],
+    "selection_009_accepted": false,
+    "disposition": "INDEPENDENT_NUMERIC_KATS_ARE_EVIDENCE_ONLY_AUTHORITY_LABELS_STAY_TYPED_UNRESOLVED"
+  },
+  "selection_004_terminals": [
+    {
+      "code": "PPW_NONFINITE_INPUT",
+      "condition": "ANY_INPUT_VALUE_NONFINITE"
+    },
+    {
+      "code": "PPW_SERIES_TOO_SHORT",
+      "condition": "n_common < 60"
+    },
+    {
+      "code": "PPW_CONSTANT_COLUMN",
+      "condition": "gamma_hat(0) = 0 EXACTLY"
+    },
+    {
+      "code": "PPW_DEGENERATE_DENOMINATOR",
+      "condition": "D_hat_SB ZERO NONFINITE OR UNDEFINED"
+    },
+    {
+      "code": "PPW_NONPOSITIVE_BLOCK_LENGTH",
+      "condition": "b_hat_SB_raw NONPOSITIVE OR NONFINITE"
+    }
+  ],
+  "engineering_selector_terminals": [
+    {
+      "code": "PPW_INVALID_MATRIX_SHAPE",
+      "condition": "MATRIX_IS_NOT_EXACT_N_BY_96_LIST_OR_N_EXCEEDS_2048"
+    },
+    {
+      "code": "PPW_INVALID_CANONICAL_DECIMAL",
+      "condition": "CELL_IS_NOT_A_BOUNDED_CANONICAL_FINITE_DECIMAL_STRING"
+    },
+    {
+      "code": "PPW_DECIMAL_ARITHMETIC_FAILURE",
+      "condition": "REGISTERED_DECIMAL_CONTEXT_RAISES_DURING_SELECTOR_ARITHMETIC"
+    }
+  ],
+  "registered_lag_selection_terminal": {
+    "code": "PPW_NO_INSIGNIFICANT_RUN",
+    "selection_id": "PPW-REGISTERED-003-LAG-SELECTION-AND-FAILURE",
+    "condition": "NO_FULL_K_N_STRICTLY_INSIGNIFICANT_WINDOW_INSIDE_M_MAX"
+  },
+  "kat_fixture": {
+    "path": "tests/fixtures/governance/ppw-independent-vector-kats-v1.json",
+    "sha256": "1b589786:32d1d06e:ca4284c5:65e6ecf6:899f631e:dea0c108:84081a15:795ce3bd"
+  },
+  "vector_classes": [
+    "short",
+    "constant",
+    "IID",
+    "negatively_correlated",
+    "zero_negative_intermediate",
+    "floor",
+    "cap",
+    "integer_boundary",
+    "96_column_aggregation"
+  ],
+  "active_freeze_v5_blockers": [
+    {
+      "blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "ticket_id": "NEE-110",
+      "category": "GOVERNANCE",
+      "description": "Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."
+    },
+    {
+      "blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD",
+      "ticket_id": "NEE-116",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."
+    },
+    {
+      "blocker_code": "NEE-116-CAPACITY-SOLVER",
+      "ticket_id": "NEE-116",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."
+    },
+    {
+      "blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "ticket_id": "NEE-116",
+      "category": "PRODUCTION_EVIDENCE",
+      "description": "Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."
+    },
+    {
+      "blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+      "ticket_id": "NEE-116",
+      "category": "PRODUCTION_EVIDENCE",
+      "description": "Accepted point-in-time production data and receipts are unavailable."
+    },
+    {
+      "blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "ticket_id": "NEE-116",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."
+    },
+    {
+      "blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "ticket_id": "NEE-119",
+      "category": "PRODUCTION_EVIDENCE",
+      "description": "No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."
+    },
+    {
+      "blocker_code": "NEE-119-AV-PROXY-EVIDENCE",
+      "ticket_id": "NEE-119",
+      "category": "PRODUCTION_EVIDENCE",
+      "description": "No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."
+    },
+    {
+      "blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+      "ticket_id": "NEE-121",
+      "category": "PRODUCTION_EVIDENCE",
+      "description": "XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."
+    },
+    {
+      "blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+      "ticket_id": "NEE-121",
+      "category": "FINAL_DERIVED_EVIDENCE",
+      "description": "The final freeze anchor and receipt remain unavailable until every other blocker is accepted."
+    },
+    {
+      "blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "ticket_id": "NEE-122",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."
+    },
+    {
+      "blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+      "ticket_id": "NEE-122",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "The registered estimator and bootstrap uncertainty procedure are not implemented."
+    }
+  ],
+  "claims": {
+    "independent_numeric_kats_registered": true,
+    "engineering_selector_terminals_registered": true,
+    "selection_009_accepted": false,
+    "typed_unresolved_labels_changed": false,
+    "ppw_selector_executable_in_this_artifact": false,
+    "bootstrap_distribution_available": false,
+    "n_eff_used_available": false,
+    "dsr_available": false,
+    "holm_available": false,
+    "empirical_output_available": false,
+    "production_inference_available": false,
+    "freeze_blocker_changed": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "alpha_proven": false,
+    "live_order_authority": false
+  },
+  "nonclaims": [
+    "NO_SELECTION_009_ACCEPTANCE",
+    "NO_TYPED_UNRESOLVED_LABEL_FLIP",
+    "NO_DSR_OR_HOLM_MULTIPLICITY_OUTPUT",
+    "NO_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "NO_FREEZE_V5_BLOCKER_REMOVAL",
+    "NO_FINAL_FREEZE_ALPHA_PRODUCTION_READINESS_M0_OR_LIVE_ORDER_CLAIM"
+  ]
+}
