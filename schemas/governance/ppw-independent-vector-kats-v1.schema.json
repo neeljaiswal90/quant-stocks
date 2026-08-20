@@ -1,0 +1,337 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/ppw-independent-vector-kats-v1.schema.json",
+  "title": "QME PPW independent vector KATs v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "artifact_id",
+    "ticket_id",
+    "status",
+    "semantic_sha256",
+    "authority",
+    "typed_unresolved_labels_unchanged",
+    "selection_004_terminals",
+    "engineering_selector_terminals",
+    "registered_lag_selection_terminal",
+    "kat_fixture",
+    "vector_classes",
+    "active_freeze_v5_blockers",
+    "claims",
+    "nonclaims"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "../../schemas/governance/ppw-independent-vector-kats-v1.schema.json"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "qme.ppw_independent_vector_kats.v1"
+    },
+    "artifact_id": {
+      "type": "string",
+      "const": "QME-PPW-INDEPENDENT-VECTOR-KATS-V1"
+    },
+    "ticket_id": {
+      "type": "string",
+      "const": "NEE-204"
+    },
+    "status": {
+      "type": "string",
+      "const": "INDEPENDENT_NUMERIC_KATS_REGISTERED_SELECTION_009_UNACCEPTED_TYPED_UNRESOLVED_LABELS_UNCHANGED"
+    },
+    "semantic_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}(:[0-9a-f]{8}){7}$"
+    },
+    "authority": {
+      "type": "object",
+      "const": {
+        "protected_main": {
+          "commit": "bfc3df10:9b0b572d:18be6160:f2f4d61c:f031988e",
+          "tree": "a9de2854:77e2e7f1:e2b5c42b:6be4949f:bc9a20a6"
+        },
+        "predecessor_authority": {
+          "config_path": "configs/governance/ppw-bootstrap-uncertainty-authority-v1.json",
+          "config_sha256": "71b22f95:fdf223ba:4ebb0e9e:ee047fd2:61bcb866:0692d8f3:b179ca48:cb8f09d1",
+          "semantic_sha256": "cc6dd002:b5c44722:75e953a3:b364a0b0:638a2b96:342cd6d9:8dc18162:63ca798c",
+          "source_equations_path": "tests/fixtures/governance/ppw-bootstrap-source-equations-v1.json",
+          "source_equations_sha256": "2ef0e4c9:a760cb2c:c1627c99:b3887068:a3c15aa3:555f2b0a:c4a3c477:87853820"
+        },
+        "predecessor_owner_selections": {
+          "path": "configs/governance/ppw-bootstrap-owner-selections-v1.json",
+          "sha256": "6b1434a1:cc4b57c8:f221512a:7e2dcfd8:317fb037:1fb955f7:6e2f73d6:8cb5c3b6",
+          "semantic_sha256": "7a51a7da:182354b0:5d96ad77:f08a7513:8a7d41ef:c918d11d:bf5f242e:9bb5f743",
+          "manifest_path": "configs/governance/ppw-bootstrap-owner-selections-v1.hashes.json",
+          "manifest_sha256": "e325adbc:2f4d8f8e:4e8034c0:f74ca022:d4f2e2cc:54ca0226:d9e31cdc:b38de58f"
+        },
+        "implementation": {
+          "runtime_path": "qme/stats/effective_trials_uncertainty.py",
+          "runtime_sha256": "209a9289:0fdcb191:9eddb077:93ee75e6:258b10af:2f6c5042:31a55874:d33c9f7a",
+          "config_path": "configs/governance/effective-trials-uncertainty-v1.json",
+          "config_sha256": "e3884ae8:6dd62bf5:a86abd6e:fb68b6d6:9febf45c:5c3c487b:2d5e3bf0:36d1391e"
+        },
+        "freeze_v4": {
+          "path": "configs/governance/specification-freeze-policy-v4.json",
+          "sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458",
+          "semantic_sha256": "90acc886:5efb56e6:39bab29b:0efd13bc:c1f81249:91dca9c9:5179c3be:1c528771",
+          "manifest_path": "configs/governance/specification-freeze-v4.hashes.json",
+          "manifest_sha256": "a2c3bbfa:d15e7bd3:769142ad:69c291e7:885cd14d:6ca2d939:99c39df2:5360ea42",
+          "active_blocker_count": 13
+        },
+        "freeze_v5": {
+          "path": "configs/governance/specification-freeze-policy-v5.json",
+          "sha256": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840",
+          "semantic_sha256": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3",
+          "manifest_path": "configs/governance/specification-freeze-v5.hashes.json",
+          "manifest_sha256": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548",
+          "active_blocker_count": 12,
+          "resolved_since_v4": [
+            "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE"
+          ]
+        },
+        "coordinator_correction": {
+          "source_system": "LINEAR",
+          "source_issue_id": "NEE-204",
+          "source_comment_id": "40b5e5c2-0908-4be8-b23a-2edd4ed9be6e",
+          "source_created_at": "2026-08-16T00:42:30.172Z",
+          "source_updated_at": "2026-08-16T00:42:30.159Z",
+          "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+          "source_author_name": "Neel Jaiswal",
+          "source_body_bytes": 446,
+          "source_body_sha256": "6329e0be:18eb222d:27be20c9:74205e3e:f2b9dd00:8964441a:b1b961c1:b56d77fb",
+          "source_body_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+          "source_body": "Coordinator correction (2026-08-15): Claude withdrew PASS_FOR_SUCCESSOR_FREEZE. New verdict = FAIL on the successor-freeze gate. Requirement 8 numeric KATs are not in versioned artifacts; selection_009_accepted remains false; extra selector terminals need register-or-remove. Successor-freeze PR is not authorized. Next implementation: versioned independent KAT classes + extra-terminal disposition. Freeze V4 unchanged. Ticket stays In Progress.",
+          "authorized_next_implementation": "VERSIONED_INDEPENDENT_KAT_CLASSES_AND_EXTRA_TERMINAL_DISPOSITION",
+          "successor_freeze_authorized": false
+        },
+        "empirical_results_used": false
+      }
+    },
+    "typed_unresolved_labels_unchanged": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_fixture_path",
+        "source_fixture_sha256",
+        "labels",
+        "selection_009_accepted",
+        "disposition"
+      ],
+      "properties": {
+        "source_fixture_path": {
+          "type": "string"
+        },
+        "source_fixture_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(:[0-9a-f]{8}){7}$"
+        },
+        "labels": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "string"
+          }
+        },
+        "selection_009_accepted": {
+          "type": "boolean",
+          "const": false
+        },
+        "disposition": {
+          "type": "string"
+        }
+      }
+    },
+    "selection_004_terminals": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "condition"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "engineering_selector_terminals": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "condition"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "registered_lag_selection_terminal": {
+      "type": "object"
+    },
+    "kat_fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(:[0-9a-f]{8}){7}$"
+        }
+      }
+    },
+    "vector_classes": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "string"
+      }
+    },
+    "active_freeze_v5_blockers": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blocker_code",
+          "ticket_id",
+          "category",
+          "description"
+        ],
+        "properties": {
+          "blocker_code": {"type": "string"},
+          "ticket_id": {"type": "string"},
+          "category": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independent_numeric_kats_registered",
+        "engineering_selector_terminals_registered",
+        "selection_009_accepted",
+        "typed_unresolved_labels_changed",
+        "ppw_selector_executable_in_this_artifact",
+        "bootstrap_distribution_available",
+        "n_eff_used_available",
+        "dsr_available",
+        "holm_available",
+        "empirical_output_available",
+        "production_inference_available",
+        "freeze_blocker_changed",
+        "milestone_m0_complete",
+        "production_ready",
+        "alpha_proven",
+        "live_order_authority"
+      ],
+      "properties": {
+        "independent_numeric_kats_registered": {
+          "type": "boolean",
+          "const": true
+        },
+        "engineering_selector_terminals_registered": {
+          "type": "boolean",
+          "const": true
+        },
+        "selection_009_accepted": {
+          "type": "boolean",
+          "const": false
+        },
+        "typed_unresolved_labels_changed": {
+          "type": "boolean",
+          "const": false
+        },
+        "ppw_selector_executable_in_this_artifact": {
+          "type": "boolean",
+          "const": false
+        },
+        "bootstrap_distribution_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "n_eff_used_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "dsr_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "holm_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "empirical_output_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_inference_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "freeze_blocker_changed": {
+          "type": "boolean",
+          "const": false
+        },
+        "milestone_m0_complete": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_ready": {
+          "type": "boolean",
+          "const": false
+        },
+        "alpha_proven": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_order_authority": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "nonclaims": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

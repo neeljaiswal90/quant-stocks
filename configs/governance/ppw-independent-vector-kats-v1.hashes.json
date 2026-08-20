@@ -1,0 +1,39 @@
+{
+  "schema_version": "qme.ppw_independent_vector_kats_manifest.v1",
+  "artifact_id": "QME-PPW-INDEPENDENT-VECTOR-KATS-V1",
+  "ticket_id": "NEE-204",
+  "status": "INDEPENDENT_NUMERIC_KATS_REGISTERED_SELECTION_009_UNACCEPTED_ZERO_BLOCKERS_RESOLVED",
+  "artifacts": [
+    {
+      "path": "configs/governance/ppw-independent-vector-kats-v1.json",
+      "sha256": "7d94db3d:1c9a2c1a:7812166c:86b5294c:7cad25e1:f9666cc5:19490317:c10fb33f"
+    },
+    {
+      "path": "docs/governance/PPW_INDEPENDENT_VECTOR_KATS_V1.md",
+      "sha256": "332b6430:f83b854a:7bdb485c:5402b6f7:d6a1eac8:c5a23696:b81d6ae5:08ab2e4a"
+    },
+    {
+      "path": "qme/governance/ppw_independent_vector_kats.py",
+      "sha256": "fdccecc3:c98fa335:b9d400fd:70e0cc76:6d62b7c6:e6ad9a08:7ab3429a:cfb51f31"
+    },
+    {
+      "path": "schemas/governance/ppw-independent-vector-kats-v1.schema.json",
+      "sha256": "246b8640:c6ab8083:f64c6dc3:7dc2b341:166755e0:040aa3eb:a81b2133:df85b71e"
+    },
+    {
+      "path": "tests/fixtures/governance/ppw-independent-vector-kats-v1.json",
+      "sha256": "1b589786:32d1d06e:ca4284c5:65e6ecf6:899f631e:dea0c108:84081a15:795ce3bd"
+    },
+    {
+      "path": "tests/governance/test_ppw_independent_vector_kats.py",
+      "sha256": "1fcb41ef:31333e34:bbb9c57a:e44a0b34:f8fb16f9:56112a3c:cc7bc279:65bcf9cc"
+    }
+  ],
+  "limitations": [
+    "NO_SELECTION_009_ACCEPTANCE",
+    "NO_TYPED_UNRESOLVED_LABEL_FLIP",
+    "NO_DSR_HOLM_EMPIRICAL_OR_PRODUCTION_OUTPUT",
+    "NO_FREEZE_V5_BLOCKER_REMOVAL",
+    "NO_FINAL_FREEZE_M0_ALPHA_READINESS_OR_LIVE_ORDER_AUTHORITY"
+  ]
+}
