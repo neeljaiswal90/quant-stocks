@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/nee204-successor-freeze-candidate-v1.schema.json",
+  "title": "NEE-204 selection-009 successor-freeze candidate v1",
+  "description": "Fail-closed candidate contract. It proposes, but cannot perform, a two-row Freeze V5 blocker transition.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "candidate_id",
+    "candidate_kind",
+    "status",
+    "semantic_sha256",
+    "authority",
+    "candidate_incapability",
+    "lineage_manifests",
+    "selection_009",
+    "current_freeze",
+    "target",
+    "proposed_transition",
+    "issue_state_boundary",
+    "required_next_gates",
+    "claims",
+    "nonclaims"
+  ],
+  "properties": {
+    "$schema": {"const": "../../schemas/governance/nee204-successor-freeze-candidate-v1.schema.json"},
+    "schema_version": {"const": "qme.nee204_successor_freeze_candidate.v1"},
+    "candidate_id": {"const": "NEE-204-SELECTION-009-SUCCESSOR-FREEZE-CANDIDATE-V1"},
+    "candidate_kind": {"const": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE"},
+    "status": {"const": "CANDIDATE_UNREVIEWED_FREEZE_V5_UNCHANGED_PENDING_DELTA_REVIEW_EXACT_BYTE_OWNER_SIGNOFF_AND_RECEIPT"},
+    "semantic_sha256": {"$ref": "#/$defs/grouped_sha256"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approval_owner",
+        "candidate_date",
+        "protected_main",
+        "independent_review_receipt",
+        "owner_selection_009_decision_receipt",
+        "owner_selection_009_decision_meaning",
+        "empirical_results_used"
+      ],
+      "properties": {
+        "approval_owner": {"const": "neeljaiswal90"},
+        "candidate_date": {"const": "2026-08-20"},
+        "protected_main": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["commit", "tree", "qme_ci_workflow_path", "qme_ci_workflow_sha256", "push_run", "push_job", "event", "conclusion"],
+          "properties": {
+            "commit": {"const": "a7ee2f5a:75d58cbe:6bc88cf4:e5d17763:9b56aecd"},
+            "tree": {"const": "497e5702:cd46ade4:9f4e7120:eaf6f9fe:aab38bf3"},
+            "qme_ci_workflow_path": {"const": ".github/workflows/ci.yml"},
+            "qme_ci_workflow_sha256": {"const": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"},
+            "push_run": {"const": "32346828082"},
+            "push_job": {"const": "96357230515"},
+            "event": {"const": "push"},
+            "conclusion": {"const": "success"}
+          }
+        },
+        "independent_review_receipt": {"$ref": "#/$defs/receipt"},
+        "owner_selection_009_decision_receipt": {"$ref": "#/$defs/receipt"},
+        "owner_selection_009_decision_meaning": {"const": "ACCEPTS_EXACT_REVIEWED_SYNTHETIC_SELECTION_009_EVIDENCE_AND_AUTHORIZES_SUCCESSOR_CANDIDATE_PREPARATION_ONLY"},
+        "empirical_results_used": {"const": false}
+      }
+    },
+    "candidate_incapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["can_change_active_freeze", "transition_ladder"],
+      "properties": {
+        "can_change_active_freeze": {"const": false},
+        "transition_ladder": {
+          "const": [
+            "candidate created != blocker cleared",
+            "candidate independently reviewed != blocker cleared",
+            "owner signs exact candidate bytes != blocker cleared",
+            "candidate merged and protected CI passes != blocker cleared",
+            "separate receipt publishes a new successor freeze and protected CI passes = blocker transition"
+          ]
+        }
+      }
+    },
+    "lineage_manifests": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "artifact_id", "role"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/grouped_sha256"},
+          "artifact_id": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "selection_009": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner_decision_accepted",
+        "evidence_scope",
+        "index_stream_sha256",
+        "bootstrap_distribution_sha256",
+        "one_based_rank",
+        "rank_value",
+        "n_eff_used",
+        "valid_distribution_reason",
+        "invalid_distribution_fallback_reason_unchanged",
+        "predecessor_selection_009_accepted_fields_remain_false",
+        "statistical_rule_changed",
+        "production_n_eff_available"
+      ],
+      "properties": {
+        "owner_decision_accepted": {"const": true},
+        "evidence_scope": {"const": "SYNTHETIC_DETERMINISTIC_KAT_ONLY"},
+        "index_stream_sha256": {"const": "e5f8ac97:7cbd6c5e:6de09048:c86b4d7d:c9351b89:8a2e6875:d9057860:f18a1640"},
+        "bootstrap_distribution_sha256": {"const": "e90ba0e3:da74fa34:bbeaddab:01e0d8a1:137702a1:8fc8de73:61f48b01:faf95bcf"},
+        "one_based_rank": {"const": 1950},
+        "rank_value": {"const": "1.928085337475850467660159735112550709"},
+        "n_eff_used": {"const": 2},
+        "valid_distribution_reason": {"const": "N_EFF_BOOTSTRAP_UPPER_QUANTILE"},
+        "invalid_distribution_fallback_reason_unchanged": {"const": "N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96"},
+        "predecessor_selection_009_accepted_fields_remain_false": {"const": true},
+        "statistical_rule_changed": {"const": false},
+        "production_n_eff_available": {"const": false}
+      }
+    },
+    "current_freeze": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_path", "policy_id", "policy_sha256", "semantic_sha256", "manifest_path", "manifest_sha256", "policy_status", "active_blocker_count", "historical_resolved_or_superseded_count", "bytes_unchanged", "claims_unchanged", "milestone_m0_complete"],
+      "properties": {
+        "policy_path": {"const": "configs/governance/specification-freeze-policy-v5.json"},
+        "policy_id": {"const": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5"},
+        "policy_sha256": {"const": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840"},
+        "semantic_sha256": {"const": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3"},
+        "manifest_path": {"const": "configs/governance/specification-freeze-v5.hashes.json"},
+        "manifest_sha256": {"const": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548"},
+        "policy_status": {"const": "BLOCKED_12_ACTIVE_GOVERNANCE_EVIDENCE_AND_ENGINEERING"},
+        "active_blocker_count": {"const": 12},
+        "historical_resolved_or_superseded_count": {"const": 18},
+        "bytes_unchanged": {"const": true},
+        "claims_unchanged": {"const": true},
+        "milestone_m0_complete": {"const": false}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "blocker_rows_verbatim", "transition_count", "transition_performed_by_this_candidate", "transition_performed_only_by"],
+      "properties": {
+        "scope": {"const": "TWO_EXACT_FREEZE_V5_ENGINEERING_EVIDENCE_ROWS_NOT_THE_LINEAR_ISSUES"},
+        "blocker_rows_verbatim": {
+          "const": [
+            {"blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE", "ticket_id": "NEE-122", "category": "ENGINEERING_EVIDENCE", "description": "Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."},
+            {"blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE", "ticket_id": "NEE-122", "category": "ENGINEERING_EVIDENCE", "description": "The registered estimator and bootstrap uncertainty procedure are not implemented."}
+          ]
+        },
+        "transition_count": {"const": 2},
+        "transition_performed_by_this_candidate": {"const": false},
+        "transition_performed_only_by": {"const": "SEPARATE_APPEND_ONLY_RECEIPT_PR_PUBLISHING_NEW_FREEZE_AFTER_DELTA_REVIEW_EXACT_BYTE_OWNER_SIGNOFF_MERGE_AND_PROTECTED_CI"}
+      }
+    },
+    "proposed_transition": {"$ref": "#/$defs/nonempty_object"},
+    "issue_state_boundary": {"$ref": "#/$defs/nonempty_object"},
+    "required_next_gates": {"$ref": "#/$defs/nonempty_object"},
+    "claims": {"$ref": "#/$defs/nonempty_object"},
+    "nonclaims": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "$defs": {
+    "grouped_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}(?::[0-9a-f]{8}){7}$"
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_system", "source_issue_id", "source_comment_id", "source_created_at", "source_updated_at", "source_author_id", "source_author_name", "source_body_bytes", "source_body_sha256", "source_body_hash_convention", "source_body"],
+      "properties": {
+        "source_system": {"const": "LINEAR"},
+        "source_issue_id": {"const": "NEE-204"},
+        "source_comment_id": {"type": "string", "pattern": "^[0-9a-f-]{36}$"},
+        "source_created_at": {"type": "string", "format": "date-time"},
+        "source_updated_at": {"type": "string", "format": "date-time"},
+        "source_author_id": {"const": "a2f77320-3e15-4fe3-acea-a276546a8274"},
+        "source_author_name": {"const": "Neel Jaiswal"},
+        "source_body_bytes": {"type": "integer", "minimum": 1},
+        "source_body_sha256": {"$ref": "#/$defs/grouped_sha256"},
+        "source_body_hash_convention": {"const": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE"},
+        "source_body": {"type": "string", "minLength": 1}
+      }
+    },
+    "nonempty_object": {
+      "type": "object",
+      "minProperties": 1
+    }
+  }
+}
