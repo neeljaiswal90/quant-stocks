@@ -1,0 +1,726 @@
+{
+  "artifact_id": "NEE-205-HISTORICAL-ASYMMETRIC-COSTS-V3-ALL-TRANSITION-KAT",
+  "cases": [
+    {
+      "case_id": "TRANSITION-2010-01-04",
+      "expected": {
+        "after_cash": "2999.94110000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-01",
+        "finra_taf_raw": "0.0075",
+        "regulatory_fee_ledger_amount": "0.05890000",
+        "regulatory_fees_total": "0.05890000",
+        "sec31_raw": "0.0514",
+        "sec_interval_id": "SEC31-01",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2010-01-04",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2010-01-04",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2010-01-04",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2010-01-15",
+      "expected": {
+        "after_cash": "2999.96710000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-01",
+        "finra_taf_raw": "0.0075",
+        "regulatory_fee_ledger_amount": "0.03290000",
+        "regulatory_fees_total": "0.03290000",
+        "sec31_raw": "0.0254",
+        "sec_interval_id": "SEC31-02",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2010-01-15",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2010-01-15",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2010-01-15",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2010-04-01",
+      "expected": {
+        "after_cash": "2999.95870000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-01",
+        "finra_taf_raw": "0.0075",
+        "regulatory_fee_ledger_amount": "0.04130000",
+        "regulatory_fees_total": "0.04130000",
+        "sec31_raw": "0.0338",
+        "sec_interval_id": "SEC31-03",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2010-04-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2010-04-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2010-04-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2011-01-21",
+      "expected": {
+        "after_cash": "2999.95410000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-01",
+        "finra_taf_raw": "0.0075",
+        "regulatory_fee_ledger_amount": "0.04590000",
+        "regulatory_fees_total": "0.04590000",
+        "sec31_raw": "0.0384",
+        "sec_interval_id": "SEC31-04",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2011-01-21",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2011-01-21",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2011-01-21",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2011-07-01",
+      "expected": {
+        "after_cash": "2999.95260000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-02",
+        "finra_taf_raw": "0.009",
+        "regulatory_fee_ledger_amount": "0.04740000",
+        "regulatory_fees_total": "0.04740000",
+        "sec31_raw": "0.0384",
+        "sec_interval_id": "SEC31-04",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2011-07-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2011-07-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2011-07-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2012-02-21",
+      "expected": {
+        "after_cash": "2999.95500000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-02",
+        "finra_taf_raw": "0.009",
+        "regulatory_fee_ledger_amount": "0.04500000",
+        "regulatory_fees_total": "0.04500000",
+        "sec31_raw": "0.036",
+        "sec_interval_id": "SEC31-05",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2012-02-21",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2012-02-21",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2012-02-21",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2012-03-01",
+      "expected": {
+        "after_cash": "2999.95450000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-03",
+        "finra_taf_raw": "0.0095",
+        "regulatory_fee_ledger_amount": "0.04550000",
+        "regulatory_fees_total": "0.04550000",
+        "sec31_raw": "0.036",
+        "sec_interval_id": "SEC31-05",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2012-03-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2012-03-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2012-03-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2012-04-01",
+      "expected": {
+        "after_cash": "2999.94570000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-03",
+        "finra_taf_raw": "0.0095",
+        "regulatory_fee_ledger_amount": "0.05430000",
+        "regulatory_fees_total": "0.05430000",
+        "sec31_raw": "0.0448",
+        "sec_interval_id": "SEC31-06",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2012-04-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2012-04-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2012-04-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2012-07-01",
+      "expected": {
+        "after_cash": "2999.94330000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.05670000",
+        "regulatory_fees_total": "0.05670000",
+        "sec31_raw": "0.0448",
+        "sec_interval_id": "SEC31-06",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2012-07-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2012-07-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2012-07-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2013-05-25",
+      "expected": {
+        "after_cash": "2999.95330000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.04670000",
+        "regulatory_fees_total": "0.04670000",
+        "sec31_raw": "0.0348",
+        "sec_interval_id": "SEC31-07",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2013-05-25",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2013-05-25",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2013-05-25",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2014-03-18",
+      "expected": {
+        "after_cash": "2999.94390000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.05610000",
+        "regulatory_fees_total": "0.05610000",
+        "sec31_raw": "0.0442",
+        "sec_interval_id": "SEC31-08",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2014-03-18",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2014-03-18",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2014-03-18",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2015-02-14",
+      "expected": {
+        "after_cash": "2999.95130000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.04870000",
+        "regulatory_fees_total": "0.04870000",
+        "sec31_raw": "0.0368",
+        "sec_interval_id": "SEC31-09",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2015-02-14",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2015-02-14",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2015-02-14",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2016-02-16",
+      "expected": {
+        "after_cash": "2999.94450000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.05550000",
+        "regulatory_fees_total": "0.05550000",
+        "sec31_raw": "0.0436",
+        "sec_interval_id": "SEC31-10",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2016-02-16",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2016-02-16",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2016-02-16",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2017-07-04",
+      "expected": {
+        "after_cash": "2999.94190000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.05810000",
+        "regulatory_fees_total": "0.05810000",
+        "sec31_raw": "0.0462",
+        "sec_interval_id": "SEC31-11",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2017-07-04",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2017-07-04",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2017-07-04",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2018-05-22",
+      "expected": {
+        "after_cash": "2999.96210000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.03790000",
+        "regulatory_fees_total": "0.03790000",
+        "sec31_raw": "0.026",
+        "sec_interval_id": "SEC31-12",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2018-05-22",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2018-05-22",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2018-05-22",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2019-04-16",
+      "expected": {
+        "after_cash": "2999.94670000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.05330000",
+        "regulatory_fees_total": "0.05330000",
+        "sec31_raw": "0.0414",
+        "sec_interval_id": "SEC31-13",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2019-04-16",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2019-04-16",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2019-04-16",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2020-02-18",
+      "expected": {
+        "after_cash": "2999.94390000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.05610000",
+        "regulatory_fees_total": "0.05610000",
+        "sec31_raw": "0.0442",
+        "sec_interval_id": "SEC31-14",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2020-02-18",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2020-02-18",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2020-02-18",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2021-02-25",
+      "expected": {
+        "after_cash": "2999.97790000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-04",
+        "finra_taf_raw": "0.0119",
+        "regulatory_fee_ledger_amount": "0.02210000",
+        "regulatory_fees_total": "0.02210000",
+        "sec31_raw": "0.0102",
+        "sec_interval_id": "SEC31-15",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2021-02-25",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2021-02-25",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2021-02-25",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2022-01-01",
+      "expected": {
+        "after_cash": "2999.97680000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-05",
+        "finra_taf_raw": "0.013",
+        "regulatory_fee_ledger_amount": "0.02320000",
+        "regulatory_fees_total": "0.02320000",
+        "sec31_raw": "0.0102",
+        "sec_interval_id": "SEC31-15",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2022-01-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2022-01-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2022-01-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2022-05-14",
+      "expected": {
+        "after_cash": "2999.94120000",
+        "finra_applicability_regime": "BASE_COVERED_EQUITY",
+        "finra_interval_id": "FINRA-TAF-05",
+        "finra_taf_raw": "0.013",
+        "regulatory_fee_ledger_amount": "0.05880000",
+        "regulatory_fees_total": "0.05880000",
+        "sec31_raw": "0.0458",
+        "sec_interval_id": "SEC31-16",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2022-05-14",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2022-05-14",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2022-05-14",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2023-01-01",
+      "expected": {
+        "after_cash": "2999.93970000",
+        "finra_applicability_regime": "PRE_PTF_MEMBER_EXCHANGE_EXEMPTION",
+        "finra_interval_id": "FINRA-TAF-06",
+        "finra_taf_raw": "0.0145",
+        "regulatory_fee_ledger_amount": "0.06030000",
+        "regulatory_fees_total": "0.06030000",
+        "sec31_raw": "0.0458",
+        "sec_interval_id": "SEC31-16",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2023-01-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2023-01-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2023-01-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2023-02-27",
+      "expected": {
+        "after_cash": "2999.96950000",
+        "finra_applicability_regime": "PRE_PTF_MEMBER_EXCHANGE_EXEMPTION",
+        "finra_interval_id": "FINRA-TAF-06",
+        "finra_taf_raw": "0.0145",
+        "regulatory_fee_ledger_amount": "0.03050000",
+        "regulatory_fees_total": "0.03050000",
+        "sec31_raw": "0.016",
+        "sec_interval_id": "SEC31-17",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2023-02-27",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2023-02-27",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2023-02-27",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2023-11-06",
+      "expected": {
+        "after_cash": "2999.96950000",
+        "finra_applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+        "finra_interval_id": "FINRA-TAF-07",
+        "finra_taf_raw": "0.0145",
+        "regulatory_fee_ledger_amount": "0.03050000",
+        "regulatory_fees_total": "0.03050000",
+        "sec31_raw": "0.016",
+        "sec_interval_id": "SEC31-17",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2023-11-06",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2023-11-06",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2023-11-06",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2024-01-01",
+      "expected": {
+        "after_cash": "2999.96740000",
+        "finra_applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+        "finra_interval_id": "FINRA-TAF-08",
+        "finra_taf_raw": "0.0166",
+        "regulatory_fee_ledger_amount": "0.03260000",
+        "regulatory_fees_total": "0.03260000",
+        "sec31_raw": "0.016",
+        "sec_interval_id": "SEC31-17",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2024-01-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2024-01-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2024-01-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2024-05-22",
+      "expected": {
+        "after_cash": "2999.92780000",
+        "finra_applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+        "finra_interval_id": "FINRA-TAF-08",
+        "finra_taf_raw": "0.0166",
+        "regulatory_fee_ledger_amount": "0.07220000",
+        "regulatory_fees_total": "0.07220000",
+        "sec31_raw": "0.0556",
+        "sec_interval_id": "SEC31-18",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2024-05-22",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2024-05-22",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2024-05-22",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2025-05-14",
+      "expected": {
+        "after_cash": "2999.98340000",
+        "finra_applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+        "finra_interval_id": "FINRA-TAF-08",
+        "finra_taf_raw": "0.0166",
+        "regulatory_fee_ledger_amount": "0.01660000",
+        "regulatory_fees_total": "0.01660000",
+        "sec31_raw": "0",
+        "sec_interval_id": "SEC31-19",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2025-05-14",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2025-05-14",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2025-05-14",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2026-01-01",
+      "expected": {
+        "after_cash": "2999.98050000",
+        "finra_applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+        "finra_interval_id": "FINRA-TAF-09",
+        "finra_taf_raw": "0.0195",
+        "regulatory_fee_ledger_amount": "0.01950000",
+        "regulatory_fees_total": "0.01950000",
+        "sec31_raw": "0",
+        "sec_interval_id": "SEC31-19",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2026-01-01",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2026-01-01",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2026-01-01",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    },
+    {
+      "case_id": "TRANSITION-2026-04-04",
+      "expected": {
+        "after_cash": "2999.93930000",
+        "finra_applicability_regime": "PTF_MEMBER_EXCHANGE_EXEMPTION_ACTIVE_CALLER_CLASSIFICATION_REQUIRED",
+        "finra_interval_id": "FINRA-TAF-09",
+        "finra_taf_raw": "0.0195",
+        "regulatory_fee_ledger_amount": "0.06070000",
+        "regulatory_fees_total": "0.06070000",
+        "sec31_raw": "0.0412",
+        "sec_interval_id": "SEC31-20",
+        "self_financing_residual": "0.00000000"
+      },
+      "input": {
+        "charge_date": "2026-04-04",
+        "execution_price": "20",
+        "regulatory_trade_id": "REG-2026-04-04",
+        "sold_shares": "100",
+        "starting_cash": "1000",
+        "starting_shares": "1000",
+        "trade_date": "2026-04-04",
+        "transaction_cost_bps": "0",
+        "transaction_tax_bps": "0"
+      }
+    }
+  ],
+  "claims": {
+    "blocker_resolved": false,
+    "broker_customer_debit": false,
+    "live_order_authority": false,
+    "milestone_m0_complete": false,
+    "production_observation": false
+  },
+  "coverage": {
+    "finra_transition_count": 9,
+    "first_date": "2010-01-04",
+    "last_date": "2026-08-14",
+    "sec_transition_count": 20,
+    "unique_transition_case_count": 28
+  },
+  "oracle": {
+    "arithmetic": "PYTHON_FRACTION_WITH_EXACT_DECIMAL_LITERALS",
+    "posting": "ONE_Q8_ROUND_HALF_EVEN_PER_REGULATORY_TRADE_LINE_THEN_SUM",
+    "schedule_tables": "LITERAL_20_SEC_AND_9_FINRA_ROWS_NO_CANDIDATE_IMPORT"
+  },
+  "schema_version": "qme.historical_asymmetric_costs_v3_cases.v1",
+  "status": "DETERMINISTIC_ENGINEERING_EVIDENCE_ONLY_BLOCKERS_UNCHANGED"
+}
