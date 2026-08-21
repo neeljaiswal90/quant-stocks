@@ -1,0 +1,181 @@
+{
+  "$schema": "../../schemas/governance/nee116-capacity-solver-freeze-candidate-v1.schema.json",
+  "schema_version": "qme.successor_freeze_candidate.v1",
+  "candidate_id": "NEE-116-CAPACITY-SOLVER-SUCCESSOR-FREEZE-CANDIDATE-V1",
+  "candidate_kind": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
+  "status": "READY_FOR_FRESH_INDEPENDENT_DELTA_REVIEW_BLOCKER_REMAINS_ACTIVE",
+  "semantic_sha256": "17eaf700:fc901d3e:6c50c478:47f3df38:7c091df8:31013f36:f327f5d4:4d345576",
+  "authority": {
+    "approval_owner": "neeljaiswal90",
+    "candidate_date": "2026-08-20",
+    "source_type": "OWNER_AUTHORIZED_M0_BLOCKER_REMEDIATION_2026-08-20",
+    "owner_directive": "I authorize to fix blockers and complete M0 implementation.",
+    "owner_signoff_on_exact_bytes": null,
+    "owner_signoff_status": "PENDING_OWNER_SIGNOFF_ON_EXACT_CANDIDATE_BYTES",
+    "fresh_independent_delta_review_status": "PENDING",
+    "empirical_results_used": false
+  },
+  "candidate_incapability": {
+    "can_change_active_freeze": false,
+    "can_clear_blocker": false,
+    "transition_ladder": [
+      "candidate reviewed and signed != blocker cleared",
+      "candidate merged and protected CI succeeds != blocker cleared",
+      "separate successor-freeze receipt merged and protected CI succeeds = blocker transition"
+    ]
+  },
+  "pre_state": {
+    "protected_main": {
+      "commit": "629e7847:f187122b:0a078290:26e7a917:f85cb709",
+      "tree": "fe23314f:8d321141:272c6f16:cf3caf21:08d4dc24",
+      "committer_at": "2026-08-20T18:27:53-07:00",
+      "published_pr": 57,
+      "push_ci": {
+        "event": "push",
+        "run_id": 32436380368,
+        "job_id": 96638318003,
+        "job_name": "foundation",
+        "conclusion": "success",
+        "tested_commit": "629e7847:f187122b:0a078290:26e7a917:f85cb709"
+      }
+    },
+    "active_freeze": {
+      "policy_path": "configs/governance/specification-freeze-policy-v6.json",
+      "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V6",
+      "version": 6,
+      "policy_sha256": "f28d2a90:7d5078a1:bdc90053:12ac3259:54c3e499:cb43a80c:f49ee70b:d6326668",
+      "policy_semantic_sha256": "879d2107:1c5e8948:9fd6fed4:332027f1:8ebe9427:14503c84:a643c1b1:7d2e70ef",
+      "export_path": "configs/governance/specification-freeze-export-v5.json",
+      "export_sha256": "01d89c4a:4a28d859:b6bdf0cb:2a6a5e62:a7802e92:09f281b3:5e33e395:87d83ca1",
+      "export_derived_sha256": "3d7d953e:ca62b35d:6de6c0ca:30fbf04a:fe1fab57:248b6eeb:2804ab2b:f48a5fc3",
+      "manifest_path": "configs/governance/specification-freeze-v6.hashes.json",
+      "manifest_sha256": "cebd85d5:0f19932c:42c6c3b6:2548c73c:8810e98f:3325cbf2:c5e104a9:7404ec4f",
+      "policy_status": "BLOCKED_10_ACTIVE_GOVERNANCE_EVIDENCE_AND_ENGINEERING",
+      "mutation_rule": "NEW_VERSION_NO_OVERWRITE",
+      "active_blocker_count": 10,
+      "historical_resolved_or_superseded_count": 20,
+      "target_blocker_present": true,
+      "bytes_unchanged": true,
+      "milestone_m0_complete": false
+    }
+  },
+  "target": {
+    "blocker_row_verbatim": {
+      "blocker_code": "NEE-116-CAPACITY-SOLVER",
+      "ticket_id": "NEE-116",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."
+    },
+    "scope": "ONE_ACTIVE_FREEZE_BLOCKER_ROW_NOT_THE_LINEAR_ISSUE",
+    "resolution_basis": "CAPACITY_SOLVER_V3_FAIL_CLOSED_PARAMETER_VALIDATION_OVER_IMMUTABLE_V2_EXACT_FRACTION_FEASIBILITY_PENDING_FRESH_EXTERNAL_REVIEW",
+    "linear_issue_nee116_remains_in_progress_after_transition": true,
+    "transition_performed_by_this_candidate": false
+  },
+  "proposed_transition": {
+    "removes_exactly": [
+      "NEE-116-CAPACITY-SOLVER"
+    ],
+    "pre_state": {
+      "active": 10,
+      "historical_resolved_or_superseded": 20
+    },
+    "post_state": {
+      "active": 9,
+      "historical_resolved_or_superseded": 21
+    },
+    "retained_active_blocker_codes_in_order": [
+      "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "NEE-116-ASYMMETRIC-COST-METHOD",
+      "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "NEE-116-PRODUCTION-PIT-DATA",
+      "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "NEE-119-AV-PROXY-EVIDENCE",
+      "NEE-121-CALENDAR-SESSION-REGISTRATION",
+      "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP"
+    ],
+    "other_rows_changed": false,
+    "publication_mode": "NEW_FREEZE_VERSION_NO_OVERWRITE",
+    "expected_successor_policy_version": 7,
+    "milestone_m0_complete_after_transition": false,
+    "production_ready_after_transition": false,
+    "empirical_capacity_available_after_transition": false
+  },
+  "capacity_evidence": {
+    "implementation_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V3",
+    "economic_method_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1",
+    "v1_status": "SUPERSEDED_DEFECTIVE_CANDIDATE_NOT_ACCEPTED",
+    "v2_status": "SUPERSEDED_FAIL_CLOSED_PARAMETER_DOMAIN_DEFECT_PRESERVED",
+    "prior_a3_v2_external_review_disposition": "GO_SUPERSEDED_BY_PR58_DELTA_REVIEW",
+    "fresh_external_review_disposition": "PENDING_AFTER_V3_REMEDIATION",
+    "pr58_delta_review": {
+      "disposition": "NO_GO",
+      "reviewed_head": "b4cd248e:1c23fef6:e66e0528:bf213685:e102a63d",
+      "reviewed_tree": "5452bcd0:3eb07b88:62295302:45853bb2:bb2416f",
+      "p0_count": 0,
+      "p1_count": 1,
+      "p2_count": 0,
+      "linear_comment_id": "89409042-cace-4484-81fd-13fd3eea6552",
+      "finding": "INVALID_NON_GRID_PARAMETERS_REACHED_BOUND_COMPUTATION_AND_RETURNED_MALFORMED_UNAVAILABLE_CERTIFICATES",
+      "required_remediation": "VALIDATE_ALL_PARAMETER_DOMAINS_BEFORE_BOUND_COMPUTATION_ADD_REGRESSIONS_REPIN_AND_REREVIEW"
+    },
+    "capacity_v2_protected_ci": {
+      "pr": 47,
+      "merge_commit": "43a84301:f01a1f3f:7a9ee634:ebe22bbd:97cb2b7d",
+      "event": "push",
+      "run_id": 32082483326,
+      "job_id": 95548013999,
+      "conclusion": "success"
+    },
+    "external_review_publication_ci": {
+      "pr": 50,
+      "merge_commit": "e64307d3:d0105da4:eb121c5e:a0224d86:ae8bfb29",
+      "event": "push",
+      "run_id": 32177250528,
+      "job_id": 95841911960,
+      "conclusion": "success"
+    },
+    "evidence_scope": "ENGINEERING_CONFORMANCE_ONLY_NO_EMPIRICAL_CAPACITY_VALUE"
+  },
+  "lineage": [
+    {"path": "configs/governance/owner-decision-record-2026-08-16-v1.json", "sha256": "85622222:d0863304:61ffe460:e16fe226:e5c67c85:9ea67c88:bc888a3c:85547fd0", "role": "OWNER_M0_ENGINEERING_ACCEPTANCE_STANDARD"},
+    {"path": "configs/governance/owner-implementation-correction-2026-08-17-v1.json", "sha256": "bbf6e881:5bfd8278:cb39956e:0164a218:a81efd93:628d281d:db2e4f94:91d3aa1c", "role": "CAPACITY_V1_SUPERSEDED_V2_REGISTERED"},
+    {"path": "docs/governance/OWNER_IMPLEMENTATION_CORRECTION_2026_08_17_V1.md", "sha256": "a38f4d85:edbc10e7:a85ad01c:da7383f9:578ad7a6:d12001ad:4ec6e82f:fbe301fd", "role": "OWNER_CORRECTION_DOCUMENTATION"},
+    {"path": "qme/quant/capacity_solver.py", "sha256": "a78bd421:99898fe3:a1000bf8:7ad58363:5adb60fd:a47bf7c2:0c8a79b9:75107487", "role": "SUPERSEDED_V1_BYTES"},
+    {"path": "docs/quant/NEE_116_CAPACITY_SOLVER_V1.md", "sha256": "abfafd18:3b803e82:18af7141:17abc3c2:9274aaa6:187607ff:19a50ac9:92ce353e", "role": "SUPERSEDED_V1_DOCUMENTATION"},
+    {"path": "qme/quant/capacity_solver_v2.py", "sha256": "6cd9d45d:6e860246:640959a1:13f679f7:bbe7cc75:f3f6c661:9ac2d7c0:c60f805c", "role": "IMMUTABLE_SUPERSEDED_V2_IMPLEMENTATION"},
+    {"path": "tests/quant/test_capacity_solver_v2.py", "sha256": "5d5c11ae:4209a6e2:3dcb9c09:3fa6ae06:91cf5ca5:a13f76e5:51e8e830:6bb6b1d2", "role": "IMMUTABLE_V2_DETERMINISTIC_TESTS"},
+    {"path": "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V2.md", "sha256": "c5182854:b23b346b:d4b86cf9:afe8490a:4a96543e:42732686:7d3efa69:85de4afe", "role": "IMMUTABLE_V2_IMPLEMENTATION_CONTRACT"},
+    {"path": "qme/quant/capacity_solver_v3.py", "sha256": "189673ba:62f75f0f:63e765f3:2f10be81:5229e422:13217dd2:702a989e:2ada7e13", "role": "AUTHORITATIVE_V3_FAIL_CLOSED_IMPLEMENTATION"},
+    {"path": "tests/quant/test_capacity_solver_v3.py", "sha256": "46093294:00d29d59:d92e16b4:9288ce46:cc60aade:10e069d8:8ae4a3c7:95e30ca7", "role": "V3_PARAMETER_DOMAIN_REGRESSION_TESTS"},
+    {"path": "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md", "sha256": "901eef44:99010efe:1e32fea4:ef816cb2:db6e4c40:3e89afc8:3e901d1b:ed36a3cf", "role": "V3_FAIL_CLOSED_CORRECTION_CONTRACT"},
+    {"path": "docs/governance/external-review-results-2026-08-18/INDEX.md", "sha256": "abf94925:1fa9e270:29f4c276:4cdaca67:ea6ae9fe:8f0f5424:64419c10:dc859a80", "role": "EXTERNAL_REVIEW_INDEX"},
+    {"path": "docs/governance/external-review-results-2026-08-18/A3-V2/A3-V2-VERDICT.md", "sha256": "94953898:189944b8:c20ca2b7:eb5d4039:7472f219:e922c176:dc38adf3:a1a6a373", "role": "CAPACITY_A3_V2_GO_VERDICT"},
+    {"path": "docs/governance/external-review-results-2026-08-18/A3-V2/METADATA.md", "sha256": "e75f6cfa:442e6e95:725b027d:1a4ecac6:411a5518:8b14ab23:b0fc16ee:1aacce17", "role": "EXTERNAL_REVIEW_METADATA"},
+    {"path": "docs/governance/external-review-results-2026-08-18/A3-V2/REVIEW-PROMPT.md", "sha256": "d11f6bf9:78e2f3f1:d083852e:3de13c95:4334333f:e606c2c2:c52e064a:44c86e8b", "role": "EXTERNAL_REVIEW_PROMPT"},
+    {"path": "docs/governance/external-review-results-2026-08-18/A3-V2/independent_capacity_solver.py.txt", "sha256": "d1352eeb:6ec15cbd:708dd821:778fc065:79e73fb9:3956d468:19eed6a4:8a9a82d3", "role": "INDEPENDENT_EXACT_ARITHMETIC_ORACLE"},
+    {"path": "docs/governance/external-review-results-2026-08-18/A3-V2/independent_capacity_solver.output.txt", "sha256": "17c720f0:f2efb4a7:d816ee02:4d24f825:b8f09231:132b3994:93697d86:f05440b4", "role": "INDEPENDENT_ORACLE_OUTPUT"}
+  ],
+  "claims": {
+    "candidate_registered": true,
+    "capacity_engineering_evidence_ready_for_transition_review": true,
+    "candidate_changes_active_freeze": false,
+    "target_blocker_cleared": false,
+    "any_blocker_cleared": false,
+    "successor_freeze_published": false,
+    "owner_signoff_on_exact_bytes_complete": false,
+    "fresh_independent_delta_review_complete": false,
+    "milestone_m0_complete": false,
+    "empirical_capacity_available": false,
+    "production_ready": false,
+    "live_order_authority": false
+  },
+  "nonclaims": [
+    "NO_BLOCKER_IS_CLEARED_BY_THIS_CANDIDATE",
+    "FREEZE_V6_REMAINS_10_ACTIVE_20_HISTORICAL",
+    "NO_EMPIRICAL_PORTFOLIO_CAPACITY_VALUE_IS_AVAILABLE",
+    "NO_PRODUCTION_OR_LIVE_ORDER_AUTHORITY",
+    "MILESTONE_M0_COMPLETE_IS_FALSE",
+    "NEE_116_REMAINS_IN_PROGRESS_AFTER_THE_PROPOSED_ROW_TRANSITION"
+  ]
+}
