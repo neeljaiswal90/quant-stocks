@@ -1,0 +1,28 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-116-CAPACITY-SOLVER-SUCCESSOR-FREEZE-CANDIDATE-V1",
+  "implementation_status": "READY_FOR_FRESH_INDEPENDENT_DELTA_REVIEW_BLOCKER_REMAINS_ACTIVE",
+  "production_status": "NO_BLOCKER_CLEARANCE_OR_PRODUCTION_AUTHORITY",
+  "artifacts": [
+    {
+      "path": "configs/governance/nee116-capacity-solver-freeze-candidate-v1.json",
+      "sha256": "698c756f:b855626f:b740812d:b023ec39:5e97e14c:94e9e9d0:56b1001a:4a3ac678"
+    },
+    {
+      "path": "docs/governance/NEE_116_CAPACITY_SOLVER_FREEZE_CANDIDATE_V1.md",
+      "sha256": "072e6215:b509c8aa:852af6aa:9eafecf6:cd1cc60a:44fc69cc:e9fcbf00:fc31e77f"
+    },
+    {
+      "path": "qme/governance/nee116_capacity_solver_freeze_candidate.py",
+      "sha256": "52efb1d4:02c9c158:5f1b1edf:daf01a6b:d7281d06:22981b90:1cf4fbba:fd895c65"
+    },
+    {
+      "path": "schemas/governance/nee116-capacity-solver-freeze-candidate-v1.schema.json",
+      "sha256": "91181bf6:ee09767b:bb249b1e:45bbe458:5e0c23ce:de4b1ba7:149e30b5:1cdf696a"
+    },
+    {
+      "path": "tests/governance/test_nee116_capacity_solver_freeze_candidate.py",
+      "sha256": "34650ab9:79606895:22c39269:9e5bf655:caacccd7:bb31461e:ed8fd4e1:8f308953"
+    }
+  ]
+}
