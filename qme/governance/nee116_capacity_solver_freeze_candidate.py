@@ -38,11 +38,11 @@ MANIFEST_PATH: Final = "configs/governance/nee116-capacity-solver-freeze-candida
 CANDIDATE_STATUS: Final = "READY_FOR_FRESH_INDEPENDENT_DELTA_REVIEW_BLOCKER_REMAINS_ACTIVE"
 TARGET_BLOCKER_CODE: Final = "NEE-116-CAPACITY-SOLVER"
 
-_CONFIG_SHA: Final = "698c756f:b855626f:b740812d:b023ec39:5e97e14c:94e9e9d0:56b1001a:4a3ac678"
-_SCHEMA_SHA: Final = "91181bf6:ee09767b:bb249b1e:45bbe458:5e0c23ce:de4b1ba7:149e30b5:1cdf696a"
-_SEMANTIC_SHA: Final = "46618f8c:8fbc5cfb:e376b958:23eeee16:7de76ae8:2b795871:a1af8322:97ef784d"
+_CONFIG_SHA: Final = "59262726:6e43de36:898726ed:692d004b:27a3c337:61aa9dea:44bfe7f4:25b45248"
+_SCHEMA_SHA: Final = "9762f4e2:d2a5eef3:e0f5eba8:f9b9e27a:1d7c56e7:c6065a0f:29bf72f3:f975fba9"
+_SEMANTIC_SHA: Final = "17eaf700:fc901d3e:6c50c478:47f3df38:7c091df8:31013f36:f327f5d4:4d345576"
 # fmt: off
-_RUNTIME_NORMALIZED_SHA: Final = "f5c4bf30:740792e6:996b4873:b8427742:4abd8590:4d056ae0:7b35643e:66b9a78e"
+_RUNTIME_NORMALIZED_SHA: Final = "d218951a:894d9f7d:a01d8f70:953274ec:4e7e3f15:bd58157c:29169c26:01eda869"
 # fmt: on
 _MAX_BYTES: Final = 2_000_000
 
@@ -159,6 +159,9 @@ _EVIDENCE_LEAVES: Final = MappingProxyType(
         "qme/quant/capacity_solver_v2.py": "6cd9d45d:6e860246:640959a1:13f679f7:bbe7cc75:f3f6c661:9ac2d7c0:c60f805c",
         "tests/quant/test_capacity_solver_v2.py": "5d5c11ae:4209a6e2:3dcb9c09:3fa6ae06:91cf5ca5:a13f76e5:51e8e830:6bb6b1d2",
         "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V2.md": "c5182854:b23b346b:d4b86cf9:afe8490a:4a96543e:42732686:7d3efa69:85de4afe",
+        "qme/quant/capacity_solver_v3.py": "189673ba:62f75f0f:63e765f3:2f10be81:5229e422:13217dd2:702a989e:2ada7e13",
+        "tests/quant/test_capacity_solver_v3.py": "46093294:00d29d59:d92e16b4:9288ce46:cc60aade:10e069d8:8ae4a3c7:95e30ca7",
+        "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md": "901eef44:99010efe:1e32fea4:ef816cb2:db6e4c40:3e89afc8:3e901d1b:ed36a3cf",
         "docs/governance/external-review-results-2026-08-18/INDEX.md": "abf94925:1fa9e270:29f4c276:4cdaca67:ea6ae9fe:8f0f5424:64419c10:dc859a80",
         "docs/governance/external-review-results-2026-08-18/A3-V2/A3-V2-VERDICT.md": "94953898:189944b8:c20ca2b7:eb5d4039:7472f219:e922c176:dc38adf3:a1a6a373",
         "docs/governance/external-review-results-2026-08-18/A3-V2/METADATA.md": "e75f6cfa:442e6e95:725b027d:1a4ecac6:411a5518:8b14ab23:b0fc16ee:1aacce17",
@@ -171,10 +174,13 @@ _EVIDENCE_LEAVES: Final = MappingProxyType(
 _MANIFEST_LEAF_PINS: Final = MappingProxyType(
     {
         CANDIDATE_PATH: _CONFIG_SHA,
-        "docs/governance/NEE_116_CAPACITY_SOLVER_FREEZE_CANDIDATE_V1.md": "072e6215:b509c8aa:852af6aa:9eafecf6:cd1cc60a:44fc69cc:e9fcbf00:fc31e77f",
+        "docs/governance/NEE_116_CAPACITY_SOLVER_FREEZE_CANDIDATE_V1.md": "be1c2894:29080d74:51ea97be:15fbbc4d:49dc0fb3:c8d9cbe6:e09f7af7:eddee912",
         "qme/governance/nee116_capacity_solver_freeze_candidate.py": "SELF_RUNTIME_RAW_HASH_FROM_MANIFEST",
         SCHEMA_PATH: _SCHEMA_SHA,
-        "tests/governance/test_nee116_capacity_solver_freeze_candidate.py": "34650ab9:79606895:22c39269:9e5bf655:caacccd7:bb31461e:ed8fd4e1:8f308953",
+        "tests/governance/test_nee116_capacity_solver_freeze_candidate.py": "a91872cd:709ed5ef:31409450:8a666592:00f19b79:fc37bfb4:e81f17f9:81c35e69",
+        "qme/quant/capacity_solver_v3.py": "189673ba:62f75f0f:63e765f3:2f10be81:5229e422:13217dd2:702a989e:2ada7e13",
+        "tests/quant/test_capacity_solver_v3.py": "46093294:00d29d59:d92e16b4:9288ce46:cc60aade:10e069d8:8ae4a3c7:95e30ca7",
+        "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md": "901eef44:99010efe:1e32fea4:ef816cb2:db6e4c40:3e89afc8:3e901d1b:ed36a3cf",
     }
 )
 
@@ -588,7 +594,13 @@ def _make_workers(
         }:
             fail("Freeze V6 candidate pre-state projection changed")
         target = document.get("target")
-        if not isinstance(target, dict) or target.get("blocker_row_verbatim") != dict(_TARGET_ROW):
+        if not isinstance(target, dict) or target != {
+            "blocker_row_verbatim": dict(_TARGET_ROW),
+            "scope": "ONE_ACTIVE_FREEZE_BLOCKER_ROW_NOT_THE_LINEAR_ISSUE",
+            "resolution_basis": "CAPACITY_SOLVER_V3_FAIL_CLOSED_PARAMETER_VALIDATION_OVER_IMMUTABLE_V2_EXACT_FRACTION_FEASIBILITY_PENDING_FRESH_EXTERNAL_REVIEW",
+            "linear_issue_nee116_remains_in_progress_after_transition": True,
+            "transition_performed_by_this_candidate": False,
+        }:
             fail("target blocker row changed")
         transition = document.get("proposed_transition")
         if not isinstance(transition, dict) or transition != {
@@ -646,6 +658,44 @@ def _make_workers(
             or capacity.get("merge_sha") != "43a84301:f01a1f3f:7a9ee634:ebe22bbd:97cb2b7d"
         ):
             fail("owner capacity correction semantics changed")
+        capacity_evidence = document.get("capacity_evidence")
+        if capacity_evidence != {
+            "implementation_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V3",
+            "economic_method_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1",
+            "v1_status": "SUPERSEDED_DEFECTIVE_CANDIDATE_NOT_ACCEPTED",
+            "v2_status": "SUPERSEDED_FAIL_CLOSED_PARAMETER_DOMAIN_DEFECT_PRESERVED",
+            "prior_a3_v2_external_review_disposition": "GO_SUPERSEDED_BY_PR58_DELTA_REVIEW",
+            "fresh_external_review_disposition": "PENDING_AFTER_V3_REMEDIATION",
+            "pr58_delta_review": {
+                "disposition": "NO_GO",
+                "reviewed_head": "b4cd248e:1c23fef6:e66e0528:bf213685:e102a63d",
+                "reviewed_tree": "5452bcd0:3eb07b88:62295302:45853bb2:bb2416f",
+                "p0_count": 0,
+                "p1_count": 1,
+                "p2_count": 0,
+                "linear_comment_id": "89409042-cace-4484-81fd-13fd3eea6552",
+                "finding": "INVALID_NON_GRID_PARAMETERS_REACHED_BOUND_COMPUTATION_AND_RETURNED_MALFORMED_UNAVAILABLE_CERTIFICATES",
+                "required_remediation": "VALIDATE_ALL_PARAMETER_DOMAINS_BEFORE_BOUND_COMPUTATION_ADD_REGRESSIONS_REPIN_AND_REREVIEW",
+            },
+            "capacity_v2_protected_ci": {
+                "pr": 47,
+                "merge_commit": "43a84301:f01a1f3f:7a9ee634:ebe22bbd:97cb2b7d",
+                "event": "push",
+                "run_id": 32082483326,
+                "job_id": 95548013999,
+                "conclusion": "success",
+            },
+            "external_review_publication_ci": {
+                "pr": 50,
+                "merge_commit": "e64307d3:d0105da4:eb121c5e:a0224d86:ae8bfb29",
+                "event": "push",
+                "run_id": 32177250528,
+                "job_id": 95841911960,
+                "conclusion": "success",
+            },
+            "evidence_scope": "ENGINEERING_CONFORMANCE_ONLY_NO_EMPIRICAL_CAPACITY_VALUE",
+        }:
+            fail("capacity evidence projection changed")
         verdict = read(
             "docs/governance/external-review-results-2026-08-18/A3-V2/A3-V2-VERDICT.md",
             root,

@@ -311,7 +311,7 @@ def test_private_worker_closure_has_no_authoritative_module_global_lookups() -> 
     "relative",
     [
         "configs/governance/specification-freeze-policy-v6.json",
-        "qme/quant/capacity_solver_v2.py",
+        "qme/quant/capacity_solver_v3.py",
         "docs/governance/external-review-results-2026-08-18/A3-V2/A3-V2-VERDICT.md",
     ],
 )
@@ -365,7 +365,15 @@ def test_candidate_config_schema_manifest_full_local_repin_rejects(tmp_path: Pat
         candidate.verify_nee116_capacity_solver_freeze_candidate(root)
 
 
-@pytest.mark.parametrize("relative", [DOC.as_posix(), TEST.as_posix()])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        DOC.as_posix(),
+        TEST.as_posix(),
+        "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md",
+        "tests/quant/test_capacity_solver_v3.py",
+    ],
+)
 def test_manifest_nonruntime_leaf_full_local_repin_rejects(tmp_path: Path, relative: str) -> None:
     root = _copy_root(tmp_path)
     with (root / relative).open("ab") as handle:
@@ -401,7 +409,7 @@ def test_manifest_duplicate_and_unsafe_paths_reject(tmp_path: Path) -> None:
 
 def test_hardlinked_evidence_rejects(tmp_path: Path) -> None:
     root = _copy_root(tmp_path)
-    relative = "qme/quant/capacity_solver_v2.py"
+    relative = "qme/quant/capacity_solver_v3.py"
     target = root / relative
     payload = target.read_bytes()
     target.unlink()
@@ -417,7 +425,7 @@ def test_hardlinked_evidence_rejects(tmp_path: Path) -> None:
 
 def test_symlinked_evidence_rejects(tmp_path: Path) -> None:
     root = _copy_root(tmp_path)
-    relative = "qme/quant/capacity_solver_v2.py"
+    relative = "qme/quant/capacity_solver_v3.py"
     target = root / relative
     external = tmp_path / "external-capacity.py"
     external.write_bytes(target.read_bytes())

@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_FRESH_INDEPENDENT_DELTA_REVIEW_BLOCKER_REMAINS_ACTIVE`
 
-This six-file packet proposes one future Freeze V7 transition. It does not
+This nine-file packet proposes one future Freeze V7 transition. It does not
 publish Freeze V7, clear a blocker, complete M0, make an empirical portfolio
 capacity claim, authorize production, or grant live-order authority.
 
@@ -71,7 +71,7 @@ remain active.
 ## Engineering-evidence basis
 
 The proposed resolution is narrowly
-`CAPACITY_SOLVER_V2_EXACT_FRACTION_FEASIBILITY_WITH_OWNER_IMPLEMENTATION_CORRECTION_PROTECTED_CI_AND_FORMAL_EXTERNAL_REVIEW_A3_V2`.
+`CAPACITY_SOLVER_V3_FAIL_CLOSED_PARAMETER_VALIDATION_OVER_IMMUTABLE_V2_EXACT_FRACTION_FEASIBILITY_PENDING_FRESH_EXTERNAL_REVIEW`.
 
 The packet rehashes and validates:
 
@@ -80,7 +80,8 @@ The packet rehashes and validates:
   `SUPERSEDED_DEFECTIVE_CANDIDATE_NOT_ACCEPTED` and registers
   `QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V2`;
 - the byte-unchanged V1 module and documentation;
-- the exact-fraction V2 module, deterministic tests, and contract;
+- the immutable exact-fraction V2 module, deterministic tests, and contract;
+- the V3 fail-closed successor, parameter-domain regressions, and contract;
 - the A3-V2 independent review prompt, metadata, verdict, exact-arithmetic
   oracle, output, and publication index.
 
@@ -92,10 +93,23 @@ published by PR 50 at merge
 `32177250528`, job `95841911960`, succeeded.
 
 The A3-V2 reviewer independently recomputed exact-fraction feasibility and
-returned GO with no P0 or P1 findings. That evidence establishes the registered
-engineering mechanism only. It does not establish an empirical portfolio
-capacity value, market-impact calibration, performance, production readiness,
-or order authority.
+returned GO, but the later PR 58 delta review found one P1: V2 could compute a
+bound and return a malformed unavailable certificate before validating invalid
+non-grid parameters. That NO_GO is recorded on NEE-116 as comment
+`89409042-cace-4484-81fd-13fd3eea6552` and supersedes the earlier review for
+transition purposes.
+
+V2 is protected and remains byte-unchanged. V3 validates bps, cash buffer,
+participation, and order quantum before bound computation, validates the grid
+before scan, and raises the existing `CapacitySolverV2Error` for every invalid
+domain. Its regressions reproduce all four reported failures and prove the V2
+scan is never entered. Valid V3 results match V2 exactly apart from the new
+implementation identity. Fresh independent review of these replacement bytes
+is still pending; the candidate is not accepted until that review and owner
+exact-byte signoff are both recorded.
+
+None of this establishes an empirical portfolio capacity value, market-impact
+calibration, performance, production readiness, or order authority.
 
 ## Fail-closed verifier
 
@@ -110,7 +124,8 @@ private standard-library dependencies for authoritative replay. It:
 - independently pins and rehashes every Freeze V6 and capacity-evidence leaf;
 - compares the exact ten Freeze V6 rows, the 10→9 / 20→21 arithmetic, and the
   retained order;
-- checks correction and A3-V2 verdict semantics after the byte replay;
+- checks correction, prior A3-V2, PR 58 NO_GO, and V3-remediation semantics
+  after the byte replay;
 - returns an opaque result whose serializer independently reopens the
   repository, compares private state, and emits only fresh artifact-derived
   fields;

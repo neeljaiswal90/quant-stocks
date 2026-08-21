@@ -10,7 +10,7 @@
     "candidate_id": "NEE-116-CAPACITY-SOLVER-SUCCESSOR-FREEZE-CANDIDATE-V1",
     "candidate_kind": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
     "status": "READY_FOR_FRESH_INDEPENDENT_DELTA_REVIEW_BLOCKER_REMAINS_ACTIVE",
-    "semantic_sha256": "46618f8c:8fbc5cfb:e376b958:23eeee16:7de76ae8:2b795871:a1af8322:97ef784d",
+    "semantic_sha256": "17eaf700:fc901d3e:6c50c478:47f3df38:7c091df8:31013f36:f327f5d4:4d345576",
     "authority": {
       "approval_owner": "neeljaiswal90",
       "candidate_date": "2026-08-20",
@@ -73,7 +73,7 @@
         "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."
       },
       "scope": "ONE_ACTIVE_FREEZE_BLOCKER_ROW_NOT_THE_LINEAR_ISSUE",
-      "resolution_basis": "CAPACITY_SOLVER_V2_EXACT_FRACTION_FEASIBILITY_WITH_OWNER_IMPLEMENTATION_CORRECTION_PROTECTED_CI_AND_FORMAL_EXTERNAL_REVIEW_A3_V2",
+      "resolution_basis": "CAPACITY_SOLVER_V3_FAIL_CLOSED_PARAMETER_VALIDATION_OVER_IMMUTABLE_V2_EXACT_FRACTION_FEASIBILITY_PENDING_FRESH_EXTERNAL_REVIEW",
       "linear_issue_nee116_remains_in_progress_after_transition": true,
       "transition_performed_by_this_candidate": false
     },
@@ -108,14 +108,23 @@
       "empirical_capacity_available_after_transition": false
     },
     "capacity_evidence": {
-      "implementation_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V2",
+      "implementation_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-IMPLEMENTATION-V3",
       "economic_method_id": "QME-NEE116-GREATEST-CAPITAL-EXHAUSTIVE-SCAN-V1",
       "v1_status": "SUPERSEDED_DEFECTIVE_CANDIDATE_NOT_ACCEPTED",
-      "external_review_disposition": "GO",
-      "external_review_p0_count": 0,
-      "external_review_p1_count": 0,
-      "external_review_reviewed_commit": "4848a7f8:99624288:ad0d34ef:3bce4707:0de0e1f5",
-      "external_review_reviewed_tree": "d911bf58:3c748aac:9aba76bb:5c69045a:08f17564",
+      "v2_status": "SUPERSEDED_FAIL_CLOSED_PARAMETER_DOMAIN_DEFECT_PRESERVED",
+      "prior_a3_v2_external_review_disposition": "GO_SUPERSEDED_BY_PR58_DELTA_REVIEW",
+      "fresh_external_review_disposition": "PENDING_AFTER_V3_REMEDIATION",
+      "pr58_delta_review": {
+        "disposition": "NO_GO",
+        "reviewed_head": "b4cd248e:1c23fef6:e66e0528:bf213685:e102a63d",
+        "reviewed_tree": "5452bcd0:3eb07b88:62295302:45853bb2:bb2416f",
+        "p0_count": 0,
+        "p1_count": 1,
+        "p2_count": 0,
+        "linear_comment_id": "89409042-cace-4484-81fd-13fd3eea6552",
+        "finding": "INVALID_NON_GRID_PARAMETERS_REACHED_BOUND_COMPUTATION_AND_RETURNED_MALFORMED_UNAVAILABLE_CERTIFICATES",
+        "required_remediation": "VALIDATE_ALL_PARAMETER_DOMAINS_BEFORE_BOUND_COMPUTATION_ADD_REGRESSIONS_REPIN_AND_REREVIEW"
+      },
       "capacity_v2_protected_ci": {
         "pr": 47,
         "merge_commit": "43a84301:f01a1f3f:7a9ee634:ebe22bbd:97cb2b7d",
@@ -163,17 +172,32 @@
       {
         "path": "qme/quant/capacity_solver_v2.py",
         "sha256": "6cd9d45d:6e860246:640959a1:13f679f7:bbe7cc75:f3f6c661:9ac2d7c0:c60f805c",
-        "role": "AUTHORITATIVE_V2_IMPLEMENTATION"
+        "role": "IMMUTABLE_SUPERSEDED_V2_IMPLEMENTATION"
       },
       {
         "path": "tests/quant/test_capacity_solver_v2.py",
         "sha256": "5d5c11ae:4209a6e2:3dcb9c09:3fa6ae06:91cf5ca5:a13f76e5:51e8e830:6bb6b1d2",
-        "role": "V2_DETERMINISTIC_TESTS"
+        "role": "IMMUTABLE_V2_DETERMINISTIC_TESTS"
       },
       {
         "path": "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V2.md",
         "sha256": "c5182854:b23b346b:d4b86cf9:afe8490a:4a96543e:42732686:7d3efa69:85de4afe",
-        "role": "V2_IMPLEMENTATION_CONTRACT"
+        "role": "IMMUTABLE_V2_IMPLEMENTATION_CONTRACT"
+      },
+      {
+        "path": "qme/quant/capacity_solver_v3.py",
+        "sha256": "189673ba:62f75f0f:63e765f3:2f10be81:5229e422:13217dd2:702a989e:2ada7e13",
+        "role": "AUTHORITATIVE_V3_FAIL_CLOSED_IMPLEMENTATION"
+      },
+      {
+        "path": "tests/quant/test_capacity_solver_v3.py",
+        "sha256": "46093294:00d29d59:d92e16b4:9288ce46:cc60aade:10e069d8:8ae4a3c7:95e30ca7",
+        "role": "V3_PARAMETER_DOMAIN_REGRESSION_TESTS"
+      },
+      {
+        "path": "docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md",
+        "sha256": "901eef44:99010efe:1e32fea4:ef816cb2:db6e4c40:3e89afc8:3e901d1b:ed36a3cf",
+        "role": "V3_FAIL_CLOSED_CORRECTION_CONTRACT"
       },
       {
         "path": "docs/governance/external-review-results-2026-08-18/INDEX.md",
