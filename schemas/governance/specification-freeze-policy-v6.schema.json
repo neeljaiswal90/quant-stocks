@@ -1,0 +1,722 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/specification-freeze-policy-v6.schema.json",
+  "title": "QME specification freeze policy V6",
+  "description": "Exact reviewed 10-blocker policy instance with one bounded two-row effective-trials engineering-evidence transition.",
+  "const": {
+    "$schema": "../../schemas/governance/specification-freeze-policy-v6.schema.json",
+    "schema_version": "qme.specification_freeze_policy.v6",
+    "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V6",
+    "ticket_id": "NEE-110",
+    "policy_status": "BLOCKED_10_ACTIVE_GOVERNANCE_EVIDENCE_AND_ENGINEERING",
+    "canonicalization": "qme.foundation.canonical_json.v1",
+    "supersedes": {
+      "policy_path": "configs/governance/specification-freeze-policy-v5.json",
+      "policy_sha256": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840",
+      "schema_path": "schemas/governance/specification-freeze-policy-v5.schema.json",
+      "schema_sha256": "e30a678e:90e4a98e:39366d5d:0ad580c5:738cd7fa:c86707a3:a1da07db:118643fd",
+      "manifest_path": "configs/governance/specification-freeze-v5.hashes.json",
+      "manifest_sha256": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548",
+      "export_path": "configs/governance/specification-freeze-export-v4.json",
+      "export_sha256": "de559315:30491c9f:a3a3a7de:81f7dcc2:302c2333:f6976091:101adc13:2e18b2be",
+      "export_schema_path": "schemas/governance/specification-freeze-export-v4.schema.json",
+      "export_schema_sha256": "6cc775fc:d320a37e:a5890e55:d8c812fe:efc361b1:cd9bccba:bdcade21:5628fb81",
+      "runtime_path": "qme/governance/specification_freeze_v5.py",
+      "runtime_sha256": "61c3012e:07b4cf80:042074c6:baafea66:0ab1ea49:03e2d8c8:d67fd9f7:6cc0f2cf",
+      "tests_path": "tests/governance/test_specification_freeze_v5.py",
+      "tests_sha256": "bac4be57:f5a7424d:598a8efd:33875225:780a7ea7:989b41f6:f5ac67b5:7cc87dba",
+      "documentation_path": "docs/governance/SPECIFICATION_FREEZE_V5.md",
+      "documentation_sha256": "00e6c3c8:cc95644f:3b16d511:59f44a53:1a7e74f0:a8406aff:47be293a:65bf8c6c",
+      "policy_semantic_sha256": "85f0e7d9:62992601:2a44217c:bf8133ca:2169855d:db1a0296:6a908ef5:9a650ef3",
+      "export_derived_evidence_sha256": "13b09b7e:b93df675:c7455695:fd7503f8:63ce96ce:1993e30e:e23c8545:94c77001",
+      "mutation_rule": "NEW_VERSION_NO_OVERWRITE"
+    },
+    "operational_bundle": {
+      "bundle_id": "NEE-172-OPERATIONAL-V2-BUNDLE-V1",
+      "path": "configs/governance/nee-172-operational-v2-bundle-v1.json",
+      "sha256": "b133cb3d:a54fe242:816c77ec:93f7903b:f8672bb8:013c6504:b6ddb305:6646da1e",
+      "manifest_path": "configs/governance/nee-172-operational-v2-bundle-v1.hashes.json",
+      "manifest_sha256": "00d014d6:3f409378:a1b4c7f9:95caf9b7:cb81e7be:48ba40f1:a5c85f6a:496d78df",
+      "status": "VERIFIED_ATOMIC_SELECTION_ACTIVE_BLOCKERS_REMAIN"
+    },
+    "accepted_integrity_evidence": {
+      "scope": "OPERATIONAL_V2_CONTRACT_PUBLICATION_ONLY",
+      "commit_sha": "76a90397:384b6628:c7f2abfd:3a5687fa:bf5f8980",
+      "tree_sha": "a5517390:bb132f1f:cf9e1141:662dbe81:a96595ec",
+      "committer_utc": "2026-08-13T17:58:05Z",
+      "ci_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31728362582",
+      "ci_job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31728362582/job/94542312017",
+      "conclusion": "success",
+      "resolves_blocker": false,
+      "is_final_freeze_receipt": false
+    },
+    "accepted_access_chain_evidence": {
+      "scope": "CONTENT_ADDRESSED_ACCESS_CHAIN_ENGINEERING_IMPLEMENTATION_ONLY",
+      "source_ticket_id": "NEE-176",
+      "target_ticket_id": "NEE-122",
+      "resolved_blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+      "pull_request": {
+        "number": 20,
+        "url": "https://github.com/neeljaiswal90/quant-stocks/pull/20",
+        "protected_main_commit": "5f060fe3:86317849:6b3ba669:df35bd9c:20f25f7f",
+        "protected_main_tree": "ec1eda17:2ec14f26:3ad477ce:012996d8:ae405223",
+        "protected_main_committer_at": "2026-08-13T21:18:07-07:00",
+        "checks": [
+          {
+            "workflow": "qme-ci",
+            "workflow_path": ".github/workflows/ci.yml",
+            "workflow_sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
+            "event": "push",
+            "run_id": 31769444837,
+            "run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31769444837",
+            "run_status": "completed",
+            "run_conclusion": "success",
+            "job_id": 94672118781,
+            "job_name": "foundation",
+            "job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31769444837/job/94672118781",
+            "job_status": "completed",
+            "job_conclusion": "success",
+            "tested_commit": "5f060fe3:86317849:6b3ba669:df35bd9c:20f25f7f"
+          },
+          {
+            "workflow": "Sample-access-chain Linux replay",
+            "workflow_path": ".github/workflows/sample-access-chain-linux.yml",
+            "workflow_sha256": "0691c1ac:da5a9d4b:d66979d3:7b65c01d:d50eb47f:a16d2f34:1649d578:5e5e815c",
+            "event": "push",
+            "run_id": 31769444805,
+            "run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31769444805",
+            "run_status": "completed",
+            "run_conclusion": "success",
+            "job_id": 94672118808,
+            "job_name": "deterministic-replay",
+            "job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/31769444805/job/94672118808",
+            "job_status": "completed",
+            "job_conclusion": "success",
+            "tested_commit": "5f060fe3:86317849:6b3ba669:df35bd9c:20f25f7f"
+          }
+        ]
+      },
+      "acceptance_decision": {
+        "source_system": "LINEAR",
+        "source_issue_id": "NEE-176",
+        "source_comment_id": "930f091d-b21f-4ea1-b308-15aec70c16b3",
+        "source_created_at": "2026-08-14T04:32:03.585Z",
+        "source_updated_at": "2026-08-14T04:32:03.540Z",
+        "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+        "source_author_name": "Neel Jaiswal",
+        "source_body_bytes": 3394,
+        "source_body_sha256": "85af795b:4eccdd7e:6aa5f0ad:bd5fbec2:705ee7b4:e6832174:150bc0dd:3d7eb3ff",
+        "source_body_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+        "decision": "ACCEPT_BOUNDED_CONTENT_ADDRESSED_ACCESS_CHAIN_ENGINEERING_EVIDENCE",
+        "disposition": "PRODUCTION_SCALE_IMPLEMENTATION_EVIDENCE_ONLY_SYNTHETIC_KAT",
+        "interpretation": "RESOLVE_ENGINEERING_IMPLEMENTATION_BLOCKER_WITHOUT_PRODUCTION_ACCESS_DATA_CLAIM",
+        "scope_expansion_authorized": false
+      },
+      "independent_review": {
+        "reviewer_identity": "repo_readiness_redteam",
+        "scope": "FROZEN_BYTES_AND_DEPENDENCY_ISOLATION",
+        "result": "GO",
+        "p0_count": 0,
+        "p1_count": 0
+      },
+      "candidate": {
+        "evidence_id": "NEE-176-SAMPLE-ACCESS-CHAIN-V2-EVIDENCE",
+        "status": "BOUNDED_ACCESS_CHAIN_IMPLEMENTATION_CANDIDATE",
+        "config_path": "configs/governance/sample-access-chain-v2-evidence.json",
+        "config_sha256": "cbd198f1:46daf12d:1edbdb3d:238a06a2:954e6d13:32df45f9:de9c0fb2:3ca849c7",
+        "semantic_sha256": "32926f47:94ac0650:b625eadc:80caea5d:7fedcd16:3ac32955:a366233d:d2aa2c70",
+        "schema_path": "schemas/governance/sample-access-chain-v2-evidence.schema.json",
+        "schema_sha256": "e66aae44:520ceee9:05888604:afe6200d:62c1b005:800eb0b6:46d45c6c:a4898a84",
+        "manifest_path": "configs/governance/sample-access-chain-v2.hashes.json",
+        "manifest_sha256": "b505a253:439a701b:e21de17c:982db041:6cbe338b:52246a03:b0843df3:9e11520b",
+        "fixture_path": "tests/fixtures/governance/sample-access-chain-v2-known-answer.json",
+        "fixture_sha256": "2cd2cb4a:a850e8d2:013fa5be:9b93d562:58acce14:1dc9366d:70c094cc:f86b9669",
+        "runtime_path": "qme/governance/sample_access_chain_v2.py",
+        "runtime_sha256": "ba9b577b:b7f5acab:94efd19c:0da2ce6e:1fcf405b:9be6c306:80b464e5:5f4ea8cc",
+        "workflow_path": ".github/workflows/sample-access-chain-linux.yml",
+        "workflow_sha256": "0691c1ac:da5a9d4b:d66979d3:7b65c01d:d50eb47f:a16d2f34:1649d578:5e5e815c",
+        "native_verifier": "qme.governance.sample_access_chain_v2.verify_sample_access_chain_v2",
+        "manifest_verifier": "qme.governance.sample_access_chain_v2.verify_sample_access_chain_v2_manifest"
+      },
+      "verifier_runtime": {
+        "canonicalizer": {
+          "source_path": "qme/foundation/lineage.py",
+          "source_sha256": "edb64ebb:1edcdb31:c4e4620c:c90dca99:489e98d3:1f224872:81754cce:05439de6",
+          "callable_semantics": "JSON_DUMPS_ENSURE_ASCII_FALSE_ALLOW_NAN_FALSE_SORT_KEYS_TRUE_COMPACT_SEPARATORS_UTF8_PLUS_LF",
+          "execution_rule": "PRIVATE_FROZEN_EQUIVALENT_NO_AMBIENT_QME_FOUNDATION_IMPORT"
+        },
+        "protected_verifiers": [
+          {
+            "source_path": "qme/governance/specification_freeze_v3.py",
+            "source_sha256": "d678778e:04b1ee77:f39b26f2:596931f5:70eb3704:46d3be6d:b5c52855:3210a7f7",
+            "private_module_name": "_qme_nee176_specification_freeze_v3",
+            "execution_rule": "STRICT_UTF8_VERIFIED_CAPTURED_BYTES_DIRECT_PRIVATE_EXEC_GUARDED_EXACT_IMPORTS_NO_AMBIENT_MODULE_CACHE"
+          },
+          {
+            "source_path": "qme/governance/sample_access_chain_v2.py",
+            "source_sha256": "ba9b577b:b7f5acab:94efd19c:0da2ce6e:1fcf405b:9be6c306:80b464e5:5f4ea8cc",
+            "private_module_name": "_qme_nee176_sample_access_chain_v2",
+            "execution_rule": "STRICT_UTF8_VERIFIED_CAPTURED_BYTES_DIRECT_PRIVATE_EXEC_NO_AMBIENT_MODULE_CACHE"
+          }
+        ]
+      },
+      "known_answer": {
+        "synthetic_only": true,
+        "event_count": 10000,
+        "extension_prefix_event_count": 9000,
+        "extension_suffix_event_count": 1000,
+        "export_sha256": "219ce5fa:ce6b6482:ac7637c0:ad94af32:7519b101:74b05542:761528e1:9938319e",
+        "ordered_index_sha256": "a7eab06d:cfa743d3:3bb4ac66:47a93fb8:175a3319:6b84a301:7bd1eb1e:74865b3c",
+        "merkle_root": "1d12b993:a4f2abd5:f6c04dd2:ed1985e9:d0b5592d:85e81e66:51c0ea33:104f6e77",
+        "head_event_hash": "727a94a7:2408b585:8153bc0d:09a34ace:4115d0d0:8cf3c0a5:d0927f54:cc5f580e",
+        "serialized_export_bytes": 16989691,
+        "maximum_serialized_event_bytes": 1342,
+        "proof_sequences": [
+          1,
+          2,
+          3,
+          5000,
+          9999,
+          10000
+        ],
+        "windows_linux_byte_replay_verified": true,
+        "production_scale_claim": false
+      },
+      "resolution": {
+        "resolution_type": "BOUNDED_ENGINEERING_EVIDENCE_ACCEPTANCE",
+        "disposition": "PRODUCTION_SCALE_IMPLEMENTATION_EVIDENCE_ONLY_SYNTHETIC_KAT",
+        "original_v3_blocker_row": {
+          "blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+          "ticket_id": "NEE-122",
+          "category": "ENGINEERING_EVIDENCE",
+          "description": "A production-scale content-addressed access-chain export and inclusion proof remain unavailable."
+        },
+        "removes_exactly_one_blocker": true,
+        "production_access_event_corpus_available": false,
+        "production_sample_access_evidence_available": false,
+        "prospective_observations_consumable": false,
+        "production_specification_accepted": false,
+        "milestone_m0_complete": false,
+        "production_ready": false,
+        "empirical_performance_available": false,
+        "alpha_proven": false,
+        "is_final_freeze_receipt": false
+      }
+    },
+    "accepted_inference_evidence": {
+      "scope": "INFERENCE_EXECUTABLE_CONFORMANCE_EVIDENCE_ONLY_NO_EMPIRICAL_PERFORMANCE_CLAIM",
+      "source_ticket_id": "NEE-120",
+      "target_ticket_id": "NEE-120",
+      "resolved_blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+      "original_v4_blocker_row": {
+        "blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-120",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."
+      },
+      "transition_kind": "ONE_BLOCKER_TRANSITION_VIA_CANDIDATE_DELTA_REVIEW_OWNER_SIGNOFF_RECEIPT",
+      "candidate": {
+        "candidate_id": "NEE-120-INFERENCE-EVIDENCE-SUCCESSOR-FREEZE-CANDIDATE-V1",
+        "candidate_kind": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
+        "config_path": "configs/governance/nee120-successor-freeze-candidate-v1.json",
+        "config_sha256": "e756a44e:e27eb0a0:c047535f:eddb83cb:2394b7ba:156ccdb9:eba8341d:83cb308b",
+        "semantic_sha256": "931975d5:3d6a6b10:bf84e15d:18acaabd:cee7b9b3:cb30ecc8:80c0b713:38ecaedf",
+        "schema_path": "schemas/governance/nee120-successor-freeze-candidate-v1.schema.json",
+        "schema_sha256": "ab1dfb50:49ead027:0d1a17c0:e93d8c03:d35859cc:fca328aa:16a2b70e:f06783b6",
+        "manifest_path": "configs/governance/nee120-successor-freeze-candidate-v1.hashes.json",
+        "manifest_sha256": "a663d4cd:39719319:655e4615:4d3f6c6f:220e0f37:834943fd:089f1b1a:7758a8cf",
+        "runtime_path": "qme/governance/nee120_successor_freeze_candidate.py",
+        "runtime_sha256": "94c6a5dd:25da0208:f10a398d:66fefe7f:b5209a10:d5b76ed0:686ea2e9:1e09b635",
+        "tests_path": "tests/governance/test_nee120_successor_freeze_candidate.py",
+        "tests_sha256": "e2dc9b56:3b4d47f9:fe4e10d9:71d0d7ba:456db318:a7eeda68:f53df47b:c9b83125",
+        "doc_path": "docs/governance/NEE_120_SUCCESSOR_FREEZE_CANDIDATE_V1.md",
+        "doc_sha256": "d7c75ed5:5f5bad91:da63a2a6:fca0d1c8:16bbc626:9cc5f872:cbae0036:0a51755a",
+        "native_verifier": "qme.governance.nee120_successor_freeze_candidate.verify_nee120_successor_freeze_candidate",
+        "manifest_verifier": "qme.governance.nee120_successor_freeze_candidate.verify_nee120_successor_freeze_candidate_manifest",
+        "candidate_pre_state_freeze": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V4",
+        "candidate_pre_state_freeze_sha256": "adf2288b:32532669:cdd7fa9d:4876132b:222916d2:c754f006:6003a6cd:1a4fb458"
+      },
+      "candidate_pull_request": {
+        "number": 52,
+        "url": "https://github.com/neeljaiswal90/quant-stocks/pull/52",
+        "head_commit": "c8200bc9:2609be93:65817753:d49a8f65:1b67de83",
+        "head_tree": "8377ed86:b67da2f0:5b237205:075baaec:9e3b59d7",
+        "protected_main_commit": "6b4c7059:c6241ae7:eccc570d:df9f4fe1:e0077857",
+        "protected_main_tree": "8377ed86:b67da2f0:5b237205:075baaec:9e3b59d7",
+        "protected_main_committer_at": "2026-08-18T20:24:39-07:00",
+        "checks": [
+          {
+            "workflow": "qme-ci",
+            "workflow_path": ".github/workflows/ci.yml",
+            "workflow_sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
+            "event": "push",
+            "run_id": 32212043580,
+            "run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/32212043580",
+            "run_status": "completed",
+            "run_conclusion": "success",
+            "tested_commit": "6b4c7059:c6241ae7:eccc570d:df9f4fe1:e0077857"
+          }
+        ]
+      },
+      "artifact_external_review": {
+        "binding": "VIA_CANDIDATE_LINEAGE_A1_AND_A2_V2_ONLY",
+        "reviewer_provider": "xAI",
+        "reviewer_model": "Grok Build",
+        "reviewer_exact_revision": "UNAVAILABLE_NOT_EXPOSED_BY_PROVIDER",
+        "a1_verdict_sha256": "ca1177b9:4a05a2ea:bbf48c20:60f68eb2:918777dd:f4a6e3ef:e01e9518:503b5aa1",
+        "a2_v2_verdict_sha256": "ec9a1c44:a886e530:a1a4ca27:525d7fdd:e6238280:c1d60246:f3d0c9d1:631e034f",
+        "index_sha256": "abf94925:1fa9e270:29f4c276:4cdaca67:ea6ae9fe:8f0f5424:64419c10:dc859a80",
+        "published_by_protected_main_commit": "e64307d3:d0105da4:eb121c5e:a0224d86:ae8bfb29",
+        "identity_disposition": "OWNER_EXTERNAL_REVIEW_IDENTITY_DISPOSITION_2026-08-18",
+        "identity_disposition_comment_body_sha256": "6a644f83:87960e3d:d2dfb211:2c661aac:8ab02798:61dfbc65:8b3eb32c:b48bd9bb"
+      },
+      "candidate_delta_review": {
+        "kind": "FRESH_NON_CLAUDE_CANDIDATE_DELTA_REVIEW_NOT_A2_V2_REUSE",
+        "reviewer_provider": "xAI",
+        "reviewer_model": "Grok Build",
+        "reviewer_exact_revision": "UNAVAILABLE_NOT_EXPOSED_BY_PROVIDER",
+        "reviewed_head_commit": "c8200bc9:2609be93:65817753:d49a8f65:1b67de83",
+        "reviewed_tree": "8377ed86:b67da2f0:5b237205:075baaec:9e3b59d7",
+        "published_verdict_source": "GITHUB_PR_COMMENT",
+        "published_verdict_comment_id": "5337072390",
+        "published_verdict_comment_created_at": "2026-08-19T03:17:25Z",
+        "published_verdict_comment_author": "neeljaiswal90",
+        "verdict_path": "docs/governance/blocker-transition-receipts/nee120-inference-evidence/DELTA-REVIEW-VERDICT.md",
+        "verdict_sha256": "86d02dff:3620e34e:1b494f5a:977199aa:af8c3b60:fbfd8804:af6d239e:0b91cdcf",
+        "verdict_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+        "verdict_bytes_are_the_published_comment_body": true,
+        "reviewer_cited_verdict_file_sha256": "f4fef3ae:51e71bf7:5de804ff:a31104d6:2078c617:8f238a02:126af5b3:5bd5a9db",
+        "reviewer_cited_verdict_file_bytes": 8544,
+        "reviewer_cited_metadata_file_sha256": "074d2506:3aac9c68:045fb96e:c86a1c02:af5542e5:d5c8ad1f:80c96c68:86e390c2",
+        "reviewer_cited_metadata_file_bytes": 2279,
+        "reviewer_cited_files_recovered": false,
+        "reviewer_cited_files_disposition": "CITED_IN_PUBLISHED_VERDICT_NOT_RECOVERED_NOT_RECONSTRUCTED_NOT_BOUND",
+        "metadata_source": "REVIEWER_IDENTITY_HEAD_TREE_AND_TIMESTAMP_EMBEDDED_IN_PUBLISHED_VERDICT_COMMENT",
+        "prompt_path": "docs/governance/blocker-transition-receipts/nee120-inference-evidence/DELTA-REVIEW-PROMPT.md",
+        "prompt_sha256": "ae8d2e2e:a90d2d6c:843041b5:7bdc40c7:c8024c28:e429f436:50d40140:5ebd1340",
+        "prompt_binding_meaning": "PROMPT_AS_SUPPLIED_BY_LEAD_REVIEWER_DID_NOT_PUBLISH_A_PROMPT_HASH",
+        "disposition": "GO",
+        "p0_count": 0,
+        "p1_count": 0,
+        "reviewer_timestamp_utc": "2026-08-19T03:15:10Z",
+        "confirmed": [
+          "candidate binds the correct evidence",
+          "candidate removes nothing now",
+          "proposed transition removes exactly one blocker",
+          "no other row or claim changes",
+          "NEE-122 is not falsely resolved",
+          "M0 remains false",
+          "receipt remains mandatory"
+        ]
+      },
+      "owner_exact_byte_signoff": {
+        "source_system": "GITHUB_PR_COMMENT",
+        "source_comment_id": "5337128493",
+        "source_created_at": "2026-08-19T03:25:12Z",
+        "source_author": "neeljaiswal90",
+        "signed_head_commit": "c8200bc9:2609be93:65817753:d49a8f65:1b67de83",
+        "signed_tree": "8377ed86:b67da2f0:5b237205:075baaec:9e3b59d7",
+        "statement_path": "docs/governance/blocker-transition-receipts/nee120-inference-evidence/OWNER-SIGNOFF.md",
+        "statement_sha256": "f473e34d:548d8bdc:dc42d031:80986680:b92bf07f:38027dd8:1782317a:a266eb0d",
+        "statement_body_sha256": "f473e34d:548d8bdc:dc42d031:80986680:b92bf07f:38027dd8:1782317a:a266eb0d",
+        "statement_hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+        "approves_transition_of_only": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+        "does_not_itself": [
+          "clear the target blocker",
+          "clear any Freeze V4 blocker",
+          "publish the successor freeze",
+          "publish the receipt",
+          "complete NEE-120",
+          "resolve NEE-122 or NEE-204",
+          "complete M0",
+          "establish empirical performance",
+          "establish production capacity or readiness",
+          "authorize live orders"
+        ]
+      },
+      "receipt": {
+        "receipt_id": "NEE-120-INFERENCE-EVIDENCE-BLOCKER-TRANSITION-RECEIPT-V1",
+        "receipt_created_utc": "2026-08-19T06:25:43Z",
+        "receipt_branch": "claude/qme-inference-evidence-receipt",
+        "receipt_path": "docs/governance/blocker-transition-receipts/nee120-inference-evidence/RECEIPT.md",
+        "receipt_sha256": "6345626d:a988b563:851c173d:9c93f48f:62df5e60:a0892408:0a49c782:e25c216e",
+        "new_freeze_version_identity": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
+        "may_add_only": [
+          "candidate merge SHA",
+          "candidate protected-main CI",
+          "owner sign-off identity",
+          "delta-review identity and hash",
+          "receipt timestamp",
+          "new freeze version identity",
+          "exact one-blocker transition"
+        ],
+        "economic_method_or_evidence_binding_changed": false,
+        "predecessor_verification_mode": "V4_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_V4_NATIVE_VERIFICATION_RUNS_IN_V4_PINNED_TESTS_IN_THE_SAME_CI_RUN",
+        "predecessor_verification_rationale": "qme-ci job timeout-minutes 30 is frozen (ci.yml hash-pinned by the V4 manifest); V4 native re-execution measures ~186 s and exceeds the remaining CI budget; owner decision 2026-08-19 pin-not-reexecute"
+      },
+      "resolution": {
+        "previous_active_blockers": 13,
+        "new_active_blockers": 12,
+        "newly_resolved_blockers": 1,
+        "removed_blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+        "all_other_active_rows": "BYTE_IDENTICAL_SAME_ORDER",
+        "claims_block_change": "NONE_V4_CLAIMS_VERBATIM",
+        "interpretation": "RESOLVE_ENGINEERING_EVIDENCE_BLOCKER_WITHOUT_EMPIRICAL_PERFORMANCE_PRODUCTION_M0_OR_LINEAR_ISSUE_COMPLETION_CLAIM",
+        "linear_issue_nee120_complete": false,
+        "nee122_effective_trials_blockers_resolved": false,
+        "empirical_n_eff_available": false,
+        "milestone_m0_complete": false,
+        "scope_expansion_authorized": false
+      }
+    },
+    "accepted_effective_trials_evidence": {
+      "scope": "EFFECTIVE_TRIALS_ENGINEERING_EVIDENCE_ONLY_NO_EMPIRICAL_OR_PRODUCTION_INFERENCE_CLAIM",
+      "source_ticket_id": "NEE-204",
+      "target_ticket_id": "NEE-122",
+      "resolved_blocker_codes": [
+        "NEE-122-CORRELATED-TRIAL-FIXTURE",
+        "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"
+      ],
+      "original_v5_blocker_rows": [
+        {
+          "blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+          "ticket_id": "NEE-122",
+          "category": "ENGINEERING_EVIDENCE",
+          "description": "Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."
+        },
+        {
+          "blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+          "ticket_id": "NEE-122",
+          "category": "ENGINEERING_EVIDENCE",
+          "description": "The registered estimator and bootstrap uncertainty procedure are not implemented."
+        }
+      ],
+      "transition_kind": "TWO_BLOCKER_TRANSITION_VIA_CANDIDATE_DELTA_REVIEW_OWNER_SIGNOFF_PROTECTED_CI_AND_RECEIPT",
+      "candidate": {
+        "candidate_id": "NEE-204-SELECTION-009-SUCCESSOR-FREEZE-CANDIDATE-V1",
+        "candidate_kind": "BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
+        "config_path": "configs/governance/nee204-successor-freeze-candidate-v1.json",
+        "config_sha256": "5450c34d:ee31729c:533f6422:773fa69a:0e75b400:b4def0a1:f7c15495:fb031dc1",
+        "semantic_sha256": "eb441df6:cf49748e:0890e459:cca31445:931f9d6b:a73aff1d:909bc4d6:75c87871",
+        "schema_path": "schemas/governance/nee204-successor-freeze-candidate-v1.schema.json",
+        "schema_sha256": "6517d0b0:9b25fb36:5899a542:173a97e5:85360add:47733b76:018c9452:2edffeb7",
+        "manifest_path": "configs/governance/nee204-successor-freeze-candidate-v1.hashes.json",
+        "manifest_sha256": "27d74487:f9b29037:fcf08f2b:dce36b9a:ca98ab14:3850d4bc:cf32014e:c6ec152a",
+        "runtime_path": "qme/governance/nee204_successor_freeze_candidate.py",
+        "runtime_sha256": "4c714e8e:de3e5674:b7c8d979:25b0c082:37200c2a:966538e8:f8f17d1a:a3105658",
+        "runtime_normalized_sha256": "56d1914f:7f30e4dd:0c836fbd:6fa0ead2:1c9dfd99:ab10fdb5:d499544c:9c3a4abe",
+        "tests_path": "tests/governance/test_nee204_successor_freeze_candidate.py",
+        "tests_sha256": "0462b78e:aedaf6ac:1245c452:f25a4208:1b8484fa:e5ad9ed5:cb140439:29356d36",
+        "doc_path": "docs/governance/NEE_204_SUCCESSOR_FREEZE_CANDIDATE_V1.md",
+        "doc_sha256": "d23ad553:dec0ff0b:db86a9c9:ee864944:d8f9bb83:108d7fac:a4b774da:a3c66779",
+        "candidate_pre_state_freeze": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V5",
+        "candidate_pre_state_freeze_sha256": "054270b6:d749e82e:38c9cd24:cba93a24:b56ec676:feed22cf:d9b6a211:cf37c840"
+      },
+      "candidate_pull_request": {
+        "number": 55,
+        "url": "https://github.com/neeljaiswal90/quant-stocks/pull/55",
+        "head_commit": "aa419807:91f3cdf0:08b91e27:4164efe3:a9c4d37e",
+        "head_tree": "f85a35cd:f86a4f53:16957744:adcacfab:7a98b630",
+        "protected_base_commit": "a7ee2f5a:75d58cbe:6bc88cf4:e5d17763:9b56aecd",
+        "protected_main_commit": "2c314ffb:80d5a43a:9e139624:8daaa494:394848dc",
+        "protected_main_tree": "f85a35cd:f86a4f53:16957744:adcacfab:7a98b630",
+        "protected_main_parent": "a7ee2f5a:75d58cbe:6bc88cf4:e5d17763:9b56aecd",
+        "protected_main_committer_at": "2026-08-20T10:02:11-07:00",
+        "merged_at": "2026-08-20T17:02:12Z",
+        "checks": [
+          {
+            "workflow": "qme-ci",
+            "workflow_path": ".github/workflows/ci.yml",
+            "workflow_sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
+            "event": "pull_request",
+            "run_id": 32390978018,
+            "run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/32390978018",
+            "run_status": "completed",
+            "run_conclusion": "success",
+            "run_created_at": "2026-08-20T16:15:33Z",
+            "run_updated_at": "2026-08-20T16:44:12Z",
+            "job_id": 96496726372,
+            "job_name": "foundation",
+            "job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/32390978018/job/96496726372",
+            "job_status": "completed",
+            "job_conclusion": "success",
+            "job_started_at": "2026-08-20T16:15:37Z",
+            "job_completed_at": "2026-08-20T16:44:11Z",
+            "tested_commit": "aa419807:91f3cdf0:08b91e27:4164efe3:a9c4d37e"
+          },
+          {
+            "workflow": "qme-ci",
+            "workflow_path": ".github/workflows/ci.yml",
+            "workflow_sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
+            "event": "push",
+            "run_id": 32395355287,
+            "run_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/32395355287",
+            "run_status": "completed",
+            "run_conclusion": "success",
+            "run_created_at": "2026-08-20T17:02:14Z",
+            "run_updated_at": "2026-08-20T17:30:22Z",
+            "job_id": 96510774948,
+            "job_name": "foundation",
+            "job_url": "https://github.com/neeljaiswal90/quant-stocks/actions/runs/32395355287/job/96510774948",
+            "job_status": "completed",
+            "job_conclusion": "success",
+            "job_started_at": "2026-08-20T17:02:17Z",
+            "job_completed_at": "2026-08-20T17:30:21Z",
+            "tested_commit": "2c314ffb:80d5a43a:9e139624:8daaa494:394848dc"
+          }
+        ]
+      },
+      "candidate_delta_review": {
+        "kind": "FRESH_INDEPENDENT_FROZEN_BYTE_CANDIDATE_DELTA_REVIEW",
+        "source_system": "LINEAR_COMMENT",
+        "source_issue_id": "NEE-204",
+        "source_comment_id": "8f0a0e62-0544-4d59-8a95-9a03081bc572",
+        "source_created_at": "2026-08-20T16:02:08.155Z",
+        "source_updated_at": "2026-08-20T16:02:08.077Z",
+        "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+        "source_author_name": "Neel Jaiswal",
+        "verdict_path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/DELTA-REVIEW-VERDICT.md",
+        "verdict_sha256": "6abad804:f8e7969d:2cdaaf04:2dec823c:1a3a59f8:3601c367:b74bcda6:730d9805",
+        "verdict_bytes": 2962,
+        "hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+        "disposition": "SUFFICIENT_FOR_SEPARATE_EXACT_BYTE_OWNER_SIGNOFF",
+        "p0_count": 0,
+        "p1_count": 0,
+        "p2_count": 0,
+        "reviewed_base_commit": "a7ee2f5a:75d58cbe:6bc88cf4:e5d17763:9b56aecd",
+        "reviewed_base_tree": "497e5702:cd46ade4:9f4e7120:eaf6f9fe:aab38bf3",
+        "reviewed_candidate_hashes": {
+          "config": "5450c34d:ee31729c:533f6422:773fa69a:0e75b400:b4def0a1:f7c15495:fb031dc1",
+          "manifest": "27d74487:f9b29037:fcf08f2b:dce36b9a:ca98ab14:3850d4bc:cf32014e:c6ec152a",
+          "documentation": "d23ad553:dec0ff0b:db86a9c9:ee864944:d8f9bb83:108d7fac:a4b774da:a3c66779",
+          "runtime": "4c714e8e:de3e5674:b7c8d979:25b0c082:37200c2a:966538e8:f8f17d1a:a3105658",
+          "schema": "6517d0b0:9b25fb36:5899a542:173a97e5:85360add:47733b76:018c9452:2edffeb7",
+          "tests": "0462b78e:aedaf6ac:1245c452:f25a4208:1b8484fa:e5ad9ed5:cb140439:29356d36"
+        },
+        "prompt_path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/DELTA-REVIEW-PROMPT.md",
+        "prompt_sha256": "3d3a4d70:bfc50cea:7b416fc2:91886779:b5257b29:ae364ed9:05c8e6b1:d4efdcad"
+      },
+      "owner_exact_byte_signoff": {
+        "source_system": "LINEAR_COMMENT",
+        "source_issue_id": "NEE-204",
+        "source_comment_id": "df56674a-101e-4b8a-9594-7551a44afca0",
+        "source_created_at": "2026-08-20T16:12:46.038Z",
+        "source_updated_at": "2026-08-20T16:12:45.490Z",
+        "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+        "source_author_name": "Neel Jaiswal",
+        "statement_path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/OWNER-SIGNOFF.md",
+        "statement_sha256": "0d386e92:03e32e04:2f0e3eee:2c21ae7d:1ef9ad3d:1aa631bb:7d350f6f:1f780700",
+        "statement_bytes": 2008,
+        "hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+        "disposition": "EXACT_SIX_FILE_CANDIDATE_SIGNED_FOR_UNCHANGED_PUBLICATION",
+        "signed_head_commit": "aa419807:91f3cdf0:08b91e27:4164efe3:a9c4d37e",
+        "signed_tree": "f85a35cd:f86a4f53:16957744:adcacfab:7a98b630",
+        "signed_candidate_hashes": {
+          "config": "5450c34d:ee31729c:533f6422:773fa69a:0e75b400:b4def0a1:f7c15495:fb031dc1",
+          "manifest": "27d74487:f9b29037:fcf08f2b:dce36b9a:ca98ab14:3850d4bc:cf32014e:c6ec152a",
+          "documentation": "d23ad553:dec0ff0b:db86a9c9:ee864944:d8f9bb83:108d7fac:a4b774da:a3c66779",
+          "runtime": "4c714e8e:de3e5674:b7c8d979:25b0c082:37200c2a:966538e8:f8f17d1a:a3105658",
+          "schema": "6517d0b0:9b25fb36:5899a542:173a97e5:85360add:47733b76:018c9452:2edffeb7",
+          "tests": "0462b78e:aedaf6ac:1245c452:f25a4208:1b8484fa:e5ad9ed5:cb140439:29356d36"
+        },
+        "authorizes_only": "UNCHANGED_CANDIDATE_PUBLICATION_FOR_PROTECTED_CI"
+      },
+      "publication_receipt": {
+        "source_system": "LINEAR_COMMENT",
+        "source_issue_id": "NEE-204",
+        "source_comment_id": "2e9088af-e65b-4c12-b805-4f50dcf9f3ea",
+        "source_created_at": "2026-08-20T17:31:26.321Z",
+        "source_updated_at": "2026-08-20T17:31:26.179Z",
+        "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+        "source_author_name": "Neel Jaiswal",
+        "source_body_sha256": "9b8b2601:7e372ee4:871bd1bc:159f4156:693f2f9f:88152090:a8d679e6:98bf347a",
+        "source_body_bytes": 3586,
+        "observed_at": "2026-08-20T17:31:26.321Z",
+        "candidate_artifacts_rehashed_from_protected_git_objects": true,
+        "protected_ci_exact_head_success": true,
+        "protected_test_count": 1848,
+        "protected_secret_scan_reviewed_files": 518,
+        "protected_secret_scan_findings": 0,
+        "automation_done_at": "2026-08-20T17:02:14.150Z",
+        "restored_in_progress_at": "2026-08-20T17:02:37.674Z",
+        "nee204_status_after_correction": "IN_PROGRESS",
+        "nee122_status": "IN_PROGRESS"
+      },
+      "selection_009": {
+        "owner_decision_accepted": true,
+        "evidence_scope": "SYNTHETIC_DETERMINISTIC_KAT_ONLY",
+        "index_stream_sha256": "e5f8ac97:7cbd6c5e:6de09048:c86b4d7d:c9351b89:8a2e6875:d9057860:f18a1640",
+        "bootstrap_distribution_sha256": "e90ba0e3:da74fa34:bbeaddab:01e0d8a1:137702a1:8fc8de73:61f48b01:faf95bcf",
+        "one_based_rank": 1950,
+        "rank_value": "1.928085337475850467660159735112550709",
+        "n_eff_used": 2,
+        "valid_distribution_reason": "N_EFF_BOOTSTRAP_UPPER_QUANTILE",
+        "invalid_distribution_fallback_reason_unchanged": "N_EFF_DISTRIBUTION_INVALID_CONSERVATIVE_M96",
+        "predecessor_selection_009_accepted_fields_remain_false": true,
+        "statistical_rule_changed": false,
+        "production_n_eff_available": false
+      },
+      "receipt": {
+        "receipt_id": "NEE-204-EFFECTIVE-TRIALS-EVIDENCE-BLOCKER-TRANSITION-RECEIPT-V1",
+        "receipt_created_utc": "2026-08-20T18:55:26Z",
+        "receipt_branch": "codex/nee-204-freeze-v6-receipt",
+        "receipt_path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/RECEIPT.md",
+        "receipt_sha256": "f29b5078:97743f47:8ed5d977:8c4dfe6c:9ffa5e55:a1dcf3ec:17ea4bcc:f8b44610",
+        "new_freeze_version_identity": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V6",
+        "may_add_only": [
+          "candidate merge commit and tree",
+          "candidate protected-main CI identities",
+          "fresh independent delta-review receipt",
+          "owner exact-byte signoff receipt",
+          "successor-freeze receipt PR and protected-main CI identities",
+          "causally later observation timestamps"
+        ],
+        "may_not_change_without_new_review_and_signoff": [
+          "target blocker rows",
+          "retained blocker rows or order",
+          "evidence bindings",
+          "selection 009 outputs",
+          "claims or nonclaims",
+          "resolution meaning"
+        ],
+        "statistical_rule_or_evidence_binding_changed": false,
+        "predecessor_verification_mode": "V5_BYTES_PINNED_AND_MANIFEST_REPLAYED_NOT_REEXECUTED_V5_NATIVE_TESTS_RUN_SEPARATELY_IN_THE_SAME_CI_JOB"
+      },
+      "resolution": {
+        "previous_active_blockers": 12,
+        "new_active_blockers": 10,
+        "newly_resolved_blockers": 2,
+        "removed_blocker_codes": [
+          "NEE-122-CORRELATED-TRIAL-FIXTURE",
+          "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"
+        ],
+        "all_other_active_rows": "BYTE_IDENTICAL_SAME_ORDER",
+        "claims_block_change": "NONE_V5_CLAIMS_VERBATIM",
+        "resolution_basis": "PROTECTED_DETERMINISTIC_PPW_BOOTSTRAP_IMPLEMENTATION_INDEPENDENT_VECTOR_AND_2000_REPLICATE_EVIDENCE_AND_EXPLICIT_OWNER_SELECTION_009_DECISION",
+        "interpretation": "RESOLVE_TWO_ENGINEERING_EVIDENCE_ROWS_WITHOUT_EMPIRICAL_PRODUCTION_DSR_HOLM_ALPHA_M0_OR_LINEAR_ISSUE_COMPLETION_CLAIM",
+        "linear_issue_nee204_complete_before_receipt_protected_ci": false,
+        "linear_issue_nee122_complete": false,
+        "empirical_n_eff_available": false,
+        "milestone_m0_complete": false,
+        "scope_expansion_authorized": false
+      }
+    },
+    "resolved_or_superseded_blocker_codes": [
+      "NEE-110-QME-CONFIG-V1-CONTRACT",
+      "NEE-116-HUMAN-INDEPENDENT-REVIEW",
+      "NEE-116-OFFICIAL-OPEN-FALLBACK",
+      "NEE-116-TAX-LOT-METHOD",
+      "NEE-117-EXACT-SHA-REMOTE-CI",
+      "NEE-119-MINIMUM-ELIGIBLE-BREADTH",
+      "NEE-119-PRODUCTION-SOURCE-FRESHNESS",
+      "NEE-120-AUM-CAPACITY-LIMITS",
+      "NEE-120-INFERENCE-POLICY",
+      "NEE-120-PROMOTION-MANDATE",
+      "NEE-120-PREREGISTRATION-APPROVAL",
+      "NEE-121-HISTORICAL-ACCESS-PROVENANCE",
+      "NEE-121-LABEL-ENDPOINT-REGISTRATIONS",
+      "NEE-121-PROSPECTIVE-EVIDENCE-SUFFICIENCY",
+      "NEE-122-DEPENDENCE-ESTIMATOR",
+      "NEE-122-PRODUCTION-FAMILY-POLICY",
+      "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+      "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+      "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"
+    ],
+    "unresolved_blockers": [
+      {
+        "blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+        "ticket_id": "NEE-110",
+        "category": "GOVERNANCE",
+        "description": "Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."
+      },
+      {
+        "blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."
+      },
+      {
+        "blocker_code": "NEE-116-CAPACITY-SOLVER",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."
+      },
+      {
+        "blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        "ticket_id": "NEE-116",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."
+      },
+      {
+        "blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+        "ticket_id": "NEE-116",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "Accepted point-in-time production data and receipts are unavailable."
+      },
+      {
+        "blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."
+      },
+      {
+        "blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        "ticket_id": "NEE-119",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."
+      },
+      {
+        "blocker_code": "NEE-119-AV-PROXY-EVIDENCE",
+        "ticket_id": "NEE-119",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."
+      },
+      {
+        "blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+        "ticket_id": "NEE-121",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."
+      },
+      {
+        "blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+        "ticket_id": "NEE-121",
+        "category": "FINAL_DERIVED_EVIDENCE",
+        "description": "The final freeze anchor and receipt remain unavailable until every other blocker is accepted."
+      }
+    ],
+    "claims": {
+      "operational_v2_contracts_materialized": true,
+      "atomic_bundle_integrity_verified": true,
+      "access_chain_engineering_evidence_accepted": true,
+      "remaining_blockers_span_governance_evidence_and_engineering": true,
+      "cross_contract_semantic_approval_complete": false,
+      "production_access_event_corpus_available": false,
+      "production_sample_access_evidence_available": false,
+      "production_specification_accepted": false,
+      "milestone_m0_complete": false,
+      "data_spine_start_authorized": false,
+      "production_ready": false,
+      "empirical_performance_available": false,
+      "alpha_proven": false,
+      "inference_implementation_available": false,
+      "effective_trials_computable": false,
+      "dsr_computable": false,
+      "portfolio_capacity_available": false,
+      "production_calendar_available": false,
+      "final_freeze_receipt_verified": false,
+      "prospective_observations_consumable": false,
+      "live_order_authority": false
+    },
+    "blocked_downstream_issue_ids": [
+      "NEE-114",
+      "NEE-123",
+      "NEE-124",
+      "NEE-125",
+      "NEE-126",
+      "NEE-127",
+      "NEE-128"
+    ],
+    "semantic_sha256": "879d2107:1c5e8948:9fd6fed4:332027f1:8ebe9427:14503c84:a643c1b1:7d2e70ef"
+  }
+}

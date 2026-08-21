@@ -1,0 +1,67 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V6",
+  "status": "BLOCKED_10_ACTIVE",
+  "artifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"
+    },
+    {
+      "path": "configs/governance/nee204-successor-freeze-candidate-v1.hashes.json",
+      "sha256": "27d74487:f9b29037:fcf08f2b:dce36b9a:ca98ab14:3850d4bc:cf32014e:c6ec152a"
+    },
+    {
+      "path": "configs/governance/specification-freeze-v5.hashes.json",
+      "sha256": "2eb7a5bd:b6117b71:b0b77836:eca6548a:3609141d:9db2c817:2c2f22b5:0489e548"
+    },
+    {
+      "path": "configs/governance/specification-freeze-export-v5.json",
+      "sha256": "01d89c4a:4a28d859:b6bdf0cb:2a6a5e62:a7802e92:09f281b3:5e33e395:87d83ca1"
+    },
+    {
+      "path": "configs/governance/specification-freeze-policy-v6.json",
+      "sha256": "f28d2a90:7d5078a1:bdc90053:12ac3259:54c3e499:cb43a80c:f49ee70b:d6326668"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/DELTA-REVIEW-PROMPT.md",
+      "sha256": "3d3a4d70:bfc50cea:7b416fc2:91886779:b5257b29:ae364ed9:05c8e6b1:d4efdcad"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/DELTA-REVIEW-VERDICT.md",
+      "sha256": "6abad804:f8e7969d:2cdaaf04:2dec823c:1a3a59f8:3601c367:b74bcda6:730d9805"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/OWNER-SIGNOFF.md",
+      "sha256": "0d386e92:03e32e04:2f0e3eee:2c21ae7d:1ef9ad3d:1aa631bb:7d350f6f:1f780700"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/PROTECTED-PUBLICATION-RECEIPT.json",
+      "sha256": "62a966a4:88500c1a:cd3dda76:3b013135:940c3550:a34b90ff:e02f3005:6c7b7527"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/RECEIPT.md",
+      "sha256": "f29b5078:97743f47:8ed5d977:8c4dfe6c:9ffa5e55:a1dcf3ec:17ea4bcc:f8b44610"
+    },
+    {
+      "path": "docs/governance/SPECIFICATION_FREEZE_V6.md",
+      "sha256": "458b41a6:b42495a0:e205c635:29045137:3d4ba6ae:201a5d02:f89bbf11:6322805d"
+    },
+    {
+      "path": "qme/governance/specification_freeze_v6.py",
+      "sha256": "90336a28:47fa9c56:5ed465e9:9453c25c:46d12ea2:2befa2ce:c1d3d72a:b7f10c05"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-export-v5.schema.json",
+      "sha256": "254cccd6:66e1d882:76f1db77:af7156e5:5be27bf8:38207b2c:ad950f02:69039cbc"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-policy-v6.schema.json",
+      "sha256": "afca0f66:444b3ec6:19b37e97:e1dc7cbf:0f82a6e3:9221cf12:6c1248a9:6a135f56"
+    },
+    {
+      "path": "tests/governance/test_specification_freeze_v6.py",
+      "sha256": "5e0bc8aa:4a6a05c0:4cc403e5:820f28f7:8b6cbf18:5c4a871c:1def3f7d:40793b5e"
+    }
+  ]
+}
