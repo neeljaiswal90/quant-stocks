@@ -1,0 +1,14 @@
+{
+  "schema_version": "qme.linear_comment_snapshot.v1",
+  "source_system": "LINEAR_COMMENT",
+  "source_issue_id": "NEE-116",
+  "source_comment_id": "5e0d5743-4399-445d-a240-bd8a2a193ec4",
+  "source_created_at": "2026-08-21T05:32:32.947Z",
+  "source_updated_at": "2026-08-21T05:32:32.906Z",
+  "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+  "source_author_name": "Neel Jaiswal",
+  "hash_convention": "RAW_CONNECTOR_BODY_UTF8_NO_NORMALIZATION_NO_TRAILING_NEWLINE",
+  "source_body_bytes": 2093,
+  "source_body_sha256": "10b8e4ff:ce11145f:949ec548:98e381b9:102ff8b6:021e5e3c:b9eb7233:36755d13",
+  "body": "## PR #58 protected-main merge receipt — capacity V3 candidate published\n\nThe exact owner-approved PR #58 head was squash-merged and its protected-main push workflow completed successfully.\n\n### Immutable merge identity\n\n- PR: https://github.com/neeljaiswal90/quant-stocks/pull/58\n- approved head: `becf4a8c318e2f8a54f553253cc032a484827e29`\n- merge commit: `84cdd7917742f5429b63adc90ac02ca5e8ca2796`\n- merge tree: `2782d589cdad6b194de6282cc256ca00198fcb55`\n- parent: `629e7847f187122b0a07829026e7a917f85cb709`\n- GitHub verified signature: `true`\n- merge/committer time: `2026-08-21T05:02:34Z`\n\nThe merge tree exactly equals the approved PR-head tree.\n\n### Protected-main acceptance signal\n\n- workflow: `qme-ci`\n- event: `push`\n- run: https://github.com/neeljaiswal90/quant-stocks/actions/runs/32449099244\n- job: https://github.com/neeljaiswal90/quant-stocks/actions/runs/32449099244/job/96674053815\n- head SHA: `84cdd7917742f5429b63adc90ac02ca5e8ca2796`\n- conclusion: `success`\n- completed: `2026-08-21T05:31:50Z`\n- tests: `1919 passed in 1451.29s`\n- Ruff: green\n- strict mypy: 94 source files green\n- five dependency locks, wheel, compile, deterministic fixture replay, and clean-tree checks: green\n- tracked-secret scan: `540/0`\n\n### Exact candidate identity remains\n\n- config: `592627266e43de36898726ed692d004b27a3c33761aa9dea44bfe7f425b45248`\n- outer manifest: `ec14cd0aeed0e6d44c5b83b048d2ff5a8c0ea863cd74ce763cd53df9e6c53962`\n- semantic SHA: `17eaf700fc901d3e6c50c47847f3df387c091df831013f36f327f5d44d345576`\n- V3 runtime: `189673ba62f75f0f63e765f32f10be815229e42213217dd2702a989e2ada7e13`\n\n### Boundary and next gate\n\nThis receipt proves protected publication of the fail-closed V3 candidate; it does not itself mutate Freeze V6 or clear a blocker. Freeze V6 remains 10 active / 20 historical. The next bounded action is a separate successor Freeze V7 transition removing only the exact original `NEE-116-CAPACITY-SOLVER` row, with fresh exact-byte review, owner signoff, protected CI, and a later receipt. NEE-116 remains In Progress and M0/production/live-order claims remain false."
+}
