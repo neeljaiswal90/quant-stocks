@@ -17,7 +17,10 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Final, NoReturn, cast
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import (  # type: ignore[import-untyped, unused-ignore]
+    Draft202012Validator,
+    FormatChecker,
+)
 
 __all__ = [
     "ACTIVE_BLOCKER_COUNT",
@@ -75,7 +78,7 @@ _EXPECTED_EXPORT_SCHEMA_SHA256 = "6ecbd6f5:fae4d4ed:16cdc9ee:47a9489c:35efb439:4
 _EXPECTED_POLICY_SEMANTIC_SHA256 = "03223f4f:abdd0b4a:9f3b2c54:4e2066dc:da62df34:a2976d86:6c2e684b:f385a488"
 _EXPECTED_DERIVED_EVIDENCE_SHA256 = "9e671c13:303d67ca:595fb472:b349c7f2:3880c5b4:5226ff1b:f464ec8d:b574c3c3"
 _EXPECTED_CAPACITY_EVIDENCE_SHA256 = "8d63ed2d:17a2b0c3:6f1c76df:09233a9d:1b44240a:bb2aee4c:270b98ac:95a4d4d9"
-_EXPECTED_RUNTIME_NORMALIZED_SHA256 = "0be7c686:9c190ef6:269d5f90:2e9fdf26:5eae1184:4f7a5698:48272287:2a3fcce2"
+_EXPECTED_RUNTIME_NORMALIZED_SHA256 = "2dc3cec9:e5a6d086:7b6e63c8:22a611d3:da1be8ab:fc84e361:e55907b1:89e311f7"
 # fmt: on
 
 _EXPECTED_PREDECESSOR = MappingProxyType({'configs/governance/specification-freeze-policy-v6.json': 'f28d2a90:7d5078a1:bdc90053:12ac3259:54c3e499:cb43a80c:f49ee70b:d6326668', 'schemas/governance/specification-freeze-policy-v6.schema.json': 'afca0f66:444b3ec6:19b37e97:e1dc7cbf:0f82a6e3:9221cf12:6c1248a9:6a135f56', 'configs/governance/specification-freeze-v6.hashes.json': 'cebd85d5:0f19932c:42c6c3b6:2548c73c:8810e98f:3325cbf2:c5e104a9:7404ec4f', 'configs/governance/specification-freeze-export-v5.json': '01d89c4a:4a28d859:b6bdf0cb:2a6a5e62:a7802e92:09f281b3:5e33e395:87d83ca1', 'schemas/governance/specification-freeze-export-v5.schema.json': '254cccd6:66e1d882:76f1db77:af7156e5:5be27bf8:38207b2c:ad950f02:69039cbc', 'qme/governance/specification_freeze_v6.py': '90336a28:47fa9c56:5ed465e9:9453c25c:46d12ea2:2befa2ce:c1d3d72a:b7f10c05', 'tests/governance/test_specification_freeze_v6.py': '5e0bc8aa:4a6a05c0:4cc403e5:820f28f7:8b6cbf18:5c4a871c:1def3f7d:40793b5e', 'docs/governance/SPECIFICATION_FREEZE_V6.md': '458b41a6:b42495a0:e205c635:29045137:3d4ba6ae:201a5d02:f89bbf11:6322805d'})
