@@ -49,7 +49,7 @@
     },
     {
       "path": "qme/governance/specification_freeze_v7.py",
-      "sha256": "4ec79f53:afb06698:2c36e027:f3570e26:12e85bd1:12fb6e4c:b9b53385:81f2a462"
+      "sha256": "db2f7b84:d01f9b91:a2b68907:bd89c3ac:bba318c6:e65603a1:84f52235:fda7a8de"
     },
     {
       "path": "schemas/governance/specification-freeze-export-v6.schema.json",
@@ -61,7 +61,7 @@
     },
     {
       "path": "tests/governance/test_specification_freeze_v7.py",
-      "sha256": "467abe26:0bb8a918:ea67db92:561adac3:2324163f:37c2e7b6:609e517e:db6b03d3"
+      "sha256": "d60629d9:5762fe79:2e946eb6:aad8b4c9:8defa7ef:573f0f0b:d1442908:f1f6313f"
     }
   ]
 }

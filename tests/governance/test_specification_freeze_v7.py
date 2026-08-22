@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import shutil
+import subprocess
 import types
 from pathlib import Path
 from typing import Any
@@ -123,6 +124,27 @@ def _load_repin_module(root: Path, name: str) -> types.ModuleType:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _create_directory_reparse(link: Path, target: Path) -> None:
+    if os.name == "nt":
+        completed = subprocess.run(
+            ["cmd.exe", "/d", "/c", "mklink", "/J", str(link), str(target)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if completed.returncode:
+            raise OSError(completed.stderr or completed.stdout)
+        return
+    os.symlink(target, link, target_is_directory=True)
+
+
+def _remove_directory_reparse(link: Path) -> None:
+    if os.name == "nt":
+        os.rmdir(link)
+    else:
+        link.unlink()
 
 
 def test_exact_transition_schema_hashes_and_claims() -> None:
@@ -301,6 +323,143 @@ def test_runtime_self_pin_rejects_full_repin(tmp_path: Path) -> None:
     module = _load_repin_module(root, "runtime")
     with pytest.raises(module.SpecificationFreezeV7Error):
         module.verify_specification_freeze_v7_manifest(root)
+
+
+@pytest.mark.parametrize("mutation", ("extra", "missing", "reordered"))
+def test_manifest_exact_ordered_root_inventory_is_enforced(
+    tmp_path: Path, mutation: str
+) -> None:
+    root = _copy_tree(tmp_path)
+    path = root / v7.MANIFEST_PATH
+    manifest = _load(path)
+    if mutation == "extra":
+        manifest["active_blocker_count"] = 0
+        manifest["milestone_m0_complete"] = True
+    elif mutation == "missing":
+        del manifest["status"]
+    else:
+        manifest = {
+            "artifact_id": manifest["artifact_id"],
+            "schema_version": manifest["schema_version"],
+            "status": manifest["status"],
+            "artifacts": manifest["artifacts"],
+        }
+    _write_json(path, manifest)
+    with pytest.raises(v7.SpecificationFreezeV7Error):
+        v7.verify_specification_freeze_v7_manifest(root)
+
+
+def test_transient_final_symlink_interleaving_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    probe_source = tmp_path / "symlink-probe-source"
+    probe_link = tmp_path / "symlink-probe-link"
+    probe_source.write_bytes(b"probe")
+    try:
+        os.symlink(probe_source, probe_link)
+    except OSError:
+        pytest.skip("file symlink creation unavailable")
+    else:
+        probe_link.unlink()
+
+    root = _copy_tree(tmp_path / "race")
+    target = root / "docs/governance/SPECIFICATION_FREEZE_V7.md"
+    outside = tmp_path / "reviewed-original-outside.md"
+    real_open = os.open
+    real_close = os.close
+    triggered = False
+    raced_descriptor: int | None = None
+
+    def attack_open(path: object, flags: int, mode: int = 0o777) -> int:
+        nonlocal raced_descriptor, triggered
+        candidate = (
+            Path(os.fsdecode(path))
+            if isinstance(path, (str, bytes, os.PathLike))
+            else None
+        )
+        if not triggered and candidate == target:
+            triggered = True
+            target.replace(outside)
+            os.symlink(outside, target)
+            try:
+                raced_descriptor = real_open(target, flags, mode)
+            except OSError:
+                target.unlink(missing_ok=True)
+                outside.replace(target)
+                raise
+            return raced_descriptor
+        return real_open(path, flags, mode)  # type: ignore[arg-type]
+
+    def restore_on_close(descriptor: int) -> None:
+        nonlocal raced_descriptor
+        real_close(descriptor)
+        if descriptor == raced_descriptor:
+            target.unlink(missing_ok=True)
+            outside.replace(target)
+            raced_descriptor = None
+
+    monkeypatch.setattr(os, "open", attack_open)
+    monkeypatch.setattr(os, "close", restore_on_close)
+    with pytest.raises(v7.SpecificationFreezeV7Error):
+        v7.verify_specification_freeze_v7_manifest(root)
+    assert triggered is True
+
+
+def test_transient_ancestor_junction_interleaving_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    probe_source = tmp_path / "junction-probe-source"
+    probe_link = tmp_path / "junction-probe-link"
+    probe_source.mkdir()
+    try:
+        _create_directory_reparse(probe_link, probe_source)
+    except OSError:
+        pytest.skip("directory junction or symlink creation unavailable")
+    else:
+        _remove_directory_reparse(probe_link)
+
+    root = _copy_tree(tmp_path / "race")
+    ancestor = root / "docs/governance"
+    target = ancestor / "SPECIFICATION_FREEZE_V7.md"
+    outside = tmp_path / "reviewed-governance-outside"
+    real_open = os.open
+    real_close = os.close
+    triggered = False
+    raced_descriptor: int | None = None
+
+    def attack_open(path: object, flags: int, mode: int = 0o777) -> int:
+        nonlocal raced_descriptor, triggered
+        candidate = (
+            Path(os.fsdecode(path))
+            if isinstance(path, (str, bytes, os.PathLike))
+            else None
+        )
+        if not triggered and candidate == target:
+            triggered = True
+            ancestor.replace(outside)
+            _create_directory_reparse(ancestor, outside)
+            try:
+                raced_descriptor = real_open(target, flags, mode)
+            except OSError:
+                _remove_directory_reparse(ancestor)
+                outside.replace(ancestor)
+                raise
+            return raced_descriptor
+        return real_open(path, flags, mode)  # type: ignore[arg-type]
+
+    def restore_on_close(descriptor: int) -> None:
+        nonlocal raced_descriptor
+        real_close(descriptor)
+        if descriptor == raced_descriptor:
+            _remove_directory_reparse(ancestor)
+            outside.replace(ancestor)
+            raced_descriptor = None
+
+    monkeypatch.setattr(os, "open", attack_open)
+    monkeypatch.setattr(os, "close", restore_on_close)
+    with pytest.raises(v7.SpecificationFreezeV7Error):
+        v7.verify_specification_freeze_v7_manifest(root)
+    assert triggered is True
 
 
 def test_symlink_or_hardlink_leaf_is_rejected(tmp_path: Path) -> None:

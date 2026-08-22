@@ -78,12 +78,12 @@ _EXPECTED_EXPORT_SCHEMA_SHA256 = "6ecbd6f5:fae4d4ed:16cdc9ee:47a9489c:35efb439:4
 _EXPECTED_POLICY_SEMANTIC_SHA256 = "03223f4f:abdd0b4a:9f3b2c54:4e2066dc:da62df34:a2976d86:6c2e684b:f385a488"
 _EXPECTED_DERIVED_EVIDENCE_SHA256 = "9e671c13:303d67ca:595fb472:b349c7f2:3880c5b4:5226ff1b:f464ec8d:b574c3c3"
 _EXPECTED_CAPACITY_EVIDENCE_SHA256 = "8d63ed2d:17a2b0c3:6f1c76df:09233a9d:1b44240a:bb2aee4c:270b98ac:95a4d4d9"
-_EXPECTED_RUNTIME_NORMALIZED_SHA256 = "2dc3cec9:e5a6d086:7b6e63c8:22a611d3:da1be8ab:fc84e361:e55907b1:89e311f7"
+_EXPECTED_RUNTIME_NORMALIZED_SHA256 = "7481d723:caad6f68:7c8ffc5d:ae58aa5c:1a9c2875:86125ab3:114f5193:28fcb0cb"
 # fmt: on
 
 _EXPECTED_PREDECESSOR = MappingProxyType({'configs/governance/specification-freeze-policy-v6.json': 'f28d2a90:7d5078a1:bdc90053:12ac3259:54c3e499:cb43a80c:f49ee70b:d6326668', 'schemas/governance/specification-freeze-policy-v6.schema.json': 'afca0f66:444b3ec6:19b37e97:e1dc7cbf:0f82a6e3:9221cf12:6c1248a9:6a135f56', 'configs/governance/specification-freeze-v6.hashes.json': 'cebd85d5:0f19932c:42c6c3b6:2548c73c:8810e98f:3325cbf2:c5e104a9:7404ec4f', 'configs/governance/specification-freeze-export-v5.json': '01d89c4a:4a28d859:b6bdf0cb:2a6a5e62:a7802e92:09f281b3:5e33e395:87d83ca1', 'schemas/governance/specification-freeze-export-v5.schema.json': '254cccd6:66e1d882:76f1db77:af7156e5:5be27bf8:38207b2c:ad950f02:69039cbc', 'qme/governance/specification_freeze_v6.py': '90336a28:47fa9c56:5ed465e9:9453c25c:46d12ea2:2befa2ce:c1d3d72a:b7f10c05', 'tests/governance/test_specification_freeze_v6.py': '5e0bc8aa:4a6a05c0:4cc403e5:820f28f7:8b6cbf18:5c4a871c:1def3f7d:40793b5e', 'docs/governance/SPECIFICATION_FREEZE_V6.md': '458b41a6:b42495a0:e205c635:29045137:3d4ba6ae:201a5d02:f89bbf11:6322805d'})
 _EXPECTED_CANDIDATE = MappingProxyType({'configs/governance/nee116-capacity-solver-freeze-candidate-v1.hashes.json': 'ec14cd0a:eed0e6d4:4c5b83b0:48d2ff5a:8c0ea863:cd74ce76:3cd53df9:e6c53962', 'configs/governance/nee116-capacity-solver-freeze-candidate-v1.json': '59262726:6e43de36:898726ed:692d004b:27a3c337:61aa9dea:44bfe7f4:25b45248', 'docs/governance/NEE_116_CAPACITY_SOLVER_FREEZE_CANDIDATE_V1.md': 'be1c2894:29080d74:51ea97be:15fbbc4d:49dc0fb3:c8d9cbe6:e09f7af7:eddee912', 'qme/governance/nee116_capacity_solver_freeze_candidate.py': 'aa8383f6:50e85a18:77c4ed42:85bd60f2:dfb1d07d:d1c14094:6dc4dd6b:e6fd5c17', 'schemas/governance/nee116-capacity-solver-freeze-candidate-v1.schema.json': '9762f4e2:d2a5eef3:e0f5eba8:f9b9e27a:1d7c56e7:c6065a0f:29bf72f3:f975fba9', 'tests/governance/test_nee116_capacity_solver_freeze_candidate.py': 'a91872cd:709ed5ef:31409450:8a666592:00f19b79:fc37bfb4:e81f17f9:81c35e69', 'qme/quant/capacity_solver_v3.py': '189673ba:62f75f0f:63e765f3:2f10be81:5229e422:13217dd2:702a989e:2ada7e13', 'tests/quant/test_capacity_solver_v3.py': '46093294:00d29d59:d92e16b4:9288ce46:cc60aade:10e069d8:8ae4a3c7:95e30ca7', 'docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md': '901eef44:99010efe:1e32fea4:ef816cb2:db6e4c40:3e89afc8:3e901d1b:ed36a3cf'})
-_EXPECTED_NONRUNTIME_LEAVES = MappingProxyType({'.github/workflows/ci.yml': 'a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f', 'configs/governance/nee116-capacity-solver-freeze-candidate-v1.hashes.json': 'ec14cd0a:eed0e6d4:4c5b83b0:48d2ff5a:8c0ea863:cd74ce76:3cd53df9:e6c53962', 'configs/governance/specification-freeze-v6.hashes.json': 'cebd85d5:0f19932c:42c6c3b6:2548c73c:8810e98f:3325cbf2:c5e104a9:7404ec4f', 'configs/governance/specification-freeze-export-v6.json': 'b68e14d9:e0b2187f:6c740f67:47558864:3c7f1b9f:0de9929f:7c733e9d:42e39c75', 'configs/governance/specification-freeze-policy-v7.json': '5a5d54c5:1e4332b7:f4875207:f770d54e:67740b60:80a0121f:67c9cb9d:74728096', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-PROMPT.md': '10180bff:4a0c9e89:655788a3:f218dd01:51e6e754:b7968af6:53bc6926:7b2f1743', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-VERDICT.md': '981b8a38:77dd3326:07aa48ea:9a6cd06d:49bd3c1d:f3eea1c6:14e5276e:b7e1c6c3', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/OWNER-SIGNOFF.md': '0944d220:6cb7281f:f2a76b78:40b00073:16a98c67:f80e99c1:7472aaa1:46291dc5', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/PROTECTED-PUBLICATION-RECEIPT.json': '12cbd97f:37a12afc:988ff9ef:ab1559dc:a67a59dd:2b8065d1:3d140390:e4f59ea9', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/RECEIPT.md': 'e47377b6:757fab7a:3c8a07f0:34e12462:0485b0af:4e68e0a7:6054793b:5f1ac700', 'docs/governance/SPECIFICATION_FREEZE_V7.md': '0fefb3ba:48a28b36:0c7afac3:61b2ac8c:07fbfe5c:4829ce69:6a415e85:853e6a8f', 'schemas/governance/specification-freeze-export-v6.schema.json': '6ecbd6f5:fae4d4ed:16cdc9ee:47a9489c:35efb439:42ea4c59:6af07dbb:08527d70', 'schemas/governance/specification-freeze-policy-v7.schema.json': '888ff1a3:e8127031:5c6bf048:fc35a64d:6f2f1612:c33d4bab:e02648b3:302806b1', 'tests/governance/test_specification_freeze_v7.py': '467abe26:0bb8a918:ea67db92:561adac3:2324163f:37c2e7b6:609e517e:db6b03d3'})
+_EXPECTED_NONRUNTIME_LEAVES = MappingProxyType({'.github/workflows/ci.yml': 'a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f', 'configs/governance/nee116-capacity-solver-freeze-candidate-v1.hashes.json': 'ec14cd0a:eed0e6d4:4c5b83b0:48d2ff5a:8c0ea863:cd74ce76:3cd53df9:e6c53962', 'configs/governance/specification-freeze-v6.hashes.json': 'cebd85d5:0f19932c:42c6c3b6:2548c73c:8810e98f:3325cbf2:c5e104a9:7404ec4f', 'configs/governance/specification-freeze-export-v6.json': 'b68e14d9:e0b2187f:6c740f67:47558864:3c7f1b9f:0de9929f:7c733e9d:42e39c75', 'configs/governance/specification-freeze-policy-v7.json': '5a5d54c5:1e4332b7:f4875207:f770d54e:67740b60:80a0121f:67c9cb9d:74728096', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-PROMPT.md': '10180bff:4a0c9e89:655788a3:f218dd01:51e6e754:b7968af6:53bc6926:7b2f1743', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-VERDICT.md': '981b8a38:77dd3326:07aa48ea:9a6cd06d:49bd3c1d:f3eea1c6:14e5276e:b7e1c6c3', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/OWNER-SIGNOFF.md': '0944d220:6cb7281f:f2a76b78:40b00073:16a98c67:f80e99c1:7472aaa1:46291dc5', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/PROTECTED-PUBLICATION-RECEIPT.json': '12cbd97f:37a12afc:988ff9ef:ab1559dc:a67a59dd:2b8065d1:3d140390:e4f59ea9', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/RECEIPT.md': 'e47377b6:757fab7a:3c8a07f0:34e12462:0485b0af:4e68e0a7:6054793b:5f1ac700', 'docs/governance/SPECIFICATION_FREEZE_V7.md': '0fefb3ba:48a28b36:0c7afac3:61b2ac8c:07fbfe5c:4829ce69:6a415e85:853e6a8f', 'schemas/governance/specification-freeze-export-v6.schema.json': '6ecbd6f5:fae4d4ed:16cdc9ee:47a9489c:35efb439:42ea4c59:6af07dbb:08527d70', 'schemas/governance/specification-freeze-policy-v7.schema.json': '888ff1a3:e8127031:5c6bf048:fc35a64d:6f2f1612:c33d4bab:e02648b3:302806b1', 'tests/governance/test_specification_freeze_v7.py': 'd60629d9:5762fe79:2e946eb6:aad8b4c9:8defa7ef:573f0f0b:d1442908:f1f6313f'})
 _EXPECTED_PREDECESSOR_MANIFEST_PATHS = ('.github/workflows/ci.yml', 'configs/governance/nee204-successor-freeze-candidate-v1.hashes.json', 'configs/governance/specification-freeze-v5.hashes.json', 'configs/governance/specification-freeze-export-v5.json', 'configs/governance/specification-freeze-policy-v6.json', 'docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/DELTA-REVIEW-PROMPT.md', 'docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/DELTA-REVIEW-VERDICT.md', 'docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/OWNER-SIGNOFF.md', 'docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/PROTECTED-PUBLICATION-RECEIPT.json', 'docs/governance/blocker-transition-receipts/nee204-effective-trials-evidence/RECEIPT.md', 'docs/governance/SPECIFICATION_FREEZE_V6.md', 'qme/governance/specification_freeze_v6.py', 'schemas/governance/specification-freeze-export-v5.schema.json', 'schemas/governance/specification-freeze-policy-v6.schema.json', 'tests/governance/test_specification_freeze_v6.py')
 _EXPECTED_CANDIDATE_MANIFEST_PATHS = ('configs/governance/nee116-capacity-solver-freeze-candidate-v1.json', 'docs/governance/NEE_116_CAPACITY_SOLVER_FREEZE_CANDIDATE_V1.md', 'qme/governance/nee116_capacity_solver_freeze_candidate.py', 'schemas/governance/nee116-capacity-solver-freeze-candidate-v1.schema.json', 'tests/governance/test_nee116_capacity_solver_freeze_candidate.py', 'qme/quant/capacity_solver_v3.py', 'tests/quant/test_capacity_solver_v3.py', 'docs/quant/NEE_116_CAPACITY_SOLVER_IMPLEMENTATION_V3.md')
 _EXPECTED_MANIFEST_PATHS = ('.github/workflows/ci.yml', 'configs/governance/nee116-capacity-solver-freeze-candidate-v1.hashes.json', 'configs/governance/specification-freeze-v6.hashes.json', 'configs/governance/specification-freeze-export-v6.json', 'configs/governance/specification-freeze-policy-v7.json', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-PROMPT.md', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-VERDICT.md', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/OWNER-SIGNOFF.md', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/PROTECTED-PUBLICATION-RECEIPT.json', 'docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/RECEIPT.md', 'docs/governance/SPECIFICATION_FREEZE_V7.md', 'qme/governance/specification_freeze_v7.py', 'schemas/governance/specification-freeze-export-v6.schema.json', 'schemas/governance/specification-freeze-policy-v7.schema.json', 'tests/governance/test_specification_freeze_v7.py')
@@ -127,7 +127,7 @@ def _build_trusted_api(
     *,
     error_type: type[SpecificationFreezeV7Error],
     result_type: type[VerifiedSpecificationFreezeV7],
-    path_type: type[Path],
+    path_class: type[Path],
     mapping_proxy_type: type[MappingProxyType[str, Any]],
     hash_new: Any,
     json_loads: Any,
@@ -149,12 +149,18 @@ def _build_trusted_api(
     object_getattribute = object.__getattribute__
     object_setattr = object.__setattr__
     type_builtin = type
+    path_type = type_builtin(path_class())
+    any_builtin = any
     tuple_type = tuple
     list_type = list
     dict_type = dict
     str_type = str
+    getattr_builtin = getattr
+    int_type = int
     len_builtin = len
-    open_flags = os_module.O_RDONLY | getattr(os_module, "O_BINARY", 0)
+    unicode_decode_error_type = UnicodeDecodeError
+    value_error_type = ValueError
+    max_bytes = 67_108_864
     runtime_pattern = re_module.compile(
         rb'(_EXPECTED_RUNTIME_NORMALIZED_SHA256 = ")[0-9a-f:]{71}("\r?\n)'
     )
@@ -201,52 +207,129 @@ def _build_trusted_api(
             fail(f"{label} must be a SHA-256 digest")
         return normalized
 
-    def strict_relative(relative: str) -> None:
-        path = path_type(relative)
-        if path.is_absolute() or not relative or "\\" in relative or ".." in path.parts:
-            fail(f"unsafe repository path: {relative}")
+    def path_identity(path: Path) -> tuple[int, int, int, int, int]:
+        info = path.lstat()
+        attrs = int_type(getattr_builtin(info, "st_file_attributes", 0))
+        reparse = int_type(getattr_builtin(stat_module, "FILE_ATTRIBUTE_REPARSE_POINT", 0))
+        if stat_module.S_ISLNK(info.st_mode) or (reparse and attrs & reparse):
+            fail(f"linked or reparse path rejected: {path}")
+        return (
+            int_type(info.st_dev),
+            int_type(info.st_ino),
+            int_type(info.st_mode),
+            int_type(info.st_nlink),
+            attrs,
+        )
+
+    def safe_parts(relative: str) -> tuple[str, ...]:
+        if (
+            type_builtin(relative) is not str_type
+            or not relative
+            or "\\" in relative
+            or ":" in relative
+        ):
+            fail("artifact path is not canonical repository-relative POSIX text")
+        parts = tuple_type(relative.split("/"))
+        if any_builtin(part in ("", ".", "..") for part in parts):
+            fail("artifact path contains an unsafe component")
+        return parts
 
     def read_bytes(relative: str, root: Path) -> bytes:
-        strict_relative(relative)
-        target = root.joinpath(relative)
+        if type_builtin(root) is not path_type:
+            fail("repository root must be an exact platform Path")
+        parts = safe_parts(relative)
         try:
+            root_resolved = root.resolve(strict=True)
+            if not root_resolved.is_dir():
+                fail("repository root is not a directory")
+            target = root_resolved.joinpath(*parts)
+            ancestors: list[Path] = [root_resolved]
+            cursor = root_resolved
+            for part in parts[:-1]:
+                cursor = cursor / part
+                ancestors.append(cursor)
+            before_ancestors = tuple_type(
+                (str_type(item), path_identity(item)) for item in ancestors
+            )
             resolved = target.resolve(strict=True)
-            resolved.relative_to(root)
-            before = os_module.lstat(target)
-        except (OSError, ValueError) as exc:
+            resolved.relative_to(root_resolved)
+            before_target = path_identity(target)
+        except (OSError, value_error_type) as exc:
             raise error_type(f"unsafe or missing artifact: {relative}") from exc
-        if stat_module.S_ISLNK(before.st_mode) or not stat_module.S_ISREG(before.st_mode):
-            fail(f"artifact must be a regular non-symlink file: {relative}")
-        if before.st_nlink != 1:
-            fail(f"artifact must not be hard-linked: {relative}")
-        if before.st_size > 67_108_864:
-            fail(f"artifact exceeds size limit: {relative}")
-        fd = os_module.open(target, open_flags)
+        if not stat_module.S_ISREG(before_target[2]) or before_target[3] != 1:
+            fail(f"artifact must be a single-link regular file: {relative}")
+        flags = os_module.O_RDONLY | int_type(getattr_builtin(os_module, "O_BINARY", 0))
+        nofollow = int_type(getattr_builtin(os_module, "O_NOFOLLOW", 0))
+        if nofollow:
+            flags |= nofollow
+        try:
+            fd = os_module.open(target, flags)
+        except OSError as exc:
+            raise error_type(f"artifact could not be safely opened: {relative}") from exc
+        chunks: list[bytes] = []
         try:
             opened = os_module.fstat(fd)
+            opened_identity = (
+                int_type(opened.st_dev),
+                int_type(opened.st_ino),
+                int_type(opened.st_mode),
+                int_type(opened.st_nlink),
+                int_type(getattr_builtin(opened, "st_file_attributes", 0)),
+            )
             if (
-                not stat_module.S_ISREG(opened.st_mode)
-                or opened.st_nlink != 1
-                or opened.st_size != before.st_size
-                or (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino)
+                opened_identity != before_target
+                or not stat_module.S_ISREG(opened.st_mode)
+                or int_type(opened.st_nlink) != 1
             ):
                 fail(f"artifact identity changed while opening: {relative}")
-            chunks: list[bytes] = []
-            remaining = opened.st_size
-            while remaining:
-                block = os_module.read(fd, min(1_048_576, remaining))
+            total = 0
+            while True:
+                block = os_module.read(fd, 65_536)
                 if not block:
-                    fail(f"artifact truncated while reading: {relative}")
+                    break
+                total += len_builtin(block)
+                if total > max_bytes:
+                    fail(f"artifact exceeds size limit: {relative}")
                 chunks.append(block)
-                remaining -= len_builtin(block)
-            if os_module.read(fd, 1):
-                fail(f"artifact grew while reading: {relative}")
-            after = os_module.fstat(fd)
-            if (after.st_size, after.st_mtime_ns) != (opened.st_size, opened.st_mtime_ns):
+            after_open = os_module.fstat(fd)
+            after_identity = (
+                int_type(after_open.st_dev),
+                int_type(after_open.st_ino),
+                int_type(after_open.st_mode),
+                int_type(after_open.st_nlink),
+                int_type(getattr_builtin(after_open, "st_file_attributes", 0)),
+            )
+            if (
+                after_identity != opened_identity
+                or int_type(after_open.st_size) != total
+                or int_type(after_open.st_mtime_ns) != int_type(opened.st_mtime_ns)
+            ):
                 fail(f"artifact mutated while reading: {relative}")
-            return b"".join(chunks)
+            try:
+                if path_identity(target) != before_target:
+                    fail(f"artifact path identity changed while open: {relative}")
+                if tuple_type(
+                    (str_type(item), path_identity(item)) for item in ancestors
+                ) != before_ancestors:
+                    fail(f"artifact ancestor identity changed while open: {relative}")
+                if target.resolve(strict=True) != resolved:
+                    fail(f"artifact resolved target changed while open: {relative}")
+            except OSError as exc:
+                raise error_type(f"artifact path changed while open: {relative}") from exc
         finally:
             os_module.close(fd)
+        try:
+            if path_identity(target) != before_target:
+                fail(f"artifact path identity changed after close: {relative}")
+            if tuple_type(
+                (str_type(item), path_identity(item)) for item in ancestors
+            ) != before_ancestors:
+                fail(f"artifact ancestor identity changed after close: {relative}")
+            if target.resolve(strict=True) != resolved:
+                fail(f"artifact resolved target changed after close: {relative}")
+        except OSError as exc:
+            raise error_type(f"artifact path changed after close: {relative}") from exc
+        return b"".join(chunks)
 
     def digest(relative: str, root: Path) -> str:
         return cast(str, hash_new(read_bytes(relative, root)).hexdigest())
@@ -268,7 +351,7 @@ def _build_trusted_api(
                 object_pairs_hook=no_duplicates,
                 parse_constant=lambda token: fail(f"non-finite JSON number: {token}"),
             )
-        except (UnicodeDecodeError, json_error_type) as exc:
+        except (unicode_decode_error_type, json_error_type) as exc:
             raise error_type(f"invalid strict JSON: {relative}") from exc
         if type_builtin(value) is not dict_type:
             fail(f"JSON root must be an object: {relative}")
@@ -732,7 +815,8 @@ def _build_trusted_api(
         root = (repository_root or path_type.cwd()).resolve(strict=True)
         manifest, _ = load_json(manifest_path_value, root)
         if (
-            manifest.get("schema_version") != "qme.hash_manifest.v1"
+            tuple_type(manifest) != ("schema_version", "artifact_id", "status", "artifacts")
+            or manifest.get("schema_version") != "qme.hash_manifest.v1"
             or manifest.get("artifact_id") != policy_id_value
             or manifest.get("status") != "BLOCKED_9_ACTIVE"
         ):
@@ -816,7 +900,7 @@ def _build_trusted_api(
 ) = _build_trusted_api(
     error_type=SpecificationFreezeV7Error,
     result_type=VerifiedSpecificationFreezeV7,
-    path_type=Path,
+    path_class=Path,
     mapping_proxy_type=MappingProxyType,
     hash_new=hashlib.sha256,
     json_loads=json.loads,
