@@ -1,0 +1,67 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V7",
+  "status": "BLOCKED_9_ACTIVE",
+  "artifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"
+    },
+    {
+      "path": "configs/governance/nee116-capacity-solver-freeze-candidate-v1.hashes.json",
+      "sha256": "ec14cd0a:eed0e6d4:4c5b83b0:48d2ff5a:8c0ea863:cd74ce76:3cd53df9:e6c53962"
+    },
+    {
+      "path": "configs/governance/specification-freeze-v6.hashes.json",
+      "sha256": "cebd85d5:0f19932c:42c6c3b6:2548c73c:8810e98f:3325cbf2:c5e104a9:7404ec4f"
+    },
+    {
+      "path": "configs/governance/specification-freeze-export-v6.json",
+      "sha256": "b68e14d9:e0b2187f:6c740f67:47558864:3c7f1b9f:0de9929f:7c733e9d:42e39c75"
+    },
+    {
+      "path": "configs/governance/specification-freeze-policy-v7.json",
+      "sha256": "5a5d54c5:1e4332b7:f4875207:f770d54e:67740b60:80a0121f:67c9cb9d:74728096"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-PROMPT.md",
+      "sha256": "10180bff:4a0c9e89:655788a3:f218dd01:51e6e754:b7968af6:53bc6926:7b2f1743"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/DELTA-REVIEW-VERDICT.md",
+      "sha256": "981b8a38:77dd3326:07aa48ea:9a6cd06d:49bd3c1d:f3eea1c6:14e5276e:b7e1c6c3"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/OWNER-SIGNOFF.md",
+      "sha256": "0944d220:6cb7281f:f2a76b78:40b00073:16a98c67:f80e99c1:7472aaa1:46291dc5"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/PROTECTED-PUBLICATION-RECEIPT.json",
+      "sha256": "12cbd97f:37a12afc:988ff9ef:ab1559dc:a67a59dd:2b8065d1:3d140390:e4f59ea9"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/nee116-capacity-solver-evidence/RECEIPT.md",
+      "sha256": "e47377b6:757fab7a:3c8a07f0:34e12462:0485b0af:4e68e0a7:6054793b:5f1ac700"
+    },
+    {
+      "path": "docs/governance/SPECIFICATION_FREEZE_V7.md",
+      "sha256": "0fefb3ba:48a28b36:0c7afac3:61b2ac8c:07fbfe5c:4829ce69:6a415e85:853e6a8f"
+    },
+    {
+      "path": "qme/governance/specification_freeze_v7.py",
+      "sha256": "4ec79f53:afb06698:2c36e027:f3570e26:12e85bd1:12fb6e4c:b9b53385:81f2a462"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-export-v6.schema.json",
+      "sha256": "6ecbd6f5:fae4d4ed:16cdc9ee:47a9489c:35efb439:42ea4c59:6af07dbb:08527d70"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-policy-v7.schema.json",
+      "sha256": "888ff1a3:e8127031:5c6bf048:fc35a64d:6f2f1612:c33d4bab:e02648b3:302806b1"
+    },
+    {
+      "path": "tests/governance/test_specification_freeze_v7.py",
+      "sha256": "467abe26:0bb8a918:ea67db92:561adac3:2324163f:37c2e7b6:609e517e:db6b03d3"
+    }
+  ]
+}
