@@ -1,0 +1,63 @@
+{
+  "schema_version": "qme.ndx_membership_evidence_acceptance_candidate.v1",
+  "candidate_id": "NEE-119-NDX-MEMBERSHIP-EVIDENCE-ACCEPTANCE-CANDIDATE-V1",
+  "status": "SUFFICIENT_FIRST_AUTHORITATIVE_SNAPSHOT_EVIDENCE_FOR_SUCCESSOR_FREEZE_NOT_YET_PUBLISHED",
+  "target_blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+  "authority": {
+    "owner_decision_record": {
+      "path": "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md",
+      "sha256": "68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662",
+      "decision": "d14_ndx_membership_authority"
+    },
+    "official_snapshot": {
+      "xlsx_path": "tests/fixtures/data/ndx/official/NDX-2026-07-31-SOD.xlsx",
+      "xlsx_sha256": "5ffa374f:30906523:5ffd3b46:a1851166:67e519a9:d524d326:0f5c4472:e440e04c",
+      "xlsx_bytes": 8486,
+      "csv_path": "tests/fixtures/data/ndx/official/NDX-2026-07-31-SOD.csv",
+      "csv_sha256": "43ee2933:e0ed9587:17caad14:481adaa5:c3160107:1b8b2b02:5a03e022:6e7323be",
+      "csv_bytes": 2336,
+      "row_count": 103
+    },
+    "ingested_snapshot": {
+      "path": "tests/fixtures/governance/ndx-membership-2026-07-31-approved-snapshot.json",
+      "sha256": "53018290:74c36e08:f53f9261:968538f7:52143fa2:260158f0:81573b76:4dc814f9",
+      "bytes": 59994,
+      "snapshot_id": "NDX-2026-07-31-93760e0e9748"
+    },
+    "owner_approval": {
+      "path": "tests/fixtures/governance/ndx-membership-2026-07-31-approval.jsonl",
+      "sha256": "392f0a7e:ad4644d8:eff68dde:3214e4ab:7e54c0b1:4430306e:3df65d61:2db74026",
+      "bytes": 786,
+      "approver": "neeljaiswal90",
+      "approved_at": "2026-08-23T04:12:31+00:00"
+    },
+    "official_june_change_set": {
+      "path": "tests/fixtures/governance/ndx-june-2026-official-change-set.json",
+      "sha256": "1a7f05fa:0ae53c31:aeffd5da:09fe2a73:fe51b861:2a1c327d:92731323:1ba4dabd",
+      "bytes": 1200,
+      "source_url": "https://www.nasdaq.com/press-release/nasdaq-100-indexr-june-2026-quarterly-changes-2026-06-12",
+      "effective_at": "2026-06-22"
+    }
+  },
+  "accepted_scope": {
+    "membership_authority": "NASDAQ_GIW_COMPONENT_OR_WEIGHTING_EXPORT",
+    "change_reconciliation_authority": "OFFICIAL_NASDAQ_CHANGE_ANNOUNCEMENTS",
+    "first_accepted_effective_date": "2026-07-31",
+    "pre_first_snapshot_membership": "UNAVAILABLE",
+    "qqq_holdings_authority": false,
+    "goog_and_googl_preserved_separately": true,
+    "exact_component_count_assumption": false
+  },
+  "claims": {
+    "first_authoritative_ndx_snapshot_available": true,
+    "june_change_reconciliation_exact": true,
+    "evidence_sufficient_for_transition": true,
+    "historical_membership_before_first_snapshot_available": false,
+    "future_membership_inferred": false,
+    "successor_freeze_published": false,
+    "blocker_cleared": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "live_order_authority": false
+  }
+}

@@ -1,0 +1,82 @@
+name: M0 substantive evidence Linux replay
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/m0-substantive-evidence-linux.yml"
+      - "configs/governance/m0-substantive-evidence-candidate-v1.json"
+      - "configs/governance/m0-substantive-evidence-candidate-v1.hashes.json"
+      - "docs/governance/M0_SUBSTANTIVE_EVIDENCE_CANDIDATE_V1.md"
+      - "qme/governance/m0_substantive_evidence_candidate.py"
+      - "schemas/governance/m0-substantive-evidence-candidate-v1.schema.json"
+      - "tests/governance/test_m0_substantive_evidence_candidate.py"
+      - "qme/data/ndx/**"
+      - "qme/data/universe/av_proxy_review_v2.py"
+      - "tests/data/**"
+      - "tests/fixtures/data/ndx/**"
+      - "tests/fixtures/governance/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/m0-substantive-evidence-linux.yml"
+      - "configs/governance/m0-substantive-evidence-candidate-v1.json"
+      - "configs/governance/m0-substantive-evidence-candidate-v1.hashes.json"
+      - "docs/governance/M0_SUBSTANTIVE_EVIDENCE_CANDIDATE_V1.md"
+      - "qme/governance/m0_substantive_evidence_candidate.py"
+      - "schemas/governance/m0-substantive-evidence-candidate-v1.schema.json"
+      - "tests/governance/test_m0_substantive_evidence_candidate.py"
+      - "qme/data/ndx/**"
+      - "qme/data/universe/av_proxy_review_v2.py"
+      - "tests/data/**"
+      - "tests/fixtures/data/ndx/**"
+      - "tests/fixtures/governance/**"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.5"
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+      - name: Install locked development toolchain
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Replay candidate and evidence legs
+        run: >-
+          python -m pytest -q
+          tests/governance/test_m0_substantive_evidence_candidate.py
+          tests/data/test_corporate_action_corrections_oracle_v2.py
+          tests/data/test_m0_pit_fixture_receipt.py
+          tests/data/test_ndx_giw_xlsx.py
+          tests/data/test_ndx_membership_owner_approval_evidence.py
+          tests/data/test_av_proxy_review_v2.py
+          tests/governance/test_av_m0_pit_evidence_acceptance_candidate_v1.py
+          tests/governance/test_ndx_membership_evidence_acceptance_candidate_v1.py
+          tests/governance/test_xnas_calendar_acceptance_candidate_v2.py
+          tests/quant/test_tax_lots.py
+          tests/quant/test_tax_lots_fifo_wash_kat.py
+          tests/quant/test_regulatory_fees_v2.py
+          tests/quant/test_asymmetric_costs_v3.py
+      - name: Lint and type-check owned sources
+        run: >-
+          python -m ruff check
+          qme/governance/m0_substantive_evidence_candidate.py
+          qme/data/ndx/giw_xlsx.py
+          qme/data/universe/av_proxy_review_v2.py
+          tests/governance/test_m0_substantive_evidence_candidate.py
+          && python -m mypy --strict
+          qme/governance/m0_substantive_evidence_candidate.py
+          qme/data/ndx/giw_xlsx.py
+          qme/data/universe/av_proxy_review_v2.py
+      - name: Compile owned sources
+        run: >-
+          python -m compileall -q
+          qme/governance/m0_substantive_evidence_candidate.py
+          qme/data/ndx/giw_xlsx.py
+          qme/data/universe/av_proxy_review_v2.py

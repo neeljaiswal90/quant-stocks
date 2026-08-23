@@ -1,0 +1,41 @@
+{
+  "schema_version": "qme.ndx_change_set.v1",
+  "change_set_id": "NDX-2026-06-22-OFFICIAL-QUARTERLY-CHANGES",
+  "index_symbol": "NDX",
+  "source_url": "https://www.nasdaq.com/press-release/nasdaq-100-indexr-june-2026-quarterly-changes-2026-06-12",
+  "source_url_recorded": true,
+  "source_artifact": {
+    "path": "tests/fixtures/data/ndx/official/nasdaq-100-june-2026-quarterly-changes.html",
+    "sha256": "7843688e:6a34596b:56a6a729:aaba9a8a:9b420e42:f34d2b64:e7afa642:a4ef1445",
+    "bytes": 155463,
+    "retrieved_on": "2026-08-22"
+  },
+  "announced_at": "2026-06-11T20:00:00-04:00",
+  "effective_at": "2026-06-22",
+  "add": [
+    "ALAB",
+    "CRWV",
+    "NBIS",
+    "RKLB",
+    "TER"
+  ],
+  "remove": [
+    "CHTR",
+    "CTSH",
+    "INSM",
+    "VRSK",
+    "ZS"
+  ],
+  "source_facts": {
+    "publisher": "Nasdaq, Inc.",
+    "published_display": "Jun 11, 2026 8:00pm EDT",
+    "effective_wording": "prior to market open on Monday, June 22, 2026"
+  },
+  "claims": {
+    "official_change_announcement_recorded": true,
+    "announcement_exactly_explains_observed_diff": true,
+    "pre_first_snapshot_membership_claimed": false,
+    "production_ready": false,
+    "live_order_authority": false
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "qme.xnas_session_calendar_acceptance_candidate.v2",
+  "candidate_id": "NEE-121-XNAS-CALENDAR-ACCEPTANCE-CANDIDATE-V2",
+  "status": "SUFFICIENT_EVIDENCE_FOR_SUCCESSOR_FREEZE_TRANSITION_NOT_YET_PUBLISHED",
+  "target_blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+  "authority": {
+    "owner_decision_record": {
+      "path": "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md",
+      "sha256": "68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662",
+      "decision": "d9_xnas_calendar_v1_accept"
+    },
+    "evidence_config": {
+      "path": "configs/governance/xnas-session-calendar-evidence-v1.json",
+      "sha256": "348e67d9:92183c49:4f625f90:ada2bb58:e90165f5:3fd90419:3e6d8584:7eb0e290"
+    },
+    "evidence_manifest": {
+      "path": "configs/governance/xnas-session-calendar-evidence-v1.hashes.json",
+      "sha256": "31077a2d:6b7a6eb9:f974b343:b91c99d5:b48c2049:d38758a2:a455c10d:5ca2f453"
+    },
+    "external_review_verdict": {
+      "path": "docs/governance/external-review-results-2026-08-18/A4/A4-VERDICT.md",
+      "sha256": "1ad88520:96e09bd3:4396e666:1af57fd6:5a134f8f:4d007c57:38db0f52:a8c97fe7",
+      "disposition": "GO",
+      "reviewer_provider": "xAI",
+      "reviewer_model": "Grok Build",
+      "reviewed_commit": "d8900788:03c58f3c:a995ff80:004b0255:83fe6b2e",
+      "reviewed_tree": "0d00c7b1:ac87409c:67ec32cb:d0cde29c:316d8334"
+    },
+    "external_review_metadata": {
+      "path": "docs/governance/external-review-results-2026-08-18/A4/METADATA.md",
+      "sha256": "25b2f877:d0e9ae34:581c6a26:0ddce6c8:31250c4e:3082f3d3:d307318a:2de67b77"
+    },
+    "linux_replay": {
+      "workflow_path": ".github/workflows/xnas-calendar-linux.yml",
+      "workflow_sha256": "74869cc5:ba427a9a:7909ac96:e0448d25:3697d5ed:f5897fe0:a89fd679:31043c66",
+      "event": "push",
+      "branch": "main",
+      "run_id": 31922669149,
+      "job_id": 95104990190,
+      "head_sha": "62351e27:3843a62c:77615f06:4a38c805:0300dc58",
+      "conclusion": "success",
+      "replay_result": "IDENTICAL"
+    },
+    "generator_locks": [
+      {
+        "path": "requirements-xnas-calendar-generator.lock",
+        "sha256": "e040a582:49116e7a:7442e438:ffb6cd48:b745664a:3c034d96:6d75da6a:08588278"
+      },
+      {
+        "path": "requirements-xnas-calendar-generator-linux.lock",
+        "sha256": "7cef8951:814d8ef8:5cc3f526:0c894da6:c6bc436c:ed8e3188:a3901c90:8f494571"
+      }
+    ]
+  },
+  "accepted_projection": {
+    "session_count": 4526,
+    "session_ids_sha256": "dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8",
+    "official_cases_verified": 7,
+    "linux_generator_hash_lock_available": true,
+    "windows_linux_byte_replay_verified": true,
+    "production_calendar_available": true,
+    "complete_official_history_verified": false,
+    "future_sessions_are_observed_market_authority": false,
+    "correction_policy": "ANY_CORRECTION_PRODUCES_XNAS_CALENDAR_V2_NEVER_IN_PLACE_OVERWRITE"
+  },
+  "claims": {
+    "evidence_sufficient_for_transition": true,
+    "successor_freeze_published": false,
+    "blocker_cleared": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "prospective_observations_consumable": false,
+    "live_order_authority": false
+  }
+}

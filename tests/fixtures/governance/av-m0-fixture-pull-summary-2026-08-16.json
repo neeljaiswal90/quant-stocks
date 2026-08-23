@@ -1,0 +1,1138 @@
+{
+  "all_ok": true,
+  "claims": {
+    "freeze_blocker_changed": false,
+    "production_pit_evidence_registered": false,
+    "proxy_snapshot_reviewed": false,
+    "raw_pulls_stored_immutably": true
+  },
+  "counts": {
+    "OK": 23
+  },
+  "finished_at": "2026-08-16T03:36:52+00:00",
+  "fixture_event_classes": {
+    "AAPL": "ORDINARY_SPLIT_AND_DIVIDEND",
+    "ATVI": "CASH_MERGER_DELISTING",
+    "BBBY": "ADVERSE_DELISTING",
+    "COST": "SPECIAL_DIVIDEND",
+    "META": "IDENTITY_TICKER_CHANGE",
+    "MSFT": "ORDINARY_DIVIDEND",
+    "NVDA": "LARGE_MODERN_SPLIT"
+  },
+  "fixture_securities": [
+    "AAPL",
+    "NVDA",
+    "MSFT",
+    "COST",
+    "META",
+    "ATVI",
+    "BBBY"
+  ],
+  "listing_date": "2026-07-31",
+  "outcomes": [
+    {
+      "detail": null,
+      "function": "LISTING_STATUS",
+      "params": {
+        "date": "2026-07-31",
+        "state": "active"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/LISTING_STATUS/_/20260816T033626707774Z-5f36e616dd82.bin",
+        "byte_length": 993676,
+        "content_type": "application/x-download",
+        "function": "LISTING_STATUS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/LISTING_STATUS/_/20260816T033626707774Z-5f36e616dd82.meta.json",
+        "params_public": {
+          "date": "2026-07-31",
+          "function": "LISTING_STATUS",
+          "state": "active"
+        },
+        "public_url": "https://www.alphavantage.co/query?date=2026-07-31&function=LISTING_STATUS&state=active",
+        "pull_id": "20260816T033626707774Z-5f36e616dd82",
+        "received_at": "2026-08-16T03:36:26.706774+00:00",
+        "requested_at": "2026-08-16T03:36:24.511185+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "5f36e616:dd82e506:659e310d:b50ac70e:94da0b15:3b7fdf12:7c6d0970:f9c81030",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:26.707774+00:00",
+        "symbol": null
+      },
+      "status": "OK",
+      "symbol": null,
+      "validation": {
+        "columns": [
+          "symbol",
+          "name",
+          "exchange",
+          "assetType",
+          "ipoDate",
+          "delistingDate",
+          "status"
+        ],
+        "earliest": null,
+        "endpoint": "LISTING_STATUS",
+        "latest": null,
+        "notes": [
+          "status=Active"
+        ],
+        "rows": 13611
+      }
+    },
+    {
+      "detail": null,
+      "function": "LISTING_STATUS",
+      "params": {
+        "date": "2026-07-31",
+        "state": "delisted"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/LISTING_STATUS/_/20260816T033627569033Z-c88ac8e0948a.bin",
+        "byte_length": 863978,
+        "content_type": "application/x-download",
+        "function": "LISTING_STATUS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/LISTING_STATUS/_/20260816T033627569033Z-c88ac8e0948a.meta.json",
+        "params_public": {
+          "date": "2026-07-31",
+          "function": "LISTING_STATUS",
+          "state": "delisted"
+        },
+        "public_url": "https://www.alphavantage.co/query?date=2026-07-31&function=LISTING_STATUS&state=delisted",
+        "pull_id": "20260816T033627569033Z-c88ac8e0948a",
+        "received_at": "2026-08-16T03:36:27.569033+00:00",
+        "requested_at": "2026-08-16T03:36:26.720822+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "c88ac8e0:948ac059:c4a42105:2bb470be:31fc10ad:448ef6c9:5210adf4:9378e684",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:27.569033+00:00",
+        "symbol": null
+      },
+      "status": "OK",
+      "symbol": null,
+      "validation": {
+        "columns": [
+          "symbol",
+          "name",
+          "exchange",
+          "assetType",
+          "ipoDate",
+          "delistingDate",
+          "status"
+        ],
+        "earliest": null,
+        "endpoint": "LISTING_STATUS",
+        "latest": null,
+        "notes": [
+          "status=Delisted"
+        ],
+        "rows": 10078
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "AAPL"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/AAPL/20260816T033628897425Z-b1cd3580367c.json",
+        "byte_length": 1412556,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/AAPL/20260816T033628897425Z-b1cd3580367c.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "AAPL"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=AAPL",
+        "pull_id": "20260816T033628897425Z-b1cd3580367c",
+        "received_at": "2026-08-16T03:36:28.892425+00:00",
+        "requested_at": "2026-08-16T03:36:27.922150+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "b1cd3580:367ce83d:ee43adde:c15ff856:13fcfbbb:35c4538d:82ddbb56:70035616",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:28.897425+00:00",
+        "symbol": "AAPL"
+      },
+      "status": "OK",
+      "symbol": "AAPL",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "1999-11-01",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2026-08-14",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 6737
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "AAPL"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/AAPL/20260816T033629270542Z-3760057d1606.json",
+        "byte_length": 12465,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/AAPL/20260816T033629270542Z-3760057d1606.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "AAPL"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=AAPL",
+        "pull_id": "20260816T033629270542Z-3760057d1606",
+        "received_at": "2026-08-16T03:36:29.270542+00:00",
+        "requested_at": "2026-08-16T03:36:29.121340+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "3760057d:1606f272:661446c5:004f58b8:1301385e:9cf9d2ba:90ec6b2f:c1416a0b",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:29.270542+00:00",
+        "symbol": "AAPL"
+      },
+      "status": "OK",
+      "symbol": "AAPL",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": "2012-08-09",
+        "endpoint": "DIVIDENDS",
+        "latest": "2026-08-10",
+        "notes": [],
+        "rows": 58
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "AAPL"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/AAPL/20260816T033630450654Z-22a120133281.json",
+        "byte_length": 452,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/AAPL/20260816T033630450654Z-22a120133281.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "AAPL"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=AAPL",
+        "pull_id": "20260816T033630450654Z-22a120133281",
+        "received_at": "2026-08-16T03:36:30.450654+00:00",
+        "requested_at": "2026-08-16T03:36:30.316601+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "22a12013:328173ff:73f8d488:5ec57827:d39c3906:ba8bbd30:13d7c79e:bd2292d7",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:30.450654+00:00",
+        "symbol": "AAPL"
+      },
+      "status": "OK",
+      "symbol": "AAPL",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": "2000-06-21",
+        "endpoint": "SPLITS",
+        "latest": "2020-08-31",
+        "notes": [],
+        "rows": 4
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "NVDA"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/NVDA/20260816T033632153341Z-7810fd11de27.json",
+        "byte_length": 1401238,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/NVDA/20260816T033632153341Z-7810fd11de27.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "NVDA"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=NVDA",
+        "pull_id": "20260816T033632153341Z-7810fd11de27",
+        "received_at": "2026-08-16T03:36:32.147258+00:00",
+        "requested_at": "2026-08-16T03:36:31.528912+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "7810fd11:de2760e7:0f11f78e:60be1b96:5dfb921a:bf61c9db:87f3a393:f2ffde2b",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:32.153341+00:00",
+        "symbol": "NVDA"
+      },
+      "status": "OK",
+      "symbol": "NVDA",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "1999-11-01",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2026-08-14",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 6737
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "NVDA"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/NVDA/20260816T033632890563Z-c5145d3e0218.json",
+        "byte_length": 12085,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/NVDA/20260816T033632890563Z-c5145d3e0218.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "NVDA"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=NVDA",
+        "pull_id": "20260816T033632890563Z-c5145d3e0218",
+        "received_at": "2026-08-16T03:36:32.890563+00:00",
+        "requested_at": "2026-08-16T03:36:32.722722+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "c5145d3e:021889a8:d386f176:b11ba412:4cc4d193:deca0e9e:47449855:7519ab09",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:32.890563+00:00",
+        "symbol": "NVDA"
+      },
+      "status": "OK",
+      "symbol": "NVDA",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": "2012-11-20",
+        "endpoint": "DIVIDENDS",
+        "latest": "2026-06-04",
+        "notes": [],
+        "rows": 56
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "NVDA"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/NVDA/20260816T033634077188Z-a300dffc4d42.json",
+        "byte_length": 657,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/NVDA/20260816T033634077188Z-a300dffc4d42.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "NVDA"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=NVDA",
+        "pull_id": "20260816T033634077188Z-a300dffc4d42",
+        "received_at": "2026-08-16T03:36:34.077188+00:00",
+        "requested_at": "2026-08-16T03:36:33.921511+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "a300dffc:4d426d69:c04fd8db:62f93bca:4de91f5e:c5b0195b:26194409:4fe7905f",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:34.077188+00:00",
+        "symbol": "NVDA"
+      },
+      "status": "OK",
+      "symbol": "NVDA",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": "2000-06-27",
+        "endpoint": "SPLITS",
+        "latest": "2024-06-10",
+        "notes": [],
+        "rows": 6
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "MSFT"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/MSFT/20260816T033635745248Z-f744e62116ce.json",
+        "byte_length": 1403445,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/MSFT/20260816T033635745248Z-f744e62116ce.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "MSFT"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=MSFT",
+        "pull_id": "20260816T033635745248Z-f744e62116ce",
+        "received_at": "2026-08-16T03:36:35.740250+00:00",
+        "requested_at": "2026-08-16T03:36:35.109047+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "f744e621:16ceb893:b2c3c5c8:2a8ded55:11d27377:4519f4a6:c4f3f48b:c49709ad",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:35.745248+00:00",
+        "symbol": "MSFT"
+      },
+      "status": "OK",
+      "symbol": "MSFT",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "1999-11-01",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2026-08-14",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 6737
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "MSFT"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/MSFT/20260816T033636537665Z-098339f935e9.json",
+        "byte_length": 19323,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/MSFT/20260816T033636537665Z-098339f935e9.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "MSFT"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=MSFT",
+        "pull_id": "20260816T033636537665Z-098339f935e9",
+        "received_at": "2026-08-16T03:36:36.537665+00:00",
+        "requested_at": "2026-08-16T03:36:36.300828+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "098339f9:35e9c023:3ae5577b:2a81cf64:f682f3ec:ec93d38e:eec9d65c:6a8f646e",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:36.537665+00:00",
+        "symbol": "MSFT"
+      },
+      "status": "OK",
+      "symbol": "MSFT",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": "2003-02-19",
+        "endpoint": "DIVIDENDS",
+        "latest": "2026-08-20",
+        "notes": [],
+        "rows": 91
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "MSFT"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/MSFT/20260816T033637657182Z-97cb08f881c0.json",
+        "byte_length": 248,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/MSFT/20260816T033637657182Z-97cb08f881c0.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "MSFT"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=MSFT",
+        "pull_id": "20260816T033637657182Z-97cb08f881c0",
+        "received_at": "2026-08-16T03:36:37.657182+00:00",
+        "requested_at": "2026-08-16T03:36:37.507699+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "97cb08f8:81c0b649:21a61ad8:f538884a:19234ec7:d08dbfcd:249085c7:607b82e1",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:37.657182+00:00",
+        "symbol": "MSFT"
+      },
+      "status": "OK",
+      "symbol": "MSFT",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": "1999-03-29",
+        "endpoint": "SPLITS",
+        "latest": "2003-02-18",
+        "notes": [],
+        "rows": 2
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "COST"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/COST/20260816T033639324101Z-8c80266aa764.json",
+        "byte_length": 1402305,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/COST/20260816T033639324101Z-8c80266aa764.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "COST"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=COST",
+        "pull_id": "20260816T033639324101Z-8c80266aa764",
+        "received_at": "2026-08-16T03:36:39.320097+00:00",
+        "requested_at": "2026-08-16T03:36:38.704265+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "8c80266a:a764d0f4:1e84af8d:f7284458:73a6b1f9:d8624060:9edd8f6c:641c4a44",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:39.324101+00:00",
+        "symbol": "COST"
+      },
+      "status": "OK",
+      "symbol": "COST",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "1999-11-01",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2026-08-14",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 6737
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "COST"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/COST/20260816T033640095967Z-7355c1324529.json",
+        "byte_length": 20376,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/COST/20260816T033640095967Z-7355c1324529.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "COST"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=COST",
+        "pull_id": "20260816T033640095967Z-7355c1324529",
+        "received_at": "2026-08-16T03:36:40.095967+00:00",
+        "requested_at": "2026-08-16T03:36:39.892692+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "7355c132:4529bff2:014754e4:b61d9b90:7eaddd29:42c78871:84185892:92999971",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:40.095967+00:00",
+        "symbol": "COST"
+      },
+      "status": "OK",
+      "symbol": "COST",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": "1999-05-24",
+        "endpoint": "DIVIDENDS",
+        "latest": "2026-07-24",
+        "notes": [],
+        "rows": 96
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "COST"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/COST/20260816T033641238056Z-f397be293f28.json",
+        "byte_length": 146,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/COST/20260816T033641238056Z-f397be293f28.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "COST"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=COST",
+        "pull_id": "20260816T033641238056Z-f397be293f28",
+        "received_at": "2026-08-16T03:36:41.238056+00:00",
+        "requested_at": "2026-08-16T03:36:41.096060+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "f397be29:3f283ef4:c7793613:e95271a6:7ff5ccf4:33f59f73:5a03b984:19f31aca",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:41.238056+00:00",
+        "symbol": "COST"
+      },
+      "status": "OK",
+      "symbol": "COST",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": "2000-01-14",
+        "endpoint": "SPLITS",
+        "latest": "2000-01-14",
+        "notes": [],
+        "rows": 1
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "META"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/META/20260816T033642845690Z-78da904cf51f.json",
+        "byte_length": 751976,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/META/20260816T033642845690Z-78da904cf51f.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "META"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=META",
+        "pull_id": "20260816T033642845690Z-78da904cf51f",
+        "received_at": "2026-08-16T03:36:42.841166+00:00",
+        "requested_at": "2026-08-16T03:36:42.301119+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "78da904c:f51fe16c:af33e908:1900b885:60f5247c:89e8c00e:3b9ca6db:893505f8",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:42.845690+00:00",
+        "symbol": "META"
+      },
+      "status": "OK",
+      "symbol": "META",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "2012-05-18",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2026-08-14",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 3580
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "META"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/META/20260816T033643664096Z-fcd17a4be5bc.json",
+        "byte_length": 2296,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/META/20260816T033643664096Z-fcd17a4be5bc.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "META"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=META",
+        "pull_id": "20260816T033643664096Z-fcd17a4be5bc",
+        "received_at": "2026-08-16T03:36:43.663097+00:00",
+        "requested_at": "2026-08-16T03:36:43.504318+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "fcd17a4b:e5bcccc5:78e96913:3d0e9953:3632b44a:e9d48576:519d8b6c:b94b7a1b",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:43.664096+00:00",
+        "symbol": "META"
+      },
+      "status": "OK",
+      "symbol": "META",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": "2024-02-21",
+        "endpoint": "DIVIDENDS",
+        "latest": "2026-06-15",
+        "notes": [],
+        "rows": 10
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "META"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/META/20260816T033644872720Z-db75876d1a54.json",
+        "byte_length": 40,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/META/20260816T033644872720Z-db75876d1a54.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "META"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=META",
+        "pull_id": "20260816T033644872720Z-db75876d1a54",
+        "received_at": "2026-08-16T03:36:44.872720+00:00",
+        "requested_at": "2026-08-16T03:36:44.712695+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "db75876d:1a54cd4b:3afd42db:b2f182b7:4f67e3cc:a35ba39b:171a9a45:846e1af8",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:44.872720+00:00",
+        "symbol": "META"
+      },
+      "status": "OK",
+      "symbol": "META",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": null,
+        "endpoint": "SPLITS",
+        "latest": null,
+        "notes": [],
+        "rows": 0
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "ATVI"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/ATVI/20260816T033646517830Z-6c045f290591.json",
+        "byte_length": 1241773,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/ATVI/20260816T033646517830Z-6c045f290591.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "ATVI"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=ATVI",
+        "pull_id": "20260816T033646517830Z-6c045f290591",
+        "received_at": "2026-08-16T03:36:46.514831+00:00",
+        "requested_at": "2026-08-16T03:36:45.920167+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "6c045f29:0591bbe7:79b33e2a:4783fa68:b162afef:e59cc593:4e8c7ca2:e6255190",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:46.517830+00:00",
+        "symbol": "ATVI"
+      },
+      "status": "OK",
+      "symbol": "ATVI",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "1999-11-01",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2023-10-13",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 6027
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "ATVI"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/ATVI/20260816T033647246267Z-e9949aabf4a4.json",
+        "byte_length": 2941,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/ATVI/20260816T033647246267Z-e9949aabf4a4.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "ATVI"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=ATVI",
+        "pull_id": "20260816T033647246267Z-e9949aabf4a4",
+        "received_at": "2026-08-16T03:36:47.246267+00:00",
+        "requested_at": "2026-08-16T03:36:47.119799+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "e9949aab:f4a4b887:3a190f1a:d1f08d64:0abed38c:d4e4dc23:c3b670a7:6846835a",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:47.246267+00:00",
+        "symbol": "ATVI"
+      },
+      "status": "OK",
+      "symbol": "ATVI",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": "2010-02-18",
+        "endpoint": "DIVIDENDS",
+        "latest": "2023-08-01",
+        "notes": [],
+        "rows": 14
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "ATVI"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/ATVI/20260816T033648490783Z-2a21ca40c220.json",
+        "byte_length": 656,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/ATVI/20260816T033648490783Z-2a21ca40c220.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "ATVI"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=ATVI",
+        "pull_id": "20260816T033648490783Z-2a21ca40c220",
+        "received_at": "2026-08-16T03:36:48.490783+00:00",
+        "requested_at": "2026-08-16T03:36:48.325052+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "2a21ca40:c2200f4f:3203a4e6:40e82633:9fde8617:18ad4f3b:230ca356:5f3e45e2",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:48.490783+00:00",
+        "symbol": "ATVI"
+      },
+      "status": "OK",
+      "symbol": "ATVI",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": "2001-11-21",
+        "endpoint": "SPLITS",
+        "latest": "2008-09-08",
+        "notes": [],
+        "rows": 6
+      }
+    },
+    {
+      "detail": null,
+      "function": "TIME_SERIES_DAILY",
+      "params": {
+        "outputsize": "full",
+        "symbol": "BBBY"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/BBBY/20260816T033650146830Z-0feffbca8c1a.json",
+        "byte_length": 1246513,
+        "content_type": "application/json",
+        "function": "TIME_SERIES_DAILY",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/TIME_SERIES_DAILY/BBBY/20260816T033650146830Z-0feffbca8c1a.meta.json",
+        "params_public": {
+          "function": "TIME_SERIES_DAILY",
+          "outputsize": "full",
+          "symbol": "BBBY"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&outputsize=full&symbol=BBBY",
+        "pull_id": "20260816T033650146830Z-0feffbca8c1a",
+        "received_at": "2026-08-16T03:36:50.143834+00:00",
+        "requested_at": "2026-08-16T03:36:49.524420+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "0feffbca:8c1ab603:bff1001a:077ee7f5:84d42160:b87a08e3:34c87531:5dbe9715",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:50.146830+00:00",
+        "symbol": "BBBY"
+      },
+      "status": "OK",
+      "symbol": "BBBY",
+      "validation": {
+        "columns": [
+          "1. open",
+          "2. high",
+          "3. low",
+          "4. close",
+          "5. volume"
+        ],
+        "earliest": "2002-05-30",
+        "endpoint": "TIME_SERIES_DAILY",
+        "latest": "2026-08-14",
+        "notes": [
+          "output_size=Full size"
+        ],
+        "rows": 6092
+      }
+    },
+    {
+      "detail": null,
+      "function": "DIVIDENDS",
+      "params": {
+        "symbol": "BBBY"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/DIVIDENDS/BBBY/20260816T033650873094Z-c8ac086ba102.json",
+        "byte_length": 40,
+        "content_type": "application/json",
+        "function": "DIVIDENDS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/DIVIDENDS/BBBY/20260816T033650873094Z-c8ac086ba102.meta.json",
+        "params_public": {
+          "function": "DIVIDENDS",
+          "symbol": "BBBY"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=DIVIDENDS&symbol=BBBY",
+        "pull_id": "20260816T033650873094Z-c8ac086ba102",
+        "received_at": "2026-08-16T03:36:50.873094+00:00",
+        "requested_at": "2026-08-16T03:36:50.731744+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "c8ac086b:a1026a7e:6e72c9e1:cb409d13:77f565ac:08aeee73:0a45bab3:dbec4c4b",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:50.873094+00:00",
+        "symbol": "BBBY"
+      },
+      "status": "OK",
+      "symbol": "BBBY",
+      "validation": {
+        "columns": [
+          "ex_dividend_date",
+          "declaration_date",
+          "record_date",
+          "payment_date",
+          "amount"
+        ],
+        "earliest": null,
+        "endpoint": "DIVIDENDS",
+        "latest": null,
+        "notes": [],
+        "rows": 0
+      }
+    },
+    {
+      "detail": null,
+      "function": "SPLITS",
+      "params": {
+        "symbol": "BBBY"
+      },
+      "record": {
+        "attempts": 1,
+        "body_logical_id": "raw/alpha_vantage/SPLITS/BBBY/20260816T033652084426Z-c8ac086ba102.json",
+        "byte_length": 40,
+        "content_type": "application/json",
+        "function": "SPLITS",
+        "http_status": 200,
+        "meta_logical_id": "raw/alpha_vantage/SPLITS/BBBY/20260816T033652084426Z-c8ac086ba102.meta.json",
+        "params_public": {
+          "function": "SPLITS",
+          "symbol": "BBBY"
+        },
+        "public_url": "https://www.alphavantage.co/query?function=SPLITS&symbol=BBBY",
+        "pull_id": "20260816T033652084426Z-c8ac086ba102",
+        "received_at": "2026-08-16T03:36:52.084426+00:00",
+        "requested_at": "2026-08-16T03:36:51.937326+00:00",
+        "response_class": "OK",
+        "schema_version": "qme.av_raw_pull.v1",
+        "sha256": "c8ac086b:a1026a7e:6e72c9e1:cb409d13:77f565ac:08aeee73:0a45bab3:dbec4c4b",
+        "soft_message": null,
+        "source_id": "alpha_vantage",
+        "stored_at": "2026-08-16T03:36:52.084426+00:00",
+        "symbol": "BBBY"
+      },
+      "status": "OK",
+      "symbol": "BBBY",
+      "validation": {
+        "columns": [
+          "effective_date",
+          "split_factor"
+        ],
+        "earliest": null,
+        "endpoint": "SPLITS",
+        "latest": null,
+        "notes": [],
+        "rows": 0
+      }
+    }
+  ],
+  "run_id": "20260816T033624Z-av-m0-fixture-pulls",
+  "run_kind": "av-m0-fixture-pulls",
+  "schema_version": "qme.av_m0_fixture_pull_run.v1",
+  "started_at": "2026-08-16T03:36:24+00:00"
+}

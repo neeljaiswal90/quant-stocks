@@ -1,0 +1,4 @@
+# Preserve immutable reviewed source bytes exactly on every platform.
+*.csv -text
+*.html -text -whitespace
+*.xlsx -text

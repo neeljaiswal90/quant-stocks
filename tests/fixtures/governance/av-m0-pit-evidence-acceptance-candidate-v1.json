@@ -1,0 +1,62 @@
+{
+  "schema_version": "qme.av_m0_pit_evidence_acceptance_candidate.v1",
+  "candidate_id": "NEE-116-BOUNDED-PIT-EVIDENCE-ACCEPTANCE-CANDIDATE-V1",
+  "status": "SUFFICIENT_BOUNDED_REAL_SOURCE_FIXTURE_EVIDENCE_FOR_SUCCESSOR_FREEZE_NOT_YET_PUBLISHED",
+  "target_blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+  "authority": {
+    "owner_decision_record": {
+      "path": "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md",
+      "sha256": "68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662",
+      "decision": "d13_av_pull_scope"
+    },
+    "source_summary": {
+      "path": "tests/fixtures/governance/av-m0-fixture-pull-summary-2026-08-16.json",
+      "sha256": "56b35a5b:8f39d4a8:0ca5e6ec:d9b56423:948b1e65:d1a20a49:93a4d6f3:28e72e37",
+      "bytes": 39115,
+      "run_id": "20260816T033624Z-av-m0-fixture-pulls"
+    },
+    "external_append_only_audit": {
+      "logical_id": "raw/alpha_vantage/_audit.jsonl",
+      "sha256_at_local_reverification": "217fb311:159bd8a7:12c09fb5:3ddce31f:b2c62885:722cc0e2:263ae2b9:01619955",
+      "bytes_at_local_reverification": 24663,
+      "registered_bodies_rehashed": 23,
+      "registered_body_mismatches": 0,
+      "local_reverification_date": "2026-08-22"
+    }
+  },
+  "accepted_scope": {
+    "classification": "M0_PRODUCTION_SOURCE_FIXTURE_EVIDENCE",
+    "registered_pull_count": 23,
+    "successful_pull_count": 23,
+    "listing_signal_session_date": "2026-07-31",
+    "fixture_securities": [
+      "AAPL",
+      "NVDA",
+      "MSFT",
+      "COST",
+      "META",
+      "ATVI",
+      "BBBY"
+    ],
+    "functions": [
+      "LISTING_STATUS",
+      "TIME_SERIES_DAILY",
+      "DIVIDENDS",
+      "SPLITS"
+    ],
+    "body_and_meta_storage": "OWNER_DATA_ROOT_IMMUTABLE_LOGICAL_IDS_AND_SHA256",
+    "does_not_mean": "COMPLETE_PRODUCTION_POINT_IN_TIME_DATA_SPINE"
+  },
+  "claims": {
+    "bounded_real_source_fixture_available": true,
+    "all_registered_bodies_locally_rehashed": true,
+    "evidence_sufficient_for_transition": true,
+    "complete_historical_production_data_available": false,
+    "production_pit_data_spine_complete": false,
+    "successor_freeze_published": false,
+    "blocker_cleared": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "live_order_authority": false
+  }
+}

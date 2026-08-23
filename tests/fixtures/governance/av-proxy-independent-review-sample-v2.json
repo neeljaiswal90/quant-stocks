@@ -1,0 +1,545 @@
+{
+  "candidate_sha256": "c1998b0f:0e444322:bec98555:5fd32fc8:3d6a2cae:f6afb454:6a6a9168:95956ff0",
+  "claims": {
+    "freeze_blocker_changed": false,
+    "independent_review_complete": false,
+    "live_order_authority": false,
+    "production_ready": false,
+    "selection_is_deterministic": true
+  },
+  "review": {
+    "P0_count": null,
+    "P1_count": null,
+    "P2_count": null,
+    "disposition": "PENDING_INDEPENDENT_REVIEW",
+    "reviewed_at": null,
+    "reviewer_identity": null
+  },
+  "rows": [
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "Adamas Trust Inc 9.875 Senior Notes Due 2030",
+      "symbol": "ADAMH"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE ARCA",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "MicroSectors 3 Short Artificial Intelligence AI ETNs",
+      "symbol": "AIQD"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE ARCA",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "MicroSectors 3 Long Artificial Intelligence AI ETNs",
+      "symbol": "AIQU"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "AAR Corp",
+      "symbol": "AIR"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Argo Blockchain Plc",
+      "symbol": "ARBKL"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "American Express Company",
+      "symbol": "AXP"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "BioCardia Inc",
+      "symbol": "BCDA"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "MFS BLENDED RESEARCH INTERNATIONAL EQUITY ETF",
+      "symbol": "BRIE"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "BATS",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "FT VEST LADDERED EMERGING MARKETS BUFFER ETF",
+      "symbol": "BUFE"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Churchill Capital Corp IX - Class A",
+      "symbol": "CCIX"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "Chimera Investment Corporation 9.000 Senior Notes due 2029",
+      "symbol": "CIMN"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "COHEN & STEERS REAL ESTATE ACTIVE ETF",
+      "symbol": "CSRE"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Curbline Properties Corp",
+      "symbol": "CURB"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "BATS",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "Innovator Equity Dual Directional 15 Buffer ETF May",
+      "symbol": "DDFY"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "BATS",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "Innovator Equity Dual Directional 10 Buffer ETF June",
+      "symbol": "DDTZ"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Diversified Healthcare Trust",
+      "symbol": "DHCNL"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "BATS",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "Corgi Emerging Markets Equities 15 Structured Buffer ETF June Series",
+      "symbol": "EMJN"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "GRAYSCALE ETHEREUM COVERED CALL ETF",
+      "symbol": "ETCO"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "BATS",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "Leverage Shares 2X Long ETN Daily",
+      "symbol": "ETNG"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Etsy Inc",
+      "symbol": "ETSY"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "MicroSectors Travel 3X Leveraged ETNs",
+      "symbol": "FLYU"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "MicroSectors FANG 3X Leveraged ETNs",
+      "symbol": "FNGU"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Gladstone Investment Corporation",
+      "symbol": "GAING"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Gladstone Investment Corporation",
+      "symbol": "GAINZ"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Great Elm Capital Corp",
+      "symbol": "GECCI"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_EXPLICIT_GOOGL_COMMON_CLASS_ALLOWLIST",
+      "name": "Alphabet Inc - Class A",
+      "symbol": "GOOGL"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Klotho Neurosciences Inc",
+      "symbol": "GRML"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "BATS",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "ISHARES IBONDS DEC 2035 TERM MUNI BOND ETF",
+      "symbol": "IBMX"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "ETRACS IFED Invest with the Fed TR Index ETN",
+      "symbol": "IFED"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Ispire Technology Inc",
+      "symbol": "ISPR"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "MAX Airlines Inverse 3X Inverse Leveraged ETN",
+      "symbol": "JETD"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "MAX Airlines 3X Leveraged ETN",
+      "symbol": "JETU"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "JPMORGAN 100% U.S. TREASURY SECURITIES MONEY MARKET ETF",
+      "symbol": "JMMF"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Kemper Corporation",
+      "symbol": "KMPR"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "null",
+      "symbol": "MBIEL"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "MFA Financial Inc 8.875 Senior Notes due 2029",
+      "symbol": "MFAN"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Modine Manufacturing Company",
+      "symbol": "MOD"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "NextEra Energy Inc",
+      "symbol": "NEE"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Natural Grocers by Vitamin Cottage Inc",
+      "symbol": "NGVC"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Nektar Therapeutics",
+      "symbol": "NKTR"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "NexPoint Real Estate Finance Inc",
+      "symbol": "NREF"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Osisko Gold Group Inc Com",
+      "symbol": "OGG"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "OBOOK Holdings Inc - Class A",
+      "symbol": "OWLS"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Oxford Lane Capital Corp",
+      "symbol": "OXLCI"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Oxford Lane Capital Corp",
+      "symbol": "OXLCZ"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Perion Network Ltd",
+      "symbol": "PERI"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "PhenixFIN Corp",
+      "symbol": "PFXNZ"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Prelude Therapeutics Inc",
+      "symbol": "PRLD"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Qualys Inc",
+      "symbol": "QLYS"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "SPI Energy Co. Ltd.",
+      "symbol": "SPI"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "Spire Inc 6.375 Junior Subordinated Notes due 2086",
+      "symbol": "SRJN"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "SuRo Capital Corp 6.00 Notes due 2026",
+      "symbol": "SSSSL"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Smurfit WestRock plc",
+      "symbol": "SW"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "TMobile US Inc 5.500 Senior Notes due June 2070",
+      "symbol": "TMUSI"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "TMobile US Inc 6.250 Senior Notes due 2069",
+      "symbol": "TMUSL"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "TMobile US Inc 5.500 Senior Notes due March 2070",
+      "symbol": "TMUSZ"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "Terra Property Trust Inc 7.00 Senior Secured Notes due 2029",
+      "symbol": "TPTS"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "DEBT_SECURITY",
+      "expected_rule_id": "V2_NAME_EXCHANGE_LISTED_DEBT",
+      "name": "Trinity Capital Inc 7.875 Notes due 2029",
+      "symbol": "TRINZ"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "UNIFI Inc",
+      "symbol": "UFI"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "Valero Energy Corp",
+      "symbol": "VLO"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETF",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETF",
+      "name": "VANGUARD TOTAL INFLATION-PROTECTED SECURITIES ETF ETF SHARES",
+      "symbol": "VTP"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NYSE",
+      "expected_classification": "ETN",
+      "expected_rule_id": "V2_NAME_EXPLICIT_ETN",
+      "name": "J P Morgan Chase & Co Inverse VIX ShortTerm Futures ETNs due March 22 2045",
+      "symbol": "VYLD"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "RETAINED_COMMON_STOCK_PROXY",
+      "expected_rule_id": "V2_NO_EXCLUSION_RULE_MATCHED",
+      "name": "G. Willi-Food International Ltd",
+      "symbol": "WILC"
+    },
+    {
+      "asset_type": "Stock",
+      "exchange": "NASDAQ",
+      "expected_classification": "AMBIGUOUS_IDENTITY",
+      "expected_rule_id": "V2_UNVERIFIED_NASDAQ_FIFTH_CHARACTER",
+      "name": "Zions Bancorporation",
+      "symbol": "ZIONL"
+    }
+  ],
+  "sample_count": 64,
+  "sample_id": "AV-PROXY-V2-INDEPENDENT-SAMPLE-2026-07-31",
+  "schema_version": "qme.av_proxy_independent_review_sample.v2",
+  "selection_method": "STRATIFIED_LOWEST_SHA256_SEED_NUL_SYMBOL_PLUS_EXPLICIT_GOOGL",
+  "selection_seed_utf8": "QME-AV-PROXY-V2-INDEPENDENT-SAMPLE-2026-07-31",
+  "source_snapshot_sha256": "151f89d9:f1b533f5:235f12ae:0665a7af:b417a5ae:5412d70b:43ba86bb:87d0ea77",
+  "strata": {
+    "AMBIGUOUS_IDENTITY": 10,
+    "DEBT_SECURITY": 10,
+    "ETF": 10,
+    "ETN": 9,
+    "RETAINED_COMMON_STOCK_PROXY": 25
+  }
+}
