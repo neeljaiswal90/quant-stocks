@@ -1,0 +1,31 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-M0-SUBSTANTIVE-EVIDENCE-CANDIDATE-V1",
+  "status": "READY_FOR_FRESH_INDEPENDENT_REVIEW_BLOCKERS_REMAIN_ACTIVE",
+  "artifacts": [
+    {
+      "path": "configs/governance/m0-substantive-evidence-candidate-v1.json",
+      "sha256": "c03f0b46:7e058e10:034ca642:197a88d7:d193d4de:9c5f770a:45615e27:996881e3"
+    },
+    {
+      "path": "docs/governance/M0_SUBSTANTIVE_EVIDENCE_CANDIDATE_V1.md",
+      "sha256": "21e4f754:0d74abb3:675399ea:d0528e74:96dd0850:0d86ab20:f2c353ba:92d5cb64"
+    },
+    {
+      "path": "qme/governance/m0_substantive_evidence_candidate.py",
+      "sha256": "4e625fc1:2b9591b0:96d88f77:c0018844:b2090344:9a18c54d:448dabe0:0a8d04d7"
+    },
+    {
+      "path": "schemas/governance/m0-substantive-evidence-candidate-v1.schema.json",
+      "sha256": "3ae0ab73:b4bf42f6:3749629e:9dac639a:68f780ca:8cd105b5:d84c5429:681d2581"
+    },
+    {
+      "path": "tests/governance/test_m0_substantive_evidence_candidate.py",
+      "sha256": "9ae5ea2d:4529c110:a3b16e8d:c9f59ef9:9f1944ca:26b816ee:5a7bcdab:3fc7a809"
+    },
+    {
+      "path": ".github/workflows/m0-substantive-evidence-linux.yml",
+      "sha256": "ed440006:55c9f83c:c08ae8d9:6f996508:25450fe7:8b0458ca:7283109a:562df037"
+    }
+  ]
+}

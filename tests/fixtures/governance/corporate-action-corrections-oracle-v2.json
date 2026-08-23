@@ -1,0 +1,143 @@
+{
+  "schema_version": "qme.corporate_action_corrections_oracle.v2",
+  "fixture_id": "NEE-116-CORPORATE-ACTION-CORRECTIONS-ORACLE-V2",
+  "status": "OWNER_DECISIONS_MATERIALIZED_IN_EXACT_ORACLE_INDEPENDENT_REVIEW_PENDING",
+  "authority": {
+    "owner_decision_record": {
+      "path": "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md",
+      "sha256": "68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662",
+      "decisions": [
+        "d10_cost_corporate_action",
+        "d11_bbby_two_events"
+      ]
+    },
+    "registration_proposal": {
+      "path": "docs/governance/M0_BLOCKER_EVIDENCE_REGISTRATION_PROPOSAL_2026-08-16.md",
+      "sha256": "d97791d2:a98d337e:001f2e9a:f4143359:7eb3011c:71c6738e:eeb03cfe:3f81f44e"
+    },
+    "sec_receipt_index_document": {
+      "path": "docs/implementation/SEC_CROSS_SOURCE_RECEIPTS_V1.md",
+      "sha256": "eb5a0683:45a05a62:17308bc7:d469f43d:28c4a10f:e7a29b15:dce17225:324bc3c5"
+    },
+    "alpha_vantage_pull_document": {
+      "path": "docs/implementation/AV_M0_FIXTURE_PULLS_2026-08-16.md",
+      "sha256": "a376f0bd:efb497cc:5ef59645:4be731d2:13bde4ae:49b04e8f:d7aaeec3:7996c154"
+    }
+  },
+  "events": [
+    {
+      "event_id": "COST-SPECIAL-DIVIDEND-2024-V2",
+      "event_class": "SPECIAL_CASH_DIVIDEND",
+      "security_identity": "NASDAQ:COST",
+      "event_coordinates": {
+        "ex_date": "2023-12-27",
+        "record_date": "2023-12-28",
+        "payment_date": "2024-01-12"
+      },
+      "amount_per_share_usd": "15",
+      "supersedes": {
+        "event_id": "COST-SPECIAL-DIVIDEND-2024",
+        "incorrect_ex_date": "2024-01-11",
+        "status": "SUPERSEDED_INCORRECT_DATE_PRESERVED_NOT_DELETED"
+      },
+      "oracle": {
+        "opening_shares": "7",
+        "opening_cash_usd": "1000",
+        "payment_cash_credit_usd": "105",
+        "closing_shares": "7",
+        "closing_cash_usd": "1105"
+      },
+      "source_receipts": [
+        {
+          "accession_number": "0000909832-23-000062",
+          "document": "cost-20231213.htm",
+          "sha256": "da79a3ac:0bbfe5ee:bc4a62b7:2c0527fc:2fc644ed:48d7f814:fd16ad5c:7bc3d516",
+          "bytes": 24127
+        },
+        {
+          "accession_number": "0000909832-23-000062",
+          "document": "costex9918-k121423.htm",
+          "sha256": "c8d223a0:b981eaaa:8e0f5e8a:847a5281:1b8754a5:fd5a3061:958a4d65:fe7b747f",
+          "bytes": 118495
+        }
+      ]
+    },
+    {
+      "event_id": "BBBYQ-EXCHANGE-TO-OTC-TRANSITION-2023",
+      "event_class": "EXCHANGE_OR_OTC_TRANSITION",
+      "security_identity": "BBBY_TO_BBBYQ_SAME_BENEFICIAL_EQUITY",
+      "event_date": "2023-05-03",
+      "security_terminal": false,
+      "oracle": {
+        "opening_shares": "1000",
+        "forced_liquidation_shares": "0",
+        "cash_credit_usd": "0",
+        "closing_shares": "1000",
+        "terminal_valuation_applied": false
+      },
+      "source_receipts": [
+        {
+          "accession_number": "0001193125-23-115523",
+          "document": "d89202d8k.htm",
+          "sha256": "7c920e8e:63a7ffac:fa1b4896:b08d2b93:d2429c9c:9c56bb2a:fa92bbb4:d00a35b6",
+          "bytes": 26408
+        },
+        {
+          "accession_number": "0001354457-23-000478",
+          "document": "xslF25X02/primary_doc.xml",
+          "sha256": "e059e22f:137a56a6:c5157fc4:c993ee7f:28202405:ec91b050:ea972b55:06236f4b",
+          "bytes": 10126
+        }
+      ]
+    },
+    {
+      "event_id": "BBBYQ-TERMINAL-CANCELLATION-2023",
+      "event_class": "ADVERSE_TERMINAL_CANCELLATION",
+      "security_identity": "BBBYQ",
+      "event_date": "2023-09-29",
+      "security_terminal": true,
+      "last_observed_close_usd": "0.0789",
+      "oracle": {
+        "opening_shares": "1000",
+        "closing_shares": "0",
+        "reported_scenarios": [
+          {
+            "last_trade_multiplier": "0",
+            "cash_credit_usd": "0",
+            "promotion_role": "CONSERVATIVE_PRIMARY"
+          },
+          {
+            "last_trade_multiplier": "0.5",
+            "cash_credit_usd": "39.45",
+            "promotion_role": "REPORTING_ONLY"
+          }
+        ]
+      },
+      "source_receipts": [
+        {
+          "accession_number": "0001193125-23-247428",
+          "document": "d579010d8k.htm",
+          "sha256": "9db14254:8b931e35:aa0a14f3:35e4b405:08f492eb:c983cc67:4a8716e9:20336551",
+          "bytes": 37708
+        }
+      ],
+      "alpha_vantage_receipt": {
+        "symbol": "BBBYQ",
+        "pull_id": "20260816T033909079427Z-87f7a22f98d5",
+        "sha256": "87f7a22f:98d54c0c:9ca33362:f06bf719:1d357df1:67d90174:c53e91d0:a9b5abca",
+        "observed_range": "1999-11-01..2023-09-29"
+      }
+    }
+  ],
+  "claims": {
+    "owner_corrections_materialized": true,
+    "old_incorrect_cost_date_preserved": true,
+    "bbby_venue_transition_and_terminal_cancellation_separate": true,
+    "oracle_fixture_built": true,
+    "independent_review_complete": false,
+    "freeze_blocker_changed": false,
+    "milestone_m0_complete": false,
+    "production_ready": false,
+    "live_order_authority": false
+  }
+}

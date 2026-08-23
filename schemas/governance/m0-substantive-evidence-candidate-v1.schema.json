@@ -1,0 +1,723 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qme.local/schemas/governance/m0-substantive-evidence-candidate-v1.schema.json",
+  "title": "M0 substantive-evidence candidate V1",
+  "description": "Exact-const schema for the seven-leg review candidate; it clears no blocker.",
+  "type": "object",
+  "const": {
+    "$schema": "../../schemas/governance/m0-substantive-evidence-candidate-v1.schema.json",
+    "schema_version": "qme.m0_substantive_evidence_candidate.v1",
+    "candidate_id": "NEE-110-M0-SUBSTANTIVE-EVIDENCE-CANDIDATE-V1",
+    "candidate_kind": "SEVEN_BLOCKER_TRANSITION_CANDIDATE_NOT_BLOCKER_CLEARANCE",
+    "status": "READY_FOR_FRESH_INDEPENDENT_REVIEW_BLOCKERS_REMAIN_ACTIVE",
+    "semantic_sha256": "40745e87:767fe566:476fadba:1889ed75:a265f57e:4f1ea995:8aa94711:d0c1f89f",
+    "authority": {
+      "owner": "neeljaiswal90",
+      "directive": "I authorize completion of M0 spec",
+      "authorized_scope": "COMPLETE_M0_SPEC_THROUGH_FAIL_CLOSED_EVIDENCE_REVIEW_SUCCESSOR_FREEZE_AND_RECEIPT_GATES",
+      "candidate_date": "2026-08-22",
+      "fresh_independent_review_status": "PENDING",
+      "owner_exact_byte_signoff_status": "PENDING",
+      "empirical_performance_claim_authorized": false,
+      "production_authority_granted": false,
+      "live_order_authority_granted": false,
+      "linear_state_observed_at_candidate_build": {
+        "NEE-205": {
+          "status": "In Progress",
+          "completed_at": null,
+          "updated_at": "2026-08-23T04:49:57.339Z",
+          "blocks": [
+            "NEE-116"
+          ]
+        },
+        "NEE-116": {
+          "status": "In Progress",
+          "completed_at": null,
+          "updated_at": "2026-08-22T23:08:02.731Z",
+          "blocks": [
+            "NEE-110",
+            "NEE-129"
+          ]
+        },
+        "NEE-110": {
+          "status": "In Progress",
+          "completed_at": null,
+          "updated_at": "2026-08-19T18:34:53.327Z"
+        }
+      }
+    },
+    "candidate_incapability": {
+      "can_change_active_freeze": false,
+      "can_clear_any_blocker": false,
+      "can_complete_m0": false,
+      "required_ladder": [
+        "candidate exact-byte independent review",
+        "separate owner signoff on reviewed exact bytes",
+        "candidate publication and protected-main exact-SHA CI",
+        "separate successor-freeze publication and protected-main exact-SHA CI",
+        "causally later receipt publication and protected-main exact-SHA CI",
+        "terminal cross-contract semantic acceptance",
+        "terminal final-freeze timestamp receipt"
+      ]
+    },
+    "pre_state": {
+      "protected_main": {
+        "commit": "d0242a40:e5335322:50a96557:f7176074:79dbe481",
+        "tree": "edee1d4e:c41950b5:94ea4aee:d04ff0db:27b93e18",
+        "committer_at": "2026-08-22T21:35:23-07:00",
+        "published_pr": 56,
+        "push_ci": {
+          "event": "push",
+          "run_id": 32618246941,
+          "job_id": 97142322134,
+          "job_name": "foundation",
+          "created_at": "2026-08-23T04:35:26Z",
+          "run_started_at": "2026-08-23T04:35:26Z",
+          "updated_at": "2026-08-23T05:04:11Z",
+          "conclusion": "success",
+          "test_count": 1995,
+          "test_duration_seconds": "1435.59",
+          "strict_mypy_source_file_count": 97,
+          "tracked_secret_scan_reviewed_file_count": 560,
+          "tracked_secret_scan_finding_count": 0,
+          "tested_commit": "d0242a40:e5335322:50a96557:f7176074:79dbe481"
+        }
+      },
+      "active_freeze": {
+        "policy_path": "configs/governance/specification-freeze-policy-v7.json",
+        "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V7",
+        "policy_sha256": "5a5d54c5:1e4332b7:f4875207:f770d54e:67740b60:80a0121f:67c9cb9d:74728096",
+        "policy_semantic_sha256": "03223f4f:abdd0b4a:9f3b2c54:4e2066dc:da62df34:a2976d86:6c2e684b:f385a488",
+        "export_path": "configs/governance/specification-freeze-export-v6.json",
+        "export_sha256": "b68e14d9:e0b2187f:6c740f67:47558864:3c7f1b9f:0de9929f:7c733e9d:42e39c75",
+        "manifest_path": "configs/governance/specification-freeze-v7.hashes.json",
+        "manifest_sha256": "a66bf883:016c606c:d188d331:66ebb540:25e5ced8:af98746c:29bf52c2:aaadfb40",
+        "active_blocker_count": 9,
+        "historical_resolved_or_superseded_count": 21,
+        "milestone_m0_complete": false
+      }
+    },
+    "active_blocker_rows_verbatim": [
+      {
+        "blocker_code": "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+        "ticket_id": "NEE-110",
+        "category": "GOVERNANCE",
+        "description": "Final cross-contract semantic acceptance remains unavailable until every production evidence artifact exists and is reviewed."
+      },
+      {
+        "blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Dated SEC and FINRA sell-side fee logic and an independently checked ledger fixture are not implemented."
+      },
+      {
+        "blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        "ticket_id": "NEE-116",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "Corporate-action targets lack immutable provider and independent-source receipts plus accepted ledger fixtures."
+      },
+      {
+        "blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+        "ticket_id": "NEE-116",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "Accepted point-in-time production data and receipts are unavailable."
+      },
+      {
+        "blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-116",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Tax-lot election, lot accounting, and within-account wash-sale logic lack implementation and fixtures."
+      },
+      {
+        "blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        "ticket_id": "NEE-119",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "No accepted point-in-time Nasdaq-100 membership snapshot is bound into the freeze candidate."
+      },
+      {
+        "blocker_code": "NEE-119-AV-PROXY-EVIDENCE",
+        "ticket_id": "NEE-119",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "No reviewed Alpha Vantage common-stock proxy snapshot is bound into the freeze candidate."
+      },
+      {
+        "blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+        "ticket_id": "NEE-121",
+        "category": "PRODUCTION_EVIDENCE",
+        "description": "XNAS identity is registered, but pinned generator package, lock, tzdata, immutable calendar/session-vector hashes, and closure/half-day evidence are unavailable."
+      },
+      {
+        "blocker_code": "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP",
+        "ticket_id": "NEE-121",
+        "category": "FINAL_DERIVED_EVIDENCE",
+        "description": "The final freeze anchor and receipt remain unavailable until every other blocker is accepted."
+      }
+    ],
+    "proposed_transition": {
+      "removes_exactly_in_pre_state_order": [
+        "NEE-116-ASYMMETRIC-COST-METHOD",
+        "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        "NEE-116-PRODUCTION-PIT-DATA",
+        "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+        "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        "NEE-119-AV-PROXY-EVIDENCE",
+        "NEE-121-CALENDAR-SESSION-REGISTRATION"
+      ],
+      "retains_exactly_in_pre_state_order": [
+        "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+        "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP"
+      ],
+      "pre_state": {
+        "active": 9,
+        "historical_resolved_or_superseded": 21
+      },
+      "post_state": {
+        "active": 2,
+        "historical_resolved_or_superseded": 28
+      },
+      "other_rows_changed": false,
+      "transition_performed_by_this_candidate": false,
+      "expected_successor_policy_version": 8,
+      "milestone_m0_complete_after_transition": false
+    },
+    "evidence_legs": [
+      {
+        "target_blocker_code": "NEE-116-ASYMMETRIC-COST-METHOD",
+        "evidence_class": "ENGINEERING_AND_LEDGER_KAT",
+        "candidate_status": "IMPLEMENTED_MERGED_PREDECESSOR_REVIEW_GO_PROTECTED_MAIN_CI_SUCCESS",
+        "primary_artifacts": [
+          "qme/quant/regulatory_fees_v2.py",
+          "qme/quant/asymmetric_costs_v3.py",
+          "tests/fixtures/quant/historical-asymmetric-costs-v3.cases.json",
+          "tests/quant/test_regulatory_fees_v2.py",
+          "tests/quant/test_asymmetric_costs_v3.py"
+        ],
+        "predecessor_independent_review": {
+          "source_system": "LINEAR_COMMENT",
+          "source_issue_id": "NEE-205",
+          "source_comment_id": "f0343d73-83db-4fbc-ba86-7d74f21e943d",
+          "source_created_at": "2026-08-20T21:56:57.183Z",
+          "source_updated_at": "2026-08-20T21:56:57.127Z",
+          "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+          "source_author_name": "Neel Jaiswal",
+          "source_body_bytes": 3164,
+          "source_body_sha256": "c56179af:deee8bfc:ee308f09:ade73816:752d0330:720da10f:4cda5564:f7ad6093",
+          "disposition": "SUFFICIENT_FOR_COMMIT_AND_DRAFT_PR_REVIEW",
+          "p0_count": 0,
+          "p1_count": 0,
+          "p2_count": 0
+        },
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      },
+      {
+        "target_blocker_code": "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+        "evidence_class": "IMMUTABLE_PROVIDER_RECEIPTS_AND_LEDGER_ORACLE",
+        "candidate_status": "EXACT_ORACLE_MATERIALIZED_INDEPENDENT_REVIEW_PENDING",
+        "primary_artifacts": [
+          "tests/fixtures/governance/corporate-action-corrections-oracle-v2.json",
+          "tests/data/test_corporate_action_corrections_oracle_v2.py"
+        ],
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      },
+      {
+        "target_blocker_code": "NEE-116-PRODUCTION-PIT-DATA",
+        "evidence_class": "BOUNDED_REAL_SOURCE_FIXTURE_RECEIPTS",
+        "candidate_status": "BOUNDED_23_PULL_REAL_SOURCE_FIXTURE_READY_FOR_REVIEW",
+        "primary_artifacts": [
+          "tests/fixtures/governance/av-m0-fixture-pull-summary-2026-08-16.json",
+          "tests/fixtures/governance/av-m0-pit-evidence-acceptance-candidate-v1.json",
+          "tests/data/test_m0_pit_fixture_receipt.py",
+          "tests/governance/test_av_m0_pit_evidence_acceptance_candidate_v1.py"
+        ],
+        "complete_m1_pit_spine_claimed": false,
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      },
+      {
+        "target_blocker_code": "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+        "evidence_class": "FAIL_CLOSED_FIFO_WASH_SALE_IMPLEMENTATION_AND_KAT",
+        "candidate_status": "IMPLEMENTATION_AND_EXACT_KAT_COMPLETE_INDEPENDENT_REVIEW_PENDING",
+        "primary_artifacts": [
+          "qme/quant/tax_lots.py",
+          "tests/quant/fixtures/tax-lots-fifo-wash-v1.json",
+          "tests/quant/test_tax_lots.py",
+          "tests/quant/test_tax_lots_fifo_wash_kat.py"
+        ],
+        "actual_personal_tax_liability_claimed": false,
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      },
+      {
+        "target_blocker_code": "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+        "evidence_class": "OFFICIAL_NASDAQ_SNAPSHOT_AND_CHANGE_RECEIPTS",
+        "candidate_status": "FIRST_ACCEPTED_SNAPSHOT_AND_OWNER_APPROVAL_READY_FOR_REVIEW",
+        "primary_artifacts": [
+          "tests/fixtures/governance/ndx-membership-2026-07-31-approved-snapshot.json",
+          "tests/fixtures/governance/ndx-membership-2026-07-31-approval.jsonl",
+          "tests/fixtures/governance/ndx-june-2026-official-change-set.json",
+          "tests/fixtures/governance/ndx-membership-evidence-acceptance-candidate-v1.json",
+          "qme/data/ndx/giw_xlsx.py",
+          "tests/data/test_ndx_giw_xlsx.py"
+        ],
+        "pre_first_snapshot_membership_available": false,
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      },
+      {
+        "target_blocker_code": "NEE-119-AV-PROXY-EVIDENCE",
+        "evidence_class": "DETERMINISTIC_COMMON_STOCK_PROXY_REVIEW_OVERLAY",
+        "candidate_status": "ALL_1724_REVIEW_ROWS_DISPOSITIONED_64_ROW_INDEPENDENT_SAMPLE_PENDING",
+        "primary_artifacts": [
+          "tests/fixtures/governance/av-proxy-review-candidate-v2.json",
+          "tests/fixtures/governance/av-proxy-independent-review-sample-v2.json",
+          "qme/data/universe/av_proxy_review_v2.py",
+          "tests/data/test_av_proxy_review_v2.py"
+        ],
+        "authoritative_us_common_stock_universe_claimed": false,
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      },
+      {
+        "target_blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION",
+        "evidence_class": "PINNED_XNAS_GENERATOR_LOCK_SESSION_VECTOR_AND_LINUX_REPLAY",
+        "candidate_status": "PREDECESSOR_EXTERNAL_REVIEW_GO_AND_PROTECTED_LINUX_REPLAY_AVAILABLE",
+        "primary_artifacts": [
+          "configs/governance/xnas-session-calendar-evidence-v1.json",
+          "configs/governance/xnas-session-calendar-evidence-v1.hashes.json",
+          "tests/fixtures/governance/xnas-session-calendar-acceptance-candidate-v2.json",
+          "docs/governance/external-review-results-2026-08-18/A4/A4-VERDICT.md"
+        ],
+        "future_sessions_are_observed_market_authority": false,
+        "fresh_packet_review_required": true,
+        "transition_performed": false
+      }
+    ],
+    "artifact_inventory": [
+      {
+        "path": ".github/workflows/xnas-calendar-linux.yml",
+        "sha256": "74869cc5:ba427a9a:7909ac96:e0448d25:3697d5ed:f5897fe0:a89fd679:31043c66",
+        "bytes": 4395,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "configs/governance/specification-freeze-export-v6.json",
+        "sha256": "b68e14d9:e0b2187f:6c740f67:47558864:3c7f1b9f:0de9929f:7c733e9d:42e39c75",
+        "bytes": 11338,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "configs/governance/specification-freeze-policy-v7.json",
+        "sha256": "5a5d54c5:1e4332b7:f4875207:f770d54e:67740b60:80a0121f:67c9cb9d:74728096",
+        "bytes": 46347,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "configs/governance/specification-freeze-v7.hashes.json",
+        "sha256": "a66bf883:016c606c:d188d331:66ebb540:25e5ced8:af98746c:29bf52c2:aaadfb40",
+        "bytes": 2974,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "configs/governance/xnas-session-calendar-evidence-v1.hashes.json",
+        "sha256": "31077a2d:6b7a6eb9:f974b343:b91c99d5:b48c2049:d38758a2:a455c10d:5ca2f453",
+        "bytes": 2244,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "configs/governance/xnas-session-calendar-evidence-v1.json",
+        "sha256": "348e67d9:92183c49:4f625f90:ada2bb58:e90165f5:3fd90419:3e6d8584:7eb0e290",
+        "bytes": 5783,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "docs/governance/AV_PROXY_REVIEW_V2.md",
+        "sha256": "5ad7ad77:bf2c3ba5:d87f14ea:5f05fb4a:f4fff7d3:ca281012:98ef7c90:c971bc8a",
+        "bytes": 2912,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "docs/governance/external-review-results-2026-08-18/A4/A4-VERDICT.md",
+        "sha256": "1ad88520:96e09bd3:4396e666:1af57fd6:5a134f8f:4d007c57:38db0f52:a8c97fe7",
+        "bytes": 6081,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "docs/governance/external-review-results-2026-08-18/A4/METADATA.md",
+        "sha256": "25b2f877:d0e9ae34:581c6a26:0ddce6c8:31250c4e:3082f3d3:d307318a:2de67b77",
+        "bytes": 1272,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "docs/governance/HISTORICAL_ASYMMETRIC_COSTS_V3.md",
+        "sha256": "38e0c289:86fa6d55:19d93207:b207c03f:07e7a46e:4a56e5e3:02bf1456:45cdbefc",
+        "bytes": 4123,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "docs/governance/M0_BLOCKER_EVIDENCE_REGISTRATION_PROPOSAL_2026-08-16.md",
+        "sha256": "d97791d2:a98d337e:001f2e9a:f4143359:7eb3011c:71c6738e:eeb03cfe:3f81f44e",
+        "bytes": 12690,
+        "role": "OWNER_OR_METHOD_AUTHORITY"
+      },
+      {
+        "path": "docs/governance/OWNER_DECISION_RECORD_2026_08_16_V1.md",
+        "sha256": "68620e9a:ebf499f3:749bc055:1d8c6cfa:79dfb362:006d8b1d:144c8df3:bc37a662",
+        "bytes": 16011,
+        "role": "OWNER_OR_METHOD_AUTHORITY"
+      },
+      {
+        "path": "docs/governance/SPECIFICATION_FREEZE_V7.md",
+        "sha256": "0fefb3ba:48a28b36:0c7afac3:61b2ac8c:07fbfe5c:4829ce69:6a415e85:853e6a8f",
+        "bytes": 1865,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "docs/implementation/AV_M0_FIXTURE_PULLS_2026-08-16.md",
+        "sha256": "a376f0bd:efb497cc:5ef59645:4be731d2:13bde4ae:49b04e8f:d7aaeec3:7996c154",
+        "bytes": 8484,
+        "role": "PIT_EVIDENCE"
+      },
+      {
+        "path": "docs/implementation/SEC_CROSS_SOURCE_RECEIPTS_V1.md",
+        "sha256": "eb5a0683:45a05a62:17308bc7:d469f43d:28c4a10f:e7a29b15:dce17225:324bc3c5",
+        "bytes": 17577,
+        "role": "CORPORATE_ACTION_EVIDENCE"
+      },
+      {
+        "path": "qme/data/ndx/giw_xlsx.py",
+        "sha256": "ba6adf43:76d7d12c:77816cc9:7905926a:88dfd27c:78cccfc9:bfad113a:6091c6a6",
+        "bytes": 9021,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "qme/data/universe/av_proxy_review_v2.py",
+        "sha256": "6beb42db:32001513:6512e7a5:64d4217c:7e7370c7:c2df6dad:fcedf06d:55c7ebc3",
+        "bytes": 17775,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "qme/governance/specification_freeze_v7.py",
+        "sha256": "db2f7b84:d01f9b91:a2b68907:bd89c3ac:bba318c6:e65603a1:84f52235:fda7a8de",
+        "bytes": 49975,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "qme/quant/asymmetric_costs_v3.py",
+        "sha256": "c791ce5f:014c5772:364f4715:e8419b45:f2b92040:fb115e80:0dce8d02:e12678d8",
+        "bytes": 28602,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "qme/quant/regulatory_fees_v2.py",
+        "sha256": "17372ab2:68448b73:75474a2f:b87483e5:5f8317bb:6a089372:e7bcf839:a91006d8",
+        "bytes": 26417,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "qme/quant/tax_lots.py",
+        "sha256": "94f5183d:6a3a7fa6:e029c60f:726fad71:a9b6c7aa:8af894ab:e9d7d31c:b650cc93",
+        "bytes": 18895,
+        "role": "TAX_LOT_EVIDENCE"
+      },
+      {
+        "path": "requirements-xnas-calendar-generator-linux.lock",
+        "sha256": "7cef8951:814d8ef8:5cc3f526:0c894da6:c6bc436c:ed8e3188:a3901c90:8f494571",
+        "bytes": 2431,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "requirements-xnas-calendar-generator.lock",
+        "sha256": "e040a582:49116e7a:7442e438:ffb6cd48:b745664a:3c034d96:6d75da6a:08588278",
+        "bytes": 2039,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "schemas/governance/specification-freeze-export-v6.schema.json",
+        "sha256": "6ecbd6f5:fae4d4ed:16cdc9ee:47a9489c:35efb439:42ea4c59:6af07dbb:08527d70",
+        "bytes": 12088,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "schemas/governance/specification-freeze-policy-v7.schema.json",
+        "sha256": "888ff1a3:e8127031:5c6bf048:fc35a64d:6f2f1612:c33d4bab:e02648b3:302806b1",
+        "bytes": 48381,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "scripts/convert_nasdaq_giw_xlsx.py",
+        "sha256": "a98dce5c:312f2cdd:558109a2:a5502c75:7a76a3a3:316e2291:0ca7622f:d4bdc26a",
+        "bytes": 1457,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "scripts/generate_av_proxy_review_sample_v2.py",
+        "sha256": "19016f33:f85223cb:9778b0f0:ca14ad8c:415824da:21ac6fe5:15c35405:c83b6a1f",
+        "bytes": 962,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "scripts/generate_av_proxy_review_v2.py",
+        "sha256": "96d740c8:54b2815f:dfbff8a6:7e9043b3:1aff0ef5:3647e8b2:14a0cfad:73ab439f",
+        "bytes": 892,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "scripts/generate_historical_asymmetric_costs_v3_fixture.py",
+        "sha256": "6ea15c94:1951d545:621f59f0:73490864:5a279060:a155d1c6:1772c5bc:0090a29d",
+        "bytes": 6646,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "tests/data/test_av_proxy_review_v2.py",
+        "sha256": "528f5bf1:06ec6032:c9e9c433:98873c5b:5d790dea:66e49389:2c5a1efa:d91537c9",
+        "bytes": 6675,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "tests/data/test_corporate_action_corrections_oracle_v2.py",
+        "sha256": "d01516ee:f39a8aae:f2253cfc:db2eeeb5:f8c76dc2:1b4a0479:fba629f1:ea3e667e",
+        "bytes": 3236,
+        "role": "CORPORATE_ACTION_EVIDENCE"
+      },
+      {
+        "path": "tests/data/test_m0_pit_fixture_receipt.py",
+        "sha256": "867cb3c3:214e7f9a:e00287cc:6c8e1b0f:11ccb0b2:197ae826:ba8aff70:b14e8e71",
+        "bytes": 5365,
+        "role": "OWNER_OR_METHOD_AUTHORITY"
+      },
+      {
+        "path": "tests/data/test_ndx_giw_xlsx.py",
+        "sha256": "b163d6a4:6721cae7:4970c468:958d9c48:b9b38d3b:b3fed79d:8556b228:13fb06ad",
+        "bytes": 5369,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/data/test_ndx_membership_owner_approval_evidence.py",
+        "sha256": "a26790e8:ac399210:9c9f771b:8717a672:8c1c60f4:0e579ab8:3e4b15e2:bdbe3463",
+        "bytes": 3395,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/.gitattributes",
+        "sha256": "5510024b:38067a97:dae9b75c:6060993e:eee408fc:9482ea69:e7995652:8f115a1b",
+        "bytes": 120,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/nasdaq-100-june-2026-quarterly-changes.html",
+        "sha256": "7843688e:6a34596b:56a6a729:aaba9a8a:9b420e42:f34d2b64:e7afa642:a4ef1445",
+        "bytes": 155463,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-06-18-SOD.csv",
+        "sha256": "15b53599:fadc4112:fbb9dcb8:962addf0:19833dad:60a884e9:2d38dae1:0ee73168",
+        "bytes": 2293,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-06-18-SOD.xlsx",
+        "sha256": "a7ca5d9c:9dde806f:0d1d1073:41613fe0:8baa0a4b:bdb68ce7:4d09936d:bd2ea0e6",
+        "bytes": 8396,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-06-22-SOD.csv",
+        "sha256": "3d5f7870:8a5aa28b:e6e1284e:45bbf0c6:0a89a884:b614d150:07fd56ce:045d9e71",
+        "bytes": 2288,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-06-22-SOD.xlsx",
+        "sha256": "f2e543e0:01ca83a4:5655118c:d5e7817d:9fca1d1c:77e88e17:e087ea6e:50a67328",
+        "bytes": 8390,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-07-07-SOD.csv",
+        "sha256": "43ee2933:e0ed9587:17caad14:481adaa5:c3160107:1b8b2b02:5a03e022:6e7323be",
+        "bytes": 2336,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-07-07-SOD.xlsx",
+        "sha256": "b3a8d906:1f23faa5:7b956319:2b10ddb3:904a3862:c116ce8d:a2aae978:2b635cf9",
+        "bytes": 8486,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-07-31-SOD.csv",
+        "sha256": "43ee2933:e0ed9587:17caad14:481adaa5:c3160107:1b8b2b02:5a03e022:6e7323be",
+        "bytes": 2336,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/data/ndx/official/NDX-2026-07-31-SOD.xlsx",
+        "sha256": "5ffa374f:30906523:5ffd3b46:a1851166:67e519a9:d524d326:0f5c4472:e440e04c",
+        "bytes": 8486,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/.gitattributes",
+        "sha256": "60635857:d0a9c581:9ad805bd:da8964bf:2721202d:1aeec847:d5145f49:d71518b8",
+        "bytes": 136,
+        "role": "PIT_DATA_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/av-m0-fixture-pull-summary-2026-08-16.json",
+        "sha256": "56b35a5b:8f39d4a8:0ca5e6ec:d9b56423:948b1e65:d1a20a49:93a4d6f3:28e72e37",
+        "bytes": 39115,
+        "role": "PIT_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/av-m0-pit-evidence-acceptance-candidate-v1.json",
+        "sha256": "0c7d5a84:4cfae9ec:739787a3:88131f78:0e504c24:8ded5155:f1184e48:f0aca585",
+        "bytes": 2283,
+        "role": "PIT_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/av-proxy-independent-review-sample-v2.json",
+        "sha256": "d6495af7:16b10708:d7a974fc:56491f24:c84331ee:3fd5de64:f440df5f:d083b488",
+        "bytes": 17279,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/av-proxy-review-candidate-v2.json",
+        "sha256": "c1998b0f:0e444322:bec98555:5fd32fc8:3d6a2cae:f6afb454:6a6a9168:95956ff0",
+        "bytes": 35723,
+        "role": "AV_PROXY_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/corporate-action-corrections-oracle-v2.json",
+        "sha256": "052e6b17:0c30b827:86e88d1e:1b582a29:3e553c5e:1abc8a52:48efccd9:528196a3",
+        "bytes": 5056,
+        "role": "CORPORATE_ACTION_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/ndx-june-2026-official-change-set.json",
+        "sha256": "1a7f05fa:0ae53c31:aeffd5da:09fe2a73:fe51b861:2a1c327d:92731323:1ba4dabd",
+        "bytes": 1200,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/ndx-membership-2026-07-31-approval.jsonl",
+        "sha256": "392f0a7e:ad4644d8:eff68dde:3214e4ab:7e54c0b1:4430306e:3df65d61:2db74026",
+        "bytes": 786,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/ndx-membership-2026-07-31-approved-snapshot.json",
+        "sha256": "53018290:74c36e08:f53f9261:968538f7:52143fa2:260158f0:81573b76:4dc814f9",
+        "bytes": 59994,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/ndx-membership-evidence-acceptance-candidate-v1.json",
+        "sha256": "4ae9f14a:338309c3:d1625da6:16754ad1:120a840e:5787e1c5:774aa06d:fb1c932d",
+        "bytes": 2899,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/governance/xnas-session-calendar-acceptance-candidate-v2.json",
+        "sha256": "f53ff11a:90c3cf28:6dd89787:b37fd918:73cb435f:77cb9569:d963dfc2:61681161",
+        "bytes": 3274,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "tests/fixtures/quant/historical-asymmetric-costs-v3.cases.json",
+        "sha256": "cb554963:76bd9373:81ddb227:5cd009c3:8d05b067:2c7938a3:a8797e2b:d1a0b3da",
+        "bytes": 24477,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "tests/governance/test_av_m0_pit_evidence_acceptance_candidate_v1.py",
+        "sha256": "0a5197c3:899cfc51:603f4fce:b1cf6af1:af49dc61:359f227f:8fa5175f:18878dcf",
+        "bytes": 1896,
+        "role": "PIT_EVIDENCE"
+      },
+      {
+        "path": "tests/governance/test_ndx_membership_evidence_acceptance_candidate_v1.py",
+        "sha256": "5762b0fd:58d6b29a:0b708ac2:f4702140:1dac625b:59f89c35:1e3c8391:ac406071",
+        "bytes": 2078,
+        "role": "NDX_MEMBERSHIP_EVIDENCE"
+      },
+      {
+        "path": "tests/governance/test_specification_freeze_v7.py",
+        "sha256": "d60629d9:5762fe79:2e946eb6:aad8b4c9:8defa7ef:573f0f0b:d1442908:f1f6313f",
+        "bytes": 19019,
+        "role": "FREEZE_V7_AUTHORITY"
+      },
+      {
+        "path": "tests/governance/test_xnas_calendar_acceptance_candidate_v2.py",
+        "sha256": "61d4c2c4:3f63133c:bac344b1:8a9e85e6:b073a343:247923d3:cc7bf0b0:8eab2c4e",
+        "bytes": 2229,
+        "role": "CALENDAR_EVIDENCE"
+      },
+      {
+        "path": "tests/quant/fixtures/tax-lots-fifo-wash-v1.json",
+        "sha256": "bf3959f3:a8f20229:b13bb00f:bb263718:e4a702c5:ad4df9a9:ed3c13f7:29945023",
+        "bytes": 104415,
+        "role": "TAX_LOT_EVIDENCE"
+      },
+      {
+        "path": "tests/quant/test_asymmetric_costs_v3.py",
+        "sha256": "b00b2f64:0a56ea46:0e688983:1877bd29:0bb914e0:9808c120:34422232:cc4d72b3",
+        "bytes": 18744,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "tests/quant/test_regulatory_fees_v2.py",
+        "sha256": "dec111b8:82625e58:d3a7d626:650d870d:a47c3691:d59343cb:82a6ef87:5bc9765b",
+        "bytes": 14354,
+        "role": "ASYMMETRIC_COST_EVIDENCE"
+      },
+      {
+        "path": "tests/quant/test_tax_lots_fifo_wash_kat.py",
+        "sha256": "29987fd2:6be74989:9b256adf:2d88358b:406e715c:13cd58b7:66fd98fb:df68b33f",
+        "bytes": 68860,
+        "role": "TAX_LOT_EVIDENCE"
+      },
+      {
+        "path": "tests/quant/test_tax_lots.py",
+        "sha256": "f27b7b75:c9b1b13d:8beb40d3:3092bb36:8ffa3c75:1f34d0e2:d89f1b5b:9dab08b5",
+        "bytes": 13983,
+        "role": "TAX_LOT_EVIDENCE"
+      }
+    ],
+    "review_requirements": {
+      "fresh_review_must_cover_all_seven_legs": true,
+      "corporate_action_exact_oracle_review_required": true,
+      "tax_lot_exact_kat_review_required": true,
+      "av_proxy_64_row_sample_review_required": true,
+      "ndx_and_pit_receipt_replay_required": true,
+      "asymmetric_cost_and_calendar_predecessor_reviews_must_replay": true,
+      "review_complete": false
+    },
+    "claims": {
+      "candidate_registered": true,
+      "candidate_changes_active_freeze": false,
+      "any_blocker_cleared": false,
+      "successor_freeze_published": false,
+      "fresh_independent_review_complete": false,
+      "owner_signoff_on_exact_bytes_complete": false,
+      "milestone_m0_complete": false,
+      "cross_contract_semantic_approval_complete": false,
+      "final_freeze_receipt_verified": false,
+      "production_ready": false,
+      "empirical_performance_available": false,
+      "alpha_proven": false,
+      "prospective_observations_consumable": false,
+      "live_order_authority": false
+    },
+    "nonclaims": [
+      "FREEZE_V7_REMAINS_AUTHORITATIVE_AT_9_ACTIVE_21_HISTORICAL",
+      "NO_BLOCKER_IS_CLEARED_BY_THIS_CANDIDATE",
+      "M0_IS_NOT_COMPLETE",
+      "NO_PRODUCTION_PERFORMANCE_OR_ALPHA_CLAIM",
+      "NO_PROSPECTIVE_CONSUMPTION_OR_LIVE_ORDER_AUTHORITY",
+      "TERMINAL_SEMANTIC_APPROVAL_AND_FINAL_TIMESTAMP_REMAIN_SEPARATE"
+    ]
+  }
+}
