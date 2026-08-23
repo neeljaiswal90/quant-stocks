@@ -1,0 +1,12 @@
+{
+  "schema_version": "qme.linear_comment_snapshot.v1",
+  "source_system": "LINEAR_COMMENT",
+  "source_comment_id": "62fc7e32-c1df-4e1d-9088-584ec1ad1689",
+  "source_issue_id": "NEE-110",
+  "source_created_at": "2026-08-23T20:21:43.200Z",
+  "source_updated_at": "2026-08-23T20:21:43.145Z",
+  "source_author_id": "a2f77320-3e15-4fe3-acea-a276546a8274",
+  "source_body_bytes": 1748,
+  "source_body_sha256": "031a7a38:8e4f67a4:3d3633c7:8d17073f:72091561:89174562:fa10aa62:d1683dad",
+  "body": "# PR #60 unchanged protected publication receipt — success\n\nThe exact owner-signed M0 substantive-evidence packet was published unchanged.\n\n- PR: [#60](https://github.com/neeljaiswal90/quant-stocks/pull/60)\n- Signed PR head: `819186f3da4dfd4fb07a0cb24eb4de8588bf923c`\n- Signed PR tree: `2d0b9978efa66267eba734e6b689269b988a1c3f`\n- Squash-merged protected-main commit: `052a39a1a38fed5c5c7bfd7b64f90bb9535b7d69`\n- Protected-main tree: `2d0b9978efa66267eba734e6b689269b988a1c3f`\n- Merged at: `2026-08-23T19:49:47Z`\n\nProtected-main checks on that exact commit:\n\n- [M0 deterministic replay 32662481012 / 97250651939](https://github.com/neeljaiswal90/quant-stocks/actions/runs/32662481012): success; 168 tests; Ruff; strict mypy on the three owned sources; compile.\n- [qme-ci 32662481010 / 97250651929](https://github.com/neeljaiswal90/quant-stocks/actions/runs/32662481010): success; 2,044 tests; Ruff; strict mypy across 100 source files; five dependency locks; XNAS replay; wheel/smoke; compile; tracked-secret scan 602/0; deterministic foundation manifest `b10648108b4f794e1b9de68556e10210418c7bab1cfa8f8c1379d770bec6a1a4`; clean-tree check.\n- Foundation artifact: ID `9499507687`; zip digest `7061802e73f5ce2720bd23b86b14278a143c3f22294c089f9d1f553d6aa6c6d5`.\n\nThe PR-head tree and protected-main tree are identical. NEE-110, NEE-116, NEE-119, and NEE-121 remain In Progress with `completedAt=null`.\n\nNo transition occurred in PR #60. Freeze V7 remains authoritative at 9 active / 21 historical and M0 remains incomplete. Per owner directive `4dcd419f-9a75-45aa-b9cb-9ee07d51b97c`, the next and only remaining freeze candidate is one final Freeze V8 proposing 9→0 / 21→30. This receipt does not authorize production deployment or live orders."
+}
