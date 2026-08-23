@@ -1,0 +1,75 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V8",
+  "status": "M0_COMPLETE_0_ACTIVE",
+  "artifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"
+    },
+    {
+      "path": "configs/governance/m0-substantive-evidence-candidate-v1.hashes.json",
+      "sha256": "19afad19:5c43e225:70cf09f6:62f7780c:2fbb7f28:ba105b3b:987479bd:ff4c6301"
+    },
+    {
+      "path": "configs/governance/specification-freeze-v7.hashes.json",
+      "sha256": "a66bf883:016c606c:d188d331:66ebb540:25e5ced8:af98746c:29bf52c2:aaadfb40"
+    },
+    {
+      "path": "configs/governance/specification-freeze-export-v7.json",
+      "sha256": "52a8b497:49efca6d:d9f17ccb:0b2b32c8:24598c8d:40ca9494:94dfa020:0545e878"
+    },
+    {
+      "path": "configs/governance/specification-freeze-policy-v8.json",
+      "sha256": "a9394cb7:a5926639:0467df97:5477735b:65f54f94:b3eef5ed:add7fb10:54e65b4e"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/DELTA-REVIEW-PROMPT.md",
+      "sha256": "1750fa28:1b8d386f:5b7a192a:f8b6da94:953c3052:6b7d6fd9:a1cb5487:33015013"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/DELTA-REVIEW-VERDICT.md",
+      "sha256": "36065a74:30f8aba2:801487a5:f4fd9422:dfd77eb5:e372071c:2e8de1df:d7ecb908"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/OWNER-SIGNOFF.md",
+      "sha256": "c3a6b497:9da9492d:4f991d08:71965fc2:4bd54dd8:91d24b44:4e3db3c4:4ac9e73d"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/PROTECTED-PUBLICATION-RECEIPT.json",
+      "sha256": "f2f1ac43:bea5f5a6:883402f8:c837bb42:e060a568:d0c01bbd:87eb0a09:a610453a"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/RECEIPT.md",
+      "sha256": "2ede5ca9:f79f2b46:44bbd1fb:0bb50461:6b731420:bec893bb:9efb4595:475d0a07"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/OWNER-M0-COMPLETION-DIRECTIVE.md",
+      "sha256": "92660836:9c4768e9:c620271f:5a0d4777:8f10ea68:6bfafb10:e8f5b1a1:a5ba0368"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/FINAL-FREEZE-ANCHOR.json",
+      "sha256": "c7619916:f34ea640:d38ff212:2169495f:650b160b:75161639:c7d341be:582bbaa3"
+    },
+    {
+      "path": "docs/governance/SPECIFICATION_FREEZE_V8.md",
+      "sha256": "134bf214:d6ad6b10:47e0efa2:31672181:1a027f9e:59d3ed04:80040750:d0288368"
+    },
+    {
+      "path": "qme/governance/specification_freeze_v8.py",
+      "sha256": "c1063997:80ce4419:62402253:d3370e5f:be0d60fa:0c7626c6:d798fe50:e211ee4d"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-export-v7.schema.json",
+      "sha256": "c0baec86:55cce1fb:389a675c:012335a7:cbf1e082:fe51a317:f9bf77b3:41333139"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-policy-v8.schema.json",
+      "sha256": "7a2abdac:88de00d3:196eedf4:fe7cc851:619f6ea7:42b3389c:11949d3b:dd73295d"
+    },
+    {
+      "path": "tests/governance/test_specification_freeze_v8.py",
+      "sha256": "d46841b3:45c81e7e:ecbc6909:6344f62f:7db55c0c:d2b0be73:dc99351a:47d0cb26"
+    }
+  ]
+}

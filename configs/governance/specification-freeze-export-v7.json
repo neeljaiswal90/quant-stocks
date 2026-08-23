@@ -1,0 +1,259 @@
+{
+  "$schema": "../../schemas/governance/specification-freeze-export-v7.schema.json",
+  "schema_version": "qme.specification_freeze_export.v7",
+  "export_id": "NEE-110-SPECIFICATION-FREEZE-EXPORT-V7",
+  "export_status": "HASH_VERIFIED_M0_COMPLETE_0_ACTIVE",
+  "policy": {
+    "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V8",
+    "path": "configs/governance/specification-freeze-policy-v8.json",
+    "sha256": "a9394cb7:a5926639:0467df97:5477735b:65f54f94:b3eef5ed:add7fb10:54e65b4e",
+    "semantic_sha256": "cdee4ce9:e60a972b:2341fa49:576b5887:ebbd7547:5752bf67:e2a97c76:80d499c8"
+  },
+  "bundle": {
+    "bundle_id": "NEE-172-OPERATIONAL-V2-BUNDLE-V1",
+    "path": "configs/governance/nee-172-operational-v2-bundle-v1.json",
+    "sha256": "b133cb3d:a54fe242:816c77ec:93f7903b:f8672bb8:013c6504:b6ddb305:6646da1e",
+    "manifest_path": "configs/governance/nee-172-operational-v2-bundle-v1.hashes.json",
+    "manifest_sha256": "00d014d6:3f409378:a1b4c7f9:95caf9b7:cb81e7be:48ba40f1:a5c85f6a:496d78df"
+  },
+  "accepted_access_chain_evidence": {
+    "evidence_id": "NEE-176-SAMPLE-ACCESS-CHAIN-V2-EVIDENCE",
+    "config_path": "configs/governance/sample-access-chain-v2-evidence.json",
+    "config_sha256": "cbd198f1:46daf12d:1edbdb3d:238a06a2:954e6d13:32df45f9:de9c0fb2:3ca849c7",
+    "semantic_sha256": "32926f47:94ac0650:b625eadc:80caea5d:7fedcd16:3ac32955:a366233d:d2aa2c70",
+    "manifest_path": "configs/governance/sample-access-chain-v2.hashes.json",
+    "manifest_sha256": "b505a253:439a701b:e21de17c:982db041:6cbe338b:52246a03:b0843df3:9e11520b",
+    "protected_main_commit": "5f060fe3:86317849:6b3ba669:df35bd9c:20f25f7f",
+    "decision_comment_id": "930f091d-b21f-4ea1-b308-15aec70c16b3",
+    "decision_comment_body_sha256": "85af795b:4eccdd7e:6aa5f0ad:bd5fbec2:705ee7b4:e6832174:150bc0dd:3d7eb3ff",
+    "disposition": "PRODUCTION_SCALE_IMPLEMENTATION_EVIDENCE_ONLY_SYNTHETIC_KAT",
+    "resolved_blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+    "original_v3_blocker_row": {
+      "blocker_code": "NEE-122-PRODUCTION-ACCESS-CHAIN-INCLUSION",
+      "ticket_id": "NEE-122",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "A production-scale content-addressed access-chain export and inclusion proof remain unavailable."
+    },
+    "scope": "BOUNDED_ENGINEERING_EVIDENCE_ONLY_NO_PRODUCTION_DATA_CLAIM"
+  },
+  "accepted_inference_evidence": {
+    "candidate_id": "NEE-120-INFERENCE-EVIDENCE-SUCCESSOR-FREEZE-CANDIDATE-V1",
+    "config_path": "configs/governance/nee120-successor-freeze-candidate-v1.json",
+    "config_sha256": "e756a44e:e27eb0a0:c047535f:eddb83cb:2394b7ba:156ccdb9:eba8341d:83cb308b",
+    "semantic_sha256": "931975d5:3d6a6b10:bf84e15d:18acaabd:cee7b9b3:cb30ecc8:80c0b713:38ecaedf",
+    "manifest_path": "configs/governance/nee120-successor-freeze-candidate-v1.hashes.json",
+    "manifest_sha256": "a663d4cd:39719319:655e4615:4d3f6c6f:220e0f37:834943fd:089f1b1a:7758a8cf",
+    "candidate_protected_main_commit": "6b4c7059:c6241ae7:eccc570d:df9f4fe1:e0077857",
+    "delta_review_verdict_sha256": "86d02dff:3620e34e:1b494f5a:977199aa:af8c3b60:fbfd8804:af6d239e:0b91cdcf",
+    "owner_signoff_comment_id": "5337128493",
+    "owner_signoff_body_sha256": "f473e34d:548d8bdc:dc42d031:80986680:b92bf07f:38027dd8:1782317a:a266eb0d",
+    "disposition": "EXECUTABLE_CONFORMANCE_EVIDENCE_ONLY_NO_EMPIRICAL_PERFORMANCE",
+    "resolved_blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+    "original_v4_blocker_row": {
+      "blocker_code": "NEE-120-INFERENCE-IMPLEMENTATION-EVIDENCE",
+      "ticket_id": "NEE-120",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "Registered bootstrap, block-selection, interval, and multiplicity methods lack executable conformance evidence."
+    },
+    "scope": "BOUNDED_ENGINEERING_EVIDENCE_ONLY_NO_EMPIRICAL_PRODUCTION_M0_OR_LINEAR_ISSUE_COMPLETION_CLAIM"
+  },
+  "accepted_effective_trials_evidence": {
+    "candidate_id": "NEE-204-SELECTION-009-SUCCESSOR-FREEZE-CANDIDATE-V1",
+    "config_path": "configs/governance/nee204-successor-freeze-candidate-v1.json",
+    "config_sha256": "5450c34d:ee31729c:533f6422:773fa69a:0e75b400:b4def0a1:f7c15495:fb031dc1",
+    "semantic_sha256": "eb441df6:cf49748e:0890e459:cca31445:931f9d6b:a73aff1d:909bc4d6:75c87871",
+    "manifest_path": "configs/governance/nee204-successor-freeze-candidate-v1.hashes.json",
+    "manifest_sha256": "27d74487:f9b29037:fcf08f2b:dce36b9a:ca98ab14:3850d4bc:cf32014e:c6ec152a",
+    "candidate_protected_main_commit": "2c314ffb:80d5a43a:9e139624:8daaa494:394848dc",
+    "candidate_protected_main_tree": "f85a35cd:f86a4f53:16957744:adcacfab:7a98b630",
+    "delta_review_comment_id": "8f0a0e62-0544-4d59-8a95-9a03081bc572",
+    "delta_review_verdict_sha256": "6abad804:f8e7969d:2cdaaf04:2dec823c:1a3a59f8:3601c367:b74bcda6:730d9805",
+    "owner_signoff_comment_id": "df56674a-101e-4b8a-9594-7551a44afca0",
+    "owner_signoff_body_sha256": "0d386e92:03e32e04:2f0e3eee:2c21ae7d:1ef9ad3d:1aa631bb:7d350f6f:1f780700",
+    "publication_receipt_comment_id": "2e9088af-e65b-4c12-b805-4f50dcf9f3ea",
+    "publication_receipt_body_sha256": "9b8b2601:7e372ee4:871bd1bc:159f4156:693f2f9f:88152090:a8d679e6:98bf347a",
+    "selection_009_n_eff_used": 2,
+    "disposition": "SYNTHETIC_DETERMINISTIC_ENGINEERING_EVIDENCE_ONLY_NO_EMPIRICAL_OR_PRODUCTION_INFERENCE",
+    "resolved_blocker_codes": [
+      "NEE-122-CORRELATED-TRIAL-FIXTURE",
+      "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE"
+    ],
+    "original_v5_blocker_rows": [
+      {
+        "blocker_code": "NEE-122-CORRELATED-TRIAL-FIXTURE",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "Analytic participation-ratio and seeded Ledoit-Wolf end-to-end fixtures remain unavailable."
+      },
+      {
+        "blocker_code": "NEE-122-DEPENDENCE-ESTIMATOR-IMPLEMENTATION-EVIDENCE",
+        "ticket_id": "NEE-122",
+        "category": "ENGINEERING_EVIDENCE",
+        "description": "The registered estimator and bootstrap uncertainty procedure are not implemented."
+      }
+    ],
+    "scope": "EFFECTIVE_TRIALS_ENGINEERING_EVIDENCE_ONLY_NO_EMPIRICAL_OR_PRODUCTION_INFERENCE_CLAIM"
+  },
+  "accepted_capacity_solver_evidence": {
+    "candidate_id": "NEE-116-CAPACITY-SOLVER-SUCCESSOR-FREEZE-CANDIDATE-V1",
+    "config_path": "configs/governance/nee116-capacity-solver-freeze-candidate-v1.json",
+    "config_sha256": "59262726:6e43de36:898726ed:692d004b:27a3c337:61aa9dea:44bfe7f4:25b45248",
+    "semantic_sha256": "17eaf700:fc901d3e:6c50c478:47f3df38:7c091df8:31013f36:f327f5d4:4d345576",
+    "manifest_path": "configs/governance/nee116-capacity-solver-freeze-candidate-v1.hashes.json",
+    "manifest_sha256": "ec14cd0a:eed0e6d4:4c5b83b0:48d2ff5a:8c0ea863:cd74ce76:3cd53df9:e6c53962",
+    "candidate_protected_main_commit": "84cdd791:7742f542:9b63adc9:0ac02ca5:e8ca2796",
+    "candidate_protected_main_tree": "2782d589:cdad6b19:4de6282c:c256ca00:198fcb55",
+    "fresh_review_comment_id": "bf863aa6-5e6c-4fc8-8c44-21928570a76d",
+    "fresh_review_verdict_sha256": "981b8a38:77dd3326:07aa48ea:9a6cd06d:49bd3c1d:f3eea1c6:14e5276e:b7e1c6c3",
+    "owner_signoff_comment_id": "a9001d14-788a-4a6c-853b-1d4a2584a3b4",
+    "owner_signoff_body_sha256": "0944d220:6cb7281f:f2a76b78:40b00073:16a98c67:f80e99c1:7472aaa1:46291dc5",
+    "publication_receipt_comment_id": "5e0d5743-4399-445d-a240-bd8a2a193ec4",
+    "publication_receipt_body_sha256": "10b8e4ff:ce11145f:949ec548:98e381b9:102ff8b6:021e5e3c:b9eb7233:36755d13",
+    "disposition": "EXECUTABLE_FAIL_CLOSED_ENGINEERING_CONFORMANCE_ONLY_NO_EMPIRICAL_CAPACITY",
+    "resolved_blocker_code": "NEE-116-CAPACITY-SOLVER",
+    "original_v6_blocker_row": {
+      "blocker_code": "NEE-116-CAPACITY-SOLVER",
+      "ticket_id": "NEE-116",
+      "category": "ENGINEERING_EVIDENCE",
+      "description": "The authoritative greatest-capital discrete cost-aware solver remains unavailable."
+    },
+    "scope": "CAPACITY_SOLVER_ENGINEERING_CONFORMANCE_ONLY_NO_EMPIRICAL_CAPACITY_CLAIM"
+  },
+  "accepted_m0_substantive_evidence": {
+    "candidate_id": "NEE-110-M0-SUBSTANTIVE-EVIDENCE-CANDIDATE-V1",
+    "candidate_config_path": "configs/governance/m0-substantive-evidence-candidate-v1.json",
+    "candidate_config_sha256": "c03f0b46:7e058e10:034ca642:197a88d7:d193d4de:9c5f770a:45615e27:996881e3",
+    "candidate_semantic_sha256": "40745e87:767fe566:476fadba:1889ed75:a265f57e:4f1ea995:8aa94711:d0c1f89f",
+    "candidate_manifest_path": "configs/governance/m0-substantive-evidence-candidate-v1.hashes.json",
+    "candidate_manifest_sha256": "19afad19:5c43e225:70cf09f6:62f7780c:2fbb7f28:ba105b3b:987479bd:ff4c6301",
+    "candidate_inventory_count": 65,
+    "review_comment_id": "95168527-b690-4e67-ae24-e1b34c4ce8b5",
+    "owner_signoff_comment_id": "ccd7b23c-dd22-411c-88ae-6aa2606b196b",
+    "publication_receipt_comment_id": "62fc7e32-c1df-4e1d-9088-584ec1ad1689",
+    "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69:::",
+    "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f:::",
+    "disposition": "SEVEN_SUBSTANTIVE_BLOCKERS_REVIEWED_EXACT_BYTE_EVIDENCE",
+    "resolved_blocker_codes": [
+      "NEE-116-ASYMMETRIC-COST-METHOD",
+      "NEE-116-CORPORATE-ACTION-EDGE-CASES",
+      "NEE-116-PRODUCTION-PIT-DATA",
+      "NEE-116-TAX-LOT-IMPLEMENTATION-EVIDENCE",
+      "NEE-119-AUTHORITATIVE-NDX-MEMBERSHIP",
+      "NEE-119-AV-PROXY-EVIDENCE",
+      "NEE-121-CALENDAR-SESSION-REGISTRATION"
+    ],
+    "scope": "M0_SUBSTANTIVE_EVIDENCE_ONLY_NO_TERMINAL_GOVERNANCE_M0_PRODUCTION_OR_LIVE_ORDER_CLAIM"
+  },
+  "accepted_final_m0_owner_directive": {
+    "directive_id": "NEE-110-FINAL-M0-OWNER-DIRECTIVE-V1",
+    "source_comment_id": "4dcd419f-9a75-45aa-b9cb-9ee07d51b97c",
+    "freeze_timestamp": "2026-08-23T20:16:20.451Z",
+    "final_freeze_anchor_path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/FINAL-FREEZE-ANCHOR.json",
+    "resolved_blocker_codes": [
+      "NEE-110-CROSS-CONTRACT-SEMANTIC-APPROVAL",
+      "NEE-121-FINAL-SPECIFICATION-FREEZE-TIMESTAMP"
+    ],
+    "disposition": "OWNER_CROSS_CONTRACT_SEMANTIC_APPROVAL_AND_SINGLE_FINAL_FREEZE_V8_AUTHORIZATION",
+    "milestone_m0_complete_after_publication": true,
+    "production_ready": false,
+    "live_order_authority": false
+  },
+  "contract_projections": [
+    {
+      "ticket_id": "NEE-119",
+      "identity": "qme-long-only-momentum-v0.1",
+      "version": 2,
+      "config_sha256": "d71086f6:9176c1dc:ba82dcc8:dfd018b5:703ff059:f3fd526a:6a92f5c0:3370b285",
+      "semantic_sha256": "8375890d:bcc1b0c6:ae75058f:a5cfd966:43d8eb3b:06c686b7:90a5de6d:a5789263",
+      "status": "REGISTERED_DECISIONS_PRODUCTION_EVIDENCE_BLOCKED"
+    },
+    {
+      "ticket_id": "NEE-120",
+      "identity": "NEE-120-QME-ECONOMIC-DECISION-V2",
+      "version": 2,
+      "config_sha256": "02d055b0:26d9352e:aa0979cd:c158d9df:26ed6aad:06259567:291970c9:0a9359a8",
+      "semantic_sha256": "3b35015f:fa528926:3a9b125d:913fd99f:25027c1f:c7ebea82:7c962654:e1406ff4",
+      "status": "OWNER_REGISTERED_OPERATIONAL_CONTRACT_IMPLEMENTATION_AND_EVIDENCE_BLOCKED"
+    },
+    {
+      "ticket_id": "NEE-121",
+      "identity": "NEE-121-SAMPLE-HOLDOUT-GOVERNANCE-V2",
+      "version": 2,
+      "config_sha256": "c0437ecb:49787492:f5573213:103a09fc:c6d87182:ac0cc270:4b65769d:2c89e11f",
+      "semantic_sha256": "149eadf4:c1d7e240:d0088c5b:0748a072:d2f50e78:966615e2:d1f40ffd:e0070b54",
+      "status": "REGISTERED_RULES_PRODUCTION_EVIDENCE_AND_FREEZE_RECEIPT_BLOCKED"
+    }
+  ],
+  "verification_checks": [
+    {
+      "check_id": "PREDECESSOR_FREEZE_V7_BYTES_AND_MANIFEST",
+      "status": "PASS"
+    },
+    {
+      "check_id": "PREDECESSOR_FREEZE_V7_NATIVE_TESTS_IN_SAME_CI",
+      "status": "PASS"
+    },
+    {
+      "check_id": "M0_CANDIDATE_BYTES_MANIFEST_AND_65_LEAF_INVENTORY",
+      "status": "PASS"
+    },
+    {
+      "check_id": "M0_CANDIDATE_PROTECTED_EXACT_HEAD_CI",
+      "status": "PASS"
+    },
+    {
+      "check_id": "FRESH_INDEPENDENT_EXACT_HEAD_REVIEW",
+      "status": "PASS"
+    },
+    {
+      "check_id": "OWNER_EXACT_BYTE_PACKET_SIGNOFF",
+      "status": "PASS"
+    },
+    {
+      "check_id": "UNCHANGED_MERGE_AND_PROTECTED_MAIN_CI",
+      "status": "PASS"
+    },
+    {
+      "check_id": "OWNER_FINAL_M0_COMPLETION_DIRECTIVE",
+      "status": "PASS"
+    },
+    {
+      "check_id": "FINAL_FREEZE_ANCHOR",
+      "status": "PASS"
+    },
+    {
+      "check_id": "EXACT_NINE_BLOCKER_RESOLUTION_DELTA",
+      "status": "PASS"
+    },
+    {
+      "check_id": "ACTIVE_BLOCKER_EXACT_EQUALITY",
+      "status": "PASS"
+    },
+    {
+      "check_id": "SCHEMA_CONFIG_PARITY",
+      "status": "PASS"
+    },
+    {
+      "check_id": "CROSS_CONTRACT_SEMANTIC_APPROVAL",
+      "status": "PASS"
+    },
+    {
+      "check_id": "FINAL_FREEZE_ANCHOR_AND_RECEIPT",
+      "status": "PASS"
+    }
+  ],
+  "active_blocker_codes": [],
+  "closure": {
+    "integrity_state": "HASH_VERIFIED",
+    "overall_state": "M0_COMPLETE_0_ACTIVE",
+    "accepted": true,
+    "milestone_m0_complete": true,
+    "downstream_start_authorized": true,
+    "production_ready": false,
+    "production_access_event_corpus_available": false,
+    "production_sample_access_evidence_available": false,
+    "final_freeze_receipt_verified": true,
+    "prospective_observations_consumable": false
+  },
+  "derived_evidence_sha256": "559059ec:0b96d6cf:e0f6cd49:dd34999d:db6f9dc7:f442ebe8:a8e47651:95bd2b04"
+}

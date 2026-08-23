@@ -1,0 +1,13 @@
+{
+  "schema_version": "qme.final_freeze_anchor.v1",
+  "freeze_timestamp": "2026-08-23T20:16:20.451Z",
+  "source_system": "LINEAR_COMMENT",
+  "source_comment_id": "4dcd419f-9a75-45aa-b9cb-9ee07d51b97c",
+  "source_issue_id": "NEE-110",
+  "source_body_sha256": "92660836:9c4768e9:c620271f:5a0d4777:8f10ea68:6bfafb10:e8f5b1a1:a5ba0368",
+  "predecessor_policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V7",
+  "active_blocker_count_after_publication": 0,
+  "milestone_m0_complete_after_publication": true,
+  "production_ready": false,
+  "live_order_authority": false
+}
