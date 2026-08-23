@@ -194,12 +194,8 @@ def test_candidate_and_publication_identity_are_exact() -> None:
     policy = _load(ROOT / v8.POLICY_PATH)
     evidence = policy["accepted_m0_substantive_evidence"]
     candidate = evidence["candidate"]
-    assert candidate["pr_head_commit"].replace(":", "") == (
-        "819186f3da4dfd4fb07a0cb24eb4de8588bf923c"
-    )
-    assert candidate["protected_main_commit"].replace(":", "") == (
-        "052a39a1a38fed5c5c7bfd7b64f90bb9535b7d69"
-    )
+    assert candidate["pr_head_commit"] == ("819186f3:da4dfd4f:b07a0cb2:4eb4de85:88bf923c")
+    assert candidate["protected_main_commit"] == ("052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69")
     assert candidate["pr_head_tree"] == candidate["protected_main_tree"]
     assert evidence["publication_receipt"]["protected_ci_exact_head_success"] is True
     assert evidence["publication_receipt"]["m0_replay_test_count"] == 168

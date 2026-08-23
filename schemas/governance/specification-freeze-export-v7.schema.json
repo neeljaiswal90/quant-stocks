@@ -8,8 +8,8 @@
     "policy": {
       "policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V8",
       "path": "configs/governance/specification-freeze-policy-v8.json",
-      "sha256": "a9394cb7:a5926639:0467df97:5477735b:65f54f94:b3eef5ed:add7fb10:54e65b4e",
-      "semantic_sha256": "cdee4ce9:e60a972b:2341fa49:576b5887:ebbd7547:5752bf67:e2a97c76:80d499c8"
+      "sha256": "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d",
+      "semantic_sha256": "55c2d29e:a0f45938:8b86563b:8cf0dcd2:3cb62ef1:2667f3d8:49e4b9df:ed368975"
     },
     "bundle": {
       "bundle_id": "NEE-172-OPERATIONAL-V2-BUNDLE-V1",
@@ -132,8 +132,8 @@
       "review_comment_id": "95168527-b690-4e67-ae24-e1b34c4ce8b5",
       "owner_signoff_comment_id": "ccd7b23c-dd22-411c-88ae-6aa2606b196b",
       "publication_receipt_comment_id": "62fc7e32-c1df-4e1d-9088-584ec1ad1689",
-      "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69:::",
-      "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f:::",
+      "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69",
+      "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f",
       "disposition": "SEVEN_SUBSTANTIVE_BLOCKERS_REVIEWED_EXACT_BYTE_EVIDENCE",
       "resolved_blocker_codes": [
         "NEE-116-ASYMMETRIC-COST-METHOD",
@@ -257,6 +257,6 @@
       "final_freeze_receipt_verified": true,
       "prospective_observations_consumable": false
     },
-    "derived_evidence_sha256": "559059ec:0b96d6cf:e0f6cd49:dd34999d:db6f9dc7:f442ebe8:a8e47651:95bd2b04"
+    "derived_evidence_sha256": "e63288c0:fb8af144:1e7e6a00:1cfab23c:3f5a6cce:5b6d6261:a121c58a:d156dcdc"
   }
 }

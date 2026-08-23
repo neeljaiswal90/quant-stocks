@@ -17,11 +17,11 @@
     },
     {
       "path": "configs/governance/specification-freeze-export-v7.json",
-      "sha256": "52a8b497:49efca6d:d9f17ccb:0b2b32c8:24598c8d:40ca9494:94dfa020:0545e878"
+      "sha256": "576209ef:d89954fb:9eb8995b:ab3d458e:41eafa8f:2471449d:451ef5ae:5839627a"
     },
     {
       "path": "configs/governance/specification-freeze-policy-v8.json",
-      "sha256": "a9394cb7:a5926639:0467df97:5477735b:65f54f94:b3eef5ed:add7fb10:54e65b4e"
+      "sha256": "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d"
     },
     {
       "path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/DELTA-REVIEW-PROMPT.md",
@@ -57,19 +57,19 @@
     },
     {
       "path": "qme/governance/specification_freeze_v8.py",
-      "sha256": "c1063997:80ce4419:62402253:d3370e5f:be0d60fa:0c7626c6:d798fe50:e211ee4d"
+      "sha256": "105d4f25:7af61f79:684e1a05:379cbded:4ff1e103:26836f66:1f0222b1:e4044b33"
     },
     {
       "path": "schemas/governance/specification-freeze-export-v7.schema.json",
-      "sha256": "c0baec86:55cce1fb:389a675c:012335a7:cbf1e082:fe51a317:f9bf77b3:41333139"
+      "sha256": "be082328:7061534d:f63132d9:80e5bf76:f815ce3c:cc4d4d4a:b1a69a2f:25537bc2"
     },
     {
       "path": "schemas/governance/specification-freeze-policy-v8.schema.json",
-      "sha256": "7a2abdac:88de00d3:196eedf4:fe7cc851:619f6ea7:42b3389c:11949d3b:dd73295d"
+      "sha256": "8e370815:61dd3bf2:8a1e71ec:aec663c0:a133535b:953f601c:f2ecf86c:5cf51082"
     },
     {
       "path": "tests/governance/test_specification_freeze_v8.py",
-      "sha256": "d46841b3:45c81e7e:ecbc6909:6344f62f:7db55c0c:d2b0be73:dc99351a:47d0cb26"
+      "sha256": "f7e7aea0:19dcb1ea:4274887f:db4aba41:ec24d1ad:f91b885f:9894d583:974fb919"
     }
   ]
 }

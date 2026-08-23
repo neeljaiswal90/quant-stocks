@@ -85,15 +85,15 @@ _OWNER_DIRECTIVE_PATH = _RECEIPT_DIR + "OWNER-M0-COMPLETION-DIRECTIVE.md"
 _FINAL_ANCHOR_PATH = _RECEIPT_DIR + "FINAL-FREEZE-ANCHOR.json"
 
 # fmt: off
-_EXPECTED_POLICY_SHA256 = "a9394cb7:a5926639:0467df97:5477735b:65f54f94:b3eef5ed:add7fb10:54e65b4e"
-_EXPECTED_POLICY_SCHEMA_SHA256 = "7a2abdac:88de00d3:196eedf4:fe7cc851:619f6ea7:42b3389c:11949d3b:dd73295d"
-_EXPECTED_EXPORT_SHA256 = "52a8b497:49efca6d:d9f17ccb:0b2b32c8:24598c8d:40ca9494:94dfa020:0545e878"
-_EXPECTED_EXPORT_SCHEMA_SHA256 = "c0baec86:55cce1fb:389a675c:012335a7:cbf1e082:fe51a317:f9bf77b3:41333139"
-_EXPECTED_POLICY_SEMANTIC_SHA256 = "cdee4ce9:e60a972b:2341fa49:576b5887:ebbd7547:5752bf67:e2a97c76:80d499c8"
-_EXPECTED_DERIVED_EVIDENCE_SHA256 = "559059ec:0b96d6cf:e0f6cd49:dd34999d:db6f9dc7:f442ebe8:a8e47651:95bd2b04"
-_EXPECTED_M0_EVIDENCE_SHA256 = "9708d9fc:eaaea659:c8998c6b:1f1651cb:28f859ac:68b8a641:21df9f58:9c716069"
+_EXPECTED_POLICY_SHA256 = "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d"
+_EXPECTED_POLICY_SCHEMA_SHA256 = "8e370815:61dd3bf2:8a1e71ec:aec663c0:a133535b:953f601c:f2ecf86c:5cf51082"
+_EXPECTED_EXPORT_SHA256 = "576209ef:d89954fb:9eb8995b:ab3d458e:41eafa8f:2471449d:451ef5ae:5839627a"
+_EXPECTED_EXPORT_SCHEMA_SHA256 = "be082328:7061534d:f63132d9:80e5bf76:f815ce3c:cc4d4d4a:b1a69a2f:25537bc2"
+_EXPECTED_POLICY_SEMANTIC_SHA256 = "55c2d29e:a0f45938:8b86563b:8cf0dcd2:3cb62ef1:2667f3d8:49e4b9df:ed368975"
+_EXPECTED_DERIVED_EVIDENCE_SHA256 = "e63288c0:fb8af144:1e7e6a00:1cfab23c:3f5a6cce:5b6d6261:a121c58a:d156dcdc"
+_EXPECTED_M0_EVIDENCE_SHA256 = "502c0b6a:6fbb29c2:a9878751:dd29477a:01f02a9e:3f5293fb:ae00e3c2:83f007aa"
 _EXPECTED_FINAL_OWNER_DIRECTIVE_SHA256 = "fc57b22d:79ad00f0:365ea9e8:b7a4de66:99b0595f:660ebcc4:76701336:3fe81de7"
-_EXPECTED_RUNTIME_NORMALIZED_SHA256 = "e64b71b2:606bc6fe:fe26ee5e:19ab69c9:c6650821:80d02eb8:7681058d:04c15a80"
+_EXPECTED_RUNTIME_NORMALIZED_SHA256 = "87b10b6f:018948a8:92b2700e:37b1832a:81d15e8a:a13a46e8:3fb0600d:6a127dc8"
 _EXPECTED_PREDECESSOR_MANIFEST_SHA256 = "a66bf883:016c606c:d188d331:66ebb540:25e5ced8:af98746c:29bf52c2:aaadfb40"
 _EXPECTED_CANDIDATE_MANIFEST_SHA256 = "19afad19:5c43e225:70cf09f6:62f7780c:2fbb7f28:ba105b3b:987479bd:ff4c6301"
 _EXPECTED_CANDIDATE_CONFIG_SHA256 = "c03f0b46:7e058e10:034ca642:197a88d7:d193d4de:9c5f770a:45615e27:996881e3"
@@ -104,8 +104,8 @@ _EXPECTED_NONRUNTIME_LEAVES: Final[Mapping[str, str]] = MappingProxyType(
         ".github/workflows/ci.yml": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
         "configs/governance/m0-substantive-evidence-candidate-v1.hashes.json": "19afad19:5c43e225:70cf09f6:62f7780c:2fbb7f28:ba105b3b:987479bd:ff4c6301",
         "configs/governance/specification-freeze-v7.hashes.json": "a66bf883:016c606c:d188d331:66ebb540:25e5ced8:af98746c:29bf52c2:aaadfb40",
-        "configs/governance/specification-freeze-export-v7.json": "52a8b497:49efca6d:d9f17ccb:0b2b32c8:24598c8d:40ca9494:94dfa020:0545e878",
-        "configs/governance/specification-freeze-policy-v8.json": "a9394cb7:a5926639:0467df97:5477735b:65f54f94:b3eef5ed:add7fb10:54e65b4e",
+        "configs/governance/specification-freeze-export-v7.json": "576209ef:d89954fb:9eb8995b:ab3d458e:41eafa8f:2471449d:451ef5ae:5839627a",
+        "configs/governance/specification-freeze-policy-v8.json": "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d",
         "docs/governance/blocker-transition-receipts/m0-substantive-evidence/DELTA-REVIEW-PROMPT.md": "1750fa28:1b8d386f:5b7a192a:f8b6da94:953c3052:6b7d6fd9:a1cb5487:33015013",
         "docs/governance/blocker-transition-receipts/m0-substantive-evidence/DELTA-REVIEW-VERDICT.md": "36065a74:30f8aba2:801487a5:f4fd9422:dfd77eb5:e372071c:2e8de1df:d7ecb908",
         "docs/governance/blocker-transition-receipts/m0-substantive-evidence/OWNER-SIGNOFF.md": "c3a6b497:9da9492d:4f991d08:71965fc2:4bd54dd8:91d24b44:4e3db3c4:4ac9e73d",
@@ -114,9 +114,9 @@ _EXPECTED_NONRUNTIME_LEAVES: Final[Mapping[str, str]] = MappingProxyType(
         "docs/governance/blocker-transition-receipts/m0-substantive-evidence/OWNER-M0-COMPLETION-DIRECTIVE.md": "92660836:9c4768e9:c620271f:5a0d4777:8f10ea68:6bfafb10:e8f5b1a1:a5ba0368",
         "docs/governance/blocker-transition-receipts/m0-substantive-evidence/FINAL-FREEZE-ANCHOR.json": "c7619916:f34ea640:d38ff212:2169495f:650b160b:75161639:c7d341be:582bbaa3",
         "docs/governance/SPECIFICATION_FREEZE_V8.md": "134bf214:d6ad6b10:47e0efa2:31672181:1a027f9e:59d3ed04:80040750:d0288368",
-        "schemas/governance/specification-freeze-export-v7.schema.json": "c0baec86:55cce1fb:389a675c:012335a7:cbf1e082:fe51a317:f9bf77b3:41333139",
-        "schemas/governance/specification-freeze-policy-v8.schema.json": "7a2abdac:88de00d3:196eedf4:fe7cc851:619f6ea7:42b3389c:11949d3b:dd73295d",
-        "tests/governance/test_specification_freeze_v8.py": "d46841b3:45c81e7e:ecbc6909:6344f62f:7db55c0c:d2b0be73:dc99351a:47d0cb26",
+        "schemas/governance/specification-freeze-export-v7.schema.json": "be082328:7061534d:f63132d9:80e5bf76:f815ce3c:cc4d4d4a:b1a69a2f:25537bc2",
+        "schemas/governance/specification-freeze-policy-v8.schema.json": "8e370815:61dd3bf2:8a1e71ec:aec663c0:a133535b:953f601c:f2ecf86c:5cf51082",
+        "tests/governance/test_specification_freeze_v8.py": "f7e7aea0:19dcb1ea:4274887f:db4aba41:ec24d1ad:f91b885f:9894d583:974fb919",
     }
 )
 _EXPECTED_MANIFEST_PATHS: Final = (

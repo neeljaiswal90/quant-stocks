@@ -803,11 +803,11 @@
         "workflow_sha256": "ed440006:55c9f83c:c08ae8d9:6f996508:25450fe7:8b0458ca:7283109a:562df037",
         "artifact_inventory_count": 65,
         "pr_number": 60,
-        "pr_base_commit": "d0242a40:e5335322:50a96557:f7176074:79dbe481:::",
-        "pr_head_commit": "819186f3:da4dfd4f:b07a0cb2:4eb4de85:88bf923c:::",
-        "pr_head_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f:::",
-        "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69:::",
-        "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f:::"
+        "pr_base_commit": "d0242a40:e5335322:50a96557:f7176074:79dbe481",
+        "pr_head_commit": "819186f3:da4dfd4f:b07a0cb2:4eb4de85:88bf923c",
+        "pr_head_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f",
+        "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69",
+        "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f"
       },
       "fresh_independent_review": {
         "source_system": "LINEAR_COMMENT",
@@ -832,8 +832,8 @@
         "statement_path": "docs/governance/blocker-transition-receipts/m0-substantive-evidence/OWNER-SIGNOFF.md",
         "statement_bytes": 1242,
         "statement_sha256": "c3a6b497:9da9492d:4f991d08:71965fc2:4bd54dd8:91d24b44:4e3db3c4:4ac9e73d",
-        "signed_head_commit": "819186f3:da4dfd4f:b07a0cb2:4eb4de85:88bf923c:::",
-        "signed_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f:::",
+        "signed_head_commit": "819186f3:da4dfd4f:b07a0cb2:4eb4de85:88bf923c",
+        "signed_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f",
         "disposition": "EXACT_PR60_M0_SUBSTANTIVE_EVIDENCE_BYTES_SIGNED_FOR_UNCHANGED_PUBLICATION"
       },
       "publication_receipt": {
@@ -894,8 +894,8 @@
         "review_comment_id": "95168527-b690-4e67-ae24-e1b34c4ce8b5",
         "owner_signoff_comment_id": "ccd7b23c-dd22-411c-88ae-6aa2606b196b",
         "publication_receipt_comment_id": "62fc7e32-c1df-4e1d-9088-584ec1ad1689",
-        "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69:::",
-        "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f:::",
+        "protected_main_commit": "052a39a1:a38fed5c:5c7bfd7b:64f90bb9:535b7d69",
+        "protected_main_tree": "2d0b9978:efa66267:eba734e6:b689269b:988a1c3f",
         "disposition": "SEVEN_SUBSTANTIVE_BLOCKERS_REVIEWED_EXACT_BYTE_EVIDENCE",
         "resolved_blocker_codes": [
           "NEE-116-ASYMMETRIC-COST-METHOD",
@@ -1030,6 +1030,6 @@
       "NEE-127",
       "NEE-128"
     ],
-    "semantic_sha256": "cdee4ce9:e60a972b:2341fa49:576b5887:ebbd7547:5752bf67:e2a97c76:80d499c8"
+    "semantic_sha256": "55c2d29e:a0f45938:8b86563b:8cf0dcd2:3cb62ef1:2667f3d8:49e4b9df:ed368975"
   }
 }
