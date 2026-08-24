@@ -1,0 +1,1699 @@
+{
+  "$comment": "Synthetic known-answer vectors for the NEE-125 corporate-action factor kernel. Expected values were produced by an independent flat-formula oracle, not by the kernel under test.",
+  "schema_version": "qme.corporate_action_factor_kats.v1",
+  "artifact_id": "QME-NEE125-CORPORATE-ACTION-FACTOR-KATS-V1",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "kernel_id": "QME-NEE125-CORPORATE-ACTION-FACTOR-KERNEL-V1",
+  "methodology_binding": {
+    "methodology_id": "qme-point-in-time-total-return-close-v1",
+    "path": "configs/quant/qme-v0.1-total-return-methodology.json",
+    "sha256_grouped": "95381821:c1c8ff00:e0e626b3:d7ee3646:6d12c3be:9e6b8cb7:5ee166f0:043454ac",
+    "bound_rules": [
+      "split_policy.event_order = SPLIT_BEFORE_DIVIDEND_UNIT_CONVERSION",
+      "split_policy.split_applied_before_dividend_coordinate_conversion = true",
+      "split_policy.ambiguous_pre_or_post_split_dividend = BLOCKED_AMBIGUOUS_EVENT_COORDINATE",
+      "dividend_reinvestment.coordinate = POST_SPLIT_CASH_PER_SHARE",
+      "dividend_reinvestment.negative_distribution_allowed = false",
+      "revision_policy.post_cutoff_event_in_current_run = BLOCKED_POST_CUTOFF_EVENT",
+      "revision_policy.duplicate_source_event_id = BLOCKED_DUPLICATE_EVENT",
+      "numeric_policy.rounding_mode = ROUND_HALF_EVEN",
+      "numeric_policy.artifact_scale = 18",
+      "numeric_policy.binary_float_forbidden = true"
+    ]
+  },
+  "golden_fixture_cross_check": {
+    "vectors_path": "tests/fixtures/quant/golden-two-rebalance-v1.vectors.json",
+    "expected_path": "tests/fixtures/quant/golden-two-rebalance-v1.expected.json",
+    "vectors_sha256_grouped": "1e4b2d56:9f88e3b9:96f3c208:f0f3ba08:756bb9e2:c2b5134e:9a515c3d:72d3f2bb",
+    "expected_sha256_grouped": "08ec14be:67de2cd9:120fa4fc:01736982:3bb6f05b:79dd483f:c06fa5ed:19dc0b47"
+  },
+  "claims": {
+    "vendor_adjusted_comparison_run": false,
+    "security_identity_join_applied": false,
+    "raw_cache_integration_applied": false,
+    "sourced_unsupported_outcome_policy_registered": false,
+    "independent_review_recorded": false,
+    "freeze_blocker_changed": false
+  },
+  "series_cases": [
+    {
+      "case_id": "forward-split-4-for-1",
+      "contract_lines": [
+        "gross_return",
+        "tri",
+        "adjustment_factor",
+        "split_adjusted_close",
+        "split_adjusted_volume",
+        "raw_dollar_volume"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-03-03",
+          "raw_close": "404",
+          "raw_volume": "1200"
+        },
+        {
+          "session": "2026-03-04",
+          "raw_close": "102",
+          "raw_volume": "4800"
+        },
+        {
+          "session": "2026-03-05",
+          "raw_close": "103",
+          "raw_volume": "4000"
+        },
+        {
+          "session": "2026-03-06",
+          "raw_close": "104",
+          "raw_volume": "3600"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syna-split",
+          "security_id": "SYNA",
+          "session": "2026-03-04",
+          "split_factor": "4"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "400000",
+          "split_adjustment_factor": "4",
+          "split_adjusted_close": "100.000000000000000000",
+          "split_adjusted_volume": "4000",
+          "split_adjusted_dollar_volume": "400000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-03-03",
+          "raw_close": "404",
+          "raw_volume": "1200",
+          "raw_dollar_volume": "484800",
+          "split_adjustment_factor": "4",
+          "split_adjusted_close": "101.000000000000000000",
+          "split_adjusted_volume": "4800",
+          "split_adjusted_dollar_volume": "484800",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.010000000000000000",
+          "total_return_index": "1.010000000000000000"
+        },
+        {
+          "session": "2026-03-04",
+          "raw_close": "102",
+          "raw_volume": "4800",
+          "raw_dollar_volume": "489600",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "102.000000000000000000",
+          "split_adjusted_volume": "4800",
+          "split_adjusted_dollar_volume": "489600",
+          "applied_split_factor": "4",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.009900990099009901",
+          "total_return_index": "1.020000000000000000"
+        },
+        {
+          "session": "2026-03-05",
+          "raw_close": "103",
+          "raw_volume": "4000",
+          "raw_dollar_volume": "412000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "103.000000000000000000",
+          "split_adjusted_volume": "4000",
+          "split_adjusted_dollar_volume": "412000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.009803921568627451",
+          "total_return_index": "1.030000000000000000"
+        },
+        {
+          "session": "2026-03-06",
+          "raw_close": "104",
+          "raw_volume": "3600",
+          "raw_dollar_volume": "374400",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "104.000000000000000000",
+          "split_adjusted_volume": "3600",
+          "split_adjusted_dollar_volume": "374400",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.009708737864077670",
+          "total_return_index": "1.040000000000000000"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "reverse-split-1-for-10",
+      "contract_lines": [
+        "gross_return",
+        "tri",
+        "adjustment_factor",
+        "split_adjusted_close",
+        "split_adjusted_volume",
+        "raw_dollar_volume"
+      ],
+      "security_id": "SYNB",
+      "adjustment_cutoff_session": "2026-04-03",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-30",
+          "raw_close": "2",
+          "raw_volume": "100000"
+        },
+        {
+          "session": "2026-03-31",
+          "raw_close": "2.5",
+          "raw_volume": "80000"
+        },
+        {
+          "session": "2026-04-01",
+          "raw_close": "25",
+          "raw_volume": "8000"
+        },
+        {
+          "session": "2026-04-02",
+          "raw_close": "26",
+          "raw_volume": "7000"
+        },
+        {
+          "session": "2026-04-03",
+          "raw_close": "24",
+          "raw_volume": "9000"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "synb-reverse-split",
+          "security_id": "SYNB",
+          "session": "2026-04-01",
+          "split_factor": "0.1"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-03-30",
+          "raw_close": "2",
+          "raw_volume": "100000",
+          "raw_dollar_volume": "200000",
+          "split_adjustment_factor": "0.1",
+          "split_adjusted_close": "20.000000000000000000",
+          "split_adjusted_volume": "10000",
+          "split_adjusted_dollar_volume": "200000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-03-31",
+          "raw_close": "2.5",
+          "raw_volume": "80000",
+          "raw_dollar_volume": "200000",
+          "split_adjustment_factor": "0.1",
+          "split_adjusted_close": "25.000000000000000000",
+          "split_adjusted_volume": "8000",
+          "split_adjusted_dollar_volume": "200000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.250000000000000000",
+          "total_return_index": "1.250000000000000000"
+        },
+        {
+          "session": "2026-04-01",
+          "raw_close": "25",
+          "raw_volume": "8000",
+          "raw_dollar_volume": "200000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "25.000000000000000000",
+          "split_adjusted_volume": "8000",
+          "split_adjusted_dollar_volume": "200000",
+          "applied_split_factor": "0.1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.250000000000000000"
+        },
+        {
+          "session": "2026-04-02",
+          "raw_close": "26",
+          "raw_volume": "7000",
+          "raw_dollar_volume": "182000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "26.000000000000000000",
+          "split_adjusted_volume": "7000",
+          "split_adjusted_dollar_volume": "182000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.040000000000000000",
+          "total_return_index": "1.300000000000000000"
+        },
+        {
+          "session": "2026-04-03",
+          "raw_close": "24",
+          "raw_volume": "9000",
+          "raw_dollar_volume": "216000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "24.000000000000000000",
+          "split_adjusted_volume": "9000",
+          "split_adjusted_dollar_volume": "216000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "0.923076923076923077",
+          "total_return_index": "1.200000000000000000"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "cash-dividend-only",
+      "contract_lines": [
+        "gross_return",
+        "tri",
+        "dividends_never_adjust_volume",
+        "raw_dollar_volume"
+      ],
+      "security_id": "SYNC",
+      "adjustment_cutoff_session": "2026-02-20",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-02-18",
+          "raw_close": "100",
+          "raw_volume": "5000"
+        },
+        {
+          "session": "2026-02-19",
+          "raw_close": "99.09",
+          "raw_volume": "5200"
+        },
+        {
+          "session": "2026-02-20",
+          "raw_close": "100",
+          "raw_volume": "4800"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "sync-dividend",
+          "security_id": "SYNC",
+          "session": "2026-02-19",
+          "cash_per_share": "0.91",
+          "payment_session": "2026-02-20",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-02-18",
+          "raw_close": "100",
+          "raw_volume": "5000",
+          "raw_dollar_volume": "500000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "100.000000000000000000",
+          "split_adjusted_volume": "5000",
+          "split_adjusted_dollar_volume": "500000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-02-19",
+          "raw_close": "99.09",
+          "raw_volume": "5200",
+          "raw_dollar_volume": "515268",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "99.090000000000000000",
+          "split_adjusted_volume": "5200",
+          "split_adjusted_dollar_volume": "515268",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.910000000000000000",
+          "applied_dividend_pre_action_per_share": "0.91",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-02-20",
+          "raw_close": "100",
+          "raw_volume": "4800",
+          "raw_dollar_volume": "480000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "100.000000000000000000",
+          "split_adjusted_volume": "4800",
+          "split_adjusted_dollar_volume": "480000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.009183570491472399",
+          "total_return_index": "1.009183570491472399"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "same-day-split-dividend-post-split-basis",
+      "contract_lines": [
+        "registered_same_day_order",
+        "gross_return",
+        "tri",
+        "adjustment_factor"
+      ],
+      "security_id": "SYND",
+      "adjustment_cutoff_session": "2026-01-07",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "synd-split",
+          "security_id": "SYND",
+          "session": "2026-01-06",
+          "split_factor": "2.5"
+        },
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "synd-dividend",
+          "security_id": "SYND",
+          "session": "2026-01-06",
+          "cash_per_share": "2",
+          "payment_session": "2026-01-07",
+          "share_basis": "POST_SPLIT",
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "100000",
+          "split_adjustment_factor": "2.5",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "100000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500",
+          "raw_dollar_volume": "95000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "38.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "95000",
+          "applied_split_factor": "2.5",
+          "applied_dividend_post_split_per_share": "2.000000000000000000",
+          "applied_dividend_pre_action_per_share": "5",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500",
+          "raw_dollar_volume": "95000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "38.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "95000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "same-day-split-dividend-pre-action-basis",
+      "contract_lines": [
+        "registered_same_day_order",
+        "coordinate_equivalence",
+        "gross_return",
+        "tri"
+      ],
+      "security_id": "SYND",
+      "adjustment_cutoff_session": "2026-01-07",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "synd-split",
+          "security_id": "SYND",
+          "session": "2026-01-06",
+          "split_factor": "2.5"
+        },
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "synd-dividend",
+          "security_id": "SYND",
+          "session": "2026-01-06",
+          "cash_per_share": "5",
+          "payment_session": "2026-01-07",
+          "share_basis": "PRE_ACTION",
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "100000",
+          "split_adjustment_factor": "2.5",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "100000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500",
+          "raw_dollar_volume": "95000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "38.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "95000",
+          "applied_split_factor": "2.5",
+          "applied_dividend_post_split_per_share": "2.000000000000000000",
+          "applied_dividend_pre_action_per_share": "5",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500",
+          "raw_dollar_volume": "95000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "38.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "95000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "multi-action-chain",
+      "contract_lines": [
+        "adjustment_factor_product",
+        "gross_return",
+        "tri",
+        "raw_dollar_volume",
+        "split_adjusted_volume"
+      ],
+      "security_id": "SYNE",
+      "adjustment_cutoff_session": "2026-06-30",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-06-01",
+          "raw_close": "120",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-06-05",
+          "raw_close": "60",
+          "raw_volume": "2000"
+        },
+        {
+          "session": "2026-06-10",
+          "raw_close": "59",
+          "raw_volume": "2100"
+        },
+        {
+          "session": "2026-06-15",
+          "raw_close": "20",
+          "raw_volume": "6300"
+        },
+        {
+          "session": "2026-06-20",
+          "raw_close": "40",
+          "raw_volume": "3150"
+        },
+        {
+          "session": "2026-06-25",
+          "raw_close": "41",
+          "raw_volume": "3000"
+        },
+        {
+          "session": "2026-06-30",
+          "raw_close": "42",
+          "raw_volume": "2900"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syne-split-1",
+          "security_id": "SYNE",
+          "session": "2026-06-05",
+          "split_factor": "2"
+        },
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "syne-dividend",
+          "security_id": "SYNE",
+          "session": "2026-06-10",
+          "cash_per_share": "1",
+          "payment_session": "2026-06-15",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        },
+        {
+          "kind": "SPLIT",
+          "event_id": "syne-split-2",
+          "security_id": "SYNE",
+          "session": "2026-06-15",
+          "split_factor": "3"
+        },
+        {
+          "kind": "SPLIT",
+          "event_id": "syne-split-3",
+          "security_id": "SYNE",
+          "session": "2026-06-20",
+          "split_factor": "0.5"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-06-01",
+          "raw_close": "120",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "120000",
+          "split_adjustment_factor": "3",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "3000",
+          "split_adjusted_dollar_volume": "120000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-06-05",
+          "raw_close": "60",
+          "raw_volume": "2000",
+          "raw_dollar_volume": "120000",
+          "split_adjustment_factor": "1.5",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "3000",
+          "split_adjusted_dollar_volume": "120000",
+          "applied_split_factor": "2",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-06-10",
+          "raw_close": "59",
+          "raw_volume": "2100",
+          "raw_dollar_volume": "123900",
+          "split_adjustment_factor": "1.5",
+          "split_adjusted_close": "39.333333333333333333",
+          "split_adjusted_volume": "3150",
+          "split_adjusted_dollar_volume": "123900",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "1.000000000000000000",
+          "applied_dividend_pre_action_per_share": "1",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-06-15",
+          "raw_close": "20",
+          "raw_volume": "6300",
+          "raw_dollar_volume": "126000",
+          "split_adjustment_factor": "0.5",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "3150",
+          "split_adjusted_dollar_volume": "126000",
+          "applied_split_factor": "3",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.016949152542372881",
+          "total_return_index": "1.016949152542372881"
+        },
+        {
+          "session": "2026-06-20",
+          "raw_close": "40",
+          "raw_volume": "3150",
+          "raw_dollar_volume": "126000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "3150",
+          "split_adjusted_dollar_volume": "126000",
+          "applied_split_factor": "0.5",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.016949152542372881"
+        },
+        {
+          "session": "2026-06-25",
+          "raw_close": "41",
+          "raw_volume": "3000",
+          "raw_dollar_volume": "123000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "41.000000000000000000",
+          "split_adjusted_volume": "3000",
+          "split_adjusted_dollar_volume": "123000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.025000000000000000",
+          "total_return_index": "1.042372881355932203"
+        },
+        {
+          "session": "2026-06-30",
+          "raw_close": "42",
+          "raw_volume": "2900",
+          "raw_dollar_volume": "121800",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "42.000000000000000000",
+          "split_adjusted_volume": "2900",
+          "split_adjusted_dollar_volume": "121800",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.024390243902439024",
+          "total_return_index": "1.067796610169491525"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "multi-action-chain-earlier-cutoff",
+      "contract_lines": [
+        "adjustment_factor_depends_on_cutoff",
+        "gross_return",
+        "tri"
+      ],
+      "security_id": "SYNE",
+      "adjustment_cutoff_session": "2026-06-15",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-06-01",
+          "raw_close": "120",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-06-05",
+          "raw_close": "60",
+          "raw_volume": "2000"
+        },
+        {
+          "session": "2026-06-10",
+          "raw_close": "59",
+          "raw_volume": "2100"
+        },
+        {
+          "session": "2026-06-15",
+          "raw_close": "20",
+          "raw_volume": "6300"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syne-split-1",
+          "security_id": "SYNE",
+          "session": "2026-06-05",
+          "split_factor": "2"
+        },
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "syne-dividend",
+          "security_id": "SYNE",
+          "session": "2026-06-10",
+          "cash_per_share": "1",
+          "payment_session": "2026-06-15",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        },
+        {
+          "kind": "SPLIT",
+          "event_id": "syne-split-2",
+          "security_id": "SYNE",
+          "session": "2026-06-15",
+          "split_factor": "3"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-06-01",
+          "raw_close": "120",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "120000",
+          "split_adjustment_factor": "6",
+          "split_adjusted_close": "20.000000000000000000",
+          "split_adjusted_volume": "6000",
+          "split_adjusted_dollar_volume": "120000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-06-05",
+          "raw_close": "60",
+          "raw_volume": "2000",
+          "raw_dollar_volume": "120000",
+          "split_adjustment_factor": "3",
+          "split_adjusted_close": "20.000000000000000000",
+          "split_adjusted_volume": "6000",
+          "split_adjusted_dollar_volume": "120000",
+          "applied_split_factor": "2",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-06-10",
+          "raw_close": "59",
+          "raw_volume": "2100",
+          "raw_dollar_volume": "123900",
+          "split_adjustment_factor": "3",
+          "split_adjusted_close": "19.666666666666666667",
+          "split_adjusted_volume": "6300",
+          "split_adjusted_dollar_volume": "123900",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "1.000000000000000000",
+          "applied_dividend_pre_action_per_share": "1",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-06-15",
+          "raw_close": "20",
+          "raw_volume": "6300",
+          "raw_dollar_volume": "126000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "20.000000000000000000",
+          "split_adjusted_volume": "6300",
+          "split_adjusted_dollar_volume": "126000",
+          "applied_split_factor": "3",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.016949152542372881",
+          "total_return_index": "1.016949152542372881"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "special-dividend",
+      "contract_lines": [
+        "gross_return",
+        "tri",
+        "dividends_never_adjust_volume"
+      ],
+      "security_id": "SYNF",
+      "adjustment_cutoff_session": "2024-01-12",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2024-01-10",
+          "raw_close": "500",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2024-01-11",
+          "raw_close": "485",
+          "raw_volume": "1500"
+        },
+        {
+          "session": "2024-01-12",
+          "raw_close": "490",
+          "raw_volume": "1400"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "synf-special",
+          "security_id": "SYNF",
+          "session": "2024-01-11",
+          "cash_per_share": "15",
+          "payment_session": "2024-01-12",
+          "share_basis": null,
+          "classification": "SPECIAL"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2024-01-10",
+          "raw_close": "500",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "500000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "500.000000000000000000",
+          "split_adjusted_volume": "1000",
+          "split_adjusted_dollar_volume": "500000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2024-01-11",
+          "raw_close": "485",
+          "raw_volume": "1500",
+          "raw_dollar_volume": "727500",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "485.000000000000000000",
+          "split_adjusted_volume": "1500",
+          "split_adjusted_dollar_volume": "727500",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "15.000000000000000000",
+          "applied_dividend_pre_action_per_share": "15",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2024-01-12",
+          "raw_close": "490",
+          "raw_volume": "1400",
+          "raw_dollar_volume": "686000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "490.000000000000000000",
+          "split_adjusted_volume": "1400",
+          "split_adjusted_dollar_volume": "686000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.010309278350515464",
+          "total_return_index": "1.010309278350515464"
+        }
+      ],
+      "expected_exclusion": null
+    },
+    {
+      "case_id": "unheld-unsupported-action-excluded",
+      "contract_lines": [
+        "unheld_unsupported_exclusion"
+      ],
+      "security_id": "SYNG",
+      "adjustment_cutoff_session": "2026-05-08",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-05-04",
+          "raw_close": "10",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-05-05",
+          "raw_close": "11",
+          "raw_volume": "1100"
+        },
+        {
+          "session": "2026-05-06",
+          "raw_close": "12",
+          "raw_volume": "1200"
+        },
+        {
+          "session": "2026-05-07",
+          "raw_close": "13",
+          "raw_volume": "1300"
+        },
+        {
+          "session": "2026-05-08",
+          "raw_close": "14",
+          "raw_volume": "1400"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "UNSUPPORTED",
+          "event_id": "syng-spinoff",
+          "security_id": "SYNG",
+          "session": "2026-05-06",
+          "action_type": "SPINOFF"
+        }
+      ],
+      "expected_state": "EXCLUDED_UNSUPPORTED_UNHELD_ACTION",
+      "expected_sessions": [
+        {
+          "session": "2026-05-04",
+          "raw_close": "10",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "10000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "10.000000000000000000",
+          "split_adjusted_volume": "1000",
+          "split_adjusted_dollar_volume": "10000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-05-05",
+          "raw_close": "11",
+          "raw_volume": "1100",
+          "raw_dollar_volume": "12100",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "11.000000000000000000",
+          "split_adjusted_volume": "1100",
+          "split_adjusted_dollar_volume": "12100",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.100000000000000000",
+          "total_return_index": "1.100000000000000000"
+        }
+      ],
+      "expected_exclusion": {
+        "state": "EXCLUDED_UNSUPPORTED_UNHELD_ACTION",
+        "security_id": "SYNG",
+        "event_id": "syng-spinoff",
+        "session": "2026-05-06",
+        "action_type": "SPINOFF"
+      }
+    },
+    {
+      "case_id": "golden-two-rebalance-aaa-sleeve",
+      "contract_lines": [
+        "golden_cross_check",
+        "registered_same_day_order",
+        "gross_return",
+        "tri"
+      ],
+      "security_id": "AAA",
+      "adjustment_cutoff_session": "2026-01-07",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "strategy-split",
+          "security_id": "AAA",
+          "session": "2026-01-06",
+          "split_factor": "2.5"
+        },
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "strategy-dividend",
+          "security_id": "AAA",
+          "session": "2026-01-06",
+          "cash_per_share": "2",
+          "payment_session": "2026-01-07",
+          "share_basis": "POST_SPLIT",
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "SERIES_OK",
+      "expected_sessions": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000",
+          "raw_dollar_volume": "100000",
+          "split_adjustment_factor": "2.5",
+          "split_adjusted_close": "40.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "100000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": null,
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500",
+          "raw_dollar_volume": "95000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "38.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "95000",
+          "applied_split_factor": "2.5",
+          "applied_dividend_post_split_per_share": "2.000000000000000000",
+          "applied_dividend_pre_action_per_share": "5",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500",
+          "raw_dollar_volume": "95000",
+          "split_adjustment_factor": "1",
+          "split_adjusted_close": "38.000000000000000000",
+          "split_adjusted_volume": "2500",
+          "split_adjusted_dollar_volume": "95000",
+          "applied_split_factor": "1",
+          "applied_dividend_post_split_per_share": "0.000000000000000000",
+          "applied_dividend_pre_action_per_share": "0",
+          "gross_return": "1.000000000000000000",
+          "total_return_index": "1.000000000000000000"
+        }
+      ],
+      "expected_exclusion": null
+    }
+  ],
+  "blocked_cases": [
+    {
+      "case_id": "post-cutoff-action",
+      "contract_lines": [
+        "actions_after_cutoff_prohibited"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-03",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-03-03",
+          "raw_close": "404",
+          "raw_volume": "1200"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syna-split",
+          "security_id": "SYNA",
+          "session": "2026-03-04",
+          "split_factor": "4"
+        }
+      ],
+      "expected_state": "BLOCKED_POST_CUTOFF_EVENT",
+      "expected_event_id": "syna-split",
+      "expected_session": "2026-03-04"
+    },
+    {
+      "case_id": "post-cutoff-payment-leg",
+      "contract_lines": [
+        "actions_after_cutoff_prohibited"
+      ],
+      "security_id": "SYNC",
+      "adjustment_cutoff_session": "2026-02-19",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-02-18",
+          "raw_close": "100",
+          "raw_volume": "5000"
+        },
+        {
+          "session": "2026-02-19",
+          "raw_close": "99.09",
+          "raw_volume": "5200"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "sync-dividend",
+          "security_id": "SYNC",
+          "session": "2026-02-19",
+          "cash_per_share": "0.91",
+          "payment_session": "2026-02-20",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "BLOCKED_POST_CUTOFF_EVENT",
+      "expected_event_id": "sync-dividend",
+      "expected_session": "2026-02-20"
+    },
+    {
+      "case_id": "post-cutoff-session",
+      "contract_lines": [
+        "actions_after_cutoff_prohibited"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-02",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-03-03",
+          "raw_close": "404",
+          "raw_volume": "1200"
+        }
+      ],
+      "actions": [],
+      "expected_state": "BLOCKED_POST_CUTOFF_SESSION",
+      "expected_event_id": null,
+      "expected_session": "2026-03-03"
+    },
+    {
+      "case_id": "ambiguous-same-day-dividend-coordinate",
+      "contract_lines": [
+        "registered_same_day_order"
+      ],
+      "security_id": "SYND",
+      "adjustment_cutoff_session": "2026-01-07",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-01-05",
+          "raw_close": "100",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-01-06",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        },
+        {
+          "session": "2026-01-07",
+          "raw_close": "38",
+          "raw_volume": "2500"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "synd-split",
+          "security_id": "SYND",
+          "session": "2026-01-06",
+          "split_factor": "2.5"
+        },
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "synd-dividend",
+          "security_id": "SYND",
+          "session": "2026-01-06",
+          "cash_per_share": "2",
+          "payment_session": "2026-01-07",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "BLOCKED_AMBIGUOUS_EVENT_COORDINATE",
+      "expected_event_id": "synd-dividend",
+      "expected_session": "2026-01-06"
+    },
+    {
+      "case_id": "duplicate-event-id",
+      "contract_lines": [
+        "input_permutation_determinism"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-03-04",
+          "raw_close": "102",
+          "raw_volume": "4800"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syna-split",
+          "security_id": "SYNA",
+          "session": "2026-03-04",
+          "split_factor": "4"
+        },
+        {
+          "kind": "SPLIT",
+          "event_id": "syna-split",
+          "security_id": "SYNA",
+          "session": "2026-03-04",
+          "split_factor": "2"
+        }
+      ],
+      "expected_state": "BLOCKED_DUPLICATE_EVENT",
+      "expected_event_id": "syna-split",
+      "expected_session": "2026-03-04"
+    },
+    {
+      "case_id": "duplicate-bar-session",
+      "contract_lines": [
+        "input_permutation_determinism"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-03-02",
+          "raw_close": "401",
+          "raw_volume": "1000"
+        }
+      ],
+      "actions": [],
+      "expected_state": "BLOCKED_DUPLICATE_SESSION",
+      "expected_event_id": null,
+      "expected_session": "2026-03-02"
+    },
+    {
+      "case_id": "foreign-security-action",
+      "contract_lines": [
+        "security_scoped_actions"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "synz-split",
+          "security_id": "SYNZ",
+          "session": "2026-03-02",
+          "split_factor": "4"
+        }
+      ],
+      "expected_state": "BLOCKED_FOREIGN_SECURITY_ACTION",
+      "expected_event_id": "synz-split",
+      "expected_session": "2026-03-02"
+    },
+    {
+      "case_id": "held-unsupported-action",
+      "contract_lines": [
+        "held_unsupported_run_invalid"
+      ],
+      "security_id": "SYNG",
+      "adjustment_cutoff_session": "2026-05-08",
+      "held_raw_shares": "10",
+      "bars": [
+        {
+          "session": "2026-05-04",
+          "raw_close": "10",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-05-06",
+          "raw_close": "12",
+          "raw_volume": "1200"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "UNSUPPORTED",
+          "event_id": "syng-merger",
+          "security_id": "SYNG",
+          "session": "2026-05-06",
+          "action_type": "MERGER"
+        }
+      ],
+      "expected_state": "RUN_INVALID_UNSUPPORTED_HELD_ACTION",
+      "expected_event_id": "syng-merger",
+      "expected_session": "2026-05-06"
+    },
+    {
+      "case_id": "negative-distribution",
+      "contract_lines": [
+        "negative_distribution_forbidden"
+      ],
+      "security_id": "SYNC",
+      "adjustment_cutoff_session": "2026-02-20",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-02-18",
+          "raw_close": "100",
+          "raw_volume": "5000"
+        },
+        {
+          "session": "2026-02-19",
+          "raw_close": "99",
+          "raw_volume": "5200"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "sync-dividend",
+          "security_id": "SYNC",
+          "session": "2026-02-19",
+          "cash_per_share": "-0.91",
+          "payment_session": "2026-02-19",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "BLOCKED_NEGATIVE_DISTRIBUTION",
+      "expected_event_id": "sync-dividend",
+      "expected_session": "2026-02-19"
+    },
+    {
+      "case_id": "nonpositive-split-factor",
+      "contract_lines": [
+        "split_factor_positive"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-04",
+          "raw_close": "102",
+          "raw_volume": "4800"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syna-split",
+          "security_id": "SYNA",
+          "session": "2026-03-04",
+          "split_factor": "0"
+        }
+      ],
+      "expected_state": "BLOCKED_NONPOSITIVE_SPLIT_FACTOR",
+      "expected_event_id": "syna-split",
+      "expected_session": "2026-03-04"
+    },
+    {
+      "case_id": "payment-before-entitlement",
+      "contract_lines": [
+        "receivable_window"
+      ],
+      "security_id": "SYNC",
+      "adjustment_cutoff_session": "2026-02-20",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-02-18",
+          "raw_close": "100",
+          "raw_volume": "5000"
+        },
+        {
+          "session": "2026-02-19",
+          "raw_close": "99",
+          "raw_volume": "5200"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "CASH_DIVIDEND",
+          "event_id": "sync-dividend",
+          "security_id": "SYNC",
+          "session": "2026-02-19",
+          "cash_per_share": "0.91",
+          "payment_session": "2026-02-18",
+          "share_basis": null,
+          "classification": "ORDINARY"
+        }
+      ],
+      "expected_state": "BLOCKED_PAYMENT_BEFORE_ENTITLEMENT",
+      "expected_event_id": "sync-dividend",
+      "expected_session": "2026-02-19"
+    },
+    {
+      "case_id": "nonpositive-raw-close",
+      "contract_lines": [
+        "exact_arithmetic_inputs"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "0",
+          "raw_volume": "1000"
+        }
+      ],
+      "actions": [],
+      "expected_state": "BLOCKED_NONPOSITIVE_RAW_CLOSE",
+      "expected_event_id": null,
+      "expected_session": "2026-03-02"
+    },
+    {
+      "case_id": "negative-raw-volume",
+      "contract_lines": [
+        "exact_arithmetic_inputs"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "-1"
+        }
+      ],
+      "actions": [],
+      "expected_state": "BLOCKED_NEGATIVE_RAW_VOLUME",
+      "expected_event_id": null,
+      "expected_session": "2026-03-02"
+    },
+    {
+      "case_id": "noncanonical-decimal-input",
+      "contract_lines": [
+        "exact_arithmetic_inputs"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "4e2",
+          "raw_volume": "1000"
+        }
+      ],
+      "actions": [],
+      "expected_state": "BLOCKED_NONFINITE_INPUT",
+      "expected_event_id": null,
+      "expected_session": null
+    },
+    {
+      "case_id": "action-session-without-raw-bar",
+      "contract_lines": [
+        "raw_inputs_required"
+      ],
+      "security_id": "SYNA",
+      "adjustment_cutoff_session": "2026-03-06",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-03-02",
+          "raw_close": "400",
+          "raw_volume": "1000"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "SPLIT",
+          "event_id": "syna-split",
+          "security_id": "SYNA",
+          "session": "2026-03-04",
+          "split_factor": "4"
+        }
+      ],
+      "expected_state": "BLOCKED_MISSING_RAW_CLOSE",
+      "expected_event_id": null,
+      "expected_session": "2026-03-04"
+    },
+    {
+      "case_id": "supported-action-after-exclusion",
+      "contract_lines": [
+        "unheld_unsupported_exclusion"
+      ],
+      "security_id": "SYNG",
+      "adjustment_cutoff_session": "2026-05-08",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-05-04",
+          "raw_close": "10",
+          "raw_volume": "1000"
+        },
+        {
+          "session": "2026-05-06",
+          "raw_close": "12",
+          "raw_volume": "1200"
+        },
+        {
+          "session": "2026-05-07",
+          "raw_close": "13",
+          "raw_volume": "1300"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "UNSUPPORTED",
+          "event_id": "syng-spinoff",
+          "security_id": "SYNG",
+          "session": "2026-05-06",
+          "action_type": "SPINOFF"
+        },
+        {
+          "kind": "SPLIT",
+          "event_id": "syng-split",
+          "security_id": "SYNG",
+          "session": "2026-05-07",
+          "split_factor": "2"
+        }
+      ],
+      "expected_state": "BLOCKED_SUPPORTED_ACTION_AFTER_EXCLUSION",
+      "expected_event_id": "syng-split",
+      "expected_session": "2026-05-07"
+    },
+    {
+      "case_id": "unregistered-action-type",
+      "contract_lines": [
+        "held_unsupported_run_invalid"
+      ],
+      "security_id": "SYNG",
+      "adjustment_cutoff_session": "2026-05-08",
+      "held_raw_shares": "0",
+      "bars": [
+        {
+          "session": "2026-05-06",
+          "raw_close": "12",
+          "raw_volume": "1200"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "UNSUPPORTED",
+          "event_id": "syng-odd",
+          "security_id": "SYNG",
+          "session": "2026-05-06",
+          "action_type": "TENDER_OFFER"
+        }
+      ],
+      "expected_state": "BLOCKED_UNKNOWN_ACTION_TYPE",
+      "expected_event_id": "syng-odd",
+      "expected_session": "2026-05-06"
+    }
+  ]
+}
