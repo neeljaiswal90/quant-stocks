@@ -1,35 +1,49 @@
 """Paced, fail-closed Alpha Vantage HTTP client (stdlib only; no network in tests).
 
-Design rules (from IMPLEMENTATION_PLAN non-negotiables and the 2026-08-07 audit):
+Design rules (from IMPLEMENTATION_PLAN non-negotiables, the 2026-08-07 audit,
+and NEE-123):
 
 * Alpha Vantage returns business errors and throttles as **HTTP 200** with a
   JSON body carrying ``Note``, ``Information``, or ``Error Message``. Every body
-  is classified before it is trusted; ``classify_body`` is the single source of
-  truth for that classification.
-* Requests are **paced evenly** (default one per second, i.e. 60/min — under the
-  75/min premium ceiling and spread out enough to avoid "burst pattern"
-  responses) rather than fired in bursts.
-* Retries are bounded, use exponential backoff, and happen **only** for
-  idempotent-safe conditions: transport errors, HTTP 5xx/429, and the ``Note``
-  throttle body. ``Information`` and ``Error Message`` are business outcomes
-  and are returned to the caller unchanged, never retried into oblivion.
-* The API key never appears in any recorded URL, exception text, or log line.
-  ``RawResponse.public_url`` is built without it.
+  is classified before it is trusted; :func:`classify_payload` is the single
+  source of truth for that classification and returns a **typed non-data
+  state** — throttle, information, error message, malformed JSON, malformed CSV,
+  unexpected media type, truncated, empty, HTTP error, transport failure.
+* Requests are **paced evenly** (default one per second) rather than fired in
+  bursts. Plan-bound token-bucket quota lives in :mod:`.quota`; pacing here is
+  the older, weaker smoothing that the legacy :meth:`AlphaVantageClient.get`
+  path still uses.
+* Retries are bounded, use exponential backoff, and happen **only** for declared
+  idempotent reads in declared transient classes (:class:`RetryPolicy`).
+  ``Information`` and ``Error Message`` are business outcomes and are returned
+  to the caller unchanged, never retried into oblivion.
+* The credential is a **reference** (:class:`CredentialRef` — an environment
+  variable *name*) resolved from ``os.environ`` at call time. It never appears
+  in a recorded URL, a canonical parameter list, a request key, an exception, or
+  a log line: :func:`redact_url` and :func:`redact_mapping` enforce that for
+  anything persisted.
+* This module performs **no network I/O**. The only module that opens a socket
+  is :mod:`qme.data.alpha_vantage.transport`, which imports the transport
+  contract from here — so the acquisition boundary is a module edge that
+  ``tests/architecture/test_import_boundaries.py`` can assert on.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import time
-import urllib.error
 import urllib.parse
-import urllib.request
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
+
+from qme.data.alpha_vantage.plan_v1 import PROVIDER_ID, PROVIDER_VERSION
+from qme.foundation.lineage import canonical_json_bytes
 
 BASE_URL = "https://www.alphavantage.co/query"
 API_KEY_ENV = "ALPHA_VANTAGE_API_KEY"  # pragma: allowlist secret (env var name, not a value)
@@ -38,7 +52,16 @@ DEFAULT_MIN_INTERVAL_SECONDS = 1.0
 DEFAULT_MAX_ATTEMPTS = 4
 _RETRY_BACKOFF_SECONDS = (2.0, 5.0, 12.0)
 
-# Response classes returned by classify_body.
+#: What a redacted credential looks like anywhere it would otherwise be printed.
+REDACTED = "REDACTED"
+
+#: Parameter names that may carry a credential. They are stripped from canonical
+#: parameters, excluded from the request key, and redacted in anything persisted.
+CREDENTIAL_PARAM_NAMES: frozenset[str] = frozenset(
+    {"apikey", "api_key", "key", "token", "access_token", "secret", "password"}
+)
+
+# Response classes returned by classify_body (legacy, kept for stored records).
 CLASS_OK = "OK"
 CLASS_THROTTLE = "SOFT_ERROR_NOTE"  # per-minute/burst throttle -> retryable
 CLASS_INFORMATION = "SOFT_ERROR_INFORMATION"  # tier/limit/entitlement message -> not retryable
@@ -46,16 +69,478 @@ CLASS_ERROR_MESSAGE = "SOFT_ERROR_ERROR_MESSAGE"  # invalid call/symbol -> not r
 CLASS_MALFORMED = "MALFORMED"
 CLASS_HTTP_ERROR = "HTTP_ERROR"
 
+# Typed payload states. Exactly one of these describes any response, including
+# an HTTP 200 that carries no data.
+STATE_DATA = "DATA"
+STATE_THROTTLE_NOTE = "NON_DATA_THROTTLE_NOTE"
+STATE_INFORMATION = "NON_DATA_INFORMATION"
+STATE_ERROR_MESSAGE = "NON_DATA_ERROR_MESSAGE"
+STATE_MALFORMED_JSON = "NON_DATA_MALFORMED_JSON"
+STATE_MALFORMED_CSV = "NON_DATA_MALFORMED_CSV"
+STATE_UNEXPECTED_MEDIA_TYPE = "NON_DATA_UNEXPECTED_MEDIA_TYPE"
+STATE_TRUNCATED = "NON_DATA_TRUNCATED"
+STATE_EMPTY = "NON_DATA_EMPTY_BODY"
+STATE_HTTP_ERROR = "NON_DATA_HTTP_ERROR"
+STATE_TRANSPORT_FAILURE = "NON_DATA_TRANSPORT_FAILURE"
+
+NON_DATA_STATES: frozenset[str] = frozenset(
+    {
+        STATE_THROTTLE_NOTE,
+        STATE_INFORMATION,
+        STATE_ERROR_MESSAGE,
+        STATE_MALFORMED_JSON,
+        STATE_MALFORMED_CSV,
+        STATE_UNEXPECTED_MEDIA_TYPE,
+        STATE_TRUNCATED,
+        STATE_EMPTY,
+        STATE_HTTP_ERROR,
+        STATE_TRANSPORT_FAILURE,
+    }
+)
+
+_LEGACY_CLASS_BY_STATE: Mapping[str, str] = {
+    STATE_DATA: CLASS_OK,
+    STATE_THROTTLE_NOTE: CLASS_THROTTLE,
+    STATE_INFORMATION: CLASS_INFORMATION,
+    STATE_ERROR_MESSAGE: CLASS_ERROR_MESSAGE,
+    STATE_MALFORMED_JSON: CLASS_MALFORMED,
+    STATE_MALFORMED_CSV: CLASS_MALFORMED,
+    STATE_UNEXPECTED_MEDIA_TYPE: CLASS_MALFORMED,
+    STATE_TRUNCATED: CLASS_MALFORMED,
+    STATE_EMPTY: CLASS_MALFORMED,
+    STATE_HTTP_ERROR: CLASS_HTTP_ERROR,
+    STATE_TRANSPORT_FAILURE: CLASS_HTTP_ERROR,
+}
+
 _SOFT_KEYS = {
-    "Note": CLASS_THROTTLE,
-    "Information": CLASS_INFORMATION,
-    "Error Message": CLASS_ERROR_MESSAGE,
+    "Note": STATE_THROTTLE_NOTE,
+    "Information": STATE_INFORMATION,
+    "Error Message": STATE_ERROR_MESSAGE,
 }
 _CSV_HEADER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_ ]*(,[A-Za-z_][A-Za-z0-9_ ]*)+\r?$")
+
+#: Endpoints declared idempotent reads. Only these are ever retried.
+DECLARED_IDEMPOTENT_ENDPOINTS: frozenset[str] = frozenset(
+    {
+        "TIME_SERIES_DAILY",
+        "TIME_SERIES_DAILY_ADJUSTED",
+        "TIME_SERIES_WEEKLY",
+        "TIME_SERIES_MONTHLY",
+        "DIVIDENDS",
+        "SPLITS",
+        "LISTING_STATUS",
+    }
+)
+
+#: Declared transient classes. Everything else is a terminal outcome.
+DECLARED_TRANSIENT_STATES: frozenset[str] = frozenset(
+    {STATE_THROTTLE_NOTE, STATE_HTTP_ERROR, STATE_TRANSPORT_FAILURE, STATE_TRUNCATED}
+)
 
 
 class AlphaVantageError(ValueError):
     """Raised for client-side misuse or an exhausted retry budget. Never carries the key."""
+
+
+class CredentialError(AlphaVantageError):
+    """Raised when a credential reference cannot be resolved. Never carries a value."""
+
+
+class OfflineClientError(AlphaVantageError):
+    """Raised when an offline client (no injected transport) is asked to send."""
+
+
+class TransportError(OSError):
+    """Network-layer failure raised by a transport. Never carries the credential."""
+
+
+class TransportTimeoutError(TransportError, TimeoutError):
+    """A transport timed out. Retryable for declared idempotent reads."""
+
+
+# ---------------------------------------------------------------------------
+# Credential reference (never a value on disk, never a .env read)
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class CredentialRef:
+    """A reference to a credential: the *name* of an environment variable.
+
+    ``resolve`` reads ``os.environ`` at call time. No file — and specifically no
+    ``.env`` — is ever read here, and the resolved value is never stored on the
+    reference, logged, hashed, or included in a request key.
+    """
+
+    env_var: str = API_KEY_ENV
+
+    def __post_init__(self) -> None:
+        if not self.env_var or self.env_var != self.env_var.strip():
+            raise CredentialError("credential env var name must be a non-empty bare name")
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]*", self.env_var):
+            raise CredentialError(
+                f"credential env var name {self.env_var!r} must be UPPER_SNAKE_CASE"
+            )
+
+    def resolve(self, environ: Mapping[str, str] | None = None) -> str:
+        values = os.environ if environ is None else environ
+        value = (values.get(self.env_var) or "").strip()
+        if not value:
+            raise CredentialError(
+                f"environment variable {self.env_var} is not set; export it for this "
+                "process (no .env file is read)"
+            )
+        return value
+
+    def is_available(self, environ: Mapping[str, str] | None = None) -> bool:
+        values = os.environ if environ is None else environ
+        return bool((values.get(self.env_var) or "").strip())
+
+    def to_json_dict(self) -> dict[str, str]:
+        return {"credential_kind": "ENVIRONMENT_VARIABLE_NAME", "env_var": self.env_var}
+
+
+def redact_mapping(params: Mapping[str, Any]) -> dict[str, str]:
+    """Copy ``params`` with any credential-bearing value replaced by ``REDACTED``."""
+    return {
+        str(key): (REDACTED if str(key).lower() in CREDENTIAL_PARAM_NAMES else str(value))
+        for key, value in params.items()
+    }
+
+
+def redact_url(url: str) -> str:
+    """Return ``url`` with any credential-bearing query value replaced."""
+    split = urllib.parse.urlsplit(url)
+    if not split.query:
+        return url
+    pairs = urllib.parse.parse_qsl(split.query, keep_blank_values=True)
+    redacted = [
+        (key, REDACTED if key.lower() in CREDENTIAL_PARAM_NAMES else value) for key, value in pairs
+    ]
+    return urllib.parse.urlunsplit(
+        (split.scheme, split.netloc, split.path, urllib.parse.urlencode(redacted), split.fragment)
+    )
+
+
+# ---------------------------------------------------------------------------
+# Cache identity: request_key = SHA256(provider_version || endpoint || params)
+# ---------------------------------------------------------------------------
+
+
+def canonical_endpoint(endpoint: str) -> str:
+    """Uppercase, whitespace-free endpoint name."""
+    value = str(endpoint).strip().upper()
+    if not value or not re.fullmatch(r"[A-Z][A-Z0-9_]*", value):
+        raise AlphaVantageError(f"endpoint {endpoint!r} is not a canonical Alpha Vantage function")
+    return value
+
+
+def canonical_parameters(params: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
+    """Normalize request parameters for the cache identity.
+
+    Credential-bearing keys and the redundant ``function`` key are dropped, keys
+    are lowercased and de-spaced, values are stringified and stripped, empty
+    values are dropped, and the result is sorted — so the same logical request
+    always produces the same key.
+    """
+    normalized: dict[str, str] = {}
+    for raw_key, raw_value in params.items():
+        key = str(raw_key).strip().lower()
+        if not key or key in CREDENTIAL_PARAM_NAMES or key == "function":
+            continue
+        value = str(raw_value).strip()
+        if not value:
+            continue
+        if key in normalized and normalized[key] != value:
+            raise AlphaVantageError(f"parameter {key!r} was supplied twice with different values")
+        normalized[key] = value
+    return tuple(sorted(normalized.items()))
+
+
+def request_key_material(
+    endpoint: str,
+    params: Mapping[str, Any],
+    *,
+    provider_version: str = PROVIDER_VERSION,
+) -> bytes:
+    """The exact bytes hashed into a request key (canonical JSON, unambiguous)."""
+    return canonical_json_bytes(
+        {
+            "provider_version": provider_version,
+            "endpoint": canonical_endpoint(endpoint),
+            "canonical_parameters": [list(pair) for pair in canonical_parameters(params)],
+        }
+    )
+
+
+def request_key(
+    endpoint: str,
+    params: Mapping[str, Any],
+    *,
+    provider_version: str = PROVIDER_VERSION,
+) -> str:
+    """``SHA256(provider_version || endpoint || canonical_parameters)``.
+
+    The credential is excluded by construction: :func:`canonical_parameters`
+    drops every credential-bearing key before the material is built.
+    """
+    return hashlib.sha256(
+        request_key_material(endpoint, params, provider_version=provider_version)
+    ).hexdigest()
+
+
+def parameters_hash(params: Mapping[str, Any]) -> str:
+    """SHA-256 of the canonical parameters alone, credential excluded.
+
+    Narrower than :func:`request_key`: it identifies *what was asked for*
+    independently of the endpoint and the provider surface version, which is
+    what a run record needs when comparing two requests' inputs.
+    """
+    return hashlib.sha256(
+        canonical_json_bytes(
+            {"canonical_parameters": [list(pair) for pair in canonical_parameters(params)]}
+        )
+    ).hexdigest()
+
+
+def parameters_hash_from_pairs(pairs: Iterable[tuple[str, str]]) -> str:
+    """The same digest computed from already-canonical parameter pairs."""
+    return hashlib.sha256(
+        canonical_json_bytes({"canonical_parameters": [list(pair) for pair in pairs]})
+    ).hexdigest()
+
+
+# ---------------------------------------------------------------------------
+# Transport contract (implemented by qme.data.alpha_vantage.transport)
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class TransportResponse:
+    """One HTTP exchange as the transport saw it, before any interpretation."""
+
+    status: int
+    content_type: str
+    body: bytes
+    headers: Mapping[str, str] = field(default_factory=dict)
+    declared_length: int | None = None
+    final_url: str | None = None
+
+    def redacted_headers(self) -> dict[str, str]:
+        return {str(k): str(v) for k, v in sorted(self.headers.items())}
+
+
+Transport = Callable[[str, float], TransportResponse | tuple[int, str, bytes]]
+"""(url, timeout) -> TransportResponse (or the legacy 3-tuple). Injected in tests."""
+
+
+def normalize_transport_result(
+    result: TransportResponse | tuple[int, str, bytes],
+) -> TransportResponse:
+    """Accept either the rich response or the legacy ``(status, ct, body)`` tuple."""
+    if isinstance(result, TransportResponse):
+        return result
+    status, content_type, body = result
+    return TransportResponse(status=int(status), content_type=str(content_type), body=bytes(body))
+
+
+# ---------------------------------------------------------------------------
+# Typed payload classification
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class PayloadState:
+    """The typed verdict on one response body."""
+
+    state: str
+    detail: str | None = None
+    http_status: int | None = None
+
+    @property
+    def is_data(self) -> bool:
+        return self.state == STATE_DATA
+
+    @property
+    def legacy_class(self) -> str:
+        return _LEGACY_CLASS_BY_STATE[self.state]
+
+    def to_json_dict(self) -> dict[str, Any]:
+        return {
+            "state": self.state,
+            "detail": self.detail,
+            "http_status": self.http_status,
+            "response_class": self.legacy_class,
+            "is_data": self.is_data,
+        }
+
+
+def _classify_json(body: bytes) -> PayloadState:
+    try:
+        document = json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return PayloadState(STATE_MALFORMED_JSON, f"body is not valid JSON: {type(exc).__name__}")
+    if not isinstance(document, dict):
+        return PayloadState(STATE_MALFORMED_JSON, "JSON root is not an object")
+    for key, state in _SOFT_KEYS.items():
+        if key in document:
+            return PayloadState(state, str(document[key])[:500])
+    if not document:
+        return PayloadState(STATE_MALFORMED_JSON, "empty JSON object")
+    return PayloadState(STATE_DATA)
+
+
+def _classify_csv(body: bytes) -> PayloadState:
+    try:
+        head = body.split(b"\n", 1)[0].decode("utf-8")
+    except UnicodeDecodeError:
+        return PayloadState(STATE_MALFORMED_CSV, "CSV header is not UTF-8")
+    if _CSV_HEADER_RE.match(head):
+        return PayloadState(STATE_DATA)
+    # A soft error can also arrive as a plain-text/JSON body on a CSV endpoint.
+    text = body[:2000].decode("utf-8", errors="replace")
+    for key, state in _SOFT_KEYS.items():
+        if key in text:
+            return PayloadState(state, text[:500])
+    return PayloadState(STATE_MALFORMED_CSV, "CSV header does not look like a header row")
+
+
+def classify_payload(
+    content_type: str,
+    body: bytes,
+    *,
+    http_status: int = 200,
+    declared_length: int | None = None,
+) -> PayloadState:
+    """Classify one response into exactly one typed state.
+
+    ``declared_length`` is the transport's ``Content-Length``; a body shorter
+    than it is a partial/incomplete read, not data, even on HTTP 200.
+    """
+    if http_status != 200:
+        return PayloadState(STATE_HTTP_ERROR, f"HTTP {http_status}", http_status=http_status)
+    if declared_length is not None and len(body) < declared_length:
+        return PayloadState(
+            STATE_TRUNCATED,
+            f"body is {len(body)} byte(s); Content-Length declared {declared_length}",
+            http_status=http_status,
+        )
+    if not body:
+        return PayloadState(STATE_EMPTY, "response body is empty", http_status=http_status)
+    ct = content_type.lower()
+    if "json" in ct or body[:1] in (b"{", b"["):
+        state = _classify_json(body)
+    elif "csv" in ct or "text/plain" in ct or body[:1].isalpha():
+        state = _classify_csv(body)
+    else:
+        state = PayloadState(
+            STATE_UNEXPECTED_MEDIA_TYPE, f"unrecognized content type {content_type!r}"
+        )
+    return PayloadState(state.state, state.detail, http_status=http_status)
+
+
+def classify_body(content_type: str, body: bytes) -> tuple[str, str | None]:
+    """Legacy classification of a 200 body. Returns ``(response_class, message)``.
+
+    Kept byte-for-byte compatible with the pre-NEE-123 contract that
+    ``RawPullRecord.response_class`` and the M0 fixture receipts depend on; new
+    code should call :func:`classify_payload` for the typed state.
+    """
+    state = classify_payload(content_type, body)
+    return state.legacy_class, state.detail
+
+
+# ---------------------------------------------------------------------------
+# Retry policy: declared idempotent reads, declared transient classes
+# ---------------------------------------------------------------------------
+
+
+def _http_status_is_transient(status: int | None) -> bool:
+    return status is not None and (status == 429 or 500 <= status < 600)
+
+
+@dataclass(frozen=True)
+class RetryPolicy:
+    """Which outcomes may be retried, how often, and how long to back off."""
+
+    max_attempts: int = DEFAULT_MAX_ATTEMPTS
+    backoff_seconds: tuple[float, ...] = _RETRY_BACKOFF_SECONDS
+    idempotent_endpoints: frozenset[str] = DECLARED_IDEMPOTENT_ENDPOINTS
+    transient_states: frozenset[str] = DECLARED_TRANSIENT_STATES
+    enforce_idempotency: bool = True
+
+    def __post_init__(self) -> None:
+        if self.max_attempts < 1:
+            raise AlphaVantageError("max_attempts must be >= 1")
+        if not self.backoff_seconds:
+            raise AlphaVantageError("backoff_seconds must not be empty")
+
+    def is_idempotent(self, endpoint: str) -> bool:
+        if not self.enforce_idempotency:
+            return True
+        return canonical_endpoint(endpoint) in self.idempotent_endpoints
+
+    def is_transient(self, state: str, http_status: int | None) -> bool:
+        if state not in self.transient_states:
+            return False
+        if state == STATE_HTTP_ERROR:
+            return _http_status_is_transient(http_status)
+        return True
+
+    def may_retry(self, endpoint: str, state: str, http_status: int | None, attempt: int) -> bool:
+        if attempt >= self.max_attempts:
+            return False
+        if not self.is_idempotent(endpoint):
+            return False
+        return self.is_transient(state, http_status)
+
+    def backoff_for(self, attempt: int) -> float:
+        index = min(max(attempt, 1) - 1, len(self.backoff_seconds) - 1)
+        return self.backoff_seconds[index]
+
+    def to_json_dict(self) -> dict[str, Any]:
+        return {
+            "max_attempts": self.max_attempts,
+            "backoff_seconds": list(self.backoff_seconds),
+            "idempotent_endpoints": sorted(self.idempotent_endpoints),
+            "transient_states": sorted(self.transient_states),
+            "enforce_idempotency": self.enforce_idempotency,
+        }
+
+
+#: The pre-NEE-123 behaviour, kept for :meth:`AlphaVantageClient.get`: retry any
+#: endpoint on a throttle Note, a 429/5xx, or a transport failure.
+LEGACY_RETRY_POLICY = RetryPolicy(
+    transient_states=frozenset({STATE_THROTTLE_NOTE, STATE_HTTP_ERROR, STATE_TRANSPORT_FAILURE}),
+    enforce_idempotency=False,
+)
+
+
+@dataclass(frozen=True)
+class RetryEvent:
+    """One recorded attempt that did not terminate the request."""
+
+    attempt: int
+    outcome_state: str
+    http_status: int | None
+    detail: str | None
+    backoff_seconds: float
+    observed_at: str
+
+    def to_json_dict(self) -> dict[str, Any]:
+        return {
+            "attempt": self.attempt,
+            "outcome_state": self.outcome_state,
+            "http_status": self.http_status,
+            "detail": self.detail,
+            "backoff_seconds": self.backoff_seconds,
+            "observed_at": self.observed_at,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Responses
+# ---------------------------------------------------------------------------
 
 
 @dataclass(frozen=True)
@@ -73,6 +558,94 @@ class RawResponse:
     attempts: int
     response_class: str
     soft_message: str | None = None
+
+
+@dataclass(frozen=True)
+class FetchOutcome:
+    """Everything NEE-123 asks the acquisition boundary to be able to record.
+
+    This is the richer sibling of :class:`RawResponse`: it adds the cache
+    identity, the HTTP metadata, the retry/throttle log, the typed payload
+    state, and the provider metadata. It carries **no** credential.
+    """
+
+    endpoint: str
+    request_key: str
+    parameters_sha256: str
+    provider_id: str
+    provider_version: str
+    canonical_parameters: tuple[tuple[str, str], ...]
+    parameters_redacted: Mapping[str, str]
+    public_url: str
+    http_status: int | None
+    content_type: str
+    http_headers: Mapping[str, str]
+    body: bytes
+    sha256: str
+    byte_length: int
+    requested_at: str
+    received_at: str
+    attempts: int
+    payload_state: PayloadState
+    retry_log: tuple[RetryEvent, ...]
+    transport_failure: str | None = None
+
+    @property
+    def is_data(self) -> bool:
+        return self.payload_state.is_data
+
+    @property
+    def provider_metadata(self) -> dict[str, str]:
+        metadata = {
+            "provider_id": self.provider_id,
+            "provider_version": self.provider_version,
+            "endpoint": self.endpoint,
+        }
+        for header in ("Date", "Server", "Content-Type", "Content-Length"):
+            for key, value in self.http_headers.items():
+                if key.lower() == header.lower():
+                    metadata[f"http_{header.lower().replace('-', '_')}"] = str(value)
+        return metadata
+
+    def to_raw_response(self) -> RawResponse:
+        """Adapt to the legacy record shape the immutable store persists."""
+        return RawResponse(
+            function=self.endpoint,
+            params_public=dict(self.parameters_redacted),
+            public_url=self.public_url,
+            http_status=self.http_status if self.http_status is not None else 0,
+            content_type=self.content_type,
+            body=self.body,
+            requested_at=self.requested_at,
+            received_at=self.received_at,
+            attempts=self.attempts,
+            response_class=self.payload_state.legacy_class,
+            soft_message=self.payload_state.detail,
+        )
+
+    def to_json_dict(self) -> dict[str, Any]:
+        return {
+            "endpoint": self.endpoint,
+            "request_key": self.request_key,
+            "parameters_sha256": self.parameters_sha256,
+            "provider_id": self.provider_id,
+            "provider_version": self.provider_version,
+            "canonical_parameters": [list(pair) for pair in self.canonical_parameters],
+            "parameters_redacted": dict(sorted(self.parameters_redacted.items())),
+            "public_url": self.public_url,
+            "http_status": self.http_status,
+            "content_type": self.content_type,
+            "http_headers": {str(k): str(v) for k, v in sorted(self.http_headers.items())},
+            "sha256": self.sha256,
+            "byte_length": self.byte_length,
+            "requested_at": self.requested_at,
+            "received_at": self.received_at,
+            "attempts": self.attempts,
+            "payload_state": self.payload_state.to_json_dict(),
+            "retry_log": [event.to_json_dict() for event in self.retry_log],
+            "transport_failure": self.transport_failure,
+            "provider_metadata": self.provider_metadata,
+        }
 
 
 @dataclass
@@ -102,48 +675,19 @@ def _now_iso() -> str:
     return datetime.now(UTC).isoformat(timespec="microseconds")
 
 
-def classify_body(content_type: str, body: bytes) -> tuple[str, str | None]:
-    """Classify a 200 response body. Returns (response_class, soft_message)."""
-    ct = content_type.lower()
-    if "json" in ct or body[:1] in (b"{", b"["):
-        try:
-            document = json.loads(body.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError):
-            return CLASS_MALFORMED, "body is not valid JSON"
-        if not isinstance(document, dict):
-            return CLASS_MALFORMED, "JSON root is not an object"
-        for key, klass in _SOFT_KEYS.items():
-            if key in document:
-                return klass, str(document[key])[:500]
-        if not document:
-            return CLASS_MALFORMED, "empty JSON object"
-        return CLASS_OK, None
-    if "csv" in ct or "text/plain" in ct or body[:1].isalpha():
-        try:
-            head = body.split(b"\n", 1)[0].decode("utf-8")
-        except UnicodeDecodeError:
-            return CLASS_MALFORMED, "CSV header is not UTF-8"
-        if _CSV_HEADER_RE.match(head):
-            return CLASS_OK, None
-        # A soft error can also arrive as a plain-text/JSON body on a CSV endpoint.
-        text = body[:2000].decode("utf-8", errors="replace")
-        for key, klass in _SOFT_KEYS.items():
-            if key in text:
-                return klass, text[:500]
-        return CLASS_MALFORMED, "CSV header does not look like a header row"
-    return CLASS_MALFORMED, f"unrecognized content type {content_type!r}"
-
-
 def load_api_key(
     *,
     environ: Mapping[str, str] | None = None,
     repository_root: Path | None = None,
 ) -> str:
-    """Resolve the key from the environment, then ``<repository_root>/.env``.
+    """Legacy key loader: environment first, then ``<repository_root>/.env``.
 
-    The value is returned to the caller and never logged. A ``.env`` line must
-    be exactly ``ALPHA_VANTAGE_API_KEY=<value>``; python-dotenv is deliberately
-    not used (it is not in the runtime lock).
+    .. deprecated:: NEE-123
+       New code must use :class:`CredentialRef`, which resolves an environment
+       variable *name* through ``os.environ`` at call time and never reads a
+       file. This function is retained only because the pre-NEE-123 M0 fixture
+       CLI path and its test depend on the ``.env`` fallback; nothing in the
+       acquisition boundary calls it.
     """
     values = os.environ if environ is None else environ
     key = (values.get(API_KEY_ENV) or "").strip()
@@ -162,58 +706,78 @@ def load_api_key(
     )
 
 
-Transport = Callable[[str, float], tuple[int, str, bytes]]
-"""(url, timeout) -> (http_status, content_type, body). Injected in tests."""
-
-
-def _urllib_transport(url: str, timeout: float) -> tuple[int, str, bytes]:
-    request = urllib.request.Request(url, headers={"User-Agent": "qme-av-ingest/0.1"})
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310
-            return (
-                int(response.status),
-                str(response.headers.get("Content-Type", "")),
-                response.read(),
-            )
-    except urllib.error.HTTPError as exc:
-        return int(exc.code), str(exc.headers.get("Content-Type", "")), exc.read()
-
-
 class AlphaVantageClient:
-    """Paced GET client.
+    """Paced GET client with an injected transport.
 
-    ``get`` returns a classified ``RawResponse`` for anything the server actually
-    answered — including throttles and HTTP errors on the final attempt, so the
-    caller can *record* what happened. It raises ``AlphaVantageError`` only for
-    client misuse or when every attempt failed at the transport layer.
+    ``transport`` is **required for any network access**: with ``transport=None``
+    the client is offline and every request path raises before a socket could be
+    opened. The real transport lives in
+    :mod:`qme.data.alpha_vantage.transport`, which this module deliberately does
+    not import.
+
+    ``get`` returns a classified :class:`RawResponse` for anything the server
+    actually answered — including throttles and HTTP errors on the final
+    attempt, so the caller can *record* what happened. It raises
+    ``AlphaVantageError`` only for client misuse or when every attempt failed at
+    the transport layer. ``fetch`` is the NEE-123 path: it never raises for a
+    server outcome, returning a typed :class:`FetchOutcome` instead.
     """
 
     def __init__(
         self,
-        api_key: str,
+        api_key: str | None = None,
         *,
+        credential: CredentialRef | None = None,
+        environ: Mapping[str, str] | None = None,
         transport: Transport | None = None,
         pacer: Pacer | None = None,
         max_attempts: int = DEFAULT_MAX_ATTEMPTS,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
         sleep: Callable[[float], None] = time.sleep,
+        retry_policy: RetryPolicy | None = None,
     ) -> None:
-        if not api_key or not api_key.strip():
-            raise AlphaVantageError("api_key must be non-empty")
+        if credential is not None and api_key is not None:
+            raise AlphaVantageError("pass either api_key or credential, not both")
+        if credential is None:
+            if api_key is None or not api_key.strip():
+                raise AlphaVantageError("api_key must be non-empty")
+            self._api_key: str | None = api_key.strip()
+        else:
+            self._api_key = None
         if max_attempts < 1:
             raise AlphaVantageError("max_attempts must be >= 1")
-        self._api_key = api_key.strip()
-        self._transport = transport or _urllib_transport
+        self._credential = credential
+        self._environ = environ
+        self._transport = transport
         self._pacer = pacer or Pacer()
         self._max_attempts = max_attempts
         self._timeout = timeout_seconds
         self._sleep = sleep
+        self._retry_policy = retry_policy or RetryPolicy(max_attempts=max_attempts)
+
+    # -- credential ---------------------------------------------------------
+
+    @property
+    def credential_ref(self) -> CredentialRef | None:
+        return self._credential
+
+    @property
+    def is_offline(self) -> bool:
+        return self._transport is None
+
+    def _credential_value(self) -> str:
+        """Resolve the credential for exactly one request. Never cached, never logged."""
+        if self._credential is not None:
+            return self._credential.resolve(self._environ)
+        if self._api_key is None:  # pragma: no cover - guarded in __init__
+            raise CredentialError("no credential is configured")
+        return self._api_key
 
     # -- URL construction ---------------------------------------------------
 
     @staticmethod
     def public_params(function: str, params: Mapping[str, str]) -> dict[str, str]:
-        if "apikey" in params:
+        if any(str(key).lower() in CREDENTIAL_PARAM_NAMES for key in params):
             raise AlphaVantageError("do not pass 'apikey' in params; the client injects it")
         merged = {"function": function, **{k: str(v) for k, v in params.items()}}
         return dict(sorted(merged.items()))
@@ -226,14 +790,23 @@ class AlphaVantageClient:
 
     def _private_url(self, function: str, params: Mapping[str, str]) -> str:
         public = AlphaVantageClient.public_params(function, params)
-        return BASE_URL + "?" + urllib.parse.urlencode({**public, "apikey": self._api_key})
+        return BASE_URL + "?" + urllib.parse.urlencode(
+            {**public, "apikey": self._credential_value()}
+        )
 
-    # -- Request ------------------------------------------------------------
+    def _send(self, private_url: str) -> TransportResponse:
+        if self._transport is None:
+            raise OfflineClientError(
+                "this Alpha Vantage client is offline: no transport was injected, so no "
+                "network request can be made (replay from the immutable raw cache instead)"
+            )
+        return normalize_transport_result(self._transport(private_url, self._timeout))
+
+    # -- Legacy request path ------------------------------------------------
 
     def get(self, function: str, **params: str) -> RawResponse:
         public = self.public_params(function, params)
         public_url = self.public_url(function, params)
-        private_url = self._private_url(function, params)
         attempts = 0
         last_reason = "no attempt made"
         while attempts < self._max_attempts:
@@ -241,12 +814,14 @@ class AlphaVantageClient:
             self._pacer.wait()
             requested_at = _now_iso()
             try:
-                status, content_type, body = self._transport(private_url, self._timeout)
-            except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                private_url = self._private_url(function, params)
+                response = self._send(private_url)
+            except (TimeoutError, OSError) as exc:
                 last_reason = f"transport error: {type(exc).__name__}"
                 self._backoff(attempts)
                 continue
             received_at = _now_iso()
+            status, content_type, body = response.status, response.content_type, response.body
 
             if status == 200:
                 klass, message = classify_body(content_type, body)
@@ -274,3 +849,126 @@ class AlphaVantageClient:
     def _backoff(self, attempt_number: int) -> None:
         index = min(attempt_number - 1, len(_RETRY_BACKOFF_SECONDS) - 1)
         self._sleep(_RETRY_BACKOFF_SECONDS[index])
+
+    # -- NEE-123 request path -----------------------------------------------
+
+    def fetch(
+        self,
+        endpoint: str,
+        parameters: Mapping[str, Any] | None = None,
+        *,
+        retry_policy: RetryPolicy | None = None,
+        before_attempt: Callable[[int], None] | None = None,
+    ) -> FetchOutcome:
+        """Perform one logical request and return a typed outcome.
+
+        Never raises for anything the provider did: a throttle, a business
+        error, a malformed body, a truncated read, and an exhausted retry budget
+        after transport failures all come back as non-data states with a full
+        retry log. ``before_attempt`` is called with the 1-based attempt number
+        before each send; the acquisition boundary uses it to spend quota.
+        """
+        canonical = canonical_endpoint(endpoint)
+        params = dict(parameters or {})
+        policy = retry_policy or self._retry_policy
+        public = self.public_params(canonical, params)
+        public_url = self.public_url(canonical, params)
+        key = request_key(canonical, params)
+        canonical_params = canonical_parameters(params)
+        redacted = redact_mapping(public)
+        retry_log: list[RetryEvent] = []
+        attempts = 0
+
+        while True:
+            attempts += 1
+            if before_attempt is not None:
+                before_attempt(attempts)
+            self._pacer.wait()
+            requested_at = _now_iso()
+            try:
+                private_url = self._private_url(canonical, params)
+                response = self._send(private_url)
+            except (TimeoutError, OSError) as exc:
+                received_at = _now_iso()
+                detail = f"transport error: {type(exc).__name__}"
+                state = PayloadState(STATE_TRANSPORT_FAILURE, detail)
+                if policy.may_retry(canonical, state.state, None, attempts):
+                    backoff = policy.backoff_for(attempts)
+                    retry_log.append(
+                        RetryEvent(attempts, state.state, None, detail, backoff, received_at)
+                    )
+                    self._sleep(backoff)
+                    continue
+                return self._outcome(
+                    canonical, key, canonical_params, redacted, public_url,
+                    None, "", {}, b"", requested_at, received_at, attempts, state,
+                    tuple(retry_log), detail,
+                )
+            received_at = _now_iso()
+            state = classify_payload(
+                response.content_type,
+                response.body,
+                http_status=response.status,
+                declared_length=response.declared_length,
+            )
+            if policy.may_retry(canonical, state.state, response.status, attempts):
+                backoff = policy.backoff_for(attempts)
+                retry_log.append(
+                    RetryEvent(
+                        attempts, state.state, response.status, state.detail, backoff, received_at
+                    )
+                )
+                self._sleep(backoff)
+                continue
+            return self._outcome(
+                canonical, key, canonical_params, redacted, public_url,
+                response.status, response.content_type, response.redacted_headers(),
+                response.body, requested_at, received_at, attempts, state,
+                tuple(retry_log), None,
+            )
+
+    def _outcome(
+        self,
+        endpoint: str,
+        key: str,
+        canonical_params: tuple[tuple[str, str], ...],
+        redacted: Mapping[str, str],
+        public_url: str,
+        http_status: int | None,
+        content_type: str,
+        headers: Mapping[str, str],
+        body: bytes,
+        requested_at: str,
+        received_at: str,
+        attempts: int,
+        state: PayloadState,
+        retry_log: tuple[RetryEvent, ...],
+        transport_failure: str | None,
+    ) -> FetchOutcome:
+        return FetchOutcome(
+            endpoint=endpoint,
+            request_key=key,
+            parameters_sha256=parameters_hash_from_pairs(canonical_params),
+            provider_id=PROVIDER_ID,
+            provider_version=PROVIDER_VERSION,
+            canonical_parameters=canonical_params,
+            parameters_redacted=dict(redacted),
+            public_url=public_url,
+            http_status=http_status,
+            content_type=content_type,
+            http_headers=dict(headers),
+            body=body,
+            sha256=hashlib.sha256(body).hexdigest(),
+            byte_length=len(body),
+            requested_at=requested_at,
+            received_at=received_at,
+            attempts=attempts,
+            payload_state=state,
+            retry_log=retry_log,
+            transport_failure=transport_failure,
+        )
+
+
+def non_data_states(outcomes: Iterable[FetchOutcome]) -> tuple[str, ...]:
+    """The typed non-data states present in ``outcomes``, sorted and de-duplicated."""
+    return tuple(sorted({o.payload_state.state for o in outcomes if not o.is_data}))
