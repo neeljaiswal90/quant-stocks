@@ -1,0 +1,399 @@
+{
+  "schema_version": "qme.asset_classification_fixture.v1",
+  "fixture_id": "QME-NEE124-ASSET-CLASSIFICATION-V1",
+  "provenance": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "purpose": "Known-answer vectors for the NEE-124 deterministic asset-classification rule engine. Every expected row was derived by hand from the documented rule ladder in docs/data/NEE_124_ASSET_CLASSIFICATION_V1.md, not read back from the engine. Identifiers and source hashes are written as labels; the test derives the opaque grouped-sha256 form from the seeds below with the same function used to build the inputs, so the fixture stays readable and carries no contiguous hex run.",
+  "identifier_derivation": {
+    "form": "grouped sha256: eight lowercase 8-hex groups joined by ':'",
+    "security_id": "sha256(b'QME-NEE124-FIXTURE-SECURITY-V1:' + label.encode('utf-8'))",
+    "issuer_id": "sha256(b'QME-NEE124-FIXTURE-ISSUER-V1:' + label.encode('utf-8'))",
+    "source_hash": "sha256(b'QME-NEE124-FIXTURE-SOURCE-V1:' + label.encode('utf-8'))",
+    "opacity_note": "These identifiers are opaque to the engine. It validates their shape and nothing else; see IDENTITY_ADAPTER_SEAM."
+  },
+  "rules_version": "qme.asset_classification_rules.v1",
+  "bumped_rules_version": "qme.asset_classification_rules.v1-test-bump",
+  "analysis_cutoff": "2026-08-01T00:00:00Z",
+  "securities": [
+    {
+      "label": "common-a",
+      "issuer_label": "common-a",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "av-listing-common-a", "source_class": "VENDOR_LISTING", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-01T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "CMNA"},
+        {"label": "xnas-official-common-a", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "CMNA"}
+      ]
+    },
+    {
+      "label": "etf",
+      "issuer_label": "etf",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-etf", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "ETF", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "ETFX"}
+      ]
+    },
+    {
+      "label": "adr",
+      "issuer_label": "adr",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-adr", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "ADR", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "ADRX"}
+      ]
+    },
+    {
+      "label": "reit",
+      "issuer_label": "reit",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "sec-filing-reit", "source_class": "REGULATORY_FILING", "observed_class": "REIT", "as_of": "2026-05-15T13:30:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "RETX"}
+      ]
+    },
+    {
+      "label": "unit",
+      "issuer_label": "unit",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "reference-unit", "source_class": "VENDOR_REFERENCE", "observed_class": "UNIT", "as_of": "2026-06-10T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "UNTU"}
+      ]
+    },
+    {
+      "label": "warrant",
+      "issuer_label": "warrant",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "av-listing-warrant", "source_class": "VENDOR_LISTING", "observed_class": "WARRANT", "as_of": "2026-06-11T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "WRTW"}
+      ]
+    },
+    {
+      "label": "right",
+      "issuer_label": "right",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-right", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "RIGHT", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "RGTR"}
+      ]
+    },
+    {
+      "label": "preferred",
+      "issuer_label": "preferred",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-preferred", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "PREFERRED", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "PRFP"}
+      ]
+    },
+    {
+      "label": "when-issued",
+      "issuer_label": "when-issued",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-when-issued", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "WHEN_ISSUED", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "WHIV"}
+      ]
+    },
+    {
+      "label": "spac",
+      "issuer_label": "spac",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "sec-filing-spac", "source_class": "REGULATORY_FILING", "observed_class": "SPAC_ARTIFACT", "as_of": "2026-04-20T13:30:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "SPCA"}
+      ]
+    },
+    {
+      "label": "no-evidence",
+      "issuer_label": "no-evidence",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": []
+    },
+    {
+      "label": "conflict",
+      "issuer_label": "conflict",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-conflict-etf", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "ETF", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "CFLA"},
+        {"label": "xnas-official-conflict-common", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-03T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "CFLA"}
+      ]
+    },
+    {
+      "label": "conflict-filing",
+      "issuer_label": "conflict-filing",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "sec-filing-conflict-reit", "source_class": "REGULATORY_FILING", "observed_class": "REIT", "as_of": "2026-05-01T13:30:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null},
+        {"label": "sec-filing-conflict-common", "source_class": "REGULATORY_FILING", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-05-02T13:30:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "conflict-reference",
+      "issuer_label": "conflict-reference",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "reference-conflict-unit", "source_class": "VENDOR_REFERENCE", "observed_class": "UNIT", "as_of": "2026-06-01T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null},
+        {"label": "reference-conflict-common", "source_class": "VENDOR_REFERENCE", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-06-02T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "conflict-listing",
+      "issuer_label": "conflict-listing",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "av-listing-conflict-etf", "source_class": "VENDOR_LISTING", "observed_class": "ETF", "as_of": "2026-06-03T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null},
+        {"label": "av-listing-conflict-common", "source_class": "VENDOR_LISTING", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-06-04T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "outranked",
+      "issuer_label": "outranked",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-outranked", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "REIT", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null},
+        {"label": "av-listing-outranked", "source_class": "VENDOR_LISTING", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-05T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "name-only",
+      "issuer_label": "name-only",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "name-heuristic-etf", "source_class": "NAME_HEURISTIC", "observed_class": "ETF", "as_of": "2026-06-20T18:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "cutoff-as-of",
+      "issuer_label": "cutoff-as-of",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-cutoff-as-of", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-09-01T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "cutoff-availability",
+      "issuer_label": "cutoff-availability",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "sec-filing-cutoff-availability", "source_class": "REGULATORY_FILING", "observed_class": "REIT", "as_of": "2026-06-01T13:30:00Z", "available_at": "2026-09-15T13:30:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "partial-cutoff",
+      "issuer_label": "partial-cutoff",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-partial-visible", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-06-01T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": null},
+        {"label": "xnas-official-partial-future", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "ETF", "as_of": "2026-09-01T20:00:00Z", "effective_from": "2026-07-01", "effective_to": null, "ticker": null}
+      ]
+    },
+    {
+      "label": "flip",
+      "issuer_label": "flip",
+      "span_from": "2020-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "av-listing-flip-historical", "source_class": "VENDOR_LISTING", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-02-01T18:00:00Z", "effective_from": "2020-01-01", "effective_to": "2026-03-01", "ticker": "FLIP"},
+        {"label": "xnas-official-flip-current", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "REIT", "as_of": "2026-03-02T20:00:00Z", "effective_from": "2026-03-01", "effective_to": null, "ticker": "FLIP"}
+      ]
+    },
+    {
+      "label": "gap",
+      "issuer_label": "gap",
+      "span_from": "2024-01-01",
+      "span_to": "2026-01-01",
+      "evidence": [
+        {"label": "xnas-official-gap", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2025-01-01", "effective_to": "2025-06-01", "ticker": null}
+      ]
+    },
+    {
+      "label": "reuse-first",
+      "issuer_label": "reuse-first",
+      "span_from": "2018-01-01",
+      "span_to": "2022-06-01",
+      "evidence": [
+        {"label": "xnas-official-reuse-first", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2022-06-01T20:00:00Z", "effective_from": "2018-01-01", "effective_to": "2022-06-01", "ticker": "RUSE"}
+      ]
+    },
+    {
+      "label": "reuse-second",
+      "issuer_label": "reuse-second",
+      "span_from": "2022-06-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-reuse-second", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "ETF", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2022-06-01", "effective_to": null, "ticker": "RUSE"}
+      ]
+    },
+    {
+      "label": "renamed",
+      "issuer_label": "renamed",
+      "span_from": "2021-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-renamed-old", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2021-01-04T20:00:00Z", "effective_from": "2021-01-01", "effective_to": null, "ticker": "OLDN"},
+        {"label": "xnas-official-renamed-new", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2021-01-01", "effective_to": null, "ticker": "NEWN"}
+      ]
+    },
+    {
+      "label": "share-class-a",
+      "issuer_label": "multi-class",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-share-class-a", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "MCLA"}
+      ]
+    },
+    {
+      "label": "share-class-b",
+      "issuer_label": "multi-class",
+      "span_from": "2024-01-01",
+      "span_to": null,
+      "evidence": [
+        {"label": "xnas-official-share-class-b", "source_class": "EXCHANGE_OFFICIAL", "observed_class": "COMMON_STOCK_PROXY", "as_of": "2026-07-02T20:00:00Z", "effective_from": "2024-01-01", "effective_to": null, "ticker": "MCLB"}
+      ]
+    }
+  ],
+  "ndx_official_profile": {
+    "profile_id": "NDX-OFFICIAL-FIXTURE-2026-07-15",
+    "as_of": "2026-07-15T00:00:00Z",
+    "constituents": [
+      {"security_label": "common-a", "evidence_ref": "NDX-EVIDENCE-REF-COMMON-A", "adr_override": false},
+      {"security_label": "adr", "evidence_ref": "NDX-EVIDENCE-REF-ADR", "adr_override": true},
+      {"security_label": "etf", "evidence_ref": "NDX-EVIDENCE-REF-ETF", "adr_override": false}
+    ]
+  },
+  "expected_rows": [
+    {"security_label": "adr", "issuer_label": "adr", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "ADR", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-adr"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "common-a", "issuer_label": "common-a", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-common-a"], "outranked_labels": ["av-listing-common-a"], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "conflict", "issuer_label": "conflict", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "AMBIGUOUS", "rule_id": "R050_TIER_CONFLICT_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-conflict-common", "xnas-official-conflict-etf"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-03T20:00:00Z"},
+    {"security_label": "conflict-filing", "issuer_label": "conflict-filing", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "AMBIGUOUS", "rule_id": "R051_TIER_CONFLICT_REGULATORY_FILING", "source_labels": ["sec-filing-conflict-common", "sec-filing-conflict-reit"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-05-02T13:30:00Z"},
+    {"security_label": "conflict-listing", "issuer_label": "conflict-listing", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "AMBIGUOUS", "rule_id": "R053_TIER_CONFLICT_VENDOR_LISTING", "source_labels": ["av-listing-conflict-common", "av-listing-conflict-etf"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-06-04T18:00:00Z"},
+    {"security_label": "conflict-reference", "issuer_label": "conflict-reference", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "AMBIGUOUS", "rule_id": "R052_TIER_CONFLICT_VENDOR_REFERENCE", "source_labels": ["reference-conflict-common", "reference-conflict-unit"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-06-02T18:00:00Z"},
+    {"security_label": "cutoff-as-of", "issuer_label": "cutoff-as-of", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "UNKNOWN", "rule_id": "R020_ALL_EVIDENCE_EXCLUDED_BY_CUTOFF", "source_labels": [], "outranked_labels": [], "excluded_labels": ["xnas-official-cutoff-as-of"], "evidence_as_of": null},
+    {"security_label": "cutoff-availability", "issuer_label": "cutoff-availability", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "UNKNOWN", "rule_id": "R020_ALL_EVIDENCE_EXCLUDED_BY_CUTOFF", "source_labels": [], "outranked_labels": [], "excluded_labels": ["sec-filing-cutoff-availability"], "evidence_as_of": null},
+    {"security_label": "etf", "issuer_label": "etf", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "ETF", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-etf"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "flip", "issuer_label": "flip", "effective_from": "2020-01-01", "effective_to": "2026-03-01", "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R063_CONFIRMED_VENDOR_LISTING", "source_labels": ["av-listing-flip-historical"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-02-01T18:00:00Z"},
+    {"security_label": "flip", "issuer_label": "flip", "effective_from": "2026-03-01", "effective_to": null, "asset_class": "REIT", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-flip-current"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-03-02T20:00:00Z"},
+    {"security_label": "gap", "issuer_label": "gap", "effective_from": "2024-01-01", "effective_to": "2025-01-01", "asset_class": "UNKNOWN", "classification_status": "UNKNOWN", "rule_id": "R030_NO_VISIBLE_EVIDENCE_IN_INTERVAL", "source_labels": [], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": null},
+    {"security_label": "gap", "issuer_label": "gap", "effective_from": "2025-01-01", "effective_to": "2025-06-01", "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-gap"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "gap", "issuer_label": "gap", "effective_from": "2025-06-01", "effective_to": "2026-01-01", "asset_class": "UNKNOWN", "classification_status": "UNKNOWN", "rule_id": "R030_NO_VISIBLE_EVIDENCE_IN_INTERVAL", "source_labels": [], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": null},
+    {"security_label": "name-only", "issuer_label": "name-only", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "AMBIGUOUS", "rule_id": "R040_NON_CONFIRMING_SOURCE_TIER", "source_labels": ["name-heuristic-etf"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-06-20T18:00:00Z"},
+    {"security_label": "no-evidence", "issuer_label": "no-evidence", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNKNOWN", "classification_status": "UNKNOWN", "rule_id": "R010_NO_EVIDENCE_SUPPLIED", "source_labels": [], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": null},
+    {"security_label": "outranked", "issuer_label": "outranked", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "REIT", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-outranked"], "outranked_labels": ["av-listing-outranked"], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "partial-cutoff", "issuer_label": "partial-cutoff", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-partial-visible"], "outranked_labels": [], "excluded_labels": ["xnas-official-partial-future"], "evidence_as_of": "2026-06-01T20:00:00Z"},
+    {"security_label": "preferred", "issuer_label": "preferred", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "PREFERRED", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-preferred"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "reit", "issuer_label": "reit", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "REIT", "classification_status": "CONFIRMED", "rule_id": "R061_CONFIRMED_REGULATORY_FILING", "source_labels": ["sec-filing-reit"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-05-15T13:30:00Z"},
+    {"security_label": "renamed", "issuer_label": "renamed", "effective_from": "2021-01-01", "effective_to": null, "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-renamed-new", "xnas-official-renamed-old"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "reuse-first", "issuer_label": "reuse-first", "effective_from": "2018-01-01", "effective_to": "2022-06-01", "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-reuse-first"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2022-06-01T20:00:00Z"},
+    {"security_label": "reuse-second", "issuer_label": "reuse-second", "effective_from": "2022-06-01", "effective_to": null, "asset_class": "ETF", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-reuse-second"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "right", "issuer_label": "right", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "RIGHT", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-right"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "share-class-a", "issuer_label": "multi-class", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-share-class-a"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "share-class-b", "issuer_label": "multi-class", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "COMMON_STOCK_PROXY", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-share-class-b"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"},
+    {"security_label": "spac", "issuer_label": "spac", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "SPAC_ARTIFACT", "classification_status": "CONFIRMED", "rule_id": "R061_CONFIRMED_REGULATORY_FILING", "source_labels": ["sec-filing-spac"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-04-20T13:30:00Z"},
+    {"security_label": "unit", "issuer_label": "unit", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "UNIT", "classification_status": "CONFIRMED", "rule_id": "R062_CONFIRMED_VENDOR_REFERENCE", "source_labels": ["reference-unit"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-06-10T18:00:00Z"},
+    {"security_label": "warrant", "issuer_label": "warrant", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "WARRANT", "classification_status": "CONFIRMED", "rule_id": "R063_CONFIRMED_VENDOR_LISTING", "source_labels": ["av-listing-warrant"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-06-11T18:00:00Z"},
+    {"security_label": "when-issued", "issuer_label": "when-issued", "effective_from": "2024-01-01", "effective_to": null, "asset_class": "WHEN_ISSUED", "classification_status": "CONFIRMED", "rule_id": "R060_CONFIRMED_EXCHANGE_OFFICIAL", "source_labels": ["xnas-official-when-issued"], "outranked_labels": [], "excluded_labels": [], "evidence_as_of": "2026-07-02T20:00:00Z"}
+  ],
+  "expected_excluded_evidence": [
+    {"security_label": "cutoff-as-of", "source_id": "xnas-official-cutoff-as-of", "source_class": "EXCHANGE_OFFICIAL", "as_of": "2026-09-01T20:00:00Z", "available_at": "2026-09-01T20:00:00Z", "state": "EXCLUDED_EVIDENCE_AFTER_ANALYSIS_CUTOFF"},
+    {"security_label": "cutoff-availability", "source_id": "sec-filing-cutoff-availability", "source_class": "REGULATORY_FILING", "as_of": "2026-06-01T13:30:00Z", "available_at": "2026-09-15T13:30:00Z", "state": "EXCLUDED_EVIDENCE_AFTER_ANALYSIS_CUTOFF"},
+    {"security_label": "partial-cutoff", "source_id": "xnas-official-partial-future", "source_class": "EXCHANGE_OFFICIAL", "as_of": "2026-09-01T20:00:00Z", "available_at": "2026-09-01T20:00:00Z", "state": "EXCLUDED_EVIDENCE_AFTER_ANALYSIS_CUTOFF"}
+  ],
+  "expected_eligibility": [
+    {"security_label": "adr", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "E030_NDX_OFFICIAL_ADR_OVERRIDE", "ndx_evidence_ref": "NDX-EVIDENCE-REF-ADR"},
+    {"security_label": "common-a", "effective_from": "2024-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "E020_NDX_OFFICIAL_CONSTITUENT", "ndx_evidence_ref": "NDX-EVIDENCE-REF-COMMON-A"},
+    {"security_label": "conflict", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx_evidence_ref": null},
+    {"security_label": "conflict-filing", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx_evidence_ref": null},
+    {"security_label": "conflict-listing", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx_evidence_ref": null},
+    {"security_label": "conflict-reference", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx_evidence_ref": null},
+    {"security_label": "cutoff-as-of", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx_evidence_ref": null},
+    {"security_label": "cutoff-availability", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx_evidence_ref": null},
+    {"security_label": "etf", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx_evidence_ref": null},
+    {"security_label": "flip", "effective_from": "2020-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "flip", "effective_from": "2026-03-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "gap", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx_evidence_ref": null},
+    {"security_label": "gap", "effective_from": "2025-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "gap", "effective_from": "2025-06-01", "broad": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx_evidence_ref": null},
+    {"security_label": "name-only", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx": "NOT_ELIGIBLE_STATUS_AMBIGUOUS", "ndx_evidence_ref": null},
+    {"security_label": "no-evidence", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx": "NOT_ELIGIBLE_STATUS_UNKNOWN", "ndx_evidence_ref": null},
+    {"security_label": "outranked", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "partial-cutoff", "effective_from": "2024-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "preferred", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "reit", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "renamed", "effective_from": "2021-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "reuse-first", "effective_from": "2018-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "reuse-second", "effective_from": "2022-06-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "right", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "share-class-a", "effective_from": "2024-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "share-class-b", "effective_from": "2024-01-01", "broad": "E010_BROAD_UNIVERSE_COMMON_STOCK_PROXY", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "spac", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "unit", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "warrant", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null},
+    {"security_label": "when-issued", "effective_from": "2024-01-01", "broad": "NOT_ELIGIBLE_EXCLUDED_ASSET_CLASS", "ndx": "NOT_ELIGIBLE_NOT_AN_OFFICIAL_NDX_CONSTITUENT", "ndx_evidence_ref": null}
+  ],
+  "expected_table_identity": {
+    "row_count": 30,
+    "excluded_evidence_count": 3,
+    "table_sha256_grouped": "259bf762:6981a942:d6ff7db5:ab24eff2:32cbb5f7:bdf6449d:6dee4839:3b2957c4",
+    "table_sha256_grouped_under_bumped_rules_version": "7af25096:7a9e7235:eb7b3ac1:f99fae12:81498037:e87bd2f2:d1022321:db1f24ce",
+    "note": "The semantic content of every row is pinned independently by expected_rows. These two digests are regression pins over the canonical table bytes: bumping only the rules version, with the input rows untouched, must change the digest."
+  },
+  "blocked_cases": [
+    {"case": "confidence-threshold-without-evidence-ref", "state": "BLOCKED_CONFIDENCE_THRESHOLD_WITHOUT_EVIDENCE_REF"},
+    {"case": "confidence-threshold-with-unregistered-evidence-ref", "state": "BLOCKED_UNREGISTERED_CONFIDENCE_THRESHOLD_EVIDENCE_REF"},
+    {"case": "evidence-carries-a-confidence-score", "state": "BLOCKED_CONFIDENCE_SCORE_WITHOUT_REGISTERED_THRESHOLD"},
+    {"case": "confidence-threshold-value-not-canonical-decimal", "state": "BLOCKED_INVALID_CONFIDENCE_VALUE"},
+    {"case": "ndx-adr-override-without-evidence-ref", "state": "BLOCKED_NDX_ADR_OVERRIDE_WITHOUT_EVIDENCE_REF"},
+    {"case": "ndx-profile-dated-after-the-cutoff", "state": "BLOCKED_NDX_PROFILE_AFTER_CUTOFF"},
+    {"case": "ndx-profile-without-the-ndx-profile-id", "state": "BLOCKED_NDX_PROFILE_WITHOUT_NDX_PROFILE_ID"},
+    {"case": "ndx-profile-id-without-the-profile-parameter", "state": "BLOCKED_MISSING_NDX_PROFILE"},
+    {"case": "duplicate-ndx-constituent", "state": "BLOCKED_DUPLICATE_NDX_CONSTITUENT"},
+    {"case": "unregistered-eligibility-profile", "state": "BLOCKED_UNREGISTERED_ELIGIBILITY_PROFILE"},
+    {"case": "duplicate-security-id", "state": "BLOCKED_DUPLICATE_SECURITY_ID"},
+    {"case": "duplicate-source-id", "state": "BLOCKED_DUPLICATE_SOURCE_ID"},
+    {"case": "security-id-is-not-opaque-grouped-hex", "state": "BLOCKED_INVALID_OPAQUE_IDENTIFIER"},
+    {"case": "source-hash-is-not-grouped-hex", "state": "BLOCKED_INVALID_SOURCE_HASH"},
+    {"case": "source-id-is-not-a-token", "state": "BLOCKED_INVALID_SOURCE_ID"},
+    {"case": "unregistered-source-class", "state": "BLOCKED_UNREGISTERED_SOURCE_CLASS"},
+    {"case": "observed-class-is-unknown", "state": "BLOCKED_INDETERMINATE_OBSERVED_CLASS"},
+    {"case": "observed-class-is-unregistered", "state": "BLOCKED_UNREGISTERED_ASSET_CLASS"},
+    {"case": "evidence-interval-is-empty", "state": "BLOCKED_INVALID_INTERVAL"},
+    {"case": "evidence-outside-the-declared-span", "state": "BLOCKED_EVIDENCE_OUTSIDE_DECLARED_SPAN"},
+    {"case": "availability-precedes-the-as-of-time", "state": "BLOCKED_AVAILABILITY_BEFORE_AS_OF"},
+    {"case": "effective-from-is-not-a-calendar-date", "state": "BLOCKED_INVALID_DATE"},
+    {"case": "as-of-has-no-explicit-offset", "state": "BLOCKED_INVALID_TIMESTAMP"},
+    {"case": "unregistered-rules-version", "state": "BLOCKED_UNREGISTERED_RULES_VERSION"},
+    {"case": "abstract-row-base-instantiated", "state": "BLOCKED_ROW_TYPE_STATUS_MISMATCH"}
+  ],
+  "required_case_coverage": {
+    "every_allowed_class": ["COMMON_STOCK_PROXY", "ETF", "ADR", "REIT", "UNIT", "WARRANT", "RIGHT", "PREFERRED", "WHEN_ISSUED", "SPAC_ARTIFACT", "UNKNOWN"],
+    "conflicting_sources": ["conflict", "conflict-filing", "conflict-reference", "conflict-listing", "outranked"],
+    "ticker_reuse": ["reuse-first", "reuse-second"],
+    "rename": ["renamed"],
+    "multiple_share_classes": ["share-class-a", "share-class-b"],
+    "missing_evidence": ["no-evidence", "gap", "cutoff-as-of", "cutoff-availability"],
+    "historical_current_disagreement": ["flip"],
+    "cutoff_excluded_evidence": ["cutoff-as-of", "cutoff-availability", "partial-cutoff"]
+  },
+  "claims": {
+    "synthetic_non_empirical": true,
+    "evidence_acquired_or_registered": false,
+    "official_ndx_constituent_list_carried": false,
+    "inclusion_threshold_registered": false,
+    "independent_review_recorded": false,
+    "freeze_blocker_changed": false,
+    "production_ready": false
+  }
+}
