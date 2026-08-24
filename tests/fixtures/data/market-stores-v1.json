@@ -1,0 +1,532 @@
+{
+  "$comment": "Synthetic known-answer vectors for the NEE-126 market stores. Calendar expectations are read from the ACCEPTED XNAS bytes pinned below; effective-annual expectations were produced by an independent exact-rational bisection on x**d == (1+y)**n (no Decimal, no float, no library power) and are asserted against the module under test.",
+  "schema_version": "qme.market_store_kats.v1",
+  "artifact_id": "QME-NEE126-MARKET-STORE-KATS-V1",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "calendar_store_id": "QME-NEE126-XNAS-TRADING-CALENDAR-STORE-V1",
+  "calendar_binding": {
+    "calendar_id": "XNAS_2010-01-04_2027-12-31_v1",
+    "accepted_session_count": 4526,
+    "calendar_path": "tests/fixtures/governance/xnas-session-calendar-2010-2027-v1.candidate.json",
+    "calendar_sha256_grouped": "a414d89a:2d18a3e2:27c7cfab:05c271c8:209490e3:beb49bf0:bb1a00f1:9ecd2a5e",
+    "ordered_session_vector_path": "tests/fixtures/governance/xnas-ordered-session-vector-2010-2027-v1.candidate.json",
+    "ordered_session_vector_sha256_grouped": "97f0eebd:efa68f08:46dfc1dc:a6ad4de5:31a8c0db:066b908f:073f45d0:a9bb9b4e",
+    "session_ids_sha256_grouped": "dfbb9bc1:13e7de06:67c5226a:4451634a:943d3d70:2aa87db4:ffb1a72d:0d3f2bd8",
+    "acceptance_record_path": "tests/fixtures/governance/xnas-session-calendar-acceptance-candidate-v2.json",
+    "acceptance_record_sha256_grouped": "f53ff11a:90c3cf28:6dd89787:b37fd918:73cb435f:77cb9569:d963dfc2:61681161",
+    "freeze_policy_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V8",
+    "freeze_policy_path": "configs/governance/specification-freeze-policy-v8.json",
+    "freeze_policy_sha256_grouped": "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d",
+    "accepted_blocker_code": "NEE-121-CALENDAR-SESSION-REGISTRATION"
+  },
+  "numeric_policy": {
+    "decimal_working_precision": 60,
+    "decimal_rounding": "ROUND_HALF_EVEN",
+    "artifact_scale": 18,
+    "rounding_mode": "ROUND_HALF_EVEN",
+    "effective_annual_error_bound": "absolute error of r_period before rendering <= 1e-57, from an exactly represented base, a correctly-rounded exponent division (<= 5e-60 relative), an almost-always-correctly-rounded Context.power (<= 1 ulp at 60 digits), and exponent sensitivity |ln b|*|f| over the accepted ranges; the scale-18 artifact is therefore the correct rounding of the true value except within 1e-57 of an exact 1e-18 tie",
+    "independent_oracle": "exact-rational bisection on x**d == (1+y)**n at 45 decimal digits"
+  },
+  "calendar_cases": [
+    {
+      "case_id": "holiday_month_end_2013_03",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2013,
+      "month": 3,
+      "expected_session_id": "2013-03-28",
+      "why": "2013-03-31 is a Sunday and 2013-03-29 is Good Friday, so the month-end session is displaced two further days to Thursday"
+    },
+    {
+      "case_id": "holiday_month_end_2018_03",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2018,
+      "month": 3,
+      "expected_session_id": "2018-03-29",
+      "why": "2018-03-31 is a Saturday and 2018-03-30 is Good Friday"
+    },
+    {
+      "case_id": "holiday_month_end_2012_10",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2012,
+      "month": 10,
+      "expected_session_id": "2012-10-31",
+      "why": "the month contains the two-session Sandy closure, but the month-end session is unaffected"
+    },
+    {
+      "case_id": "leap_year_month_end_2016_02",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2016,
+      "month": 2,
+      "expected_session_id": "2016-02-29",
+      "why": "2016-02-29 is itself a session"
+    },
+    {
+      "case_id": "leap_year_month_end_2020_02",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2020,
+      "month": 2,
+      "expected_session_id": "2020-02-28",
+      "why": "2020-02-29 is a Saturday, so 02-28 ends the month"
+    },
+    {
+      "case_id": "leap_year_month_end_2024_02",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2024,
+      "month": 2,
+      "expected_session_id": "2024-02-29",
+      "why": "2024-02-29 is itself a session"
+    },
+    {
+      "case_id": "non_leap_year_month_end_2015_02",
+      "kind": "month_end_session",
+      "contract_line": "month-end sessions",
+      "year": 2015,
+      "month": 2,
+      "expected_session_id": "2015-02-27",
+      "why": "2015-02-28 is a Saturday in a non-leap February"
+    },
+    {
+      "case_id": "half_day_2012_11_23",
+      "kind": "half_day",
+      "contract_line": "half-days",
+      "session_id": "2012-11-23",
+      "expected_close_class": "EARLY_CLOSE",
+      "expected_is_half_day": true,
+      "expected_market_close": "2012-11-23T13:00:00-05:00"
+    },
+    {
+      "case_id": "half_day_2013_07_03",
+      "kind": "half_day",
+      "contract_line": "half-days",
+      "session_id": "2013-07-03",
+      "expected_close_class": "EARLY_CLOSE",
+      "expected_is_half_day": true,
+      "expected_market_close": "2013-07-03T13:00:00-04:00"
+    },
+    {
+      "case_id": "half_day_2018_12_24",
+      "kind": "half_day",
+      "contract_line": "half-days",
+      "session_id": "2018-12-24",
+      "expected_close_class": "EARLY_CLOSE",
+      "expected_is_half_day": true,
+      "expected_market_close": "2018-12-24T13:00:00-05:00"
+    },
+    {
+      "case_id": "full_day_2012_11_21",
+      "kind": "half_day",
+      "contract_line": "half-days",
+      "session_id": "2012-11-21",
+      "expected_close_class": "NORMAL",
+      "expected_is_half_day": false,
+      "expected_market_close": "2012-11-21T16:00:00-05:00"
+    },
+    {
+      "case_id": "consecutive_closure_sandy_2012",
+      "kind": "consecutive_closure",
+      "contract_line": "consecutive closure",
+      "absent_sessions": [
+        "2012-10-29",
+        "2012-10-30"
+      ],
+      "preceding_session": "2012-10-26",
+      "following_session": "2012-10-31",
+      "expected_next_session_from_preceding": "2012-10-31",
+      "expected_sessions_between": 1,
+      "why": "Hurricane Sandy closed XNAS on two consecutive weekdays"
+    },
+    {
+      "case_id": "offset_2013_06_28_minus21",
+      "kind": "session_offset",
+      "contract_line": "exact session offsets",
+      "anchor_session": "2013-06-28",
+      "offset_sessions": -21,
+      "expected_session_id": "2013-05-30"
+    },
+    {
+      "case_id": "offset_2013_06_28_minus252",
+      "kind": "session_offset",
+      "contract_line": "exact session offsets",
+      "anchor_session": "2013-06-28",
+      "offset_sessions": -252,
+      "expected_session_id": "2012-06-26"
+    },
+    {
+      "case_id": "offset_2013_06_28_plus21",
+      "kind": "session_offset",
+      "contract_line": "exact session offsets",
+      "anchor_session": "2013-06-28",
+      "offset_sessions": 21,
+      "expected_session_id": "2013-07-30"
+    },
+    {
+      "case_id": "offset_2016_03_31_minus21",
+      "kind": "session_offset",
+      "contract_line": "exact session offsets",
+      "anchor_session": "2016-03-31",
+      "offset_sessions": -21,
+      "expected_session_id": "2016-03-01"
+    },
+    {
+      "case_id": "offset_2016_03_31_minus252",
+      "kind": "session_offset",
+      "contract_line": "exact session offsets",
+      "anchor_session": "2016-03-31",
+      "offset_sessions": -252,
+      "expected_session_id": "2015-03-31"
+    },
+    {
+      "case_id": "offset_2012_11_01_minus21",
+      "kind": "session_offset",
+      "contract_line": "exact session offsets",
+      "anchor_session": "2012-11-01",
+      "offset_sessions": -21,
+      "expected_session_id": "2012-10-01"
+    },
+    {
+      "case_id": "next_session_2012_10_26",
+      "kind": "next_session",
+      "contract_line": "next session",
+      "anchor_session": "2012-10-26",
+      "expected_session_id": "2012-10-31"
+    },
+    {
+      "case_id": "next_session_2013_06_27",
+      "kind": "next_session",
+      "contract_line": "next session",
+      "anchor_session": "2013-06-27",
+      "expected_session_id": "2013-06-28"
+    },
+    {
+      "case_id": "next_session_2016_02_29",
+      "kind": "next_session",
+      "contract_line": "next session",
+      "anchor_session": "2016-02-29",
+      "expected_session_id": "2016-03-01"
+    },
+    {
+      "case_id": "next_eligible_2012_10_29",
+      "kind": "next_eligible_session",
+      "contract_line": "next-eligible-session mapping",
+      "day": "2012-10-29",
+      "expected_session_id": "2012-10-31"
+    },
+    {
+      "case_id": "next_eligible_2012_10_30",
+      "kind": "next_eligible_session",
+      "contract_line": "next-eligible-session mapping",
+      "day": "2012-10-30",
+      "expected_session_id": "2012-10-31"
+    },
+    {
+      "case_id": "next_eligible_2013_03_29",
+      "kind": "next_eligible_session",
+      "contract_line": "next-eligible-session mapping",
+      "day": "2013-03-29",
+      "expected_session_id": "2013-04-01"
+    },
+    {
+      "case_id": "next_eligible_2016_02_29",
+      "kind": "next_eligible_session",
+      "contract_line": "next-eligible-session mapping",
+      "day": "2016-02-29",
+      "expected_session_id": "2016-02-29"
+    },
+    {
+      "case_id": "missing_session_2012_10_29",
+      "kind": "missing_session",
+      "contract_line": "missing session -> typed error",
+      "day": "2012-10-29",
+      "expected_state": "BLOCKED_MISSING_SESSION"
+    },
+    {
+      "case_id": "missing_session_2012_10_30",
+      "kind": "missing_session",
+      "contract_line": "missing session -> typed error",
+      "day": "2012-10-30",
+      "expected_state": "BLOCKED_MISSING_SESSION"
+    },
+    {
+      "case_id": "missing_session_2013_03_29",
+      "kind": "missing_session",
+      "contract_line": "missing session -> typed error",
+      "day": "2013-03-29",
+      "expected_state": "BLOCKED_MISSING_SESSION"
+    },
+    {
+      "case_id": "missing_session_2015_04_03",
+      "kind": "missing_session",
+      "contract_line": "missing session -> typed error",
+      "day": "2015-04-03",
+      "expected_state": "BLOCKED_MISSING_SESSION"
+    },
+    {
+      "case_id": "missing_session_out_of_coverage_2009",
+      "kind": "missing_session",
+      "contract_line": "missing session -> typed error",
+      "day": "2009-12-31",
+      "expected_state": "BLOCKED_DATE_OUT_OF_COVERAGE"
+    }
+  ],
+  "day_fraction_cases": [
+    {
+      "case_id": "act360_thirty_days",
+      "contract_line": "declared day-count basis",
+      "day_count": "ACT/360",
+      "start": "2013-06-01",
+      "end": "2013-07-01",
+      "requires_calendar": false,
+      "expected_day_fraction": "1/12"
+    },
+    {
+      "case_id": "act365f_full_year",
+      "contract_line": "declared day-count basis",
+      "day_count": "ACT/365F",
+      "start": "2012-06-28",
+      "end": "2013-06-28",
+      "requires_calendar": false,
+      "expected_day_fraction": "1/1"
+    },
+    {
+      "case_id": "act365f_leap_year",
+      "contract_line": "declared day-count basis",
+      "day_count": "ACT/365F",
+      "start": "2015-06-30",
+      "end": "2016-06-30",
+      "requires_calendar": false,
+      "expected_day_fraction": "366/365"
+    },
+    {
+      "case_id": "thirty360_one_quarter",
+      "contract_line": "declared day-count basis",
+      "day_count": "30/360US",
+      "start": "2013-03-31",
+      "end": "2013-06-30",
+      "requires_calendar": false,
+      "expected_day_fraction": "1/4"
+    },
+    {
+      "case_id": "bus252_21_sessions",
+      "contract_line": "declared day-count basis",
+      "day_count": "BUS/252",
+      "start": "2013-05-30",
+      "end": "2013-06-28",
+      "requires_calendar": true,
+      "expected_day_fraction": "1/12"
+    },
+    {
+      "case_id": "bus252_252_sessions",
+      "contract_line": "declared day-count basis",
+      "day_count": "BUS/252",
+      "start": "2012-06-26",
+      "end": "2013-06-28",
+      "requires_calendar": true,
+      "expected_day_fraction": "1/1"
+    },
+    {
+      "case_id": "bus252_across_sandy",
+      "contract_line": "declared day-count basis",
+      "day_count": "BUS/252",
+      "start": "2012-10-26",
+      "end": "2012-10-31",
+      "requires_calendar": true,
+      "expected_day_fraction": "1/252"
+    },
+    {
+      "case_id": "bus252_across_leap_day",
+      "contract_line": "declared day-count basis",
+      "day_count": "BUS/252",
+      "start": "2016-02-26",
+      "end": "2016-03-01",
+      "requires_calendar": true,
+      "expected_day_fraction": "1/126"
+    }
+  ],
+  "conversion_cases": [
+    {
+      "case_id": "simple_positive_act360_one_month",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "SIMPLE_ANNUAL",
+      "day_count": "ACT/360",
+      "quoted_value": "5.25",
+      "day_fraction": "1/12",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.004375000000000000"
+    },
+    {
+      "case_id": "simple_zero_act360_one_month",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "ZERO",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "SIMPLE_ANNUAL",
+      "day_count": "ACT/360",
+      "quoted_value": "0",
+      "day_fraction": "1/12",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.000000000000000000"
+    },
+    {
+      "case_id": "simple_negative_act360_one_month",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "NEGATIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "SIMPLE_ANNUAL",
+      "day_count": "ACT/360",
+      "quoted_value": "-0.5",
+      "day_fraction": "1/12",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "-0.000416666666666667"
+    },
+    {
+      "case_id": "simple_positive_act365f_full_year",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "SIMPLE_ANNUAL",
+      "day_count": "ACT/365F",
+      "quoted_value": "4.375",
+      "day_fraction": "1/1",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.043750000000000000"
+    },
+    {
+      "case_id": "simple_positive_bus252_21_sessions",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "SIMPLE_ANNUAL",
+      "day_count": "BUS/252",
+      "quoted_value": "5.25",
+      "day_fraction": "1/12",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.004375000000000000"
+    },
+    {
+      "case_id": "simple_positive_decimal_unit",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "DECIMAL_PER_ANNUM",
+      "compounding": "SIMPLE_ANNUAL",
+      "day_count": "ACT/360",
+      "quoted_value": "0.0525",
+      "day_fraction": "1/12",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.004375000000000000"
+    },
+    {
+      "case_id": "effective_positive_act365f_one_month",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "ACT/365F",
+      "quoted_value": "5.25",
+      "day_fraction": "1/12",
+      "expected_exactness": "ROUNDED_DECIMAL",
+      "expected_period_return": "0.004273127766158050"
+    },
+    {
+      "case_id": "effective_zero_act365f_one_month",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "ZERO",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "ACT/365F",
+      "quoted_value": "0",
+      "day_fraction": "1/12",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.000000000000000000"
+    },
+    {
+      "case_id": "effective_negative_act365f_one_month",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "NEGATIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "ACT/365F",
+      "quoted_value": "-0.5",
+      "day_fraction": "1/12",
+      "expected_exactness": "ROUNDED_DECIMAL",
+      "expected_period_return": "-0.000417624589192991"
+    },
+    {
+      "case_id": "effective_positive_act365f_full_year",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "ACT/365F",
+      "quoted_value": "5.25",
+      "day_fraction": "1/1",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.052500000000000000"
+    },
+    {
+      "case_id": "effective_positive_bus252_21_sessions",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "BUS/252",
+      "quoted_value": "5.25",
+      "day_fraction": "1/12",
+      "expected_exactness": "ROUNDED_DECIMAL",
+      "expected_period_return": "0.004273127766158050"
+    },
+    {
+      "case_id": "effective_positive_bus252_252_sessions",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "BUS/252",
+      "quoted_value": "5.25",
+      "day_fraction": "1/1",
+      "expected_exactness": "EXACT_RATIONAL",
+      "expected_period_return": "0.052500000000000000"
+    },
+    {
+      "case_id": "effective_negative_bus252_63_sessions",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "NEGATIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "BUS/252",
+      "quoted_value": "-0.75",
+      "day_fraction": "1/4",
+      "expected_exactness": "ROUNDED_DECIMAL",
+      "expected_period_return": "-0.001880296628423552"
+    },
+    {
+      "case_id": "effective_positive_thirty360_one_quarter",
+      "contract_line": "risk-free conversion under the declared convention",
+      "rate_sign": "POSITIVE",
+      "quote_unit": "PERCENT_PER_ANNUM",
+      "compounding": "EFFECTIVE_ANNUAL",
+      "day_count": "30/360US",
+      "quoted_value": "2.5",
+      "day_fraction": "1/4",
+      "expected_exactness": "ROUNDED_DECIMAL",
+      "expected_period_return": "0.006192246325635997"
+    }
+  ],
+  "claims": {
+    "complete_official_history_verified": false,
+    "future_sessions_are_observed_market_authority": false,
+    "prospective_observations_consumable": false,
+    "live_order_authority": false,
+    "vintage_risk_free_source_registered": false,
+    "raw_price_ingestion_integrated": false,
+    "security_identity_join_applied": false,
+    "independent_review_recorded": false,
+    "freeze_blocker_changed": false
+  }
+}
