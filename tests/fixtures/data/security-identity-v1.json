@@ -1,0 +1,1001 @@
+{
+  "artifact_kind": "qme.security_identity_known_answers.v1",
+  "claims": {
+    "coverage_complete": false,
+    "freeze_blocker_changed": false,
+    "identity_snapshot_reviewed": false,
+    "owner_decisions_applied": false,
+    "production_pit_evidence_registered": false,
+    "synthetic_fixture_only_no_vendor_data": true
+  },
+  "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+  "known_answers": {
+    "cases": [
+      {
+        "case_id": "unchanged_ticker",
+        "exercises": "one listing window, never renamed, still open"
+      },
+      {
+        "case_id": "rename_with_sourced_link",
+        "exercises": "FB -> META with a sourced 8-K link: one security"
+      },
+      {
+        "case_id": "reuse_after_gap",
+        "exercises": "TWTR retired, then reissued to a different issuer"
+      },
+      {
+        "case_id": "exchange_move",
+        "exercises": "one security, NYSEAMERICAN then NASDAQ, sourced link"
+      },
+      {
+        "case_id": "merger",
+        "exercises": "predecessor delisted into an acquirer; identifiers never merge"
+      },
+      {
+        "case_id": "spinoff",
+        "exercises": "child listing begins; parent continues; identifiers never merge"
+      },
+      {
+        "case_id": "multiple_share_classes",
+        "exercises": "two classes of one issuer are two securities"
+      },
+      {
+        "case_id": "cik_mismatch",
+        "exercises": "two sources give one issuer two CIKs over one window"
+      },
+      {
+        "case_id": "missing_history",
+        "exercises": "listing window reaches before every sourced issuer window"
+      },
+      {
+        "case_id": "conflicting_sources",
+        "exercises": "two securities claim one ticker/exchange at once"
+      },
+      {
+        "case_id": "unsourced_rename",
+        "exercises": "a rename with no evidence reference is never applied"
+      },
+      {
+        "case_id": "share_class_link_conflict",
+        "exercises": "a link across share classes is never applied"
+      }
+    ],
+    "manifest": {
+      "claims": {
+        "coverage_complete": false,
+        "freeze_blocker_changed": false,
+        "identity_snapshot_reviewed": false,
+        "owner_decisions_applied": false,
+        "production_pit_evidence_registered": false
+      },
+      "completeness_evidence_ref": null,
+      "counts": {
+        "ambiguity_spans": 2,
+        "cik_mappings": 8,
+        "issuers": 8,
+        "listings": 17,
+        "relationships": 2,
+        "review_queue": 5,
+        "securities": 15,
+        "sources": 2
+      },
+      "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+      "rules_version": "qme.identity_rules.v1",
+      "schema_version": "qme.security_identity_table.v1",
+      "table_sha256": "68ee4115:be9dd648:d5dde7bc:eafbb97a:9fc5c1f5:5a9d5b96:788c3bbc:20cd59c3"
+    },
+    "resolutions": [
+      {
+        "as_of": "2020-01-02",
+        "case_id": "unchanged_ticker",
+        "cik": "0000320193",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:ALPHA:1980-12-12:a",
+          "LISTING_STATUS:AAPL:NASDAQ:1980-12-12"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "66ff1935:23c4e740:079ccf3d:6d17b61a:e86f1942:76207dad:1d98b0e9:7d0783a3",
+        "issuer_interval": {
+          "valid_from": "1980-12-12",
+          "valid_to": null
+        },
+        "legal_name": "ALPHA INDUSTRIES INC",
+        "listing_interval": {
+          "valid_from": "1980-12-12",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "b6b265eb:4b39935d:eb155e35:ae8dc517:ccde0e6e:5f2dd780:17e78063:2681362a",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "AAPL"
+      },
+      {
+        "as_of": "1970-01-02",
+        "case_id": "unchanged_ticker",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "exchange": "NASDAQ",
+        "reason": "OUTSIDE_SOURCED_LISTING_HISTORY",
+        "rules_version": "qme.identity_rules.v1",
+        "status": "excluded",
+        "ticker": "AAPL"
+      },
+      {
+        "as_of": "2015-01-02",
+        "case_id": "rename_with_sourced_link",
+        "cik": "0000789019",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:BETA:2012-05-18:a",
+          "LISTING_STATUS:FB:NASDAQ:2012-05-18"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "4e6b7de3:6ee7519f:78993260:e67394ee:676b2998:a1ded044:da1d2864:49cc4550",
+        "issuer_interval": {
+          "valid_from": "2012-05-18",
+          "valid_to": null
+        },
+        "legal_name": "BETA PLATFORMS INC",
+        "listing_interval": {
+          "valid_from": "2012-05-18",
+          "valid_to": "2022-06-09"
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "a3a49e45:b58d10ad:fb0cdbc5:bc3951d4:946668c0:abaa80c1:da52d3c2:90e1c63a",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "FB"
+      },
+      {
+        "as_of": "2023-01-03",
+        "case_id": "rename_with_sourced_link",
+        "cik": "0000789019",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:BETA:2012-05-18:a",
+          "LISTING_STATUS:META:NASDAQ:2022-06-09"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "4e6b7de3:6ee7519f:78993260:e67394ee:676b2998:a1ded044:da1d2864:49cc4550",
+        "issuer_interval": {
+          "valid_from": "2012-05-18",
+          "valid_to": null
+        },
+        "legal_name": "BETA PLATFORMS INC",
+        "listing_interval": {
+          "valid_from": "2022-06-09",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "a3a49e45:b58d10ad:fb0cdbc5:bc3951d4:946668c0:abaa80c1:da52d3c2:90e1c63a",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "META"
+      },
+      {
+        "as_of": "2023-01-03",
+        "case_id": "rename_with_sourced_link",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "exchange": "NASDAQ",
+        "reason": "OUTSIDE_SOURCED_LISTING_HISTORY",
+        "rules_version": "qme.identity_rules.v1",
+        "status": "excluded",
+        "ticker": "FB"
+      },
+      {
+        "as_of": "2015-01-02",
+        "case_id": "reuse_after_gap",
+        "cik": "0001045810",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:GAMMA:1993-10-25:a",
+          "LISTING_STATUS:TWTR:NYSE:2013-11-07"
+        ],
+        "exchange": "NYSE",
+        "issuer_id": "bbb791a3:2cb27241:0f2a7721:e4d3a7e3:067cab85:2a0dc5bb:dc9e8ea0:7348fa41",
+        "issuer_interval": {
+          "valid_from": "1993-10-25",
+          "valid_to": null
+        },
+        "legal_name": "GAMMA INTERACTIVE CORP",
+        "listing_interval": {
+          "valid_from": "2013-11-07",
+          "valid_to": "2022-10-28"
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "3d208f38:38ba10c0:775cc459:2a8542b7:929d3720:8cc59653:f4b6d19e:53de9f48",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "TWTR"
+      },
+      {
+        "as_of": "2024-01-02",
+        "case_id": "reuse_after_gap",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "exchange": "NYSE",
+        "reason": "OUTSIDE_SOURCED_LISTING_HISTORY",
+        "rules_version": "qme.identity_rules.v1",
+        "status": "excluded",
+        "ticker": "TWTR"
+      },
+      {
+        "as_of": "2026-02-02",
+        "case_id": "reuse_after_gap",
+        "cik": "0001652044",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:DELTA:2011-01-03:a",
+          "LISTING_STATUS:TWTR:NYSE:2026-01-05"
+        ],
+        "exchange": "NYSE",
+        "issuer_id": "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd",
+        "issuer_interval": {
+          "valid_from": "2011-01-03",
+          "valid_to": null
+        },
+        "legal_name": "DELTA SYSTEMS INC",
+        "listing_interval": {
+          "valid_from": "2026-01-05",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "4227d28d:cec7b1b7:d9808a7e:9935c911:bba2f77c:a4f9010e:5d3f4826:4f6b4d33",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "TWTR"
+      },
+      {
+        "as_of": "2016-01-04",
+        "case_id": "exchange_move",
+        "cik": "0001652044",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:DELTA:2011-01-03:a",
+          "LISTING_STATUS:MOVR:NYSEAMERICAN:2015-03-02"
+        ],
+        "exchange": "NYSEAMERICAN",
+        "issuer_id": "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd",
+        "issuer_interval": {
+          "valid_from": "2011-01-03",
+          "valid_to": null
+        },
+        "legal_name": "DELTA SYSTEMS INC",
+        "listing_interval": {
+          "valid_from": "2015-03-02",
+          "valid_to": "2019-09-16"
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "25c61cad:137a4467:f815306e:5b4fa435:777ad0bc:1650cd67:1a9b5438:f6776739",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "MOVR"
+      },
+      {
+        "as_of": "2020-01-02",
+        "case_id": "exchange_move",
+        "cik": "0001652044",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:DELTA:2011-01-03:a",
+          "LISTING_STATUS:MOVR:NASDAQ:2019-09-16"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd",
+        "issuer_interval": {
+          "valid_from": "2011-01-03",
+          "valid_to": null
+        },
+        "legal_name": "DELTA SYSTEMS INC",
+        "listing_interval": {
+          "valid_from": "2019-09-16",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "25c61cad:137a4467:f815306e:5b4fa435:777ad0bc:1650cd67:1a9b5438:f6776739",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "MOVR"
+      },
+      {
+        "as_of": "2020-01-02",
+        "case_id": "merger",
+        "cik": "0001045810",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:GAMMA:1993-10-25:a",
+          "LISTING_STATUS:ATVI:NASDAQ:1993-10-25"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "bbb791a3:2cb27241:0f2a7721:e4d3a7e3:067cab85:2a0dc5bb:dc9e8ea0:7348fa41",
+        "issuer_interval": {
+          "valid_from": "1993-10-25",
+          "valid_to": null
+        },
+        "legal_name": "GAMMA INTERACTIVE CORP",
+        "listing_interval": {
+          "valid_from": "1993-10-25",
+          "valid_to": "2023-10-13"
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "e104f458:557392b1:e4640954:f2f9371d:92730e2c:5ea0e37e:79487b28:6bd8fc25",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "ATVI"
+      },
+      {
+        "as_of": "2024-01-02",
+        "case_id": "merger",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "exchange": "NASDAQ",
+        "reason": "OUTSIDE_SOURCED_LISTING_HISTORY",
+        "rules_version": "qme.identity_rules.v1",
+        "status": "excluded",
+        "ticker": "ATVI"
+      },
+      {
+        "as_of": "2022-01-03",
+        "case_id": "spinoff",
+        "cik": "0000789019",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:BETA:2012-05-18:a",
+          "LISTING_STATUS:SPIN:NASDAQ:2021-11-02"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "4e6b7de3:6ee7519f:78993260:e67394ee:676b2998:a1ded044:da1d2864:49cc4550",
+        "issuer_interval": {
+          "valid_from": "2012-05-18",
+          "valid_to": null
+        },
+        "legal_name": "BETA PLATFORMS INC",
+        "listing_interval": {
+          "valid_from": "2021-11-02",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "39fae282:56e66b56:8445d4f6:c8ac3865:aa4881b1:10784fdf:694e6f17:44809a4e",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "SPIN"
+      },
+      {
+        "as_of": "2020-01-02",
+        "case_id": "multiple_share_classes",
+        "cik": "0001067983",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:OMEGA:1996-05-09:a",
+          "LISTING_STATUS:BRK-A:NYSE:1996-05-09"
+        ],
+        "exchange": "NYSE",
+        "issuer_id": "bff7cc63:8397b976:b311a733:59f86203:629855aa:3ea784d6:9ac5e683:500cb5a0",
+        "issuer_interval": {
+          "valid_from": "1996-05-09",
+          "valid_to": null
+        },
+        "legal_name": "OMEGA HOLDING COMPANY",
+        "listing_interval": {
+          "valid_from": "1996-05-09",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "2d72e5b3:c6338133:139f17a7:376675d4:f58abe99:7313ce51:dcbcbfdb:e5c8a7e0",
+        "share_class": "A",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "BRK-A"
+      },
+      {
+        "as_of": "2020-01-02",
+        "case_id": "multiple_share_classes",
+        "cik": "0001067983",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:OMEGA:1996-05-09:a",
+          "LISTING_STATUS:BRK-B:NYSE:1996-05-09"
+        ],
+        "exchange": "NYSE",
+        "issuer_id": "bff7cc63:8397b976:b311a733:59f86203:629855aa:3ea784d6:9ac5e683:500cb5a0",
+        "issuer_interval": {
+          "valid_from": "1996-05-09",
+          "valid_to": null
+        },
+        "legal_name": "OMEGA HOLDING COMPANY",
+        "listing_interval": {
+          "valid_from": "1996-05-09",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "5f75c90f:068b9e0c:5688c679:1ff8b279:ee6b71f2:3481f885:c9fad964:0753bb51",
+        "share_class": "B",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "BRK-B"
+      },
+      {
+        "as_of": "2015-01-02",
+        "candidate_ids": [
+          "77c21742:83def981:5bcbecb3:1ad6fbe2:83be1e28:14bb0265:cbd123d3:962f2bc4#0001111111",
+          "77c21742:83def981:5bcbecb3:1ad6fbe2:83be1e28:14bb0265:cbd123d3:962f2bc4#0002222222"
+        ],
+        "case_id": "cik_mismatch",
+        "conflict_kind": "CIK_MISMATCH_ACROSS_SOURCES",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:EPSILON:2012-03-01:av",
+          "EDGAR:SUBMISSIONS:ISS:EPSILON:2012-03-01:sec"
+        ],
+        "exchange": "NASDAQ",
+        "queue_ids": [
+          "30581d49:d9450d69:ec974acc:9e4565aa:35e9d334:0dd43cf2:96a54a57:37c7abf2"
+        ],
+        "reason": "CONFLICTING_SOURCED_ISSUER_ATTRIBUTES_AT_AS_OF:CIK_MISMATCH_ACROSS_SOURCES",
+        "rules_version": "qme.identity_rules.v1",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "ambiguous",
+        "ticker": "EPSL"
+      },
+      {
+        "as_of": "2020-06-01",
+        "case_id": "missing_history",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "exchange": "NYSE",
+        "reason": "NO_SOURCED_ISSUER_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "status": "excluded",
+        "ticker": "ZETA"
+      },
+      {
+        "as_of": "2022-06-01",
+        "case_id": "missing_history",
+        "cik": "0003333333",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:ZETA:2021-01-04:a",
+          "LISTING_STATUS:ZETA:NYSE:2020-01-02"
+        ],
+        "exchange": "NYSE",
+        "issuer_id": "c96535cd:d770a2c0:5de31fde:4241a2e8:3a94235b:5a382d06:5af9d06d:b9fb8bfc",
+        "issuer_interval": {
+          "valid_from": "2021-01-04",
+          "valid_to": null
+        },
+        "legal_name": "ZETA MINING COMPANY",
+        "listing_interval": {
+          "valid_from": "2020-01-02",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "b337e022:b3472f38:02969b09:7e71b525:f6a31e15:ff0fcde8:322bbe75:0da93a42",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "ZETA"
+      },
+      {
+        "as_of": "2019-01-02",
+        "case_id": "conflicting_sources",
+        "cik": "0000320193",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:ALPHA:1980-12-12:a",
+          "LISTING_STATUS:DUPE:NASDAQ:2018-01-02"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "66ff1935:23c4e740:079ccf3d:6d17b61a:e86f1942:76207dad:1d98b0e9:7d0783a3",
+        "issuer_interval": {
+          "valid_from": "1980-12-12",
+          "valid_to": null
+        },
+        "legal_name": "ALPHA INDUSTRIES INC",
+        "listing_interval": {
+          "valid_from": "2018-01-02",
+          "valid_to": "2024-01-02"
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "517b3d90:f33c6772:655840a7:1934aafc:94c7e3d5:1184e9d8:a1156957:da87ef1f",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "DUPE"
+      },
+      {
+        "as_of": "2021-01-04",
+        "candidate_ids": [
+          "34a3e850:dee9cdf2:cc92852b:0bcd6497:68effdb9:f515b073:863ee263:c0edf8ea",
+          "517b3d90:f33c6772:655840a7:1934aafc:94c7e3d5:1184e9d8:a1156957:da87ef1f"
+        ],
+        "case_id": "conflicting_sources",
+        "conflict_kind": "CONFLICTING_SOURCE_LISTING_ATTRIBUTES",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:DUPE:NASDAQ:2018-01-02",
+          "LISTING_STATUS:DUPE:NASDAQ:2020-01-02"
+        ],
+        "exchange": "NASDAQ",
+        "queue_ids": [
+          "e379116a:aea47590:97900663:7cd524c8:c78ad6b5:488c3361:d159abfc:11c785a9"
+        ],
+        "reason": "MULTIPLE_SOURCED_MAPPINGS_AT_AS_OF:CONFLICTING_SOURCE_LISTING_ATTRIBUTES",
+        "rules_version": "qme.identity_rules.v1",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "ambiguous",
+        "ticker": "DUPE"
+      },
+      {
+        "as_of": "2012-01-03",
+        "case_id": "unsourced_rename",
+        "cik": "0001652044",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:DELTA:2011-01-03:a",
+          "LISTING_STATUS:OLDT:NASDAQ:2011-01-03"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd",
+        "issuer_interval": {
+          "valid_from": "2011-01-03",
+          "valid_to": null
+        },
+        "legal_name": "DELTA SYSTEMS INC",
+        "listing_interval": {
+          "valid_from": "2011-01-03",
+          "valid_to": "2016-05-02"
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "802d94f8:22a40a19:c05835b9:edc802de:e867b742:df15a7a4:b4de8c3b:3d810f15",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "OLDT"
+      },
+      {
+        "as_of": "2020-01-02",
+        "case_id": "unsourced_rename",
+        "cik": "0001652044",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:DELTA:2011-01-03:a",
+          "LISTING_STATUS:NEWT:NASDAQ:2016-05-02"
+        ],
+        "exchange": "NASDAQ",
+        "issuer_id": "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd",
+        "issuer_interval": {
+          "valid_from": "2011-01-03",
+          "valid_to": null
+        },
+        "legal_name": "DELTA SYSTEMS INC",
+        "listing_interval": {
+          "valid_from": "2016-05-02",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "d33d73da:68c70e7a:65204b57:c81792b9:6a39413b:39ff5805:516b8a52:a65fc8b3",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "NEWT"
+      },
+      {
+        "as_of": "1996-05-09",
+        "case_id": "share_class_link_conflict",
+        "cik": "0001067983",
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "EDGAR:SUBMISSIONS:ISS:OMEGA:1996-05-09:a",
+          "LISTING_STATUS:BRK-A:NYSE:1996-05-09"
+        ],
+        "exchange": "NYSE",
+        "issuer_id": "bff7cc63:8397b976:b311a733:59f86203:629855aa:3ea784d6:9ac5e683:500cb5a0",
+        "issuer_interval": {
+          "valid_from": "1996-05-09",
+          "valid_to": null
+        },
+        "legal_name": "OMEGA HOLDING COMPANY",
+        "listing_interval": {
+          "valid_from": "1996-05-09",
+          "valid_to": null
+        },
+        "reason": "SINGLE_SOURCED_MAPPING_AT_AS_OF",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "2d72e5b3:c6338133:139f17a7:376675d4:f58abe99:7313ce51:dcbcbfdb:e5c8a7e0",
+        "share_class": "A",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC",
+          "SRC:SEC_EDGAR_SYNTHETIC"
+        ],
+        "status": "resolved",
+        "ticker": "BRK-A"
+      }
+    ],
+    "review_queue_conflict_counts": {
+      "CIK_MISMATCH_ACROSS_SOURCES": 1,
+      "CONFLICTING_SOURCE_LISTING_ATTRIBUTES": 1,
+      "MISSING_ISSUER_INTERVAL_COVERAGE": 1,
+      "SHARE_CLASS_LINK_CONFLICT": 1,
+      "UNSOURCED_RENAME_LINK": 1
+    },
+    "securities": [
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:MOVR:NASDAQ:2019-09-16",
+          "LISTING_STATUS:MOVR:NYSEAMERICAN:2015-03-02"
+        ],
+        "first_valid_from": "2015-03-02",
+        "issuer_ids": [
+          "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd"
+        ],
+        "last_valid_to": null,
+        "listing_count": 2,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "25c61cad:137a4467:f815306e:5b4fa435:777ad0bc:1650cd67:1a9b5438:f6776739",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:BRK-A:NYSE:1996-05-09"
+        ],
+        "first_valid_from": "1996-05-09",
+        "issuer_ids": [
+          "bff7cc63:8397b976:b311a733:59f86203:629855aa:3ea784d6:9ac5e683:500cb5a0"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "2d72e5b3:c6338133:139f17a7:376675d4:f58abe99:7313ce51:dcbcbfdb:e5c8a7e0",
+        "share_class": "A",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:DUPE:NASDAQ:2020-01-02"
+        ],
+        "first_valid_from": "2020-01-02",
+        "issuer_ids": [
+          "4e6b7de3:6ee7519f:78993260:e67394ee:676b2998:a1ded044:da1d2864:49cc4550"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "34a3e850:dee9cdf2:cc92852b:0bcd6497:68effdb9:f515b073:863ee263:c0edf8ea",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:SPIN:NASDAQ:2021-11-02"
+        ],
+        "first_valid_from": "2021-11-02",
+        "issuer_ids": [
+          "4e6b7de3:6ee7519f:78993260:e67394ee:676b2998:a1ded044:da1d2864:49cc4550"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "39fae282:56e66b56:8445d4f6:c8ac3865:aa4881b1:10784fdf:694e6f17:44809a4e",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:TWTR:NYSE:2013-11-07"
+        ],
+        "first_valid_from": "2013-11-07",
+        "issuer_ids": [
+          "bbb791a3:2cb27241:0f2a7721:e4d3a7e3:067cab85:2a0dc5bb:dc9e8ea0:7348fa41"
+        ],
+        "last_valid_to": "2022-10-28",
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "3d208f38:38ba10c0:775cc459:2a8542b7:929d3720:8cc59653:f4b6d19e:53de9f48",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:TWTR:NYSE:2026-01-05"
+        ],
+        "first_valid_from": "2026-01-05",
+        "issuer_ids": [
+          "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "4227d28d:cec7b1b7:d9808a7e:9935c911:bba2f77c:a4f9010e:5d3f4826:4f6b4d33",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:DUPE:NASDAQ:2018-01-02"
+        ],
+        "first_valid_from": "2018-01-02",
+        "issuer_ids": [
+          "66ff1935:23c4e740:079ccf3d:6d17b61a:e86f1942:76207dad:1d98b0e9:7d0783a3"
+        ],
+        "last_valid_to": "2024-01-02",
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "517b3d90:f33c6772:655840a7:1934aafc:94c7e3d5:1184e9d8:a1156957:da87ef1f",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:BRK-B:NYSE:1996-05-09"
+        ],
+        "first_valid_from": "1996-05-09",
+        "issuer_ids": [
+          "bff7cc63:8397b976:b311a733:59f86203:629855aa:3ea784d6:9ac5e683:500cb5a0"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "5f75c90f:068b9e0c:5688c679:1ff8b279:ee6b71f2:3481f885:c9fad964:0753bb51",
+        "share_class": "B",
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:EPSL:NASDAQ:2012-03-01"
+        ],
+        "first_valid_from": "2012-03-01",
+        "issuer_ids": [
+          "77c21742:83def981:5bcbecb3:1ad6fbe2:83be1e28:14bb0265:cbd123d3:962f2bc4"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "70a4ee3f:e8b66b84:35fdaf5d:a6719e8f:625c2dc6:fa3408c9:3e67ec42:b023c641",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:OLDT:NASDAQ:2011-01-03"
+        ],
+        "first_valid_from": "2011-01-03",
+        "issuer_ids": [
+          "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd"
+        ],
+        "last_valid_to": "2016-05-02",
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "802d94f8:22a40a19:c05835b9:edc802de:e867b742:df15a7a4:b4de8c3b:3d810f15",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:FB:NASDAQ:2012-05-18",
+          "LISTING_STATUS:META:NASDAQ:2022-06-09"
+        ],
+        "first_valid_from": "2012-05-18",
+        "issuer_ids": [
+          "4e6b7de3:6ee7519f:78993260:e67394ee:676b2998:a1ded044:da1d2864:49cc4550"
+        ],
+        "last_valid_to": null,
+        "listing_count": 2,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "a3a49e45:b58d10ad:fb0cdbc5:bc3951d4:946668c0:abaa80c1:da52d3c2:90e1c63a",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:ZETA:NYSE:2020-01-02"
+        ],
+        "first_valid_from": "2020-01-02",
+        "issuer_ids": [
+          "c96535cd:d770a2c0:5de31fde:4241a2e8:3a94235b:5a382d06:5af9d06d:b9fb8bfc"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "b337e022:b3472f38:02969b09:7e71b525:f6a31e15:ff0fcde8:322bbe75:0da93a42",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:AAPL:NASDAQ:1980-12-12"
+        ],
+        "first_valid_from": "1980-12-12",
+        "issuer_ids": [
+          "66ff1935:23c4e740:079ccf3d:6d17b61a:e86f1942:76207dad:1d98b0e9:7d0783a3"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "b6b265eb:4b39935d:eb155e35:ae8dc517:ccde0e6e:5f2dd780:17e78063:2681362a",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:NEWT:NASDAQ:2016-05-02"
+        ],
+        "first_valid_from": "2016-05-02",
+        "issuer_ids": [
+          "0fbea11d:96854478:9d1d5349:ec6b7fe2:0f292f90:e0a63527:8c681ef3:b24281cd"
+        ],
+        "last_valid_to": null,
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "d33d73da:68c70e7a:65204b57:c81792b9:6a39413b:39ff5805:516b8a52:a65fc8b3",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      },
+      {
+        "coverage_limitation": "AV_SURVIVORSHIP_REDUCED_PROXY",
+        "evidence_refs": [
+          "LISTING_STATUS:ATVI:NASDAQ:1993-10-25"
+        ],
+        "first_valid_from": "1993-10-25",
+        "issuer_ids": [
+          "bbb791a3:2cb27241:0f2a7721:e4d3a7e3:067cab85:2a0dc5bb:dc9e8ea0:7348fa41"
+        ],
+        "last_valid_to": "2023-10-13",
+        "listing_count": 1,
+        "reason": "GROUPED_BY_SOURCED_IDENTITY_EVIDENCE_ONLY",
+        "rules_version": "qme.identity_rules.v1",
+        "security_id": "e104f458:557392b1:e4640954:f2f9371d:92730e2c:5ea0e37e:79487b28:6bd8fc25",
+        "share_class": null,
+        "source_ids": [
+          "SRC:AV_LISTING_STATUS_SYNTHETIC"
+        ],
+        "status": "resolved"
+      }
+    ]
+  },
+  "purpose": "Known answers for the NEE-127 security/issuer identity core. Every identifier below is the grouped SHA-256 of a canonical identity tuple derived only from the synthetic sourced facts in tests/data/test_security_identity_intervals.py. Inputs are synthetic; no vendor data, no network, no credential.",
+  "rules_version": "qme.identity_rules.v1",
+  "schema_version": "qme.security_identity_table.v1"
+}
