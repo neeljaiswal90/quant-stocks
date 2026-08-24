@@ -1,0 +1,528 @@
+{
+  "schema_version": "qme.coverage_audit_fixture.v1",
+  "fixture_id": "QME-NEE128-COVERAGE-AUDIT-V1",
+  "provenance": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "purpose": "Known-answer vectors for the NEE-128 coverage audit and source-aware delisting policy. Every expected coverage fraction, ledger entry, delisting outcome state and attribution row was derived by hand from the declared inputs below and from the rules documented in docs/data/NEE_128_COVERAGE_AUDIT_V1.md, not read back from the engine. The two read-back fields are named explicitly under `read_back_fields`.",
+  "identifier_derivation": {
+    "form": "grouped sha256: eight lowercase 8-hex groups joined by ':'",
+    "security_id": "sha256(b'QME-NEE128-FIXTURE-SECURITY-V1:' + label.encode('utf-8'))",
+    "opacity_note": "These identifiers are opaque to the coverage package. It validates their shape and nothing else; the identity layer owns every semantic guarantee about them.",
+    "ordering_note": "Because security ids are digests, the missingness ledger's key order is not hand-predictable. Expected ledger entries are therefore listed here by label and the test derives, sorts and compares the keys; the ordering itself is asserted separately by the content-order test."
+  },
+  "read_back_fields": [
+    "expected_report_identity.report_sha256_grouped",
+    "expected_clean_run.report_sha256_grouped"
+  ],
+  "sessions": {
+    "note": "Every session below is an accepted XNAS session in the NEE-126 calendar. The audit refuses a price, anchor, held or benchmark item whose session is not one.",
+    "s_a": "2024-03-13",
+    "s_b": "2024-03-14",
+    "s_c": "2024-03-15",
+    "s_d": "2024-03-18",
+    "non_session": "2024-03-16"
+  },
+  "audit_id": "nee128-coverage-audit-fixture-1",
+  "analysis_cutoff": "2024-04-01T00:00:00+00:00",
+  "as_of": "2024-04-01",
+  "security_labels": [
+    "cash-merger",
+    "stock-merger",
+    "bankruptcy",
+    "voluntary-delist",
+    "migration",
+    "missing-last-trade",
+    "stale-mark",
+    "benchmark-exit",
+    "survivor"
+  ],
+  "required_items": [
+    {"coverage_class": "LISTINGS", "subject_label": "cash-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "stock-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "bankruptcy", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "voluntary-delist", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "migration", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "missing-last-trade", "session": "2024-03-14", "state": "ITEM_MISSING_NOT_SOURCED"},
+    {"coverage_class": "LISTINGS", "subject_label": "stale-mark", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "benchmark-exit", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "LISTINGS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+
+    {"coverage_class": "IDENTITY", "subject_token": "CASHM:XNAS", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "IDENTITY", "subject_token": "STKM:XNAS", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "IDENTITY", "subject_token": "MIGR:XNAS", "session": "2024-03-14", "state": "ITEM_EXCLUDED_TERMINAL_STATUS"},
+    {"coverage_class": "IDENTITY", "subject_token": "SRVV:XNAS", "session": "2024-03-14", "state": "ITEM_VALID"},
+
+    {"coverage_class": "CLASSIFICATION", "subject_label": "cash-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "CLASSIFICATION", "subject_label": "stock-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "CLASSIFICATION", "subject_label": "bankruptcy", "session": "2024-03-14", "state": "ITEM_EXCLUDED_TERMINAL_STATUS"},
+    {"coverage_class": "CLASSIFICATION", "subject_label": "benchmark-exit", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "CLASSIFICATION", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+
+    {"coverage_class": "PRICES", "subject_label": "survivor", "session": "2024-03-13", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "survivor", "session": "2024-03-15", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "survivor", "session": "2024-03-18", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "cash-merger", "session": "2024-03-13", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "cash-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "cash-merger", "session": "2024-03-15", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "stock-merger", "session": "2024-03-13", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "stock-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "stock-merger", "session": "2024-03-15", "state": "ITEM_MISSING_NOT_SOURCED"},
+    {"coverage_class": "PRICES", "subject_label": "bankruptcy", "session": "2024-03-13", "state": "ITEM_VALID"},
+    {"coverage_class": "PRICES", "subject_label": "bankruptcy", "session": "2024-03-14", "state": "ITEM_MISSING_AFTER_AVAILABILITY_CUTOFF"},
+
+    {"coverage_class": "ACTIONS", "subject_label": "cash-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "ACTIONS", "subject_label": "stock-merger", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "ACTIONS", "subject_label": "bankruptcy", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "ACTIONS", "subject_label": "migration", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "ACTIONS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "ACTIONS", "subject_label": "benchmark-exit", "session": "2024-03-14", "state": "ITEM_EXCLUDED_UNSUPPORTED_ACTION"},
+
+    {"coverage_class": "ANCHORS", "subject_token": "formation-2024-02", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "ANCHORS", "subject_token": "formation-2024-03", "session": "2024-03-13", "state": "ITEM_VALID"},
+    {"coverage_class": "ANCHORS", "subject_token": "rebalance-2024-03", "session": "2024-03-18", "state": "ITEM_VALID"},
+
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "survivor", "session": "2024-03-15", "state": "ITEM_VALID"},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "survivor", "session": "2024-03-18", "state": "ITEM_VALID"},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "cash-merger", "session": "2024-03-15", "state": "ITEM_VALID"},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "stock-merger", "session": "2024-03-15", "state": "ITEM_VALID"},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "bankruptcy", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "stale-mark", "session": "2024-03-15", "state": "ITEM_VALID"},
+
+    {"coverage_class": "BENCHMARKS", "subject_token": "ndx-total-return", "session": "2024-03-13", "state": "ITEM_VALID"},
+    {"coverage_class": "BENCHMARKS", "subject_token": "ndx-total-return", "session": "2024-03-14", "state": "ITEM_VALID"},
+    {"coverage_class": "BENCHMARKS", "subject_token": "ndx-total-return", "session": "2024-03-15", "state": "ITEM_VALID"},
+    {"coverage_class": "BENCHMARKS", "subject_token": "ndx-total-return", "session": "2024-03-18", "state": "ITEM_MISSING_NOT_SOURCED"}
+  ],
+  "held_marks": [
+    {"subject_label": "survivor", "session": "2024-03-14", "mark_session": "2024-03-14", "mark_value": "18.40"},
+    {"subject_label": "survivor", "session": "2024-03-15", "mark_session": "2024-03-15", "mark_value": "18.75"},
+    {"subject_label": "survivor", "session": "2024-03-18", "mark_session": null, "mark_value": null},
+    {"subject_label": "cash-merger", "session": "2024-03-15", "mark_session": "2024-03-15", "mark_value": "41.75"},
+    {"subject_label": "stock-merger", "session": "2024-03-15", "mark_session": "2024-03-15", "mark_value": "22.50"},
+    {"subject_label": "bankruptcy", "session": "2024-03-14", "mark_session": "2024-03-14", "mark_value": "0.90"},
+    {"subject_label": "stale-mark", "session": "2024-03-15", "mark_session": "2024-03-13", "mark_value": "7.25"}
+  ],
+  "delisting_events": [
+    {
+      "event_id": "evt-cash-merger",
+      "subject_label": "cash-merger",
+      "event_type": "CASH_MERGER",
+      "reason": "ACQUIRED_FOR_CASH",
+      "last_trade_date": "2024-03-15",
+      "outcome": {
+        "type": "SOURCED",
+        "outcome_kind": "SOURCED_CASH",
+        "source_kind": "ISSUER_FILING",
+        "source": "definitive merger agreement, all-cash consideration",
+        "source_reference": "fixture://issuer/cash-merger/defm14a",
+        "availability_time": "2024-03-18T13:30:00+00:00",
+        "cash_per_share": "42.5"
+      },
+      "source": "issuer 8-K announcing completion",
+      "source_reference": "fixture://issuer/cash-merger/8-k",
+      "availability_time": "2024-03-18T13:30:00+00:00",
+      "valuation_date": null,
+      "fallback_rule": "NOT_APPLICABLE_SOURCED_OUTCOME",
+      "benchmark_treatment": "UNCHANGED"
+    },
+    {
+      "event_id": "evt-stock-merger",
+      "subject_label": "stock-merger",
+      "event_type": "STOCK_MERGER",
+      "reason": "ACQUIRED_FOR_STOCK",
+      "last_trade_date": "2024-03-15",
+      "outcome": {
+        "type": "SOURCED",
+        "outcome_kind": "SOURCED_STOCK",
+        "source_kind": "ISSUER_FILING",
+        "source": "definitive merger agreement, all-stock consideration",
+        "source_reference": "fixture://issuer/stock-merger/s-4",
+        "availability_time": "2024-03-18T13:30:00+00:00",
+        "share_ratio": "0.75",
+        "successor_label": "survivor"
+      },
+      "source": "issuer 8-K announcing completion",
+      "source_reference": "fixture://issuer/stock-merger/8-k",
+      "availability_time": "2024-03-18T13:30:00+00:00",
+      "valuation_date": null,
+      "fallback_rule": "NOT_APPLICABLE_SOURCED_OUTCOME",
+      "benchmark_treatment": "UNCHANGED"
+    },
+    {
+      "event_id": "evt-bankruptcy",
+      "subject_label": "bankruptcy",
+      "event_type": "BANKRUPTCY",
+      "reason": "UNKNOWN_ADVERSE_OUTCOME",
+      "last_trade_date": "2024-03-13",
+      "outcome": {
+        "type": "UNKNOWN_ADVERSE",
+        "source_kind": "EXCHANGE_NOTICE",
+        "source": "exchange trading halt and delisting determination",
+        "source_reference": "fixture://exchange/bankruptcy/notice",
+        "availability_time": "2024-03-14T13:30:00+00:00",
+        "unknown_terms_note": "no plan of reorganization has been confirmed; recovery to common is not sourced"
+      },
+      "source": "exchange delisting determination",
+      "source_reference": "fixture://exchange/bankruptcy/notice",
+      "availability_time": "2024-03-14T13:30:00+00:00",
+      "valuation_date": null,
+      "fallback_rule": "PREREGISTERED_SENSITIVITY_HAIRCUT",
+      "benchmark_treatment": "UNCHANGED"
+    },
+    {
+      "event_id": "evt-voluntary-delist",
+      "subject_label": "voluntary-delist",
+      "event_type": "VOLUNTARY_DELISTING",
+      "reason": "UNKNOWN_ADVERSE_OUTCOME",
+      "last_trade_date": "2024-03-14",
+      "outcome": {
+        "type": "UNKNOWN_ADVERSE",
+        "source_kind": "ISSUER_FILING",
+        "source": "issuer Form 25 voluntary delisting notice",
+        "source_reference": "fixture://issuer/voluntary-delist/form-25",
+        "availability_time": "2024-03-14T21:00:00+00:00",
+        "unknown_terms_note": "shares continue to exist off-exchange; no exchange price and no sourced consideration"
+      },
+      "source": "issuer Form 25",
+      "source_reference": "fixture://issuer/voluntary-delist/form-25",
+      "availability_time": "2024-03-14T21:00:00+00:00",
+      "valuation_date": null,
+      "fallback_rule": "NO_FALLBACK_PERMITTED",
+      "benchmark_treatment": "UNCHANGED"
+    },
+    {
+      "event_id": "evt-migration",
+      "subject_label": "migration",
+      "event_type": "TICKER_MIGRATION",
+      "reason": "IDENTITY_CONTINUATION_SAME_SECURITY",
+      "last_trade_date": null,
+      "outcome": {
+        "type": "SOURCED",
+        "outcome_kind": "CONTINUATION_NO_CONSIDERATION",
+        "source_kind": "EXCHANGE_NOTICE",
+        "source": "exchange symbol change notice",
+        "source_reference": "fixture://exchange/migration/symbol-change",
+        "availability_time": "2024-03-14T13:30:00+00:00"
+      },
+      "source": "exchange symbol change notice",
+      "source_reference": "fixture://exchange/migration/symbol-change",
+      "availability_time": "2024-03-14T13:30:00+00:00",
+      "valuation_date": null,
+      "fallback_rule": "NOT_APPLICABLE_SOURCED_OUTCOME",
+      "benchmark_treatment": "UNCHANGED"
+    },
+    {
+      "event_id": "evt-benchmark-exit",
+      "subject_label": "benchmark-exit",
+      "event_type": "BENCHMARK_CONSTITUENT_EXIT",
+      "reason": "INDEX_METHODOLOGY_REMOVAL",
+      "last_trade_date": null,
+      "outcome": {
+        "type": "SOURCED",
+        "outcome_kind": "CONTINUATION_NO_CONSIDERATION",
+        "source_kind": "INDEX_PROVIDER_NOTICE",
+        "source": "index provider constituent change notice",
+        "source_reference": "fixture://index/benchmark-exit/notice",
+        "availability_time": "2024-03-15T21:00:00+00:00"
+      },
+      "source": "index provider constituent change notice",
+      "source_reference": "fixture://index/benchmark-exit/notice",
+      "availability_time": "2024-03-15T21:00:00+00:00",
+      "valuation_date": null,
+      "fallback_rule": "NOT_APPLICABLE_SOURCED_OUTCOME",
+      "benchmark_treatment": "UNCHANGED",
+      "note": "The security leaves the benchmark, but recording that as CONSTITUENT_REMOVED_AT_EXIT needs a registered owner decision. With the empty decision registry only UNCHANGED is constructible, which is the point: a benchmark treatment change cannot even be written down yet."
+    }
+  ],
+  "pricing": [
+    {"event_id": "evt-cash-merger", "held_notional": "125000", "entry_basis": "41.75"},
+    {"event_id": "evt-stock-merger", "held_notional": "88000", "entry_basis": "22.5", "successor_close": "31.2"},
+    {"event_id": "evt-bankruptcy", "held_notional": "40000", "haircut_id": "hc-bankruptcy-recovery-a", "sensitivity_range_id": "sr-bankruptcy-v1"}
+  ],
+  "expected_coverage": {
+    "note": "Eight separate denominators. There is no ninth number: these are never pooled, and no API returns a combined figure.",
+    "LISTINGS": {"required_items": 9, "valid_items": 8, "coverage_exact": "8/9"},
+    "IDENTITY": {"required_items": 4, "valid_items": 3, "coverage_exact": "3/4"},
+    "CLASSIFICATION": {"required_items": 5, "valid_items": 4, "coverage_exact": "4/5"},
+    "PRICES": {"required_items": 12, "valid_items": 10, "coverage_exact": "5/6"},
+    "ACTIONS": {"required_items": 6, "valid_items": 5, "coverage_exact": "5/6"},
+    "ANCHORS": {"required_items": 3, "valid_items": 3, "coverage_exact": "1"},
+    "HELD_POSITION_MARKS_EXITS": {"required_items": 7, "valid_items": 2, "coverage_exact": "2/7"},
+    "BENCHMARKS": {"required_items": 4, "valid_items": 3, "coverage_exact": "3/4"}
+  },
+  "expected_missingness_ledger": [
+    {"coverage_class": "LISTINGS", "subject_label": "missing-last-trade", "session": "2024-03-14", "declared_state": "ITEM_MISSING_NOT_SOURCED", "state": "ITEM_MISSING_NOT_SOURCED", "override_sources": [], "invalidates_run": false},
+    {"coverage_class": "IDENTITY", "subject_token": "MIGR:XNAS", "session": "2024-03-14", "declared_state": "ITEM_EXCLUDED_TERMINAL_STATUS", "state": "ITEM_EXCLUDED_TERMINAL_STATUS", "override_sources": [], "invalidates_run": false},
+    {"coverage_class": "CLASSIFICATION", "subject_label": "bankruptcy", "session": "2024-03-14", "declared_state": "ITEM_EXCLUDED_TERMINAL_STATUS", "state": "ITEM_EXCLUDED_TERMINAL_STATUS", "override_sources": [], "invalidates_run": false},
+    {"coverage_class": "PRICES", "subject_label": "stock-merger", "session": "2024-03-15", "declared_state": "ITEM_MISSING_NOT_SOURCED", "state": "ITEM_MISSING_NOT_SOURCED", "override_sources": [], "invalidates_run": false},
+    {"coverage_class": "PRICES", "subject_label": "bankruptcy", "session": "2024-03-14", "declared_state": "ITEM_MISSING_AFTER_AVAILABILITY_CUTOFF", "state": "ITEM_MISSING_AFTER_AVAILABILITY_CUTOFF", "override_sources": [], "invalidates_run": false},
+    {"coverage_class": "ACTIONS", "subject_label": "benchmark-exit", "session": "2024-03-14", "declared_state": "ITEM_EXCLUDED_UNSUPPORTED_ACTION", "state": "ITEM_EXCLUDED_UNSUPPORTED_ACTION", "override_sources": [], "invalidates_run": false},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "survivor", "session": "2024-03-18", "declared_state": "ITEM_VALID", "state": "ITEM_MISSING_NOT_SOURCED", "override_sources": ["HELD_MARK_RESOLUTION"], "invalidates_run": false},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "cash-merger", "session": "2024-03-15", "declared_state": "ITEM_VALID", "state": "ITEM_UNAUDITED_HELD_POSITION", "override_sources": ["UNRESOLVED_EXIT_CROSS_CHECK"], "invalidates_run": true},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "stock-merger", "session": "2024-03-15", "declared_state": "ITEM_VALID", "state": "ITEM_UNAUDITED_HELD_POSITION", "override_sources": ["UNRESOLVED_EXIT_CROSS_CHECK"], "invalidates_run": true},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "bankruptcy", "session": "2024-03-14", "declared_state": "ITEM_VALID", "state": "ITEM_UNAUDITED_HELD_POSITION", "override_sources": ["UNRESOLVED_EXIT_CROSS_CHECK"], "invalidates_run": true},
+    {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "stale-mark", "session": "2024-03-15", "declared_state": "ITEM_VALID", "state": "ITEM_STALE_BEYOND_DECLARED_HORIZON", "override_sources": ["HELD_MARK_RESOLUTION"], "invalidates_run": false},
+    {"coverage_class": "BENCHMARKS", "subject_token": "ndx-total-return", "session": "2024-03-18", "declared_state": "ITEM_MISSING_NOT_SOURCED", "state": "ITEM_MISSING_NOT_SOURCED", "override_sources": [], "invalidates_run": false}
+  ],
+  "expected_delisting_rows": [
+    {"event_id": "evt-bankruptcy", "outcome_state": "BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT", "result_label": "UNRESOLVED", "is_audited": false},
+    {"event_id": "evt-benchmark-exit", "outcome_state": "SETTLED_CONTINUATION_NO_RETURN", "result_label": "CONTINUATION_NO_RETURN", "is_audited": true},
+    {"event_id": "evt-cash-merger", "outcome_state": "BLOCKED_UNREGISTERED_TIMING_RULE", "result_label": "UNRESOLVED", "is_audited": false},
+    {"event_id": "evt-migration", "outcome_state": "SETTLED_CONTINUATION_NO_RETURN", "result_label": "CONTINUATION_NO_RETURN", "is_audited": true},
+    {"event_id": "evt-stock-merger", "outcome_state": "BLOCKED_UNREGISTERED_TIMING_RULE", "result_label": "UNRESOLVED", "is_audited": false},
+    {"event_id": "evt-voluntary-delist", "outcome_state": "BLOCKED_NO_FALLBACK_PERMITTED", "result_label": "UNRESOLVED", "is_audited": false}
+  ],
+  "expected_observed_returns": [],
+  "expected_fallback_results": [],
+  "expected_attribution": [
+    {"result_label": "CONTINUATION_NO_RETURN", "outcome_type": "BENCHMARK_CONSTITUENT_EXIT", "attribution_state": "ATTRIBUTION_RESOLVED", "event_count": 1, "priced_event_count": 0, "affected_notional": null, "pnl_impact": "0", "benchmark_treatment": "UNCHANGED", "scenario_ids": []},
+    {"result_label": "CONTINUATION_NO_RETURN", "outcome_type": "TICKER_MIGRATION", "attribution_state": "ATTRIBUTION_RESOLVED", "event_count": 1, "priced_event_count": 0, "affected_notional": null, "pnl_impact": "0", "benchmark_treatment": "UNCHANGED", "scenario_ids": []},
+    {"result_label": "UNRESOLVED", "outcome_type": "BANKRUPTCY", "attribution_state": "ATTRIBUTION_UNRESOLVED", "event_count": 1, "priced_event_count": 1, "affected_notional": "40000", "pnl_impact": null, "benchmark_treatment": "UNCHANGED", "scenario_ids": []},
+    {"result_label": "UNRESOLVED", "outcome_type": "CASH_MERGER", "attribution_state": "ATTRIBUTION_UNRESOLVED", "event_count": 1, "priced_event_count": 1, "affected_notional": "125000", "pnl_impact": null, "benchmark_treatment": "UNCHANGED", "scenario_ids": []},
+    {"result_label": "UNRESOLVED", "outcome_type": "STOCK_MERGER", "attribution_state": "ATTRIBUTION_UNRESOLVED", "event_count": 1, "priced_event_count": 1, "affected_notional": "88000", "pnl_impact": null, "benchmark_treatment": "UNCHANGED", "scenario_ids": []},
+    {"result_label": "UNRESOLVED", "outcome_type": "VOLUNTARY_DELISTING", "attribution_state": "ATTRIBUTION_UNRESOLVED", "event_count": 1, "priced_event_count": 0, "affected_notional": null, "pnl_impact": null, "benchmark_treatment": "UNCHANGED", "scenario_ids": []}
+  ],
+  "expected_gate": {
+    "status": "RUN_INVALID_UNAUDITED_HELD_POSITION",
+    "is_valid": false,
+    "held_position_requirement_exact": "1/1",
+    "held_position_coverage_exact": "2/7",
+    "unaudited_held_labels": ["bankruptcy", "cash-merger", "stock-merger"],
+    "unregistered_threshold_classes": [],
+    "note": "Step 1 of the gate ordering fires before the threshold registry is consulted, which is why an unaudited held position invalidates the run today, with no registration at all."
+  },
+  "expected_report_identity": {
+    "schema_version": "qme.coverage_audit.v1",
+    "kernel_id": "QME-NEE128-COVERAGE-AUDIT-V1",
+    "audit_id": "nee128-coverage-audit-fixture-1",
+    "as_of": "2024-04-01",
+    "gate_status": "RUN_INVALID_UNAUDITED_HELD_POSITION",
+    "coverage_class_count": 8,
+    "missingness_record_count": 12,
+    "delisting_row_count": 6,
+    "fallback_result_count": 0,
+    "attribution_row_count": 6,
+    "report_sha256_grouped": "4c472218:4c8a62ca:8bbeed18:835411a7:28ffb7a0:c3b3fcb9:1cb62318:5070a4c0"
+  },
+  "clean_run": {
+    "note": "A run with nothing missing at all. It still cannot be gated valid, because no owner-registered minimum coverage or breadth threshold exists for the other seven classes. This is the fixture that proves the empty registry blocks a verdict rather than merely a value.",
+    "audit_id": "nee128-coverage-audit-fixture-clean",
+    "required_items": [
+      {"coverage_class": "LISTINGS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "IDENTITY", "subject_token": "SRVV:XNAS", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "CLASSIFICATION", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "PRICES", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "ACTIONS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "ANCHORS", "subject_token": "formation-2024-03", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "HELD_POSITION_MARKS_EXITS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
+      {"coverage_class": "BENCHMARKS", "subject_token": "ndx-total-return", "session": "2024-03-14", "state": "ITEM_VALID"}
+    ],
+    "held_marks": [
+      {"subject_label": "survivor", "session": "2024-03-14", "mark_session": "2024-03-14", "mark_value": "18.40"}
+    ],
+    "expected_coverage_exact": {
+      "LISTINGS": "1", "IDENTITY": "1", "CLASSIFICATION": "1", "PRICES": "1",
+      "ACTIONS": "1", "ANCHORS": "1", "HELD_POSITION_MARKS_EXITS": "1", "BENCHMARKS": "1"
+    },
+    "expected_gate": {
+      "status": "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
+      "is_valid": false,
+      "held_position_requirement_exact": "1/1",
+      "held_position_coverage_exact": "1/1",
+      "unregistered_threshold_classes": [
+        "LISTINGS", "IDENTITY", "CLASSIFICATION", "PRICES", "ACTIONS", "ANCHORS", "BENCHMARKS"
+      ]
+    },
+    "report_sha256_grouped": "00290ca0:6d7183e7:17c4b564:00e7c69c:1d5d293d:f90efdb5:95041457:b502becc"
+  },
+  "registered_probe": {
+    "note": "Test-only records passed through the `rules=` / `haircuts=` / `ranges=` / `thresholds=` parameters under the TEST_CONSTRUCTED source kind, which every validate_*_registry forbids in a shipped registry. They exist to prove the machinery is complete, not to register anything.",
+    "timing_rule": {
+      "rule_id": "test-timing-last-trade-plus-one",
+      "valuation_anchor": "LAST_TRADE_DATE",
+      "valuation_offset_sessions": 1,
+      "coordinate_ordering": ["EX_DATE", "LAST_TRADE_DATE", "VALUATION_DATE"],
+      "applies_to_event_types": ["CASH_MERGER", "STOCK_MERGER"],
+      "effective_date": "2024-01-01"
+    },
+    "haircut": {
+      "haircut_id": "hc-bankruptcy-recovery-a",
+      "scenario_id": "sc-bankruptcy-recovery-35",
+      "recovery_fraction": "0.35",
+      "applies_to_event_types": ["BANKRUPTCY"],
+      "applies_to_reasons": ["UNKNOWN_ADVERSE_OUTCOME"],
+      "effective_date": "2024-01-01"
+    },
+    "sensitivity_range": {
+      "range_id": "sr-bankruptcy-v1",
+      "haircut_ids": ["hc-bankruptcy-recovery-a"],
+      "scenario_ids": ["sc-bankruptcy-recovery-35"],
+      "low_recovery_fraction": "0.10",
+      "high_recovery_fraction": "0.60",
+      "effective_date": "2024-01-01"
+    },
+    "coverage_threshold_minimum_fraction": "0.80",
+    "expected_cash_merger_settlement": {
+      "timing_rule_id": "test-timing-last-trade-plus-one",
+      "anchor_session": "2024-03-15",
+      "valuation_date": "2024-03-18",
+      "proceeds_per_share_exact": "85/2",
+      "entry_basis_exact": "167/4",
+      "observed_return_exact": "3/167",
+      "observed_return_artifact": "0.017964071856287425",
+      "affected_notional": "125000",
+      "pnl_impact_exact": "375000/167",
+      "derivation": "proceeds 42.5 over basis 41.75 is 170/167; minus 1 is 3/167. The exact rational is not representable in base 10, which is why coverage and returns are compared as rationals and only rendered once, at the artifact boundary."
+    },
+    "expected_bankruptcy_scenario": {
+      "scenario_id": "sc-bankruptcy-recovery-35",
+      "haircut_id": "hc-bankruptcy-recovery-a",
+      "sensitivity_range_id": "sr-bankruptcy-v1",
+      "recovery_fraction_exact": "7/20",
+      "scenario_return_exact": "-13/20",
+      "affected_notional": "40000",
+      "pnl_impact_exact": "-26000",
+      "result_label": "FALLBACK_SCENARIO",
+      "event_count": 1,
+      "benchmark_treatment": "UNCHANGED"
+    },
+    "expected_main_run_gate_with_thresholds": {
+      "status": "RUN_INVALID_UNAUDITED_HELD_POSITION",
+      "note": "Registering thresholds does not rescue a run with an unaudited held position: step 1 of the gate ordering precedes the registry."
+    },
+    "expected_clean_run_gate_with_thresholds": {
+      "status": "GATE_VALID",
+      "note": "The only configuration in this fixture that produces a verdict, and it needs seven owner registrations that do not exist."
+    }
+  },
+  "required_case_coverage": {
+    "note": "The eight acceptance fixtures the ticket names, mapped to where each one lives.",
+    "valid cash merger": "delisting_events[evt-cash-merger] plus registered_probe.expected_cash_merger_settlement",
+    "stock merger": "delisting_events[evt-stock-merger]",
+    "bankruptcy / unknown adverse event": "delisting_events[evt-bankruptcy] plus registered_probe.expected_bankruptcy_scenario",
+    "voluntary delist": "delisting_events[evt-voluntary-delist]",
+    "ticker migration": "delisting_events[evt-migration]",
+    "missing last trade": "blocked_cases.missing_last_trade_on_sourced_exit, plus the LISTINGS coverage miss for the missing-last-trade security",
+    "stale held mark": "held_marks[stale-mark] and expected_missingness_ledger[stale-mark]",
+    "benchmark constituent exit": "delisting_events[evt-benchmark-exit]"
+  },
+  "blocked_cases": {
+    "missing_last_trade_on_sourced_exit": "BLOCKED_MISSING_LAST_TRADE_DATE",
+    "benchmark_treatment_change_without_decision_ref": "BLOCKED_BENCHMARK_TREATMENT_WITHOUT_DECISION_REF",
+    "benchmark_treatment_change_without_registered_decision": "BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE",
+    "missing_held_mark": "BLOCKED_MISSING_MARK_NO_POLICY",
+    "stale_held_mark": "BLOCKED_STALE_MARK_NO_CARRY_FORWARD_POLICY",
+    "mark_after_required_session": "BLOCKED_MARK_AFTER_REQUIRED_SESSION",
+    "mark_policy_not_applicable": "BLOCKED_MARK_POLICY_NOT_APPLICABLE",
+    "carry_forward_horizon_exceeded": "BLOCKED_CARRY_FORWARD_HORIZON_EXCEEDED",
+    "missing_required_field": "BLOCKED_MISSING_REQUIRED_FIELD",
+    "settle_with_empty_timing_registry": "BLOCKED_UNREGISTERED_TIMING_RULE",
+    "fallback_with_empty_haircut_registry": "BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT",
+    "fallback_with_empty_sensitivity_registry": "BLOCKED_UNREGISTERED_SENSITIVITY_RANGE",
+    "fallback_on_sourced_outcome": "BLOCKED_FALLBACK_ON_SOURCED_OUTCOME",
+    "continuation_has_no_return": "BLOCKED_CONTINUATION_HAS_NO_DELISTING_RETURN",
+    "no_fallback_permitted": "BLOCKED_NO_FALLBACK_PERMITTED",
+    "event_reason_mismatch": "BLOCKED_EVENT_REASON_MISMATCH",
+    "outcome_event_mismatch": "BLOCKED_OUTCOME_EVENT_MISMATCH",
+    "outcome_terms_mismatch": "BLOCKED_OUTCOME_TERMS_MISMATCH",
+    "fallback_rule_outcome_mismatch": "BLOCKED_FALLBACK_RULE_OUTCOME_MISMATCH",
+    "valuation_before_last_trade": "BLOCKED_VALUATION_BEFORE_LAST_TRADE",
+    "valuation_contradicts_timing_rule": "BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE",
+    "missing_successor_mark": "BLOCKED_MISSING_SUCCESSOR_MARK",
+    "nonpositive_entry_basis": "BLOCKED_NONPOSITIVE_ENTRY_BASIS",
+    "missing_prior_close": "BLOCKED_MISSING_PRIOR_CLOSE",
+    "malformed_identifier": "BLOCKED_MALFORMED_IDENTIFIER",
+    "malformed_exact_value": "BLOCKED_MALFORMED_EXACT_VALUE",
+    "not_an_iso_date": "BLOCKED_NOT_AN_ISO_DATE",
+    "missing_availability_time": "BLOCKED_MISSING_AVAILABILITY_TIME",
+    "unregistered_vocabulary_value": "BLOCKED_UNREGISTERED_VOCABULARY_VALUE",
+    "unregistered_source_kind": "BLOCKED_UNREGISTERED_SOURCE_KIND",
+    "duplicate_delisting_event": "BLOCKED_DUPLICATE_DELISTING_EVENT",
+    "duplicate_exit_pricing_input": "BLOCKED_DUPLICATE_EXIT_PRICING_INPUT",
+    "duplicate_held_mark": "BLOCKED_DUPLICATE_HELD_MARK",
+    "duplicate_required_item": "BLOCKED_DUPLICATE_REQUIRED_ITEM",
+    "empty_coverage_denominator": "BLOCKED_EMPTY_COVERAGE_DENOMINATOR",
+    "gate_not_valid": "BLOCKED_GATE_NOT_VALID",
+    "held_position_threshold_is_fixed": "BLOCKED_HELD_POSITION_THRESHOLD_IS_FIXED",
+    "inconsistent_coverage_counts": "BLOCKED_INCONSISTENT_COVERAGE_COUNTS",
+    "item_session_not_a_session": "BLOCKED_ITEM_SESSION_NOT_A_SESSION",
+    "item_state_not_valid_for_class": "BLOCKED_ITEM_STATE_NOT_VALID_FOR_CLASS",
+    "mark_for_undeclared_held_item": "BLOCKED_MARK_FOR_UNDECLARED_HELD_ITEM",
+    "unregistered_coverage_class": "BLOCKED_UNREGISTERED_COVERAGE_CLASS",
+    "unregistered_coverage_threshold": "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
+    "unregistered_item_state": "BLOCKED_UNREGISTERED_ITEM_STATE",
+    "unresolved_identity": "BLOCKED_UNRESOLVED_IDENTITY"
+  },
+  "owner_registrations_required": [
+    {
+      "registry": "qme.data.coverage.audit_v1.REGISTERED_COVERAGE_THRESHOLDS",
+      "record_type": "CoverageThreshold",
+      "count_required": 7,
+      "subject": "a minimum coverage (and, where wanted, minimum breadth) threshold for each of LISTINGS, IDENTITY, CLASSIFICATION, PRICES, ACTIONS, ANCHORS, BENCHMARKS",
+      "typed_state_until_registered": "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
+      "blocks": "any coverage verdict at all; the gate cannot return GATE_VALID",
+      "required_fields": ["threshold_id", "threshold_kind", "coverage_class", "minimum_fraction or minimum_count", "source_kind", "source", "source_reference", "effective_date"],
+      "note": "HELD_POSITION_MARKS_EXITS must NOT be registered here. The ticket fixes it at exactly 1 and validate_threshold_registry refuses any record naming it, with BLOCKED_HELD_POSITION_THRESHOLD_IS_FIXED."
+    },
+    {
+      "registry": "qme.data.coverage.delisting_v1.REGISTERED_DELISTING_TIMING_RULES",
+      "record_type": "DelistingTimingRule",
+      "count_required": 1,
+      "subject": "the frozen delisting timing rule: which coordinate a sourced exit is valued from, the signed session offset, and the frozen ordering of ex-date / last-trade-date / valuation-date",
+      "typed_state_until_registered": "BLOCKED_UNREGISTERED_TIMING_RULE",
+      "blocks": "settling any sourced cash or stock delisting outcome, so every held position carrying such an exit stays unaudited and invalidates its run",
+      "required_fields": ["rule_id", "valuation_anchor", "valuation_offset_sessions", "coordinate_ordering", "applies_to_event_types", "source_kind", "source", "source_reference", "effective_date"]
+    },
+    {
+      "registry": "qme.data.coverage.delisting_v1.REGISTERED_FALLBACK_HAIRCUTS",
+      "record_type": "FallbackHaircut",
+      "count_required": 1,
+      "subject": "the preregistered sensitivity haircut(s): the assumed recovery fraction for an unknown adverse outcome, and which event types and reasons it covers",
+      "typed_state_until_registered": "BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT",
+      "blocks": "evaluating any unknown adverse outcome at all; no fallback-scenario number can be produced",
+      "required_fields": ["haircut_id", "scenario_id", "recovery_fraction", "applies_to_event_types", "applies_to_reasons", "source_kind", "source", "source_reference", "effective_date"]
+    },
+    {
+      "registry": "qme.data.coverage.delisting_v1.REGISTERED_SENSITIVITY_RANGES",
+      "record_type": "SensitivityRange",
+      "count_required": 1,
+      "subject": "the sensitivity range(s): which haircuts and scenario ids a sweep may explore, and the recovery bounds it may not leave",
+      "typed_state_until_registered": "BLOCKED_UNREGISTERED_SENSITIVITY_RANGE",
+      "blocks": "a fallback sensitivity sweep even when a haircut exists",
+      "required_fields": ["range_id", "haircut_ids", "scenario_ids", "low_recovery_fraction", "high_recovery_fraction", "source_kind", "source", "source_reference", "effective_date"]
+    },
+    {
+      "registry": "qme.data.coverage.delisting_v1.REGISTERED_BENCHMARK_TREATMENT_DECISIONS",
+      "record_type": "BenchmarkTreatmentDecision",
+      "count_required": 0,
+      "subject": "an explicit owner decision authorising a benchmark treatment other than UNCHANGED",
+      "typed_state_until_registered": "BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE",
+      "blocks": "nothing today: the default UNCHANGED needs no record. Only required if a run should ever remove or replace a benchmark constituent at an exit.",
+      "required_fields": ["decision_ref", "treatment", "applies_to_event_types", "source_kind", "source", "source_reference", "effective_date"]
+    },
+    {
+      "registry": "qme.data.coverage.delisting_v1.REGISTERED_MISSING_MARK_POLICIES",
+      "record_type": "MissingMarkPolicy",
+      "count_required": 0,
+      "subject": "an explicit owner policy for a missing or stale held-position mark (carry forward with a bounded horizon, zero return, or explicit write-off)",
+      "typed_state_until_registered": "BLOCKED_MISSING_MARK_NO_POLICY / BLOCKED_STALE_MARK_NO_CARRY_FORWARD_POLICY",
+      "blocks": "nothing today: without a policy a missing mark is simply a non-valid coverage item. Only required if a run should ever substitute a value for a missing or stale mark.",
+      "required_fields": ["policy_id", "treatment", "max_carry_forward_sessions", "source_kind", "source", "source_reference", "effective_date"]
+    }
+  ],
+  "claims": {
+    "coverage_thresholds_registered": false,
+    "delisting_timing_rule_registered": false,
+    "fallback_haircuts_registered": false,
+    "sensitivity_ranges_registered": false,
+    "benchmark_treatment_change_registered": false,
+    "missing_mark_policy_registered": false,
+    "coverage_verdict_producible": false,
+    "empirical_delisting_outcomes_acquired": false,
+    "security_identity_join_applied": false,
+    "independent_review_recorded": false,
+    "freeze_blocker_changed": false,
+    "production_ready": false
+  }
+}
