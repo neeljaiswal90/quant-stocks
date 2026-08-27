@@ -3,23 +3,35 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 
+from qme.data.alpha_vantage.client import CLASS_OK, RawResponse
+from qme.data.alpha_vantage.store import RawPullStore
+from qme.data.corporate_actions.registered_events import REGISTERED_EVENTS
 from qme.data.identity import (
     COVERAGE_LIMITATION,
     Ambiguous,
     DateInterval,
     ResolvedSecurity,
+    UnknownIdentityError,
     require_resolved,
 )
-from qme.data.universe.av_proxy_snapshot import ListingRow
+from qme.data.universe.av_proxy_snapshot import AvProxySnapshotError, ListingRow
 from qme.data.universe.listing_status_identity_adapter_v1 import (
     ADAPTER_VERSION,
     ListingStatusIdentityAdapterError,
     identity_table_from_listing_status,
+    identity_table_from_stored_listing_status,
     listing_facts_from_rows,
 )
+from qme.foundation.data_root import DataRootLayout
+
+REPO = Path(__file__).resolve().parents[2]
+HEADER = "symbol,name,exchange,assetType,ipoDate,delistingDate,status"
+FB_META = next(event for event in REGISTERED_EVENTS if event.event_id == "FB-META-IDENTITY-2022")
 
 
 def _row(
@@ -185,4 +197,166 @@ def test_colliding_pull_ids_fail_closed() -> None:
             delisted_rows=(),
             active_pull_id="same",
             delisted_pull_id="same",
+        )
+
+
+def test_sourced_rename_joins_retired_and_continuing_tickers() -> None:
+    table = identity_table_from_listing_status(
+        active_rows=[
+            _row(
+                symbol="META",
+                name="Meta Platforms Inc",
+                ipo_date="2022-06-09",
+            )
+        ],
+        delisted_rows=[
+            _row(
+                symbol="FB",
+                name="Facebook Inc",
+                ipo_date="2012-05-18",
+                delisting_date="2022-06-09",
+                status="Delisted",
+                listing_state="delisted",
+            )
+        ],
+        active_pull_id="pull-active",
+        delisted_pull_id="pull-delisted",
+        identity_events=(FB_META,),
+    )
+
+    before = require_resolved(table.resolve("FB", "NASDAQ", "2015-01-02"))
+    after = require_resolved(table.resolve("META", "NASDAQ", "2023-01-03"))
+    assert before.security_id == after.security_id
+    with pytest.raises(UnknownIdentityError):
+        require_resolved(table.resolve("FB", "NASDAQ", "2023-01-03"))
+
+
+def test_rename_without_both_listing_facts_fails_closed() -> None:
+    with pytest.raises(ListingStatusIdentityAdapterError, match="IDENTITY_LINK_MISSING_FACT"):
+        identity_table_from_listing_status(
+            active_rows=[_row(symbol="META", name="Meta Platforms Inc", ipo_date="2022-06-09")],
+            delisted_rows=(),
+            active_pull_id="pull-active",
+            delisted_pull_id="pull-delisted",
+            identity_events=(FB_META,),
+        )
+
+
+def _listing_csv(
+    rows: list[tuple[str, str, str, str, str, str]],
+    *,
+    state: str,
+) -> bytes:
+    status = "Active" if state == "active" else "Delisted"
+    lines = [HEADER]
+    lines.extend(
+        f"{symbol},{name},{exchange},{asset_type},{ipo},{delisting},{status}"
+        for symbol, name, exchange, asset_type, ipo, delisting in rows
+    )
+    return ("\r\n".join(lines) + "\r\n").encode("utf-8")
+
+
+def _store_listing_pull(
+    layout: DataRootLayout,
+    body: bytes,
+    *,
+    state: str,
+    date: str,
+    now: datetime,
+) -> str:
+    params = {"date": date, "function": "LISTING_STATUS", "state": state}
+    record = RawPullStore(layout).record(
+        RawResponse(
+            function="LISTING_STATUS",
+            params_public=params,
+            public_url="https://www.alphavantage.co/query?"
+            + "&".join(f"{k}={v}" for k, v in sorted(params.items())),
+            http_status=200,
+            content_type="application/x-download",
+            body=body,
+            requested_at="2026-08-16T03:36:24.000000+00:00",
+            received_at="2026-08-16T03:36:26.000000+00:00",
+            attempts=1,
+            response_class=CLASS_OK,
+            soft_message=None,
+        ),
+        symbol=None,
+        now=now,
+    )
+    return record.pull_id
+
+
+def test_stored_listing_pulls_build_an_identity_table(tmp_path: Path) -> None:
+    layout = DataRootLayout.from_path(tmp_path / "qme-data", repository_root=REPO)
+    layout.initialize()
+    date = "2026-07-31"
+    active_id = _store_listing_pull(
+        layout,
+        _listing_csv(
+            [("AAPL", "Apple Inc", "NASDAQ", "Stock", "1980-12-12", "null")],
+            state="active",
+        ),
+        state="active",
+        date=date,
+        now=datetime(2026, 8, 16, 3, 36, 24, tzinfo=UTC),
+    )
+    delisted_id = _store_listing_pull(
+        layout,
+        _listing_csv(
+            [("BBBYQ", "Bed Bath & Beyond", "OTC", "Stock", "1992-06-04", "2023-09-29")],
+            state="delisted",
+        ),
+        state="delisted",
+        date=date,
+        now=datetime(2026, 8, 16, 3, 36, 25, tzinfo=UTC),
+    )
+
+    table = identity_table_from_stored_listing_status(
+        RawPullStore(layout),
+        signal_session_date=date,
+        active_pull_id=active_id,
+        delisted_pull_id=delisted_id,
+    )
+
+    resolved = require_resolved(table.resolve("AAPL", "NASDAQ", date))
+    assert isinstance(resolved, ResolvedSecurity)
+    assert table.coverage_limitation == COVERAGE_LIMITATION
+
+
+def test_tampered_stored_listing_body_fails_closed(tmp_path: Path) -> None:
+    layout = DataRootLayout.from_path(tmp_path / "qme-data", repository_root=REPO)
+    layout.initialize()
+    date = "2026-07-31"
+    active_id = _store_listing_pull(
+        layout,
+        _listing_csv(
+            [("AAPL", "Apple Inc", "NASDAQ", "Stock", "1980-12-12", "null")],
+            state="active",
+        ),
+        state="active",
+        date=date,
+        now=datetime(2026, 8, 16, 3, 36, 24, tzinfo=UTC),
+    )
+    delisted_id = _store_listing_pull(
+        layout,
+        _listing_csv(
+            [("BBBYQ", "Bed Bath & Beyond", "OTC", "Stock", "1992-06-04", "2023-09-29")],
+            state="delisted",
+        ),
+        state="delisted",
+        date=date,
+        now=datetime(2026, 8, 16, 3, 36, 25, tzinfo=UTC),
+    )
+    store = RawPullStore(layout)
+    record = next(entry for entry in store.audit_records() if entry["pull_id"] == active_id)
+    (layout.root / record["body_logical_id"]).write_bytes(
+        _listing_csv([], state="active")
+    )
+
+    with pytest.raises(AvProxySnapshotError, match="unreadable or altered"):
+        identity_table_from_stored_listing_status(
+            store,
+            signal_session_date=date,
+            active_pull_id=active_id,
+            delisted_pull_id=delisted_id,
         )

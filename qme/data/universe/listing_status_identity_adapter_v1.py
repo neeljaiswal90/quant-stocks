@@ -22,20 +22,31 @@ Interval mapping (half-open ``[ipo_date, delisting_date)``):
 A symbol present in both the active and delisted pulls becomes two sourced
 listing facts; overlapping windows are the identity layer's conflicting-source
 case, not a silent merge.
+
+Registered ``IDENTITY_TICKER_CHANGE`` events become sourced :class:`IdentityLink`
+values. A rename is applied only when both listing windows meet at the registered
+change date and the event carries a source citation. The retired listing then
+reuses the continuing listing's vendor issuer key so the two windows share an
+issuer without inventing a CIK.
 """
 
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import replace
 
+from qme.data.alpha_vantage.store import RawPullStore
+from qme.data.corporate_actions.registered_events import RegisteredEvent
 from qme.data.identity.intervals_v1 import DateInterval, IntervalError, parse_iso_date
 from qme.data.identity.resolution_v1 import (
+    IdentityLink,
     IdentityTable,
     IssuerFact,
+    LinkKind,
     ListingFact,
     build_identity_table,
 )
-from qme.data.universe.av_proxy_snapshot import ListingRow
+from qme.data.universe.av_proxy_snapshot import ListingRow, load_verified_listing_rows
 
 ADAPTER_VERSION = "qme.listing_status_identity_adapter.v1"
 _NULL_DELISTING_TOKENS = frozenset({"", "null"})
@@ -131,6 +142,7 @@ def identity_table_from_listing_status(
     delisted_rows: Sequence[ListingRow],
     active_pull_id: str,
     delisted_pull_id: str,
+    identity_events: Sequence[RegisteredEvent] = (),
 ) -> IdentityTable:
     """Build an identity table from one active and one delisted LISTING_STATUS pull."""
 
@@ -146,4 +158,145 @@ def identity_table_from_listing_status(
     issuers = active_issuers + delisted_issuers
     if not listings:
         raise ListingStatusIdentityAdapterError("NO_LISTING_ROWS")
-    return build_identity_table(listing_facts=listings, issuer_facts=issuers)
+    links = identity_links_from_registered_events(listings, identity_events)
+    listings, issuers = _align_issuers_for_identity_links(listings, issuers, links)
+    return build_identity_table(
+        listing_facts=listings, issuer_facts=issuers, links=links
+    )
+
+
+def _unique_meeting_fact(
+    matches: Sequence[ListingFact],
+    *,
+    ticker: str,
+    event_id: str,
+    role: str,
+    predicate_name: str,
+) -> ListingFact:
+    if not matches:
+        raise ListingStatusIdentityAdapterError(
+            f"IDENTITY_LINK_MISSING_FACT:{event_id}:{role}:{ticker}:{predicate_name}"
+        )
+    if len(matches) > 1:
+        raise ListingStatusIdentityAdapterError(
+            f"IDENTITY_LINK_AMBIGUOUS_FACT:{event_id}:{role}:{ticker}"
+        )
+    return matches[0]
+
+
+def identity_links_from_registered_events(
+    listings: Sequence[ListingFact],
+    events: Sequence[RegisteredEvent],
+) -> tuple[IdentityLink, ...]:
+    """Turn sourced identity expectations into rename links. Skip events without identity."""
+
+    links: list[IdentityLink] = []
+    for event in events:
+        identity = event.identity
+        if identity is None:
+            continue
+        if not event.source_citation:
+            raise ListingStatusIdentityAdapterError(
+                f"IDENTITY_LINK_MISSING_EVIDENCE:{event.event_id}"
+            )
+        retired_matches = [
+            fact
+            for fact in listings
+            if fact.ticker == identity.retired_symbol
+            and fact.interval.valid_to == identity.change_date
+        ]
+        continuing_matches = [
+            fact
+            for fact in listings
+            if fact.ticker == identity.continuing_symbol
+            and fact.interval.valid_from == identity.change_date
+        ]
+        retired = _unique_meeting_fact(
+            retired_matches,
+            ticker=identity.retired_symbol,
+            event_id=event.event_id,
+            role="retired",
+            predicate_name="valid_to",
+        )
+        continuing = _unique_meeting_fact(
+            continuing_matches,
+            ticker=identity.continuing_symbol,
+            event_id=event.event_id,
+            role="continuing",
+            predicate_name="valid_from",
+        )
+        links.append(
+            IdentityLink(
+                link_id=f"link:{event.event_id}",
+                source_id=event.event_id,
+                link_kind=LinkKind.RENAME,
+                from_fact_id=retired.fact_id,
+                to_fact_id=continuing.fact_id,
+                effective_date=identity.change_date,
+                evidence_ref=event.source_citation,
+            )
+        )
+    return tuple(links)
+
+
+def _align_issuers_for_identity_links(
+    listings: Sequence[ListingFact],
+    issuers: Sequence[IssuerFact],
+    links: Sequence[IdentityLink],
+) -> tuple[tuple[ListingFact, ...], tuple[IssuerFact, ...]]:
+    """Reuse the continuing listing's issuer key on the retired window of a sourced rename."""
+
+    listings_by_id = {fact.fact_id: fact for fact in listings}
+    listing_rewrites: dict[str, str] = {}
+    issuer_rewrites: dict[str, str] = {}
+    for link in links:
+        retired = listings_by_id[link.from_fact_id]
+        continuing = listings_by_id[link.to_fact_id]
+        if retired.issuer_key == continuing.issuer_key:
+            continue
+        listing_rewrites[retired.fact_id] = continuing.issuer_key
+        issuer_rewrites[retired.evidence_ref] = continuing.issuer_key
+    rewritten_listings = tuple(
+        replace(fact, issuer_key=listing_rewrites[fact.fact_id])
+        if fact.fact_id in listing_rewrites
+        else fact
+        for fact in listings
+    )
+    rewritten_issuers = tuple(
+        replace(fact, issuer_key=issuer_rewrites[fact.evidence_ref])
+        if fact.evidence_ref in issuer_rewrites
+        else fact
+        for fact in issuers
+    )
+    return rewritten_listings, rewritten_issuers
+
+
+def identity_table_from_stored_listing_status(
+    store: RawPullStore,
+    *,
+    signal_session_date: str,
+    active_pull_id: str,
+    delisted_pull_id: str,
+    identity_events: Sequence[RegisteredEvent] = (),
+) -> IdentityTable:
+    """Build an identity table from hash-verified stored LISTING_STATUS pulls."""
+
+    _active_record, active_rows = load_verified_listing_rows(
+        store,
+        pull_id=active_pull_id,
+        expect_state="active",
+        signal_session_date=signal_session_date,
+    )
+    _delisted_record, delisted_rows = load_verified_listing_rows(
+        store,
+        pull_id=delisted_pull_id,
+        expect_state="delisted",
+        signal_session_date=signal_session_date,
+    )
+    return identity_table_from_listing_status(
+        active_rows=active_rows,
+        delisted_rows=delisted_rows,
+        active_pull_id=active_pull_id,
+        delisted_pull_id=delisted_pull_id,
+        identity_events=identity_events,
+    )
