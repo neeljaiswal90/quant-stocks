@@ -25,6 +25,7 @@ NETWORK_CLIENT_MODULES = frozenset(
         "qme.data.alpha_vantage.client",
         "qme.data.alpha_vantage.acquisition",
         "qme.data.alpha_vantage.m0_fixture_pulls",
+        "qme.data.alpha_vantage.endpoint_ingest",
         "qme.data.sec.edgar_receipts",
     }
 )

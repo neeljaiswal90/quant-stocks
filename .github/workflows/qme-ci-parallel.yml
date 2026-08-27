@@ -1,0 +1,275 @@
+name: qme-ci-parallel
+
+# Additive to the frozen `qme-ci` workflow, which stays byte-unchanged. This
+# runs the same gates as independent jobs so a slow leg cannot starve the
+# others inside one 30-minute budget. Sharding the test leg is only safe if the
+# split itself is checked, so both Windows shards publish their collected node
+# ids and `foundation-parallel` proves they are disjoint and that their union is
+# exactly the full Windows collection. A directory dropped by path drift fails
+# the aggregate instead of quietly disappearing from a green run.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  static-build:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.lock
+            requirements-runtime.lock
+            requirements-xnas-calendar-generator.lock
+      - name: Install fully hashed development toolchain
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Verify dependency locks
+        run: python scripts/verify_lock.py requirements-agent-build.lock requirements-runtime.lock requirements-dev.lock requirements-agents.lock requirements-xnas-calendar-generator.lock
+      - name: Verify isolated XNAS calendar candidate replay
+        shell: pwsh
+        run: |
+          python --version
+          python -m venv "$env:RUNNER_TEMP\qme-xnas-calendar"
+          & "$env:RUNNER_TEMP\qme-xnas-calendar\Scripts\python.exe" -m pip install --require-hashes --only-binary=:all: -r requirements-xnas-calendar-generator.lock
+          if ($LASTEXITCODE -ne 0) { throw "calendar generator dependency install failed" }
+          & "$env:RUNNER_TEMP\qme-xnas-calendar\Scripts\python.exe" scripts/materialize_xnas_calendar_v1.py --repository-root . --verify
+          if ($LASTEXITCODE -ne 0) { throw "calendar candidate replay failed" }
+      - name: Build wheel without dependency resolution
+        run: python -m build --wheel --no-isolation
+      - name: Clean wheel and CLI smoke
+        shell: pwsh
+        run: |
+          py -3.12 -m venv "$env:RUNNER_TEMP\qme-smoke"
+          & "$env:RUNNER_TEMP\qme-smoke\Scripts\python.exe" -m pip install --require-hashes -r requirements-runtime.lock
+          if ($LASTEXITCODE -ne 0) { throw "runtime dependency install failed" }
+          & "$env:RUNNER_TEMP\qme-smoke\Scripts\python.exe" -m pip install --no-deps (Get-ChildItem dist\qme-*.whl).FullName
+          if ($LASTEXITCODE -ne 0) { throw "wheel install failed" }
+          & "$env:RUNNER_TEMP\qme-smoke\Scripts\qme-agent-review.exe" --help
+          if ($LASTEXITCODE -ne 0) { throw "agent CLI smoke failed" }
+          & "$env:RUNNER_TEMP\qme-smoke\Scripts\qme-foundation.exe" --help
+          if ($LASTEXITCODE -ne 0) { throw "foundation CLI smoke failed" }
+          & "$env:RUNNER_TEMP\qme-smoke\Scripts\python.exe" -m pip check
+          if ($LASTEXITCODE -ne 0) { throw "clean environment pip check failed" }
+      - name: Lint
+        run: python -m ruff check qme tests scripts
+      - name: Strict typing
+        run: python -m mypy qme scripts/verify_lock.py scripts/check_secrets.py scripts/verify_test_shards.py
+      - name: Compile check
+        run: python -m compileall -q qme tests scripts
+      - name: Collect the full Windows test node id manifest
+        shell: pwsh
+        run: |
+          $env:PYTHONDONTWRITEBYTECODE = "1"
+          python -m pytest -q --collect-only -p no:cacheprovider > "$env:RUNNER_TEMP\full-collect.txt"
+          if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\full-collect.txt"; throw "full collection failed" }
+          python scripts/verify_test_shards.py normalize --input "$env:RUNNER_TEMP\full-collect.txt" --output "$env:RUNNER_TEMP\nodes-full.json"
+          if ($LASTEXITCODE -ne 0) { throw "full collection manifest failed" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nodes-full
+          path: ${{ runner.temp }}/nodes-full.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Verify source tree unchanged
+        run: git diff --exit-code
+
+  tests-data-architecture:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.lock
+            requirements-runtime.lock
+            requirements-xnas-calendar-generator.lock
+      - name: Install fully hashed development toolchain
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Collect this shard's node id manifest
+        shell: pwsh
+        run: |
+          $env:PYTHONDONTWRITEBYTECODE = "1"
+          python -m pytest -q --collect-only -p no:cacheprovider tests/data tests/architecture > "$env:RUNNER_TEMP\shard-collect.txt"
+          if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\shard-collect.txt"; throw "shard collection failed" }
+          python scripts/verify_test_shards.py normalize --input "$env:RUNNER_TEMP\shard-collect.txt" --output "$env:RUNNER_TEMP\nodes-data-architecture.json"
+          if ($LASTEXITCODE -ne 0) { throw "shard manifest failed" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nodes-data-architecture
+          path: ${{ runner.temp }}/nodes-data-architecture.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Data and architecture tests
+        run: python -m pytest -q -p no:cacheprovider tests/data tests/architecture
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+      - name: Verify source tree unchanged
+        run: git diff --exit-code
+
+  tests-rest:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.lock
+            requirements-runtime.lock
+            requirements-xnas-calendar-generator.lock
+      - name: Install fully hashed development toolchain
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Collect this shard's node id manifest
+        shell: pwsh
+        run: |
+          $env:PYTHONDONTWRITEBYTECODE = "1"
+          python -m pytest -q --collect-only -p no:cacheprovider tests --ignore=tests/data --ignore=tests/architecture > "$env:RUNNER_TEMP\shard-collect.txt"
+          if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\shard-collect.txt"; throw "shard collection failed" }
+          python scripts/verify_test_shards.py normalize --input "$env:RUNNER_TEMP\shard-collect.txt" --output "$env:RUNNER_TEMP\nodes-rest.json"
+          if ($LASTEXITCODE -ne 0) { throw "shard manifest failed" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nodes-rest
+          path: ${{ runner.temp }}/nodes-rest.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remaining tests
+        run: python -m pytest -q -p no:cacheprovider tests --ignore=tests/data --ignore=tests/architecture
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+      - name: Verify source tree unchanged
+        run: git diff --exit-code
+
+  secrets-fixture-publication:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.lock
+            requirements-runtime.lock
+            requirements-xnas-calendar-generator.lock
+      - name: Install fully hashed development toolchain
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Tracked-secret scan
+        run: python scripts/check_secrets.py
+      - name: Generate canonical fixture twice
+        shell: pwsh
+        run: |
+          $base = @(
+            "-m", "qme.cli.foundation", "manifest",
+            "--repository-root", ".",
+            "--lock", "requirements-dev.lock",
+            "--config", "tests/fixtures/foundation/config.json",
+            "--schema", "tests/fixtures/foundation/schema.json",
+            "--data", "tests/fixtures/foundation/data.csv",
+            "--output", "tests/fixtures/foundation/output.json"
+          )
+          python @base --manifest-out "$env:RUNNER_TEMP\foundation-manifest-1.json"
+          if ($LASTEXITCODE -ne 0) { throw "first manifest failed" }
+          python @base --manifest-out "$env:RUNNER_TEMP\foundation-manifest-2.json"
+          if ($LASTEXITCODE -ne 0) { throw "second manifest failed" }
+          $one = (Get-FileHash "$env:RUNNER_TEMP\foundation-manifest-1.json" -Algorithm SHA256).Hash
+          $two = (Get-FileHash "$env:RUNNER_TEMP\foundation-manifest-2.json" -Algorithm SHA256).Hash
+          if ($one -ne $two) { throw "fixture manifests are not deterministic" }
+      - name: Windows raw and manifest publication tests
+        run: python -m pytest -q -p no:cacheprovider tests/data/test_av_acquisition_boundary.py -k "publication or windows"
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+      - name: Verify source tree unchanged
+        run: git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        with:
+          name: foundation-manifest-parallel-${{ github.sha }}
+          path: ${{ runner.temp }}/foundation-manifest-1.json
+          if-no-files-found: error
+          retention-days: 7
+
+  nee123-posix:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+      - name: Install fully hashed development toolchain
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Focused NEE-123 acquisition and ingestion tests
+        run: python -m pytest -q -p no:cacheprovider tests/data/test_av_acquisition_boundary.py tests/data/test_alpha_vantage_ingest.py
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+      - name: Real POSIX publication tests must run, not skip
+        run: |
+          set -o pipefail
+          python -m pytest -rs -p no:cacheprovider \
+            tests/data/test_av_acquisition_boundary.py -k "posix" | tee posix.txt
+          if grep -qi "skipped" posix.txt; then
+            echo "POSIX publication tests were skipped on a POSIX runner"
+            exit 1
+          fi
+          rm -f posix.txt
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+      - name: Verify source tree unchanged
+        run: git diff --exit-code
+
+  foundation-parallel:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    needs:
+      - static-build
+      - tests-data-architecture
+      - tests-rest
+      - secrets-fixture-publication
+      - nee123-posix
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nodes-*
+          path: manifests
+          merge-multiple: true
+      - name: Prove the Windows shards are disjoint and omit nothing
+        run: >-
+          python scripts/verify_test_shards.py verify
+          --full manifests/nodes-full.json
+          --shard manifests/nodes-data-architecture.json
+          --shard manifests/nodes-rest.json
+      - name: Aggregate result
+        run: echo "all parallel foundation gates passed"
