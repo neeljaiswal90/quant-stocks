@@ -1,0 +1,87 @@
+{
+  "schema_version": "qme.test_fixture.av_endpoint_normalize.v1",
+  "purpose": "NEE-123: hand-authored raw bodies and hand-authored expected canonical output for qme.data.alpha_vantage.normalize. Expected values are literal here -- never produced by calling the production normalizer -- so a test comparing against them is an independent check, not a tautology.",
+  "cases": [
+    {
+      "name": "time_series_daily_out_of_order_with_extra_field",
+      "endpoint": "TIME_SERIES_DAILY",
+      "raw": "{\"Meta Data\": {\"1. Information\": \"Daily Prices\", \"2. Symbol\": \"AAPL\", \"3. Last Refreshed\": \"2026-08-14\", \"4. Output Size\": \"Full size\", \"5. Time Zone\": \"US/Eastern\"}, \"Time Series (Daily)\": {\"2026-08-12\": {\"1. open\": \"3.0\", \"2. high\": \"3.5\", \"3. low\": \"2.9\", \"4. close\": \"3.2\", \"5. volume\": \"300\"}, \"2026-08-10\": {\"1. open\": \"1.0\", \"2. high\": \"1.5\", \"3. low\": \"0.9\", \"4. close\": \"1.2\", \"5. volume\": \"100\", \"6. dividend amount\": \"0.0\"}, \"2026-08-11\": {\"1. open\": \"2.0\", \"2. high\": \"2.5\", \"3. low\": \"1.9\", \"4. close\": \"2.2\", \"5. volume\": \"200\"}}}",
+      "expected": {
+        "endpoint": "TIME_SERIES_DAILY",
+        "schema_version": "qme.av_normalize.v2",
+        "canonical_key_field": "date",
+        "provider_symbol": "AAPL",
+        "source_metadata": {
+          "Meta Data": {
+            "1. Information": "Daily Prices",
+            "2. Symbol": "AAPL",
+            "3. Last Refreshed": "2026-08-14",
+            "4. Output Size": "Full size",
+            "5. Time Zone": "US/Eastern"
+          }
+        },
+        "row_count": 3,
+        "rows": [
+          {"date": "2026-08-10", "open": "1.0", "high": "1.5", "low": "0.9", "close": "1.2", "volume": "100", "extra": {"6. dividend amount": "0.0"}},
+          {"date": "2026-08-11", "open": "2.0", "high": "2.5", "low": "1.9", "close": "2.2", "volume": "200"},
+          {"date": "2026-08-12", "open": "3.0", "high": "3.5", "low": "2.9", "close": "3.2", "volume": "300"}
+        ],
+        "notes": ["output_size=Full size"]
+      }
+    },
+    {
+      "name": "dividends_out_of_order_with_null_tokens",
+      "endpoint": "DIVIDENDS",
+      "raw": "{\"symbol\": \"MSFT\", \"data\": [{\"ex_dividend_date\": \"2026-05-15\", \"declaration_date\": \"2026-04-01\", \"record_date\": \"2026-05-18\", \"payment_date\": \"2026-06-12\", \"amount\": \"0.75\"}, {\"ex_dividend_date\": \"2026-02-13\", \"declaration_date\": \"None\", \"record_date\": \"None\", \"payment_date\": \"None\", \"amount\": \"0.68\"}]}",
+      "expected": {
+        "endpoint": "DIVIDENDS",
+        "schema_version": "qme.av_normalize.v2",
+        "canonical_key_field": "complete_normalized_row",
+        "provider_symbol": "MSFT",
+        "source_metadata": {"symbol": "MSFT"},
+        "row_count": 2,
+        "rows": [
+          {"ex_dividend_date": "2026-02-13", "declaration_date": null, "record_date": null, "payment_date": null, "amount": "0.68"},
+          {"ex_dividend_date": "2026-05-15", "declaration_date": "2026-04-01", "record_date": "2026-05-18", "payment_date": "2026-06-12", "amount": "0.75"}
+        ],
+        "notes": []
+      }
+    },
+    {
+      "name": "splits_out_of_order",
+      "endpoint": "SPLITS",
+      "raw": "{\"symbol\": \"NVDA\", \"data\": [{\"effective_date\": \"2024-06-10\", \"split_factor\": \"10.0\"}, {\"effective_date\": \"2021-07-20\", \"split_factor\": \"4.0\"}]}",
+      "expected": {
+        "endpoint": "SPLITS",
+        "schema_version": "qme.av_normalize.v2",
+        "canonical_key_field": "complete_normalized_row",
+        "provider_symbol": "NVDA",
+        "source_metadata": {"symbol": "NVDA"},
+        "row_count": 2,
+        "rows": [
+          {"effective_date": "2021-07-20", "split_factor": "4.0"},
+          {"effective_date": "2024-06-10", "split_factor": "10.0"}
+        ],
+        "notes": []
+      }
+    },
+    {
+      "name": "listing_status_out_of_order_with_null_delisting_date",
+      "endpoint": "LISTING_STATUS",
+      "raw": "symbol,name,exchange,assetType,ipoDate,delistingDate,status\r\nNVDA,NVIDIA Corp,NASDAQ,Stock,1999-01-22,null,Active\r\nAAPL,Apple Inc,NASDAQ,Stock,1980-12-12,null,Active\r\n",
+      "expected": {
+        "endpoint": "LISTING_STATUS",
+        "schema_version": "qme.av_normalize.v2",
+        "canonical_key_field": "symbol",
+        "provider_symbol": null,
+        "source_metadata": {},
+        "row_count": 2,
+        "rows": [
+          {"symbol": "AAPL", "name": "Apple Inc", "exchange": "NASDAQ", "asset_type": "Stock", "ipo_date": "1980-12-12", "delisting_date": null, "status": "Active"},
+          {"symbol": "NVDA", "name": "NVIDIA Corp", "exchange": "NASDAQ", "asset_type": "Stock", "ipo_date": "1999-01-22", "delisting_date": null, "status": "Active"}
+        ],
+        "notes": []
+      }
+    }
+  ]
+}

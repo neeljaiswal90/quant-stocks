@@ -30,20 +30,38 @@ and NEE-123):
 
 from __future__ import annotations
 
+import dis
 import hashlib
+import hmac
+import inspect
 import json
+import math
 import os
 import re
+import secrets
+import sys
 import time
 import urllib.parse
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from dataclasses import dataclass, field, fields, is_dataclass
+from datetime import UTC, date, datetime, tzinfo
 from pathlib import Path
-from typing import Any
+from types import (
+    CodeType,
+    ModuleType,
+)
+from typing import Any, cast
 
 from qme.data.alpha_vantage.plan_v1 import PROVIDER_ID, PROVIDER_VERSION
 from qme.foundation.lineage import canonical_json_bytes
+
+_CLOSED_PROVIDER_AUTHORITY = (PROVIDER_ID, PROVIDER_VERSION)
+_PROVIDER_AUTHORITY_SEAL_KEY = secrets.token_bytes(32)
+_PROVIDER_AUTHORITY_SEAL = hmac.new(
+    _PROVIDER_AUTHORITY_SEAL_KEY,
+    "\x00".join(_CLOSED_PROVIDER_AUTHORITY).encode("utf-8"),
+    hashlib.sha256,
+).hexdigest()
 
 BASE_URL = "https://www.alphavantage.co/query"
 API_KEY_ENV = "ALPHA_VANTAGE_API_KEY"  # pragma: allowlist secret (env var name, not a value)
@@ -51,6 +69,9 @@ DEFAULT_TIMEOUT_SECONDS = 60.0
 DEFAULT_MIN_INTERVAL_SECONDS = 1.0
 DEFAULT_MAX_ATTEMPTS = 4
 _RETRY_BACKOFF_SECONDS = (2.0, 5.0, 12.0)
+
+# Single owner-approved authority for every Alpha Vantage response body path.
+MAX_ALPHA_VANTAGE_RESPONSE_BODY_BYTES = 2_097_152
 
 #: What a redacted credential looks like anywhere it would otherwise be printed.
 REDACTED = "REDACTED"
@@ -60,6 +81,32 @@ REDACTED = "REDACTED"
 CREDENTIAL_PARAM_NAMES: frozenset[str] = frozenset(
     {"apikey", "api_key", "key", "token", "access_token", "secret", "password"}
 )
+
+#: Strict, case-insensitive response metadata allowlist. Unknown headers are
+#: omitted rather than persisted because provider/CDN responses are untrusted.
+RESPONSE_EVIDENCE_HEADER_NAMES: frozenset[str] = frozenset(
+    {
+        "content-type",
+        "content-length",
+        "date",
+        "etag",
+        "last-modified",
+        "retry-after",
+    }
+)
+REVIEWED_MEDIA_TYPES: frozenset[str] = frozenset(
+    {
+        "application/csv",
+        "application/json",
+        "application/octet-stream",
+        "application/x-download",
+        "text/csv",
+        "text/json",
+        "text/plain",
+    }
+)
+_MEDIA_TYPE_RE = re.compile(r"[a-z0-9][a-z0-9!#$&^_.+-]*/[a-z0-9][a-z0-9!#$&^_.+-]*")
+_REPR_ADDRESS_RE = re.compile(r"\bat 0x[0-9A-Fa-f]+\b")
 
 # Response classes returned by classify_body (legacy, kept for stored records).
 CLASS_OK = "OK"
@@ -82,6 +129,7 @@ STATE_TRUNCATED = "NON_DATA_TRUNCATED"
 STATE_EMPTY = "NON_DATA_EMPTY_BODY"
 STATE_HTTP_ERROR = "NON_DATA_HTTP_ERROR"
 STATE_TRANSPORT_FAILURE = "NON_DATA_TRANSPORT_FAILURE"
+STATE_CLOCK_REGRESSION = "CLOCK_REGRESSION"
 
 NON_DATA_STATES: frozenset[str] = frozenset(
     {
@@ -95,6 +143,7 @@ NON_DATA_STATES: frozenset[str] = frozenset(
         STATE_EMPTY,
         STATE_HTTP_ERROR,
         STATE_TRANSPORT_FAILURE,
+        STATE_CLOCK_REGRESSION,
     }
 )
 
@@ -110,12 +159,18 @@ _LEGACY_CLASS_BY_STATE: Mapping[str, str] = {
     STATE_EMPTY: CLASS_MALFORMED,
     STATE_HTTP_ERROR: CLASS_HTTP_ERROR,
     STATE_TRANSPORT_FAILURE: CLASS_HTTP_ERROR,
+    STATE_CLOCK_REGRESSION: CLASS_HTTP_ERROR,
 }
 
 _SOFT_KEYS = {
     "Note": STATE_THROTTLE_NOTE,
     "Information": STATE_INFORMATION,
     "Error Message": STATE_ERROR_MESSAGE,
+}
+_SOFT_DETAILS = {
+    "Note": "PROVIDER_NOTE",
+    "Information": "PROVIDER_INFORMATION",
+    "Error Message": "PROVIDER_ERROR_MESSAGE",
 }
 _CSV_HEADER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_ ]*(,[A-Za-z_][A-Za-z0-9_ ]*)+\r?$")
 
@@ -142,8 +197,30 @@ class AlphaVantageError(ValueError):
     """Raised for client-side misuse or an exhausted retry budget. Never carries the key."""
 
 
+class ProviderAuthorityError(AlphaVantageError):
+    """The import-time registered provider authority no longer validates."""
+
+
+def _validate_closed_provider_authority() -> None:
+    current = (PROVIDER_ID, PROVIDER_VERSION)
+    expected_seal = hmac.new(
+        _PROVIDER_AUTHORITY_SEAL_KEY,
+        "\x00".join(_CLOSED_PROVIDER_AUTHORITY).encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    if (
+        current != _CLOSED_PROVIDER_AUTHORITY
+        or not hmac.compare_digest(expected_seal, _PROVIDER_AUTHORITY_SEAL)
+    ):
+        raise ProviderAuthorityError("registered provider authority changed")
+
+
 class CredentialError(AlphaVantageError):
     """Raised when a credential reference cannot be resolved. Never carries a value."""
+
+
+class ClockRegressionError(AlphaVantageError):
+    """The injected evidence clock moved backwards."""
 
 
 class OfflineClientError(AlphaVantageError):
@@ -154,11 +231,892 @@ class TransportError(OSError):
     """Network-layer failure raised by a transport. Never carries the credential."""
 
 
+class ResponseBodyLimitError(TransportError):
+    """Raised before an over-limit response can become complete evidence."""
+
+
+class ResponseHeaderError(TransportError):
+    """Raised for malformed response framing metadata."""
+
+
+class UndeclaredTransportError(OSError):
+    """An injected transport violated the declared exception contract."""
+
+
 class TransportTimeoutError(TransportError, TimeoutError):
     """A transport timed out. Retryable for declared idempotent reads."""
 
 
-# ---------------------------------------------------------------------------
+class TransportProvenanceError(AlphaVantageError):
+    """The observed final transport destination contradicts the intended request."""
+
+
+class ImplementationIdentityError(AlphaVantageError):
+    """A callable has unsupported, cyclic, or over-broad behavior state."""
+
+
+_IDENTITY_MAX_DEPTH = 128
+_IDENTITY_MAX_ITEMS = 50_000
+_EXECUTION_SEAL_KEY = secrets.token_bytes(32)
+_EXECUTION_MEMO_MISSING = object()
+_EXECUTION_FREEZE_IN_PROGRESS = object()
+
+
+@dataclass
+class _IdentityBudget:
+    items: int = 0
+    seen_callables: set[int] = field(default_factory=set)
+    seen_classes: set[int] = field(default_factory=set)
+    loaded_dependency_depth: int = 0
+
+    def enter(self, depth: int) -> None:
+        if depth > _IDENTITY_MAX_DEPTH:
+            raise ImplementationIdentityError("implementation identity depth limit exceeded")
+        self.items += 1
+        if self.items > _IDENTITY_MAX_ITEMS:
+            raise ImplementationIdentityError("implementation identity item limit exceeded")
+
+
+def _bounded_identity_mapping_items(
+    value: Mapping[object, object],
+    *,
+    budget: _IdentityBudget,
+) -> list[tuple[object, object]]:
+    remaining = _IDENTITY_MAX_ITEMS - budget.items
+    if remaining < 0 or len(value) > remaining:
+        raise ImplementationIdentityError("implementation identity item limit exceeded")
+    environment_data = getattr(os.environ, "_data", None)
+    omit_hash_seed = budget.loaded_dependency_depth > 0 and (
+        value is os.environ or value is environment_data
+    )
+    items: list[tuple[object, object]] = []
+    for item in value.items():
+        key = item[0]
+        if omit_hash_seed and key in {"PYTHONHASHSEED", b"PYTHONHASHSEED"}:
+            # The interpreter's randomized-order test coordinate must not enter
+            # executable identity. All behavior-bearing proxy/environment
+            # values remain bound.
+            continue
+        if len(items) >= remaining:
+            raise ImplementationIdentityError("implementation identity item limit exceeded")
+        items.append(item)
+    return items
+
+
+def _code_constant_material(
+    value: object,
+    *,
+    active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> object:
+    budget.enter(depth)
+    if value is None or value is Ellipsis or isinstance(value, (str, bool, int)):
+        return value
+    if isinstance(value, bytes):
+        return {"bytes_hex": value.hex()}
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ImplementationIdentityError("non-finite code constant")
+        return {"finite_float_hex": value.hex()}
+    if isinstance(value, complex):
+        if not math.isfinite(value.real) or not math.isfinite(value.imag):
+            raise ImplementationIdentityError("non-finite complex code constant")
+        return {"complex_hex": [value.real.hex(), value.imag.hex()]}
+    if isinstance(value, CodeType):
+        return _code_material(value, active=active, budget=budget, depth=depth + 1)
+    if isinstance(value, tuple):
+        identity = id(value)
+        if identity in active:
+            raise ImplementationIdentityError("cyclic code constant")
+        active.add(identity)
+        try:
+            return {
+                "tuple": [
+                    _code_constant_material(
+                        item,
+                        active=active,
+                        budget=budget,
+                        depth=depth + 1,
+                    )
+                    for item in value
+                ]
+            }
+        finally:
+            active.remove(identity)
+    if isinstance(value, frozenset):
+        encoded = [
+            _code_constant_material(
+                item,
+                active=active,
+                budget=budget,
+                depth=depth + 1,
+            )
+            for item in value
+        ]
+        return {
+            "frozenset": sorted(
+                encoded,
+                key=lambda item: json.dumps(
+                    item,
+                    ensure_ascii=False,
+                    allow_nan=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ),
+            )
+        }
+    raise ImplementationIdentityError("unsupported code constant")
+
+
+def _code_material(
+    code: CodeType,
+    *,
+    active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> dict[str, object]:
+    budget.enter(depth)
+    return {
+        "argcount": code.co_argcount,
+        "posonlyargcount": code.co_posonlyargcount,
+        "kwonlyargcount": code.co_kwonlyargcount,
+        "nlocals": code.co_nlocals,
+        "stacksize": code.co_stacksize,
+        "flags": code.co_flags,
+        "bytecode_hex": code.co_code.hex(),
+        "constants": [
+            _code_constant_material(
+                item,
+                active=active,
+                budget=budget,
+                depth=depth + 1,
+            )
+            for item in code.co_consts
+        ],
+        "names": list(code.co_names),
+        "varnames": list(code.co_varnames),
+        "freevars": list(code.co_freevars),
+        "cellvars": list(code.co_cellvars),
+    }
+
+
+def _callable_source_material(target: Callable[..., object] | type[object]) -> dict[str, object]:
+    try:
+        source: str | None = inspect.getsource(target).replace("\r\n", "\n")
+    except (OSError, TypeError):
+        source = None
+    code = getattr(target, "__code__", None)
+    return {
+        "module": getattr(target, "__module__", type(target).__module__),
+        "qualname": getattr(target, "__qualname__", type(target).__qualname__),
+        "source": source,
+        "code": (
+            None
+            if not isinstance(code, CodeType)
+            else _code_material(
+                code,
+                active=set(),
+                budget=_IdentityBudget(),
+                depth=0,
+            )
+        ),
+    }
+
+
+def _loaded_callable_configuration_identity(
+    value: object,
+    *,
+    active: set[int],
+    callable_active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> object:
+    if type(value) is object:
+        return {"opaque_sentinel": "builtins.object"}
+    if isinstance(value, (tuple, list)):
+        return {
+            "sequence": [
+                _loaded_callable_configuration_identity(
+                    item,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+                for item in value
+            ]
+        }
+    if isinstance(value, Mapping):
+        items = _bounded_identity_mapping_items(value, budget=budget)
+        encoded = [
+            [
+                _loaded_callable_configuration_identity(
+                    key,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                ),
+                _loaded_callable_configuration_identity(
+                    item,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                ),
+            ]
+            for key, item in items
+        ]
+        return {
+            "mapping_entries": sorted(
+                encoded,
+                key=lambda pair: json.dumps(
+                    pair[0],
+                    ensure_ascii=False,
+                    allow_nan=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ),
+            )
+        }
+    if isinstance(value, (set, frozenset)):
+        set_encoded: list[object] = [
+            _loaded_callable_configuration_identity(
+                item,
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            )
+            for item in value
+        ]
+        return {
+            "set": sorted(
+                set_encoded,
+                key=lambda item: json.dumps(
+                    item,
+                    ensure_ascii=False,
+                    allow_nan=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ),
+            )
+        }
+    return _identity_value(
+        value,
+        active=active,
+        callable_active=callable_active,
+        budget=budget,
+        depth=depth + 1,
+    )
+
+
+def _class_loaded_member_names(value: type[object]) -> frozenset[str]:
+    names: set[str] = set()
+    for member in vars(value).values():
+        function: object = member
+        if isinstance(member, (staticmethod, classmethod)):
+            function = member.__func__
+        elif isinstance(member, property):
+            for accessor in (member.fget, member.fset, member.fdel):
+                if accessor is not None:
+                    names.update(
+                        str(instruction.argval)
+                        for instruction in dis.get_instructions(accessor)
+                        if instruction.opname in {"LOAD_ATTR", "LOAD_METHOD"}
+                    )
+            continue
+        if inspect.isfunction(function):
+            names.update(
+                str(instruction.argval)
+                for instruction in dis.get_instructions(function)
+                if instruction.opname in {"LOAD_ATTR", "LOAD_METHOD"}
+            )
+    return frozenset(names)
+
+
+def _class_identity_material(
+    value: type[object],
+    *,
+    active: set[int],
+    callable_active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> dict[str, object]:
+    """Bind deterministic class behavior without traversing unrelated modules."""
+
+    budget.enter(depth)
+    identity = id(value)
+    if identity in callable_active or identity in budget.seen_classes:
+        return {"class_reference": _callable_source_material(value)}
+    budget.seen_classes.add(identity)
+    callable_active.add(identity)
+    try:
+        members: dict[str, object] = {}
+        loaded_member_names = _class_loaded_member_names(value)
+        for name, member in sorted(vars(value).items()):
+            budget.enter(depth + 1)
+            if inspect.isfunction(member) or inspect.ismethod(member):
+                members[name] = _callable_identity_material(
+                    cast(Callable[..., object], member),
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+            elif isinstance(member, (staticmethod, classmethod)):
+                members[name] = {
+                    type(member).__name__: _callable_identity_material(
+                        member.__func__,
+                        active=active,
+                        callable_active=callable_active,
+                        budget=budget,
+                        depth=depth + 1,
+                    )
+                }
+            elif isinstance(member, property):
+                members[name] = {
+                    "property": {
+                        label: (
+                            None
+                            if function is None
+                            else _callable_identity_material(
+                                function,
+                                active=active,
+                                callable_active=callable_active,
+                                budget=budget,
+                                depth=depth + 1,
+                            )
+                        )
+                        for label, function in (
+                            ("get", member.fget),
+                            ("set", member.fset),
+                            ("delete", member.fdel),
+                        )
+                    }
+                }
+            elif name.startswith("__"):
+                # Interpreter/dataclass bookkeeping is not a loaded class
+                # dependency. Dunder methods and descriptors were handled above.
+                continue
+            elif member is None or isinstance(
+                member,
+                (
+                    str,
+                    bool,
+                    int,
+                    bytes,
+                    float,
+                    date,
+                    datetime,
+                    tzinfo,
+                    re.Pattern,
+                ),
+            ):
+                members[name] = _identity_value(
+                    member,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+            elif isinstance(member, (tuple, list, set, frozenset, Mapping)):
+                if name not in loaded_member_names:
+                    continue
+                members[name] = _identity_value(
+                    member,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+            else:
+                members[name] = {
+                    "descriptor_type": (
+                        f"{type(member).__module__}.{type(member).__qualname__}"
+                    )
+                }
+        return {
+            "class": _callable_source_material(value),
+            "bases": [f"{base.__module__}.{base.__qualname__}" for base in value.__bases__],
+            "members": members,
+        }
+    finally:
+        callable_active.remove(identity)
+
+
+def _loaded_attribute_identity(
+    value: object,
+    *,
+    active: set[int],
+    callable_active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> object:
+    """Recursively bind the exact loaded dependency graph under one budget."""
+
+    budget.loaded_dependency_depth += 1
+    try:
+        if callable(value):
+            module_root = getattr(value, "__module__", "").partition(".")[0]
+            if budget.loaded_dependency_depth > 2 and module_root in sys.stdlib_module_names:
+                return {"stdlib_dependency": _callable_source_material(value)}
+            return _callable_identity_material(
+                cast(Callable[..., object], value),
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            )
+        return _identity_value(
+            value,
+            active=active,
+            callable_active=callable_active,
+            budget=budget,
+            depth=depth + 1,
+        )
+    finally:
+        budget.loaded_dependency_depth -= 1
+
+
+def _loaded_module_attribute_material(
+    target: Callable[..., object],
+    referenced_globals: Mapping[str, object],
+    *,
+    active: set[int],
+    callable_active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> dict[str, object]:
+    """Bind every loaded module-attribute chain the callable can execute."""
+
+    code = getattr(target, "__code__", None)
+    if not isinstance(code, CodeType):
+        return {}
+    instructions = tuple(dis.get_instructions(code))
+    chains: set[tuple[str, ...]] = set()
+    for index, instruction in enumerate(instructions):
+        if instruction.opname not in {"LOAD_GLOBAL", "LOAD_NAME"}:
+            continue
+        global_name = instruction.argval
+        if not isinstance(global_name, str) or not isinstance(
+            referenced_globals.get(global_name), ModuleType
+        ):
+            continue
+        chain = [global_name]
+        for following in instructions[index + 1 :]:
+            if following.opname not in {"LOAD_ATTR", "LOAD_METHOD"}:
+                break
+            attribute = following.argval
+            if not isinstance(attribute, str):
+                break
+            chain.append(attribute)
+        if len(chain) > 1:
+            chains.add(tuple(chain))
+
+    material: dict[str, object] = {}
+    for observed_chain in sorted(chains):
+        current = referenced_globals[observed_chain[0]]
+        try:
+            for attribute in observed_chain[1:]:
+                current = getattr(current, attribute)
+        except AttributeError as exc:
+            raise ImplementationIdentityError(
+                "loaded module attribute is unavailable"
+            ) from exc
+        material[".".join(observed_chain)] = _loaded_attribute_identity(
+            current,
+            active=active,
+            callable_active=callable_active,
+            budget=budget,
+            depth=depth + 1,
+        )
+    return material
+
+
+def _identity_value(
+    value: object,
+    *,
+    active: set[int],
+    callable_active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> object:
+    budget.enter(depth)
+    if type(value) is object and budget.loaded_dependency_depth:
+        return {"opaque_sentinel": "builtins.object"}
+    if value is None or isinstance(value, (str, bool, int)):
+        return value
+    if isinstance(value, bytes):
+        return {"bytes_sha256": hashlib.sha256(value).hexdigest(), "length": len(value)}
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            if not budget.loaded_dependency_depth:
+                raise ImplementationIdentityError("naive implementation identity datetime")
+            return {"naive_datetime": value.isoformat(timespec="microseconds")}
+        return {"datetime": value.astimezone(UTC).isoformat(timespec="microseconds")}
+    if isinstance(value, date):
+        return {"date": value.isoformat()}
+    if isinstance(value, tzinfo):
+        return {"timezone": str(value)}
+    if isinstance(value, BaseException):
+        return {
+            "exception_class": _callable_source_material(type(value)),
+            "args": _identity_value(
+                value.args,
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            ),
+        }
+    if isinstance(value, Path):
+        return {"path": value.as_posix()}
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            if not budget.loaded_dependency_depth:
+                raise ImplementationIdentityError("non-finite implementation identity value")
+            return {"non_finite_float": repr(value)}
+        return {"finite_float_hex": value.hex()}
+    if isinstance(value, ModuleType):
+        return {"module": value.__name__}
+    if isinstance(value, re.Pattern):
+        pattern: object = value.pattern
+        if isinstance(pattern, bytes):
+            pattern = {
+                "bytes_sha256": hashlib.sha256(pattern).hexdigest(),
+                "length": len(pattern),
+            }
+        return {"regex": pattern, "flags": value.flags}
+    if isinstance(value, type):
+        return _class_identity_material(
+            value,
+            active=active,
+            callable_active=callable_active,
+            budget=budget,
+            depth=depth + 1,
+        )
+    if callable(value):
+        return _callable_identity_material(
+            value,
+            active=active,
+            callable_active=callable_active,
+            budget=budget,
+            depth=depth + 1,
+        )
+    if is_dataclass(value) and not isinstance(value, type):
+        identity = id(value)
+        if identity in active:
+            if budget.loaded_dependency_depth:
+                return {"cycle_reference": f"{type(value).__module__}.{type(value).__qualname__}"}
+            raise ImplementationIdentityError("cyclic implementation identity value")
+        active.add(identity)
+        try:
+            return {
+                "dataclass": f"{type(value).__module__}.{type(value).__qualname__}",
+                "fields": {
+                    item.name: _identity_value(
+                        getattr(value, item.name),
+                        active=active,
+                        callable_active=callable_active,
+                        budget=budget,
+                        depth=depth + 1,
+                    )
+                    for item in fields(value)
+                },
+            }
+        finally:
+            active.remove(identity)
+    if isinstance(value, Mapping):
+        identity = id(value)
+        if identity in active:
+            if budget.loaded_dependency_depth:
+                return {"cycle_reference": f"{type(value).__module__}.{type(value).__qualname__}"}
+            raise ImplementationIdentityError("cyclic implementation identity value")
+        items = _bounded_identity_mapping_items(value, budget=budget)
+        if (
+            any(not isinstance(key, str) for key, _item in items)
+            and not budget.loaded_dependency_depth
+        ):
+            raise ImplementationIdentityError("implementation identity mapping key is not text")
+        active.add(identity)
+        try:
+            if any(not isinstance(key, str) for key, _item in items):
+                encoded_items = [
+                    [
+                        _identity_value(
+                            key,
+                            active=active,
+                            callable_active=callable_active,
+                            budget=budget,
+                            depth=depth + 1,
+                        ),
+                        _identity_value(
+                            item,
+                            active=active,
+                            callable_active=callable_active,
+                            budget=budget,
+                            depth=depth + 1,
+                        ),
+                    ]
+                    for key, item in items
+                ]
+                return {
+                    "mapping_entries": sorted(
+                        encoded_items,
+                        key=lambda pair: json.dumps(
+                            pair[0],
+                            ensure_ascii=False,
+                            allow_nan=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        ),
+                    )
+                }
+            return {
+                "mapping": {
+                    key: _identity_value(
+                        item,
+                        active=active,
+                        callable_active=callable_active,
+                        budget=budget,
+                        depth=depth + 1,
+                    )
+                    for key, item in sorted(items)
+                }
+            }
+        finally:
+            active.remove(identity)
+    if isinstance(value, (tuple, list)):
+        identity = id(value)
+        if identity in active:
+            if budget.loaded_dependency_depth:
+                return {"cycle_reference": f"{type(value).__module__}.{type(value).__qualname__}"}
+            raise ImplementationIdentityError("cyclic implementation identity value")
+        active.add(identity)
+        try:
+            return {
+                "sequence": [
+                    _identity_value(
+                        item,
+                        active=active,
+                        callable_active=callable_active,
+                        budget=budget,
+                        depth=depth + 1,
+                    )
+                    for item in value
+                ]
+            }
+        finally:
+            active.remove(identity)
+    if isinstance(value, (set, frozenset)):
+        identity = id(value)
+        if identity in active:
+            if budget.loaded_dependency_depth:
+                return {"cycle_reference": f"{type(value).__module__}.{type(value).__qualname__}"}
+            raise ImplementationIdentityError("cyclic implementation identity value")
+        active.add(identity)
+        try:
+            encoded = [
+                _identity_value(
+                    item,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+                for item in value
+            ]
+            return {
+                "set": sorted(
+                    encoded,
+                    key=lambda item: json.dumps(
+                        item,
+                        ensure_ascii=False,
+                        allow_nan=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    ),
+                )
+            }
+        finally:
+            active.remove(identity)
+    instance_dictionary = getattr(value, "__dict__", None)
+    if isinstance(instance_dictionary, Mapping):
+        identity = id(value)
+        if identity in active:
+            if budget.loaded_dependency_depth:
+                return {"cycle_reference": f"{type(value).__module__}.{type(value).__qualname__}"}
+            raise ImplementationIdentityError("cyclic implementation identity value")
+        active.add(identity)
+        try:
+            return {
+                "object": f"{type(value).__module__}.{type(value).__qualname__}",
+                "class": _callable_source_material(type(value)),
+                "state": _identity_value(
+                    instance_dictionary,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                ),
+            }
+        finally:
+            active.remove(identity)
+    if budget.loaded_dependency_depth:
+        rendered = repr(value)
+        if _REPR_ADDRESS_RE.search(rendered) is None:
+            return {
+                "loaded_opaque": f"{type(value).__module__}.{type(value).__qualname__}",
+                "representation": rendered,
+            }
+    raise ImplementationIdentityError(
+        "unsupported implementation identity value: "
+        f"{type(value).__module__}.{type(value).__qualname__}"
+    )
+
+
+def _callable_identity_material(
+    function: Callable[..., object],
+    *,
+    active: set[int],
+    callable_active: set[int],
+    budget: _IdentityBudget,
+    depth: int,
+) -> dict[str, object]:
+    budget.enter(depth)
+    if isinstance(function, type):
+        return _class_identity_material(
+            function,
+            active=active,
+            callable_active=callable_active,
+            budget=budget,
+            depth=depth + 1,
+        )
+    target = function.__func__ if inspect.ismethod(function) else (
+        function if inspect.isfunction(function) or inspect.isbuiltin(function)
+        else type(function).__call__
+    )
+    identity = id(target) if inspect.ismethod(function) else id(function)
+    if identity in callable_active or identity in budget.seen_callables:
+        return {"callable_reference": _callable_source_material(target)}
+    budget.seen_callables.add(identity)
+    callable_active.add(identity)
+    try:
+        if inspect.ismethod(function):
+            target = function.__func__
+            bound_self = function.__self__
+            instance_state: object = getattr(bound_self, "__dict__", None)
+        elif inspect.isfunction(function) or inspect.isbuiltin(function):
+            target = function
+            instance_state = None
+        else:
+            target = type(function).__call__
+            identity_state = getattr(function, "__qme_identity_state__", None)
+            if callable(identity_state):
+                instance_state = identity_state()
+                declared_identity_state = _callable_source_material(identity_state)
+            else:
+                instance_state = getattr(function, "__dict__", None)
+                declared_identity_state = None
+        if "declared_identity_state" not in locals():
+            declared_identity_state = None
+        try:
+            closure = inspect.getclosurevars(target)
+            nonlocals = closure.nonlocals
+            referenced_globals = {
+                name: value
+                for name, value in closure.globals.items()
+                if not name.startswith(("@py_", "@pytest_"))
+            }
+        except TypeError:
+            nonlocals = {}
+            referenced_globals = {}
+        return {
+            "callable": _callable_source_material(target),
+            "declared_identity_state": declared_identity_state,
+            "defaults": _loaded_callable_configuration_identity(
+                getattr(target, "__defaults__", None),
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            ),
+            "keyword_defaults": _loaded_callable_configuration_identity(
+                getattr(target, "__kwdefaults__", None),
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            ),
+            "function_state": _identity_value(
+                getattr(target, "__dict__", None) if inspect.isfunction(target) else None,
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            ),
+            "nonlocals": {
+                name: _identity_value(
+                    value,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+                for name, value in sorted(nonlocals.items())
+            },
+            "referenced_globals": {
+                name: _loaded_attribute_identity(
+                    value,
+                    active=active,
+                    callable_active=callable_active,
+                    budget=budget,
+                    depth=depth + 1,
+                )
+                for name, value in sorted(referenced_globals.items())
+            },
+            "loaded_module_attributes": _loaded_module_attribute_material(
+                target,
+                referenced_globals,
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            ),
+            "instance_state": _identity_value(
+                instance_state,
+                active=active,
+                callable_active=callable_active,
+                budget=budget,
+                depth=depth + 1,
+            ),
+        }
+    finally:
+        callable_active.remove(identity)
+
+
+def callable_implementation_identity(
+    function: Callable[..., object],
+) -> tuple[str, str]:
+    """Return cross-process-stable callable/configuration identity and SHA-256."""
+    material = _callable_identity_material(
+        function,
+        active=set(),
+        callable_active=set(),
+        budget=_IdentityBudget(),
+        depth=0,
+    )
+    target = function if inspect.isfunction(function) else type(function).__call__
+    module = getattr(target, "__module__", type(function).__module__)
+    qualname = getattr(target, "__qualname__", type(function).__qualname__)
+    return (
+        f"{module}.{qualname}",
+        hashlib.sha256(canonical_json_bytes(material)).hexdigest(),
+    )
+
+
 # Credential reference (never a value on disk, never a .env read)
 # ---------------------------------------------------------------------------
 
@@ -208,18 +1166,229 @@ def redact_mapping(params: Mapping[str, Any]) -> dict[str, str]:
     }
 
 
-def redact_url(url: str) -> str:
-    """Return ``url`` with any credential-bearing query value replaced."""
-    split = urllib.parse.urlsplit(url)
-    if not split.query:
-        return url
-    pairs = urllib.parse.parse_qsl(split.query, keep_blank_values=True)
-    redacted = [
-        (key, REDACTED if key.lower() in CREDENTIAL_PARAM_NAMES else value) for key, value in pairs
-    ]
-    return urllib.parse.urlunsplit(
-        (split.scheme, split.netloc, split.path, urllib.parse.urlencode(redacted), split.fragment)
+_REDACTION_MAX_PERCENT_PASSES = 3
+_REDACTION_MAX_NESTING = 4
+_REDACTION_MAX_QUERY_CHARS = 65_536
+_REDACTION_MAX_EVIDENCE_CHARS = 65_536
+_CREDENTIAL_ASSIGNMENT_RE = re.compile(
+    r"(?i)(^|[?&#;\s])(" + "|".join(
+        re.escape(name)
+        for name in sorted(CREDENTIAL_PARAM_NAMES, key=lambda item: (-len(item), item))
+    ) + r")=([^&#;\s]*)"
+)
+
+
+def _bounded_unquote(value: str) -> tuple[str, bool]:
+    decoded = value
+    for _ in range(_REDACTION_MAX_PERCENT_PASSES):
+        next_value = urllib.parse.unquote(decoded)
+        if next_value == decoded:
+            return decoded, False
+        decoded = next_value
+    return decoded, "%" in decoded
+
+
+def _evidence_value_contains_encoded_secret(
+    value: str,
+    *,
+    secrets: tuple[str, ...],
+    max_chars: int = _REDACTION_MAX_EVIDENCE_CHARS,
+) -> bool:
+    if len(value) > max_chars:
+        return True
+    frontier = {value}
+    for pass_number in range(_REDACTION_MAX_PERCENT_PASSES + 1):
+        if any(secret and secret in candidate for candidate in frontier for secret in secrets):
+            return True
+        next_frontier = {
+            transformed
+            for candidate in frontier
+            for transformed in (
+                urllib.parse.unquote(candidate),
+                urllib.parse.unquote_plus(candidate),
+            )
+        }
+        if next_frontier == frontier:
+            return False
+        if pass_number == _REDACTION_MAX_PERCENT_PASSES:
+            return True
+        frontier = next_frontier
+    return True
+
+
+def body_contains_credential_material(body: bytes, *, secrets: tuple[str, ...]) -> bool:
+    """Bounded search for an active credential inside an untrusted response body.
+
+    Screens the literal UTF-8 credential and the same bounded repeated
+    percent-encoding already approved for response-header evidence. Work is at
+    most ``_REDACTION_MAX_PERCENT_PASSES + 1`` linear passes over the body, so a
+    hostile body cannot turn this check into the denial of service it prevents.
+    A body still re-decoding after the last pass is treated as bearing
+    credential material, because at that point the check can no longer prove it
+    does not.
+    """
+    active = tuple(secret for secret in secrets if secret)
+    if not active:
+        return False
+    if any(secret.encode("utf-8") in body for secret in active):
+        return True
+    return _evidence_value_contains_encoded_secret(
+        body.decode("utf-8", errors="replace"),
+        secrets=active,
+        max_chars=MAX_ALPHA_VANTAGE_RESPONSE_BODY_BYTES,
     )
+
+
+def _redact_embedded_assignments(value: str) -> str:
+    return _CREDENTIAL_ASSIGNMENT_RE.sub(
+        lambda match: f"{match.group(1)}{match.group(2)}={REDACTED}",
+        value,
+    )
+
+
+def _redact_url_inner(url: str, *, depth: int) -> str:
+    if depth > _REDACTION_MAX_NESTING:
+        return REDACTED
+    decoded_url, over_encoded = _bounded_unquote(url)
+    if over_encoded:
+        return REDACTED
+    split = urllib.parse.urlsplit(decoded_url)
+    if not split.query:
+        return _redact_embedded_assignments(decoded_url)
+    if len(split.query) > _REDACTION_MAX_QUERY_CHARS:
+        return urllib.parse.urlunsplit(
+            (split.scheme, split.netloc, split.path, f"redaction={REDACTED}", "")
+        )
+    redacted_pairs: list[tuple[str, str]] = []
+    for raw_key, raw_value in urllib.parse.parse_qsl(split.query, keep_blank_values=True):
+        key, key_over_encoded = _bounded_unquote(raw_key)
+        if key_over_encoded:
+            redacted_pairs.append(("redaction", REDACTED))
+            continue
+        if "=" in key:
+            embedded_key, _embedded_value = key.split("=", 1)
+            if embedded_key.strip().lower() in CREDENTIAL_PARAM_NAMES:
+                redacted_pairs.append((embedded_key, REDACTED))
+                continue
+        if key.strip().lower() in CREDENTIAL_PARAM_NAMES:
+            redacted_pairs.append((key, REDACTED))
+            continue
+        value, value_over_encoded = _bounded_unquote(raw_value)
+        if value_over_encoded:
+            redacted_pairs.append((key, REDACTED))
+            continue
+        if _CREDENTIAL_ASSIGNMENT_RE.search(value):
+            value = _redact_url_inner(value, depth=depth + 1)
+        redacted_pairs.append((key, _redact_embedded_assignments(value)))
+    return urllib.parse.urlunsplit(
+        (
+            split.scheme,
+            split.netloc,
+            split.path,
+            urllib.parse.urlencode(redacted_pairs),
+            _redact_embedded_assignments(split.fragment),
+        )
+    )
+
+
+def redact_url(url: str) -> str:
+    """Redact direct, encoded, and nested credential-bearing URL material."""
+    return _redact_url_inner(url, depth=0)
+
+
+def normalize_media_type(value: object) -> str:
+    """Return a reviewed lowercase media-type token, never untrusted parameters."""
+    token = str(value).split(";", 1)[0].strip().lower()
+    if _MEDIA_TYPE_RE.fullmatch(token) is None or token not in REVIEWED_MEDIA_TYPES:
+        return ""
+    return token
+
+
+def _transport_implementation_identity(transport: Transport | None) -> tuple[str, str] | None:
+    if transport is None:
+        return None
+    try:
+        return callable_implementation_identity(transport)
+    except (ImplementationIdentityError, RecursionError) as exc:
+        raise ImplementationIdentityError("transport identity is unsupported") from exc
+
+
+def _observed_final_url(
+    final_url: str | None,
+    *,
+    intended_public_url: str,
+    credential_value: str,
+) -> str | None:
+    if final_url is None:
+        return None
+    decoded_final_url, over_encoded = _bounded_unquote(final_url)
+    if over_encoded:
+        raise TransportProvenanceError(
+            "observed final destination exceeds the percent-decoding limit"
+        )
+    try:
+        decoded_destination = urllib.parse.urlsplit(decoded_final_url)
+    except ValueError as exc:
+        raise TransportProvenanceError(
+            "observed final destination is not a valid URL"
+        ) from exc
+    if (
+        decoded_destination.username is not None
+        or decoded_destination.password is not None
+        or "#" in decoded_final_url
+    ):
+        raise TransportProvenanceError(
+            "observed final destination contains forbidden userinfo or fragment material"
+        )
+    if credential_value and credential_value in decoded_final_url:
+        query_values = {
+            key.strip().lower(): value
+            for key, value in urllib.parse.parse_qsl(
+                decoded_destination.query, keep_blank_values=True
+            )
+        }
+        if not any(
+            key in CREDENTIAL_PARAM_NAMES and value == credential_value
+            for key, value in query_values.items()
+        ):
+            raise TransportProvenanceError(
+                "observed final destination contains active credential material"
+            )
+    redacted = redact_url(decoded_final_url)
+    decoded_redacted, redacted_over_encoded = _bounded_unquote(redacted)
+    if (
+        redacted_over_encoded
+        or (credential_value and credential_value in redacted)
+        or (credential_value and credential_value in decoded_redacted)
+    ):
+        raise TransportProvenanceError(
+            "observed final destination contains active credential material"
+        )
+    observed = urllib.parse.urlsplit(redacted)
+    intended = urllib.parse.urlsplit(intended_public_url)
+    if (
+        observed.scheme.lower() != intended.scheme.lower()
+        or observed.hostname != intended.hostname
+        or observed.port != intended.port
+        or observed.path != intended.path
+        or observed.fragment
+    ):
+        raise TransportProvenanceError(
+            "observed final destination contradicts the registered Alpha Vantage origin"
+        )
+    observed_pairs = sorted(
+        (key, value)
+        for key, value in urllib.parse.parse_qsl(observed.query, keep_blank_values=True)
+        if key.strip().lower() not in CREDENTIAL_PARAM_NAMES
+    )
+    intended_pairs = sorted(
+        urllib.parse.parse_qsl(intended.query, keep_blank_values=True)
+    )
+    if observed_pairs != intended_pairs:
+        raise TransportProvenanceError(
+            "observed final destination contradicts the intended request coordinates"
+        )
+    return redacted
 
 
 # ---------------------------------------------------------------------------
@@ -326,8 +1495,38 @@ class TransportResponse:
     declared_length: int | None = None
     final_url: str | None = None
 
-    def redacted_headers(self) -> dict[str, str]:
-        return {str(k): str(v) for k, v in sorted(self.headers.items())}
+    def redacted_headers(self, *, secret_values: Iterable[str] = ()) -> dict[str, str]:
+        secrets = tuple(secret for secret in secret_values if secret)
+        evidence: dict[str, str] = {}
+        missing = object()
+        for name in sorted(RESPONSE_EVIDENCE_HEADER_NAMES):
+            canonical = "-".join(part.capitalize() for part in name.split("-"))
+            if name == "etag":
+                canonical = "ETag"
+            query_names = tuple(dict.fromkeys((name, canonical, name.upper())))
+            values: list[str] = []
+            try:
+                for query_name in query_names:
+                    raw_value = self.headers.get(query_name, missing)
+                    if raw_value is missing:
+                        continue
+                    value = str(raw_value)
+                    if name == "content-type":
+                        value = normalize_media_type(value)
+                        if not value:
+                            continue
+                    elif (
+                        "\r" in value
+                        or "\n" in value
+                        or _evidence_value_contains_encoded_secret(value, secrets=secrets)
+                    ):
+                        value = REDACTED
+                    values.append(value)
+            except Exception as exc:
+                raise AlphaVantageError("REMOTE_EVIDENCE_INVALID") from exc
+            if values:
+                evidence[name] = values[0] if all(value == values[0] for value in values) else REDACTED
+        return dict(sorted(evidence.items()))
 
 
 Transport = Callable[[str, float], TransportResponse | tuple[int, str, bytes]]
@@ -339,9 +1538,20 @@ def normalize_transport_result(
 ) -> TransportResponse:
     """Accept either the rich response or the legacy ``(status, ct, body)`` tuple."""
     if isinstance(result, TransportResponse):
-        return result
-    status, content_type, body = result
-    return TransportResponse(status=int(status), content_type=str(content_type), body=bytes(body))
+        response = result
+    else:
+        status, content_type, body = result
+        response = TransportResponse(
+            status=int(status),
+            content_type=str(content_type),
+            body=bytes(body),
+        )
+    if (
+        response.declared_length is not None
+        and response.declared_length > MAX_ALPHA_VANTAGE_RESPONSE_BODY_BYTES
+    ) or len(response.body) > MAX_ALPHA_VANTAGE_RESPONSE_BODY_BYTES:
+        raise ResponseBodyLimitError("RESPONSE_BODY_LIMIT_EXCEEDED")
+    return response
 
 
 # ---------------------------------------------------------------------------
@@ -378,13 +1588,21 @@ class PayloadState:
 def _classify_json(body: bytes) -> PayloadState:
     try:
         document = json.loads(body.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        return PayloadState(STATE_MALFORMED_JSON, f"body is not valid JSON: {type(exc).__name__}")
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return PayloadState(STATE_MALFORMED_JSON, "MALFORMED_JSON")
+    except RecursionError:
+        # A remote body nested deeply enough to exhaust the C stack is a
+        # malformed payload, not an interpreter failure the caller must handle.
+        # Classification runs before any parser, so letting this escape would
+        # abort acquisition with a raw exception instead of typed evidence.
+        return PayloadState(STATE_MALFORMED_JSON, "MALFORMED_JSON_TOO_DEEP")
+    except MemoryError:
+        return PayloadState(STATE_MALFORMED_JSON, "MALFORMED_JSON_EXHAUSTED_MEMORY")
     if not isinstance(document, dict):
         return PayloadState(STATE_MALFORMED_JSON, "JSON root is not an object")
     for key, state in _SOFT_KEYS.items():
         if key in document:
-            return PayloadState(state, str(document[key])[:500])
+            return PayloadState(state, _SOFT_DETAILS[key])
     if not document:
         return PayloadState(STATE_MALFORMED_JSON, "empty JSON object")
     return PayloadState(STATE_DATA)
@@ -401,7 +1619,7 @@ def _classify_csv(body: bytes) -> PayloadState:
     text = body[:2000].decode("utf-8", errors="replace")
     for key, state in _SOFT_KEYS.items():
         if key in text:
-            return PayloadState(state, text[:500])
+            return PayloadState(state, _SOFT_DETAILS[key])
     return PayloadState(STATE_MALFORMED_CSV, "CSV header does not look like a header row")
 
 
@@ -433,9 +1651,7 @@ def classify_payload(
     elif "csv" in ct or "text/plain" in ct or body[:1].isalpha():
         state = _classify_csv(body)
     else:
-        state = PayloadState(
-            STATE_UNEXPECTED_MEDIA_TYPE, f"unrecognized content type {content_type!r}"
-        )
+        state = PayloadState(STATE_UNEXPECTED_MEDIA_TYPE, "UNREVIEWED_MEDIA_TYPE")
     return PayloadState(state.state, state.detail, http_status=http_status)
 
 
@@ -526,6 +1742,8 @@ class RetryEvent:
     detail: str | None
     backoff_seconds: float
     observed_at: str
+    plan_id: str | None = None
+    plan_evidence_sha256: str | None = None
 
     def to_json_dict(self) -> dict[str, Any]:
         return {
@@ -535,6 +1753,8 @@ class RetryEvent:
             "detail": self.detail,
             "backoff_seconds": self.backoff_seconds,
             "observed_at": self.observed_at,
+            "plan_id": self.plan_id,
+            "plan_evidence_sha256": self.plan_evidence_sha256,
         }
 
 
@@ -577,6 +1797,8 @@ class FetchOutcome:
     canonical_parameters: tuple[tuple[str, str], ...]
     parameters_redacted: Mapping[str, str]
     public_url: str
+    observed_final_url: str | None
+    redaction_secrets: tuple[str, ...] = field(repr=False, compare=False)
     http_status: int | None
     content_type: str
     http_headers: Mapping[str, str]
@@ -612,7 +1834,7 @@ class FetchOutcome:
         return RawResponse(
             function=self.endpoint,
             params_public=dict(self.parameters_redacted),
-            public_url=self.public_url,
+            public_url=self.observed_final_url or self.public_url,
             http_status=self.http_status if self.http_status is not None else 0,
             content_type=self.content_type,
             body=self.body,
@@ -633,6 +1855,7 @@ class FetchOutcome:
             "canonical_parameters": [list(pair) for pair in self.canonical_parameters],
             "parameters_redacted": dict(sorted(self.parameters_redacted.items())),
             "public_url": self.public_url,
+            "observed_final_url": self.observed_final_url,
             "http_status": self.http_status,
             "content_type": self.content_type,
             "http_headers": {str(k): str(v) for k, v in sorted(self.http_headers.items())},
@@ -673,6 +1896,13 @@ class Pacer:
 
 def _now_iso() -> str:
     return datetime.now(UTC).isoformat(timespec="microseconds")
+
+
+def _observed_iso(clock: Callable[[], datetime]) -> str:
+    observed = clock()
+    if observed.tzinfo is None:
+        raise AlphaVantageError("request clock must be timezone-aware")
+    return observed.astimezone(UTC).isoformat(timespec="microseconds")
 
 
 def load_api_key(
@@ -749,6 +1979,12 @@ class AlphaVantageClient:
         self._credential = credential
         self._environ = environ
         self._transport = transport
+        self._transport_instance = transport
+        self._transport_identity = _transport_implementation_identity(transport)
+        self._transport_execution = transport
+        self._transport_execution_seal = self._seal_transport_execution(
+            self._transport_execution
+        )
         self._pacer = pacer or Pacer()
         self._max_attempts = max_attempts
         self._timeout = timeout_seconds
@@ -765,6 +2001,41 @@ class AlphaVantageClient:
     def is_offline(self) -> bool:
         return self._transport is None
 
+    @property
+    def transport_implementation_identity(self) -> str | None:
+        current = self.validate_transport_identity()
+        return None if current is None else current[0]
+
+    @property
+    def transport_implementation_sha256(self) -> str | None:
+        current = self.validate_transport_identity()
+        return None if current is None else current[1]
+
+    def validate_transport_identity(
+        self,
+        transport: Transport | None | object = Ellipsis,
+    ) -> tuple[str, str] | None:
+        """Recompute and compare the exact transport about to execute."""
+        observed = self._transport if transport is Ellipsis else transport
+        if observed is not self._transport_instance or self._transport is not observed:
+            raise TransportProvenanceError("transport identity changed after client construction")
+        try:
+            current = _transport_implementation_identity(observed)
+        except ImplementationIdentityError as exc:
+            raise TransportProvenanceError("transport identity changed or became unsupported") from exc
+        if current != self._transport_identity:
+            raise TransportProvenanceError("transport identity changed after client construction")
+        return current
+
+    def _seal_transport_execution(self, execution: object) -> str:
+        material = canonical_json_bytes(
+            {
+                "execution_object": None if execution is None else id(execution),
+                "transport_identity": self._transport_identity,
+            }
+        )
+        return hmac.new(_EXECUTION_SEAL_KEY, material, hashlib.sha256).hexdigest()
+
     def _credential_value(self) -> str:
         """Resolve the credential for exactly one request. Never cached, never logged."""
         if self._credential is not None:
@@ -773,12 +2044,32 @@ class AlphaVantageClient:
             raise CredentialError("no credential is configured")
         return self._api_key
 
+    def _active_redaction_secrets(self) -> tuple[str, ...]:
+        """Return request-local screening material without persisting or logging it.
+
+        An offline client holds no wire: it never builds a private URL, never
+        sends a credential, and never publishes provider bytes. Resolving a
+        credential *reference* there would create a credential exposure that the
+        work itself does not need, and would make replay impossible on a machine
+        that legitimately holds no credential. So an offline client with a
+        reference screens against nothing. A credential passed directly to the
+        constructor is already resident in this process, so it is still screened.
+        """
+        if self._credential is not None and self.is_offline:
+            return ()
+        return (self._credential_value(),)
+
     # -- URL construction ---------------------------------------------------
 
     @staticmethod
     def public_params(function: str, params: Mapping[str, str]) -> dict[str, str]:
-        if any(str(key).lower() in CREDENTIAL_PARAM_NAMES for key in params):
+        normalized_keys = {str(key).strip().lower() for key in params}
+        if normalized_keys & CREDENTIAL_PARAM_NAMES:
             raise AlphaVantageError("do not pass 'apikey' in params; the client injects it")
+        if "function" in normalized_keys:
+            raise AlphaVantageError(
+                "function parameter is forbidden; the endpoint argument is authoritative"
+            )
         merged = {"function": function, **{k: str(v) for k, v in params.items()}}
         return dict(sorted(merged.items()))
 
@@ -788,19 +2079,43 @@ class AlphaVantageClient:
             AlphaVantageClient.public_params(function, params)
         )
 
-    def _private_url(self, function: str, params: Mapping[str, str]) -> str:
+    def _private_url(
+        self,
+        function: str,
+        params: Mapping[str, str],
+        *,
+        credential_value: str | None = None,
+    ) -> str:
         public = AlphaVantageClient.public_params(function, params)
+        secret = self._credential_value() if credential_value is None else credential_value
         return BASE_URL + "?" + urllib.parse.urlencode(
-            {**public, "apikey": self._credential_value()}
+            {**public, "apikey": secret}
         )
 
     def _send(self, private_url: str) -> TransportResponse:
-        if self._transport is None:
+        transport = self._transport
+        execution = self._transport_execution
+        if transport is None:
             raise OfflineClientError(
                 "this Alpha Vantage client is offline: no transport was injected, so no "
                 "network request can be made (replay from the immutable raw cache instead)"
             )
-        return normalize_transport_result(self._transport(private_url, self._timeout))
+        if execution is None or not hmac.compare_digest(
+            self._transport_execution_seal,
+            self._seal_transport_execution(execution),
+        ):
+            raise TransportProvenanceError(
+                "transport closed execution changed after client construction"
+            )
+        self.validate_transport_identity(transport)
+        try:
+            result = execution(private_url, self._timeout)
+        except (OSError, AlphaVantageError):
+            raise
+        except Exception as exc:
+            raise UndeclaredTransportError("UNDECLARED_TRANSPORT_FAILURE") from exc
+        self.validate_transport_identity(transport)
+        return normalize_transport_result(result)
 
     # -- Legacy request path ------------------------------------------------
 
@@ -814,10 +2129,11 @@ class AlphaVantageClient:
             self._pacer.wait()
             requested_at = _now_iso()
             try:
+                self.validate_transport_identity()
                 private_url = self._private_url(function, params)
                 response = self._send(private_url)
-            except (TimeoutError, OSError) as exc:
-                last_reason = f"transport error: {type(exc).__name__}"
+            except (TimeoutError, OSError):
+                last_reason = "TRANSPORT_EXCEPTION"
                 self._backoff(attempts)
                 continue
             received_at = _now_iso()
@@ -859,6 +2175,9 @@ class AlphaVantageClient:
         *,
         retry_policy: RetryPolicy | None = None,
         before_attempt: Callable[[int], None] | None = None,
+        before_transport: Callable[[int], None] | None = None,
+        clock: Callable[[], datetime] | None = None,
+        require_observed_final_url: bool = False,
     ) -> FetchOutcome:
         """Perform one logical request and return a typed outcome.
 
@@ -866,8 +2185,11 @@ class AlphaVantageClient:
         error, a malformed body, a truncated read, and an exhausted retry budget
         after transport failures all come back as non-data states with a full
         retry log. ``before_attempt`` is called with the 1-based attempt number
-        before each send; the acquisition boundary uses it to spend quota.
+        before pacing/quota work. ``before_transport`` is called after pacing and
+        immediately before credential resolution and transport, so an authority
+        boundary can fail closed without sending.
         """
+        _validate_closed_provider_authority()
         canonical = canonical_endpoint(endpoint)
         params = dict(parameters or {})
         policy = retry_policy or self._retry_policy
@@ -878,19 +2200,53 @@ class AlphaVantageClient:
         redacted = redact_mapping(public)
         retry_log: list[RetryEvent] = []
         attempts = 0
+        observed_clock = clock or (lambda: datetime.now(UTC))
 
         while True:
             attempts += 1
             if before_attempt is not None:
                 before_attempt(attempts)
             self._pacer.wait()
-            requested_at = _now_iso()
+            if before_transport is not None:
+                before_transport(attempts)
+            self.validate_transport_identity()
+            requested_at = _observed_iso(observed_clock)
             try:
-                private_url = self._private_url(canonical, params)
+                credential_value = self._credential_value()
+                private_url = self._private_url(
+                    canonical, params, credential_value=credential_value
+                )
                 response = self._send(private_url)
+            except ResponseBodyLimitError:
+                received_at = _observed_iso(observed_clock)
+                detail = "RESPONSE_BODY_LIMIT_EXCEEDED"
+                state = PayloadState(STATE_TRANSPORT_FAILURE, detail)
+                return self._outcome(
+                    canonical,
+                    key,
+                    canonical_params,
+                    redacted,
+                    public_url,
+                    None,
+                    (credential_value,),
+                    None,
+                    "",
+                    {},
+                    b"",
+                    requested_at,
+                    received_at,
+                    attempts,
+                    state,
+                    tuple(retry_log),
+                    detail,
+                )
             except (TimeoutError, OSError) as exc:
-                received_at = _now_iso()
-                detail = f"transport error: {type(exc).__name__}"
+                received_at = _observed_iso(observed_clock)
+                detail = (
+                    "UNDECLARED_TRANSPORT_FAILURE"
+                    if isinstance(exc, UndeclaredTransportError)
+                    else "TRANSPORT_EXCEPTION"
+                )
                 state = PayloadState(STATE_TRANSPORT_FAILURE, detail)
                 if policy.may_retry(canonical, state.state, None, attempts):
                     backoff = policy.backoff_for(attempts)
@@ -901,12 +2257,46 @@ class AlphaVantageClient:
                     continue
                 return self._outcome(
                     canonical, key, canonical_params, redacted, public_url,
-                    None, "", {}, b"", requested_at, received_at, attempts, state,
+                    None, (credential_value,), None, "", {}, b"", requested_at,
+                    received_at, attempts, state,
                     tuple(retry_log), detail,
                 )
-            received_at = _now_iso()
+            try:
+                received_at = _observed_iso(observed_clock)
+            except ClockRegressionError:
+                state = PayloadState(STATE_CLOCK_REGRESSION, STATE_CLOCK_REGRESSION)
+                content_type = normalize_media_type(response.content_type)
+                return self._outcome(
+                    canonical,
+                    key,
+                    canonical_params,
+                    redacted,
+                    public_url,
+                    None,
+                    (credential_value,),
+                    response.status,
+                    content_type,
+                    response.redacted_headers(secret_values=(credential_value,)),
+                    response.body,
+                    requested_at,
+                    STATE_CLOCK_REGRESSION,
+                    attempts,
+                    state,
+                    tuple(retry_log),
+                    None,
+                )
+            observed_final_url = _observed_final_url(
+                response.final_url,
+                intended_public_url=public_url,
+                credential_value=credential_value,
+            )
+            if require_observed_final_url and observed_final_url is None:
+                raise TransportProvenanceError(
+                    "observed final destination is required for registered ingestion"
+                )
+            content_type = normalize_media_type(response.content_type)
             state = classify_payload(
-                response.content_type,
+                content_type,
                 response.body,
                 http_status=response.status,
                 declared_length=response.declared_length,
@@ -922,7 +2312,11 @@ class AlphaVantageClient:
                 continue
             return self._outcome(
                 canonical, key, canonical_params, redacted, public_url,
-                response.status, response.content_type, response.redacted_headers(),
+                observed_final_url,
+                (credential_value,),
+                response.status,
+                content_type,
+                response.redacted_headers(secret_values=(credential_value,)),
                 response.body, requested_at, received_at, attempts, state,
                 tuple(retry_log), None,
             )
@@ -934,6 +2328,8 @@ class AlphaVantageClient:
         canonical_params: tuple[tuple[str, str], ...],
         redacted: Mapping[str, str],
         public_url: str,
+        observed_final_url: str | None,
+        redaction_secrets: tuple[str, ...],
         http_status: int | None,
         content_type: str,
         headers: Mapping[str, str],
@@ -945,6 +2341,7 @@ class AlphaVantageClient:
         retry_log: tuple[RetryEvent, ...],
         transport_failure: str | None,
     ) -> FetchOutcome:
+        _validate_closed_provider_authority()
         return FetchOutcome(
             endpoint=endpoint,
             request_key=key,
@@ -954,6 +2351,8 @@ class AlphaVantageClient:
             canonical_parameters=canonical_params,
             parameters_redacted=dict(redacted),
             public_url=public_url,
+            observed_final_url=observed_final_url,
+            redaction_secrets=redaction_secrets,
             http_status=http_status,
             content_type=content_type,
             http_headers=dict(headers),
