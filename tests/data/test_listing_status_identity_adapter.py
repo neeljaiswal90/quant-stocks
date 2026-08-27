@@ -23,6 +23,7 @@ from qme.data.universe.av_proxy_snapshot import AvProxySnapshotError, ListingRow
 from qme.data.universe.listing_status_identity_adapter_v1 import (
     ADAPTER_VERSION,
     ListingStatusIdentityAdapterError,
+    SourcedCikMapping,
     identity_table_from_listing_status,
     identity_table_from_stored_listing_status,
     listing_facts_from_rows,
@@ -360,3 +361,67 @@ def test_tampered_stored_listing_body_fails_closed(tmp_path: Path) -> None:
             active_pull_id=active_id,
             delisted_pull_id=delisted_id,
         )
+
+
+def _cik(
+    *,
+    ticker: str = "AAPL",
+    exchange: str = "NASDAQ",
+    cik: str = "320193",
+    start: str = "1980-12-12",
+    end: str | None = None,
+    source_id: str = "EDGAR:SUBMISSIONS",
+    evidence_ref: str = "EDGAR:CIK:0000320193",
+) -> SourcedCikMapping:
+    return SourcedCikMapping(
+        ticker=ticker,
+        exchange=exchange,
+        cik=cik,
+        interval=DateInterval(start, end),
+        source_id=source_id,
+        evidence_ref=evidence_ref,
+    )
+
+
+def test_sourced_cik_is_attached_to_the_matching_listing() -> None:
+    table = identity_table_from_listing_status(
+        active_rows=[_row()],
+        delisted_rows=(),
+        active_pull_id="pull-active",
+        delisted_pull_id="pull-delisted",
+        cik_mappings=(_cik(),),
+    )
+
+    resolved = require_resolved(table.resolve("AAPL", "NASDAQ", "2026-07-31"))
+    assert resolved.cik == "0000320193"
+    assert any(row.cik == "0000320193" for row in table.cik_mappings)
+
+
+def test_sourced_cik_without_a_listing_fails_closed() -> None:
+    with pytest.raises(ListingStatusIdentityAdapterError, match="CIK_MAPPING_MISSING_LISTING"):
+        identity_table_from_listing_status(
+            active_rows=[_row()],
+            delisted_rows=(),
+            active_pull_id="pull-active",
+            delisted_pull_id="pull-delisted",
+            cik_mappings=(_cik(ticker="MSFT"),),
+        )
+
+
+def test_conflicting_sourced_ciks_make_identity_ambiguous() -> None:
+    table = identity_table_from_listing_status(
+        active_rows=[_row()],
+        delisted_rows=(),
+        active_pull_id="pull-active",
+        delisted_pull_id="pull-delisted",
+        cik_mappings=(
+            _cik(cik="320193", evidence_ref="EDGAR:CIK:0000320193"),
+            _cik(
+                cik="0000000001",
+                source_id="EDGAR:SUBMISSIONS:ALT",
+                evidence_ref="EDGAR:CIK:0000000001",
+            ),
+        ),
+    )
+
+    assert isinstance(table.resolve("AAPL", "NASDAQ", "2026-07-31"), Ambiguous)
