@@ -108,6 +108,12 @@ from qme.data.coverage.delisting_v1 import (
     DEFAULT_BENCHMARK_TREATMENT,
     DELISTING_EVENT_TYPES,
     DELISTING_FAIL_CLOSED_STATES,
+    EVENT_BANKRUPTCY,
+    EVENT_CASH_MERGER,
+    EVENT_COMPLIANCE_DELISTING,
+    EVENT_LIQUIDATION,
+    EVENT_STOCK_MERGER,
+    EVENT_VOLUNTARY_DELISTING,
     MARK_TREATMENT_APPLICABILITY,
     MARK_TREATMENT_CARRY_FORWARD,
     MARK_TREATMENT_EXPLICIT_WRITE_OFF,
@@ -115,6 +121,7 @@ from qme.data.coverage.delisting_v1 import (
     NON_CLAIMS,
     OUTCOME_STATE_RESULT_LABELS,
     OUTCOME_STATES,
+    REASON_UNKNOWN_ADVERSE_OUTCOME,
     REGISTERED_BENCHMARK_TREATMENT_DECISIONS,
     REGISTERED_DELISTING_TIMING_RULES,
     REGISTERED_FALLBACK_HAIRCUTS,
@@ -124,6 +131,7 @@ from qme.data.coverage.delisting_v1 import (
     RESULT_LABEL_FALLBACK_SCENARIO,
     RESULT_LABEL_OBSERVED,
     RESULT_LABEL_UNRESOLVED,
+    SOURCE_KIND_OWNER_DECISION_RECORD,
     SOURCE_KIND_TEST_CONSTRUCTED,
     TERMINAL_EXIT_EVENT_TYPES,
     BenchmarkTreatmentDecision,
@@ -145,6 +153,7 @@ from qme.data.coverage.delisting_v1 import (
     attribute_pnl_by_outcome_type,
     build_delisting_table,
     build_fallback_scenario,
+    exact,
     exact_pair,
     opaque_security_id,
     render_ratio,
@@ -680,43 +689,121 @@ def test_a_poisoned_threshold_registry_is_never_softened_into_unregistered(
     assert caught.value.state != BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD
 
 
-@pytest.mark.parametrize(
-    ("registry", "validator", "state"),
-    [
-        (
-            REGISTERED_COVERAGE_THRESHOLDS,
-            validate_threshold_registry,
-            BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD,
-        ),
-        (
-            REGISTERED_DELISTING_TIMING_RULES,
-            validate_timing_rule_registry,
-            BLOCKED_UNREGISTERED_TIMING_RULE,
-        ),
-        (
-            REGISTERED_FALLBACK_HAIRCUTS,
-            validate_haircut_registry,
-            BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT,
-        ),
-        (
-            REGISTERED_SENSITIVITY_RANGES,
-            validate_sensitivity_range_registry,
-            BLOCKED_UNREGISTERED_SENSITIVITY_RANGE,
-        ),
-    ],
-)
-def test_every_owner_gated_registry_ships_empty_and_fails_closed(
-    registry: tuple[Any, ...], validator: Any, state: str
-) -> None:
-    assert registry == ()
-    with pytest.raises(Exception) as caught:
-        validator()
-    assert getattr(caught.value, "state", None) == state
+def test_the_timing_registry_remains_empty_and_fails_closed() -> None:
+    """PR #67 cannot yet represent sourced effective/payment coordinates.
+
+    Registering LAST_TRADE_DATE + 0 or +1 session would invent settlement timing
+    and potentially introduce look-ahead. Keep the registry empty until the
+    timing contract is repaired.
+    """
+    assert REGISTERED_DELISTING_TIMING_RULES == ()
+    with pytest.raises(DelistingPolicyError) as caught:
+        validate_timing_rule_registry()
+    assert caught.value.state == BLOCKED_UNREGISTERED_TIMING_RULE
 
 
 def test_the_two_optional_registries_also_ship_empty() -> None:
     assert REGISTERED_BENCHMARK_TREATMENT_DECISIONS == ()
     assert REGISTERED_MISSING_MARK_POLICIES == ()
+
+
+def test_owner_registered_coverage_thresholds_are_one_hundred_percent() -> None:
+    configurable = tuple(
+        name for name in COVERAGE_CLASSES if name != COVERAGE_CLASS_HELD_POSITION_MARKS_EXITS
+    )
+    assert len(configurable) == 7
+    validate_threshold_registry()
+    assert len(REGISTERED_COVERAGE_THRESHOLDS) == 7
+    assert {item.coverage_class for item in REGISTERED_COVERAGE_THRESHOLDS} == set(configurable)
+    for threshold in REGISTERED_COVERAGE_THRESHOLDS:
+        assert threshold.threshold_kind == THRESHOLD_KIND_MINIMUM_COVERAGE
+        assert threshold.minimum_fraction == "1"
+        assert threshold.minimum_count is None
+        assert threshold.source_kind == SOURCE_KIND_OWNER_DECISION_RECORD
+        assert threshold.coverage_class != COVERAGE_CLASS_HELD_POSITION_MARKS_EXITS
+        assert THRESHOLD_KIND_MINIMUM_BREADTH not in {threshold.threshold_kind}
+        resolved = resolve_coverage_threshold(threshold.coverage_class, as_of="2024-04-01")
+        assert resolved.threshold_id == threshold.threshold_id
+
+
+def test_one_hundred_fifty_breadth_stays_in_the_quantitative_contract_not_nee128() -> None:
+    """NEE-128 LISTINGS items are (security_id, session) pairs, not distinct names.
+
+    A raw minimum_count of 150 would not prove rank-eligible breadth at a
+    selection date. That mandate already lives in the quantitative contract.
+    """
+    assert all(item.minimum_count is None for item in REGISTERED_COVERAGE_THRESHOLDS)
+    assert all(item.threshold_kind != THRESHOLD_KIND_MINIMUM_BREADTH for item in REGISTERED_COVERAGE_THRESHOLDS)
+    contract = json.loads(
+        (ROOT / "configs" / "quant" / "qme-v0.1-contract-v2.json").read_text("utf-8")
+    )
+    breadth = contract["selection"]["minimum_rank_eligible_breadth"]
+    assert breadth["value"] == 150
+    assert breadth["status"] == "REGISTERED_OWNER_MANDATE"
+    assert set(breadth["sensitivity_range"]) == {125, 150, 200}
+
+
+def test_owner_registered_unknown_adverse_fallbacks() -> None:
+    validate_haircut_registry()
+    validate_sensitivity_range_registry()
+    expected_ids = (
+        "UNKNOWN_ADVERSE_FULL_LOSS",
+        "UNKNOWN_ADVERSE_BASE",
+        "UNKNOWN_ADVERSE_NYSE_AMEX",
+        "UNKNOWN_ADVERSE_SHUMWAY",
+    )
+    recoveries = {
+        "UNKNOWN_ADVERSE_FULL_LOSS": "0",
+        "UNKNOWN_ADVERSE_BASE": "0.45",
+        "UNKNOWN_ADVERSE_NYSE_AMEX": "0.65",
+        "UNKNOWN_ADVERSE_SHUMWAY": "0.70",
+    }
+    applies_to_events = {
+        EVENT_BANKRUPTCY,
+        EVENT_LIQUIDATION,
+        EVENT_COMPLIANCE_DELISTING,
+        EVENT_VOLUNTARY_DELISTING,
+    }
+    assert len(REGISTERED_FALLBACK_HAIRCUTS) == 4
+    assert tuple(item.haircut_id for item in REGISTERED_FALLBACK_HAIRCUTS) == expected_ids
+    assert tuple(item.scenario_id for item in REGISTERED_FALLBACK_HAIRCUTS) == expected_ids
+    for haircut in REGISTERED_FALLBACK_HAIRCUTS:
+        assert haircut.recovery_fraction == recoveries[haircut.haircut_id]
+        assert set(haircut.applies_to_event_types) == applies_to_events
+        assert haircut.applies_to_reasons == (REASON_UNKNOWN_ADVERSE_OUTCOME,)
+        assert haircut.source_kind == SOURCE_KIND_OWNER_DECISION_RECORD
+        resolved = resolve_haircut(
+            haircut.haircut_id,
+            event_type=EVENT_BANKRUPTCY,
+            reason=REASON_UNKNOWN_ADVERSE_OUTCOME,
+            as_of="2024-04-01",
+        )
+        assert resolved.haircut_id == haircut.haircut_id
+    assert len(REGISTERED_SENSITIVITY_RANGES) == 1
+    rng = REGISTERED_SENSITIVITY_RANGES[0]
+    assert rng.low_recovery_fraction == "0"
+    assert rng.high_recovery_fraction == "0.70"
+    assert tuple(rng.haircut_ids) == expected_ids
+    assert tuple(rng.scenario_ids) == expected_ids
+    assert rng.source_kind == SOURCE_KIND_OWNER_DECISION_RECORD
+    for haircut in REGISTERED_FALLBACK_HAIRCUTS:
+        assert rng.covers(
+            haircut_id=haircut.haircut_id,
+            scenario_id=haircut.scenario_id,
+            recovery=exact(haircut.recovery_fraction, what="recovery_fraction"),
+        )
+
+
+def test_shipped_unknown_adverse_haircuts_do_not_cover_merger_events() -> None:
+    for event_type in (EVENT_CASH_MERGER, EVENT_STOCK_MERGER):
+        with pytest.raises(DelistingPolicyError) as caught:
+            resolve_haircut(
+                "UNKNOWN_ADVERSE_BASE",
+                event_type=event_type,
+                reason=REASON_UNKNOWN_ADVERSE_OUTCOME,
+                as_of="2024-04-01",
+            )
+        assert caught.value.state == BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT
 
 
 def test_no_shipped_registry_may_carry_a_test_constructed_record() -> None:
@@ -734,33 +821,30 @@ def test_no_shipped_registry_may_carry_a_test_constructed_record() -> None:
     validate_threshold_registry(_probe_thresholds())
 
 
-def test_with_the_shipped_registries_no_run_can_be_gated_valid(
-    report: CoverageAuditReport, clean_report: CoverageAuditReport
+def test_an_unaudited_held_position_still_prevents_gate_valid(
+    report: CoverageAuditReport,
 ) -> None:
     assert report.gate.status != GATE_VALID
-    assert clean_report.gate.status != GATE_VALID
     assert not report.is_valid
-    assert not clean_report.is_valid
-    for candidate in (report, clean_report):
-        with pytest.raises(CoverageAuditError) as caught:
-            require_valid_gate(candidate.gate)
-        assert caught.value.state == BLOCKED_GATE_NOT_VALID
+    with pytest.raises(CoverageAuditError) as caught:
+        require_valid_gate(report.gate)
+    assert caught.value.state == BLOCKED_GATE_NOT_VALID
 
 
-def test_a_run_with_nothing_missing_is_still_blocked_on_the_threshold_registry(
+def test_a_fully_covered_run_is_gated_valid_once_thresholds_are_registered(
     clean_report: CoverageAuditReport,
 ) -> None:
     expected = VECTORS["clean_run"]["expected_gate"]
     for name, want in VECTORS["clean_run"]["expected_coverage_exact"].items():
         assert clean_report.coverage.class_coverage(name) == Fraction(want)
     assert clean_report.gate.status == expected["status"]
-    assert clean_report.gate.status == BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD
-    assert list(clean_report.gate.unregistered_threshold_classes) == expected[
-        "unregistered_threshold_classes"
-    ]
+    assert clean_report.gate.status == GATE_VALID
+    assert clean_report.is_valid
+    assert list(clean_report.gate.unregistered_threshold_classes) == []
     assert COVERAGE_CLASS_HELD_POSITION_MARKS_EXITS not in (
         clean_report.gate.unregistered_threshold_classes
     )
+    require_valid_gate(clean_report.gate)
 
 
 # ---------------------------------------------------------------------------
@@ -1492,6 +1576,35 @@ def test_an_unknown_adverse_outcome_cannot_be_evaluated_without_a_preregistered_
             "hc-bankruptcy-recovery-a",
             event_type="BANKRUPTCY",
             reason="UNKNOWN_ADVERSE_OUTCOME",
+            as_of=VECTORS["as_of"],
+        )
+
+
+def test_the_shipped_unknown_adverse_base_evaluates_as_a_fallback_scenario() -> None:
+    event = _event("evt-bankruptcy")
+    assert isinstance(event.outcome, UnknownAdverseOutcome)
+    result = build_fallback_scenario(
+        event,
+        event.outcome,
+        held_notional="40000",
+        haircut_id="UNKNOWN_ADVERSE_BASE",
+        sensitivity_range_id=REGISTERED_SENSITIVITY_RANGES[0].range_id,
+        as_of=VECTORS["as_of"],
+    )
+    assert result.result_label == RESULT_LABEL_FALLBACK_SCENARIO
+    assert result.recovery_fraction == exact("0.45", what="recovery_fraction")
+    assert result.scenario_return == exact("0.45", what="recovery_fraction") - 1
+    assert "observed" not in result.to_json_dict()
+    for event_type in (
+        EVENT_BANKRUPTCY,
+        EVENT_LIQUIDATION,
+        EVENT_COMPLIANCE_DELISTING,
+        EVENT_VOLUNTARY_DELISTING,
+    ):
+        resolve_haircut(
+            "UNKNOWN_ADVERSE_BASE",
+            event_type=event_type,
+            reason=REASON_UNKNOWN_ADVERSE_OUTCOME,
             as_of=VECTORS["as_of"],
         )
 
@@ -2383,7 +2496,6 @@ def test_the_owner_registration_list_is_complete_and_matches_the_doc() -> None:
         for state in item["typed_state_until_registered"].split(" / "):
             assert state in doc, state
         assert item["record_type"] in doc, item["record_type"]
-    # Every registry named in the list actually exists and actually ships empty.
     namespaces = {
         "qme.data.coverage.audit_v1": {
             "REGISTERED_COVERAGE_THRESHOLDS": REGISTERED_COVERAGE_THRESHOLDS
@@ -2398,12 +2510,24 @@ def test_the_owner_registration_list_is_complete_and_matches_the_doc() -> None:
     }
     for item in registrations:
         module, name = item["registry"].rsplit(".", 1)
-        assert namespaces[module][name] == ()
+        registry = namespaces[module][name]
+        if item["registered"]:
+            assert registry != ()
+            assert len(registry) >= item["count_required"]
+        else:
+            assert registry == ()
 
 
 def test_the_fixture_claims_match_the_module_non_claims() -> None:
     assert VECTORS["claims"] == dict(NON_CLAIMS)
-    assert all(value is False for value in NON_CLAIMS.values())
+    assert NON_CLAIMS["coverage_thresholds_registered"] is True
+    assert NON_CLAIMS["fallback_haircuts_registered"] is True
+    assert NON_CLAIMS["sensitivity_ranges_registered"] is True
+    assert NON_CLAIMS["coverage_verdict_producible"] is True
+    assert NON_CLAIMS["delisting_timing_rule_registered"] is False
+    assert NON_CLAIMS["benchmark_treatment_change_registered"] is False
+    assert NON_CLAIMS["missing_mark_policy_registered"] is False
+    assert NON_CLAIMS["production_ready"] is False
 
 
 def test_the_terminal_exit_vocabulary_is_the_one_that_can_invalidate_a_run(

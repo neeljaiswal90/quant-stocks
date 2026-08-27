@@ -42,22 +42,23 @@ A **pooled headline percentage is structurally impossible**, not merely absent:
   ``BLOCKED_EMPTY_COVERAGE_DENOMINATOR`` rather than reporting ``0/0`` as ``1``,
   so "nothing was required" never reads as "everything is covered".
 
-The one fixed threshold, and the empty registry behind every other
-------------------------------------------------------------------
+The one fixed threshold, and the seven registered 100% minima
+-------------------------------------------------------------
 
 :data:`HELD_POSITION_COVERAGE_REQUIREMENT` is ``Fraction(1)``. The ticket fixes
 it, so it is hard-wired here and cannot be registered away:
 :func:`validate_threshold_registry` refuses any record naming the held-position
 class with ``BLOCKED_HELD_POSITION_THRESHOLD_IS_FIXED``.
 
-Every other minimum coverage or breadth threshold comes from
-:data:`REGISTERED_COVERAGE_THRESHOLDS`, which is ``()``. With the shipped
-registry :func:`evaluate_gate` therefore reports
-``BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD`` and **no run can be gated VALID** --
-the machinery is complete and tested and refuses to produce a verdict until an
-owner record exists, exactly as
-:data:`qme.data.stores.riskfree_v1.REGISTERED_SOURCES` and
-:data:`qme.data.alpha_vantage.plan_v1.REGISTERED_PLANS` do for their values.
+The other seven classes carry owner-registered ``MINIMUM_COVERAGE`` records at
+``minimum_fraction="1"`` in :data:`REGISTERED_COVERAGE_THRESHOLDS`. There is no
+defensible universal missing-data percentage independent of the missingness
+mechanism, so a sub-100% validity threshold would be invented. The 150-security
+rank-eligible breadth mandate stays in the quantitative contract; it is not
+duplicated here as a raw item count, because a LISTINGS item is a
+``(security_id, session)`` pair and a count aggregated across sessions would not
+prove breadth at any individual rebalance. The timing registry remains empty, so
+a sourced cash/stock exit still leaves its held position unaudited.
 
 Run invalidity is checked *before* the registry
 -----------------------------------------------
@@ -83,8 +84,9 @@ reading, not an accident.
 Non-claims
 ----------
 
-* Synthetic only. This module acquires nothing, registers nothing, and clears no
-  freeze blocker.
+* Synthetic only. Coverage minima and unknown-adverse fallbacks are
+  owner-registered; the timing registry is not. This module acquires no
+  empirical delisting evidence and clears no freeze blocker.
 * It imports no transport, no vendor client, and no raw-pull store; identifiers
   are opaque and validated for shape only.
 """
@@ -117,6 +119,7 @@ from qme.data.coverage.delisting_v1 import (
     REGISTERED_MISSING_MARK_POLICIES,
     REGISTERED_SENSITIVITY_RANGES,
     REGISTERED_SOURCE_KINDS,
+    SOURCE_KIND_OWNER_DECISION_RECORD,
     SOURCE_KINDS,
     BenchmarkTreatmentDecision,
     CoverageError,
@@ -194,6 +197,12 @@ COVERAGE_CLASSES: Final = (
     COVERAGE_CLASS_ANCHORS,
     COVERAGE_CLASS_HELD_POSITION_MARKS_EXITS,
     COVERAGE_CLASS_BENCHMARKS,
+)
+
+#: The seven classes that take an owner-registered coverage minimum. The
+#: held-position class is deliberately absent: its requirement is hard-wired.
+CONFIGURABLE_COVERAGE_CLASSES: Final = tuple(
+    name for name in COVERAGE_CLASSES if name != COVERAGE_CLASS_HELD_POSITION_MARKS_EXITS
 )
 
 SUBJECT_KIND_SECURITY: Final = "SECURITY_ID"
@@ -444,7 +453,7 @@ class CoverageAuditError(CoverageError):
 
 
 # ---------------------------------------------------------------------------
-# Registry: minimum coverage / breadth thresholds (EMPTY)
+# Registry: minimum coverage thresholds (owner-registered 100% minima)
 # ---------------------------------------------------------------------------
 
 
@@ -555,15 +564,47 @@ class CoverageThreshold:
         }
 
 
-#: Every minimum coverage / breadth threshold this repository has evidence for.
+#: Owner-registered 100% coverage minima for the seven configurable classes.
 #:
-#: EMPTY BY DESIGN. Choosing a minimum coverage or breadth is an owner decision
-#: that has not been made, so :func:`resolve_coverage_threshold` fails closed with
-#: ``BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD`` and no run can be gated ``VALID``.
-#: The held-position class is deliberately absent and may never appear here: the
-#: ticket fixes its requirement at 1 and
+#: Held-position coverage stays hard-wired at 1 and must not appear here:
 #: :func:`validate_threshold_registry` refuses a record that tries to restate it.
-REGISTERED_COVERAGE_THRESHOLDS: Final[tuple[CoverageThreshold, ...]] = ()
+#: Rank-eligible breadth of 150 remains in the quantitative contract; it is not
+#: duplicated as a NEE-128 ``minimum_count``, because LISTINGS items are
+#: ``(security_id, session)`` pairs and a count aggregated across sessions would
+#: not prove breadth at any individual selection date.
+OWNER_COVERAGE_THRESHOLD_EFFECTIVE_DATE: Final = "2010-01-01"
+OWNER_COVERAGE_THRESHOLD_SOURCE: Final = (
+    "NEE-128 owner disposition 2026-08-27: 100% coverage for all seven "
+    "configurable classes. There is no defensible universal missing-data "
+    "percentage independent of the missingness mechanism (Cochrane Handbook "
+    "v6.0; Shumway 1997 doi:10.1111/j.1540-6261.1997.tb03818.x). A sub-100% "
+    "validity threshold would be invented while the gate has no proof that "
+    "omitted names cannot change ranks, holdings, or conclusions. Alpha "
+    "Vantage LISTING_STATUS is lifecycle evidence only."
+)
+OWNER_COVERAGE_THRESHOLD_SOURCE_REFERENCE: Final = (
+    "https://linear.app/neel-jaiswal/issue/NEE-128/"
+    "implement-coverage-audit-and-source-aware-delisting-policy"
+)
+
+
+def _owner_minimum_coverage_threshold(coverage_class: str) -> CoverageThreshold:
+    return CoverageThreshold(
+        threshold_id=f"cov-{coverage_class.lower()}-minimum-v1",
+        threshold_kind=THRESHOLD_KIND_MINIMUM_COVERAGE,
+        coverage_class=coverage_class,
+        minimum_fraction="1",
+        minimum_count=None,
+        source_kind=SOURCE_KIND_OWNER_DECISION_RECORD,
+        source=OWNER_COVERAGE_THRESHOLD_SOURCE,
+        source_reference=OWNER_COVERAGE_THRESHOLD_SOURCE_REFERENCE,
+        effective_date=OWNER_COVERAGE_THRESHOLD_EFFECTIVE_DATE,
+    )
+
+
+REGISTERED_COVERAGE_THRESHOLDS: Final[tuple[CoverageThreshold, ...]] = tuple(
+    _owner_minimum_coverage_threshold(name) for name in CONFIGURABLE_COVERAGE_CLASSES
+)
 
 
 def validate_threshold_registry(
@@ -1130,7 +1171,7 @@ def evaluate_gate(
     2. held-position coverage below the hard-wired ``1`` ->
        ``RUN_INVALID_INCOMPLETE_HELD_POSITION_COVERAGE``;
     3. any of the other seven classes without a registered threshold ->
-       ``BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD`` (the shipped case);
+       ``BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD``;
     4. any class below its registered threshold -> ``RUN_INVALID_COVERAGE_BELOW_THRESHOLD``;
     5. otherwise ``GATE_VALID``.
 
@@ -1815,6 +1856,7 @@ __all__ = [
     "COVERAGE_CLASS_LISTINGS",
     "COVERAGE_CLASS_PRICES",
     "COVERAGE_CLASS_SUBJECT_KINDS",
+    "CONFIGURABLE_COVERAGE_CLASSES",
     "COVERAGE_FAIL_CLOSED_STATES",
     "GATE_STATUSES",
     "GATE_VALID",

@@ -28,10 +28,12 @@ The three rules, and how each is made structural
 
 2. **Unknown adverse outcomes may be evaluated ONLY with preregistered
    sensitivity haircuts.** :data:`REGISTERED_FALLBACK_HAIRCUTS` and
-   :data:`REGISTERED_SENSITIVITY_RANGES` are both ``()``, so
-   :func:`build_fallback_scenario` raises
-   ``BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT`` (and then
-   ``BLOCKED_UNREGISTERED_SENSITIVITY_RANGE``) before any arithmetic runs.
+   :data:`REGISTERED_SENSITIVITY_RANGES` carry the owner-registered unknown-
+   adverse recovery scenarios. The primary fallback is 45% recovery
+   (``UNKNOWN_ADVERSE_BASE``, a −55% scenario return). Every such result remains
+   labelled ``FALLBACK_SCENARIO``; it is never an observed return. Sourced cash,
+   stock, liquidation-distribution, or worthless outcomes must use their sourced
+   values instead.
 
 3. **A haircut result can never be labelled or serialized as an observed
    delisting return.** This is a type wall, not a naming convention; see below.
@@ -491,14 +493,16 @@ OUTCOME_STATE_RESULT_LABELS: Final[Mapping[str, str]] = {
 }
 
 #: Downstream claims this prebuild has not earned. Written to every artifact.
+#: Coverage minima and unknown-adverse fallbacks are owner-registered; the
+#: timing rule is not, so sourced cash/stock exits still cannot be settled.
 NON_CLAIMS: Final[Mapping[str, bool]] = {
-    "coverage_thresholds_registered": False,
+    "coverage_thresholds_registered": True,
     "delisting_timing_rule_registered": False,
-    "fallback_haircuts_registered": False,
-    "sensitivity_ranges_registered": False,
+    "fallback_haircuts_registered": True,
+    "sensitivity_ranges_registered": True,
     "benchmark_treatment_change_registered": False,
     "missing_mark_policy_registered": False,
-    "coverage_verdict_producible": False,
+    "coverage_verdict_producible": True,
     "empirical_delisting_outcomes_acquired": False,
     "security_identity_join_applied": False,
     "independent_review_recorded": False,
@@ -963,7 +967,7 @@ def resolve_timing_rule(
 
 
 # ---------------------------------------------------------------------------
-# Registry: preregistered fallback haircuts (EMPTY)
+# Registry: preregistered fallback haircuts
 # ---------------------------------------------------------------------------
 
 
@@ -1052,9 +1056,64 @@ class FallbackHaircut:
         }
 
 
-#: EMPTY BY DESIGN -- no fallback haircut value has an owner record, so no
-#: unknown adverse outcome can be evaluated today.
-REGISTERED_FALLBACK_HAIRCUTS: Final[tuple[FallbackHaircut, ...]] = ()
+#: Owner-registered unknown-adverse recovery scenarios. Each is a
+#: ``FALLBACK_SCENARIO``, never an observed return. Applicability is limited to
+#: bankruptcy, liquidation, compliance delisting, and voluntary delisting whose
+#: reason is ``UNKNOWN_ADVERSE_OUTCOME``. Known cash, stock, liquidation-
+#: distribution, or worthless outcomes must use their sourced values instead.
+SCENARIO_UNKNOWN_ADVERSE_FULL_LOSS: Final = "UNKNOWN_ADVERSE_FULL_LOSS"
+SCENARIO_UNKNOWN_ADVERSE_BASE: Final = "UNKNOWN_ADVERSE_BASE"
+SCENARIO_UNKNOWN_ADVERSE_NYSE_AMEX: Final = "UNKNOWN_ADVERSE_NYSE_AMEX"
+SCENARIO_UNKNOWN_ADVERSE_SHUMWAY: Final = "UNKNOWN_ADVERSE_SHUMWAY"
+UNKNOWN_ADVERSE_SCENARIO_IDS: Final = (
+    SCENARIO_UNKNOWN_ADVERSE_FULL_LOSS,
+    SCENARIO_UNKNOWN_ADVERSE_BASE,
+    SCENARIO_UNKNOWN_ADVERSE_NYSE_AMEX,
+    SCENARIO_UNKNOWN_ADVERSE_SHUMWAY,
+)
+UNKNOWN_ADVERSE_HAIRCUT_EVENT_TYPES: Final = (
+    EVENT_BANKRUPTCY,
+    EVENT_LIQUIDATION,
+    EVENT_COMPLIANCE_DELISTING,
+    EVENT_VOLUNTARY_DELISTING,
+)
+OWNER_UNKNOWN_ADVERSE_EFFECTIVE_DATE: Final = "2010-01-01"
+OWNER_UNKNOWN_ADVERSE_SOURCE: Final = (
+    "NEE-128 owner disposition 2026-08-27: conservative primary recovery 0.45 "
+    "(scenario return -55%) for UNKNOWN_ADVERSE_OUTCOME when venue-specific "
+    "evidence is absent. Shumway (1997) established the commonly used -30% "
+    "correction; Shumway and Warther estimated approximately -55% for "
+    "performance-related Nasdaq delistings; later research commonly uses "
+    "approximately -35% for NYSE/AMEX and -55% for Nasdaq "
+    "(Beaver, McNichols and Price). CRSP assigns -100% only where evidence "
+    "establishes worthlessness. Sensitivity range is [0, 0.70]."
+)
+OWNER_UNKNOWN_ADVERSE_SOURCE_REFERENCE: Final = (
+    "https://linear.app/neel-jaiswal/issue/NEE-128/"
+    "implement-coverage-audit-and-source-aware-delisting-policy"
+)
+
+
+def _unknown_adverse_haircut(scenario_id: str, recovery_fraction: str) -> FallbackHaircut:
+    return FallbackHaircut(
+        haircut_id=scenario_id,
+        scenario_id=scenario_id,
+        recovery_fraction=recovery_fraction,
+        applies_to_event_types=UNKNOWN_ADVERSE_HAIRCUT_EVENT_TYPES,
+        applies_to_reasons=(REASON_UNKNOWN_ADVERSE_OUTCOME,),
+        source_kind=SOURCE_KIND_OWNER_DECISION_RECORD,
+        source=OWNER_UNKNOWN_ADVERSE_SOURCE,
+        source_reference=OWNER_UNKNOWN_ADVERSE_SOURCE_REFERENCE,
+        effective_date=OWNER_UNKNOWN_ADVERSE_EFFECTIVE_DATE,
+    )
+
+
+REGISTERED_FALLBACK_HAIRCUTS: Final[tuple[FallbackHaircut, ...]] = (
+    _unknown_adverse_haircut(SCENARIO_UNKNOWN_ADVERSE_FULL_LOSS, "0"),
+    _unknown_adverse_haircut(SCENARIO_UNKNOWN_ADVERSE_BASE, "0.45"),
+    _unknown_adverse_haircut(SCENARIO_UNKNOWN_ADVERSE_NYSE_AMEX, "0.65"),
+    _unknown_adverse_haircut(SCENARIO_UNKNOWN_ADVERSE_SHUMWAY, "0.70"),
+)
 
 
 def validate_haircut_registry(
@@ -1116,7 +1175,7 @@ def resolve_haircut(
 
 
 # ---------------------------------------------------------------------------
-# Registry: preregistered sensitivity ranges (EMPTY)
+# Registry: preregistered sensitivity ranges
 # ---------------------------------------------------------------------------
 
 
@@ -1125,7 +1184,8 @@ class SensitivityRange:
     """The registered range a fallback sensitivity sweep may explore.
 
     A haircut says what one scenario assumes; a range says which scenarios the
-    owner authorised. Both are owner-gated, and both ship empty.
+    owner authorised. The unknown-adverse recovery range is owner-registered;
+    the timing registry is not.
     """
 
     range_id: str
@@ -1204,8 +1264,22 @@ class SensitivityRange:
         }
 
 
-#: EMPTY BY DESIGN -- no sensitivity range has an owner record.
-REGISTERED_SENSITIVITY_RANGES: Final[tuple[SensitivityRange, ...]] = ()
+#: Owner-registered recovery sensitivity range ``[0, 0.70]`` covering the four
+#: unknown-adverse scenarios. The timing registry remains empty.
+SENSITIVITY_RANGE_UNKNOWN_ADVERSE_RECOVERY: Final = "UNKNOWN_ADVERSE_RECOVERY_RANGE_V1"
+REGISTERED_SENSITIVITY_RANGES: Final[tuple[SensitivityRange, ...]] = (
+    SensitivityRange(
+        range_id=SENSITIVITY_RANGE_UNKNOWN_ADVERSE_RECOVERY,
+        haircut_ids=UNKNOWN_ADVERSE_SCENARIO_IDS,
+        scenario_ids=UNKNOWN_ADVERSE_SCENARIO_IDS,
+        low_recovery_fraction="0",
+        high_recovery_fraction="0.70",
+        source_kind=SOURCE_KIND_OWNER_DECISION_RECORD,
+        source=OWNER_UNKNOWN_ADVERSE_SOURCE,
+        source_reference=OWNER_UNKNOWN_ADVERSE_SOURCE_REFERENCE,
+        effective_date=OWNER_UNKNOWN_ADVERSE_EFFECTIVE_DATE,
+    ),
+)
 
 
 def validate_sensitivity_range_registry(
@@ -2308,8 +2382,8 @@ def build_fallback_scenario(
 
     Its ``outcome`` parameter is typed :class:`UnknownAdverseOutcome`, so a
     sourced outcome cannot reach it under a static type check. The haircut and
-    the sensitivity range are both resolved before any arithmetic; with the
-    shipped empty registries this raises ``BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT``.
+    the sensitivity range are both resolved before any arithmetic. An unknown
+    haircut id still fails closed with ``BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT``.
     """
     if type(outcome) is not UnknownAdverseOutcome:
         raise DelistingPolicyError(

@@ -1,7 +1,11 @@
 # NEE-128 — Coverage audit and source-aware delisting policy V1 (M1 prebuild)
 
 Status: T2 engineering output on the QME canonical data spine. Synthetic only.
-Registers nothing, acquires nothing, clears no freeze blocker.
+Owner-registered 2026-08-27: seven coverage minima at 1 and unknown-adverse
+fallback recoveries in `[0, 0.70]` with primary 0.45. Timing is not registered.
+Acquires no empirical delisting evidence and clears no freeze blocker. NEE-128
+and M1 remain open pending the timing-contract repair and measured evidence that
+the registered coverage gates pass on real data.
 
 New files, and nothing else:
 
@@ -25,24 +29,37 @@ asserts against the parsed AST rather than against a comment.
 
 ---
 
-## 1. The headline: the engine is complete and refuses to answer
+## 1. The headline: coverage minima are registered; timing is not
 
-Everything the ticket puts behind an owner record ships as an **empty
-fail-closed registry**, following the two precedents in this repository —
-`qme/data/alpha_vantage/plan_v1.py` `REGISTERED_PLANS` and
-`qme/data/stores/riskfree_v1.py` `REGISTERED_SOURCES`. The machinery is written,
-typed, and tested; it produces a typed refusal instead of a number until an owner
-record exists.
-
-There is exactly one exception, and the ticket names it: **held-position
-valuation/exit coverage must be complete**. That value is hard-wired at
+Held-position valuation/exit coverage remains hard-wired at
 `HELD_POSITION_COVERAGE_REQUIREMENT = Fraction(1)` and cannot be registered away
 — `validate_threshold_registry` refuses any record naming the held-position class
 with `BLOCKED_HELD_POSITION_THRESHOLD_IS_FIXED`.
 
-Consequence, stated plainly: **with the shipped registries no run can be gated
-`GATE_VALID`.** Even the fixture's `clean_run`, which has nothing missing in any
-of the eight classes, returns `BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD`.
+The other seven classes now carry owner-registered `MINIMUM_COVERAGE` records at
+`minimum_fraction = "1"`. There is no defensible universal missing-data
+percentage independent of the missingness mechanism (Cochrane Handbook v6.0;
+Shumway 1997), so a sub-100% validity threshold would be invented. The
+150-security rank-eligible breadth mandate, with reporting sensitivities
+`{125, 150, 200}`, stays in `configs/quant/qme-v0.1-contract-v2.json`. It is not
+duplicated as a NEE-128 `minimum_count`: a LISTINGS item is a
+`(security_id, session)` pair, and a count aggregated across sessions would not
+prove breadth at any individual rebalance.
+
+Unknown-adverse fallbacks are owner-registered. The primary recovery is `0.45`
+(`UNKNOWN_ADVERSE_BASE`, a −55% scenario return). The authorised sensitivity
+range is `[0, 0.70]`. Every fallback remains labelled `FALLBACK_SCENARIO`.
+
+The timing registry is still empty. `DelistingEvent` has no separate effective or
+payment-date field, every non-`LAST_TRADE_DATE` anchor collapses to
+`event.valuation_date`, and `coordinate_ordering` is checked only as a
+permutation. Registering `LAST_TRADE_DATE + 0` or `+1` session would invent
+settlement timing and potentially introduce look-ahead. Sourced cash/stock exits
+therefore still fail `BLOCKED_UNREGISTERED_TIMING_RULE` and leave held positions
+unaudited.
+
+Benchmark treatment stays `UNCHANGED` (no change record). There is still no
+missing-mark substitution or carry-forward policy.
 
 ---
 
@@ -554,19 +571,22 @@ case.
 
 ---
 
-## 10. What the owner must register before any coverage verdict exists
+## 10. Owner registrations (2026-08-27 disposition)
 
-This is the complete list. Until items 1–3 exist, no run can be gated `VALID`
-and no sourced exit or fallback number can be produced.
+Approved now: seven coverage minima at `1`; unknown-adverse recoveries with
+primary `0.45` and range `[0, 0.70]`; benchmark treatment `UNCHANGED`; no
+missing-mark policy. **Not approved:** the timing record. NEE-128 remains open
+until the timing contract represents sourced effective/payment coordinates and
+there is measured evidence that the registered coverage gates pass on real data.
 
-| # | Registry | Record | Required | Typed state until registered | What it blocks |
-| --- | --- | --- | --- | --- | --- |
-| 1 | `REGISTERED_COVERAGE_THRESHOLDS` (`audit_v1`) | `CoverageThreshold` | 7 — one per class for `LISTINGS`, `IDENTITY`, `CLASSIFICATION`, `PRICES`, `ACTIONS`, `ANCHORS`, `BENCHMARKS` | `BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD` | any coverage verdict at all |
-| 2 | `REGISTERED_DELISTING_TIMING_RULES` (`delisting_v1`) | `DelistingTimingRule` | 1 | `BLOCKED_UNREGISTERED_TIMING_RULE` | settling any sourced cash/stock exit, so every held position carrying one stays unaudited and invalidates its run |
-| 3 | `REGISTERED_FALLBACK_HAIRCUTS` (`delisting_v1`) | `FallbackHaircut` | ≥1 | `BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT` | evaluating any unknown adverse outcome |
-| 4 | `REGISTERED_SENSITIVITY_RANGES` (`delisting_v1`) | `SensitivityRange` | ≥1 | `BLOCKED_UNREGISTERED_SENSITIVITY_RANGE` | a fallback sweep even when a haircut exists |
-| 5 | `REGISTERED_BENCHMARK_TREATMENT_DECISIONS` (`delisting_v1`) | `BenchmarkTreatmentDecision` | 0 (only if a treatment other than `UNCHANGED` is ever wanted) | `BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE` | nothing today |
-| 6 | `REGISTERED_MISSING_MARK_POLICIES` (`delisting_v1`) | `MissingMarkPolicy` | 0 (only if a missing or stale mark should ever be substituted) | `BLOCKED_MISSING_MARK_NO_POLICY` / `BLOCKED_STALE_MARK_NO_CARRY_FORWARD_POLICY` | nothing today |
+| # | Registry | Record | Required | Status | Typed state until registered | What it blocks |
+| --- | --- | --- | ---: | --- | --- | --- |
+| 1 | `REGISTERED_COVERAGE_THRESHOLDS` (`audit_v1`) | `CoverageThreshold` | 7 — one per class for `LISTINGS`, `IDENTITY`, `CLASSIFICATION`, `PRICES`, `ACTIONS`, `ANCHORS`, `BENCHMARKS` | Registered 2026-08-27 at `minimum_fraction="1"` | `BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD` | any coverage verdict at all |
+| 2 | `REGISTERED_DELISTING_TIMING_RULES` (`delisting_v1`) | `DelistingTimingRule` | 1 | **Empty.** Do not register until effective/payment coordinates exist. | `BLOCKED_UNREGISTERED_TIMING_RULE` | settling any sourced cash/stock exit, so every held position carrying one stays unaudited and invalidates its run |
+| 3 | `REGISTERED_FALLBACK_HAIRCUTS` (`delisting_v1`) | `FallbackHaircut` | 4 | Registered: `UNKNOWN_ADVERSE_FULL_LOSS` `0`, `UNKNOWN_ADVERSE_BASE` `0.45`, `UNKNOWN_ADVERSE_NYSE_AMEX` `0.65`, `UNKNOWN_ADVERSE_SHUMWAY` `0.70` | `BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT` | evaluating any unknown adverse outcome |
+| 4 | `REGISTERED_SENSITIVITY_RANGES` (`delisting_v1`) | `SensitivityRange` | 1 | Registered: `[0, 0.70]` covering those four ids | `BLOCKED_UNREGISTERED_SENSITIVITY_RANGE` | a fallback sweep even when a haircut exists |
+| 5 | `REGISTERED_BENCHMARK_TREATMENT_DECISIONS` (`delisting_v1`) | `BenchmarkTreatmentDecision` | 0 (only if a treatment other than `UNCHANGED` is ever wanted) | Empty by design; default `UNCHANGED` | `BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE` | nothing today |
+| 6 | `REGISTERED_MISSING_MARK_POLICIES` (`delisting_v1`) | `MissingMarkPolicy` | 0 (only if a missing or stale mark should ever be substituted) | Empty by design; no substitution or carry-forward | `BLOCKED_MISSING_MARK_NO_POLICY` / `BLOCKED_STALE_MARK_NO_CARRY_FORWARD_POLICY` | nothing today |
 
 A registration under item 6 has a real effect: `EXPLICIT_WRITE_OFF` substitutes
 an authorised zero and `CARRY_FORWARD_LAST_MARK` carries the earlier mark within
@@ -646,13 +666,13 @@ against this section.
 Written into every emitted artifact as `claims`:
 
 ```
-coverage_thresholds_registered            false
+coverage_thresholds_registered            true
 delisting_timing_rule_registered          false
-fallback_haircuts_registered              false
-sensitivity_ranges_registered             false
+fallback_haircuts_registered              true
+sensitivity_ranges_registered             true
 benchmark_treatment_change_registered     false
 missing_mark_policy_registered            false
-coverage_verdict_producible               false
+coverage_verdict_producible               true
 empirical_delisting_outcomes_acquired     false
 security_identity_join_applied            false
 independent_review_recorded               false
@@ -660,10 +680,11 @@ freeze_blocker_changed                    false
 production_ready                          false
 ```
 
-This slice acquires no delisting evidence, registers no owner value, applies no
-identity join, records no independent review, and moves no freeze blocker. It is
-engineering output under the M1–M3 T2 stream; results become governed only at
-promotion.
+Coverage minima and unknown-adverse fallbacks are owner-registered. The timing
+rule is not, so sourced cash/stock exits still cannot be settled. This slice
+acquires no empirical delisting evidence, applies no identity join, records no
+independent review, and moves no freeze blocker. It is engineering output under
+the M1–M3 T2 stream; results become governed only at promotion.
 
 ---
 

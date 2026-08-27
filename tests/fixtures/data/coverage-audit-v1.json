@@ -303,10 +303,10 @@
     "delisting_row_count": 6,
     "fallback_result_count": 0,
     "attribution_row_count": 6,
-    "report_sha256_grouped": "4c472218:4c8a62ca:8bbeed18:835411a7:28ffb7a0:c3b3fcb9:1cb62318:5070a4c0"
+    "report_sha256_grouped": "2adda99b:26bb04c4:fd8f658e:67f9f282:2cccb411:f115921c:2d8afeb8:f8f71d72"
   },
   "clean_run": {
-    "note": "A run with nothing missing at all. It still cannot be gated valid, because no owner-registered minimum coverage or breadth threshold exists for the other seven classes. This is the fixture that proves the empty registry blocks a verdict rather than merely a value.",
+    "note": "A run with nothing missing in any of the eight classes. Coverage minima are owner-registered at 1, so this synthetic run is GATE_VALID. Timing remains unregistered, so a sourced cash/stock exit would still leave held positions unaudited.",
     "audit_id": "nee128-coverage-audit-fixture-clean",
     "required_items": [
       {"coverage_class": "LISTINGS", "subject_label": "survivor", "session": "2024-03-14", "state": "ITEM_VALID"},
@@ -326,15 +326,13 @@
       "ACTIONS": "1", "ANCHORS": "1", "HELD_POSITION_MARKS_EXITS": "1", "BENCHMARKS": "1"
     },
     "expected_gate": {
-      "status": "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
-      "is_valid": false,
+      "status": "GATE_VALID",
+      "is_valid": true,
       "held_position_requirement_exact": "1/1",
       "held_position_coverage_exact": "1/1",
-      "unregistered_threshold_classes": [
-        "LISTINGS", "IDENTITY", "CLASSIFICATION", "PRICES", "ACTIONS", "ANCHORS", "BENCHMARKS"
-      ]
+      "unregistered_threshold_classes": []
     },
-    "report_sha256_grouped": "00290ca0:6d7183e7:17c4b564:00e7c69c:1d5d293d:f90efdb5:95041457:b502becc"
+    "report_sha256_grouped": "dda31fe7:ee95817b:a7ae77c7:2aa2d62c:3480891d:7108198b:e763696f:b43e3629"
   },
   "registered_probe": {
     "note": "Test-only records passed through the `rules=` / `haircuts=` / `ranges=` / `thresholds=` parameters under the TEST_CONSTRUCTED source kind, which every validate_*_registry forbids in a shipped registry. They exist to prove the machinery is complete, not to register anything.",
@@ -459,6 +457,7 @@
       "registry": "qme.data.coverage.audit_v1.REGISTERED_COVERAGE_THRESHOLDS",
       "record_type": "CoverageThreshold",
       "count_required": 7,
+      "registered": true,
       "subject": "a minimum coverage (and, where wanted, minimum breadth) threshold for each of LISTINGS, IDENTITY, CLASSIFICATION, PRICES, ACTIONS, ANCHORS, BENCHMARKS",
       "typed_state_until_registered": "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
       "blocks": "any coverage verdict at all; the gate cannot return GATE_VALID",
@@ -469,6 +468,7 @@
       "registry": "qme.data.coverage.delisting_v1.REGISTERED_DELISTING_TIMING_RULES",
       "record_type": "DelistingTimingRule",
       "count_required": 1,
+      "registered": false,
       "subject": "the frozen delisting timing rule: which coordinate a sourced exit is valued from, the signed session offset, and the frozen ordering of ex-date / last-trade-date / valuation-date",
       "typed_state_until_registered": "BLOCKED_UNREGISTERED_TIMING_RULE",
       "blocks": "settling any sourced cash or stock delisting outcome, so every held position carrying such an exit stays unaudited and invalidates its run",
@@ -477,7 +477,8 @@
     {
       "registry": "qme.data.coverage.delisting_v1.REGISTERED_FALLBACK_HAIRCUTS",
       "record_type": "FallbackHaircut",
-      "count_required": 1,
+      "count_required": 4,
+      "registered": true,
       "subject": "the preregistered sensitivity haircut(s): the assumed recovery fraction for an unknown adverse outcome, and which event types and reasons it covers",
       "typed_state_until_registered": "BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT",
       "blocks": "evaluating any unknown adverse outcome at all; no fallback-scenario number can be produced",
@@ -487,6 +488,7 @@
       "registry": "qme.data.coverage.delisting_v1.REGISTERED_SENSITIVITY_RANGES",
       "record_type": "SensitivityRange",
       "count_required": 1,
+      "registered": true,
       "subject": "the sensitivity range(s): which haircuts and scenario ids a sweep may explore, and the recovery bounds it may not leave",
       "typed_state_until_registered": "BLOCKED_UNREGISTERED_SENSITIVITY_RANGE",
       "blocks": "a fallback sensitivity sweep even when a haircut exists",
@@ -496,6 +498,7 @@
       "registry": "qme.data.coverage.delisting_v1.REGISTERED_BENCHMARK_TREATMENT_DECISIONS",
       "record_type": "BenchmarkTreatmentDecision",
       "count_required": 0,
+      "registered": false,
       "subject": "an explicit owner decision authorising a benchmark treatment other than UNCHANGED",
       "typed_state_until_registered": "BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE",
       "blocks": "nothing today: the default UNCHANGED needs no record. Only required if a run should ever remove or replace a benchmark constituent at an exit.",
@@ -505,6 +508,7 @@
       "registry": "qme.data.coverage.delisting_v1.REGISTERED_MISSING_MARK_POLICIES",
       "record_type": "MissingMarkPolicy",
       "count_required": 0,
+      "registered": false,
       "subject": "an explicit owner policy for a missing or stale held-position mark (carry forward with a bounded horizon, zero return, or explicit write-off)",
       "typed_state_until_registered": "BLOCKED_MISSING_MARK_NO_POLICY / BLOCKED_STALE_MARK_NO_CARRY_FORWARD_POLICY",
       "blocks": "nothing today: without a policy a missing mark is simply a non-valid coverage item. Only required if a run should ever substitute a value for a missing or stale mark.",
@@ -512,13 +516,13 @@
     }
   ],
   "claims": {
-    "coverage_thresholds_registered": false,
+    "coverage_thresholds_registered": true,
     "delisting_timing_rule_registered": false,
-    "fallback_haircuts_registered": false,
-    "sensitivity_ranges_registered": false,
+    "fallback_haircuts_registered": true,
+    "sensitivity_ranges_registered": true,
     "benchmark_treatment_change_registered": false,
     "missing_mark_policy_registered": false,
-    "coverage_verdict_producible": false,
+    "coverage_verdict_producible": true,
     "empirical_delisting_outcomes_acquired": false,
     "security_identity_join_applied": false,
     "independent_review_recorded": false,
