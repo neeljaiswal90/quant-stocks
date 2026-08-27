@@ -766,6 +766,24 @@ def _load_pull(
     return record, body
 
 
+def load_verified_listing_rows(
+    store: RawPullStore,
+    *,
+    pull_id: str,
+    expect_state: str,
+    signal_session_date: str,
+) -> tuple[RawPullRecord, tuple[ListingRow, ...]]:
+    """Return one hash-verified LISTING_STATUS pull and its parsed rows."""
+
+    record, body = _load_pull(
+        store,
+        pull_id=pull_id,
+        expect_state=expect_state,
+        signal_session_date=signal_session_date,
+    )
+    return record, parse_listing_status_csv(body, listing_state=expect_state)
+
+
 # ---------------------------------------------------------------------------
 # Snapshot
 # ---------------------------------------------------------------------------
