@@ -997,6 +997,37 @@ def _close_windows_handle(handle: int) -> None:
     close_handle(handle)
 
 
+_POSIX_MANIFEST_DIR_FD_PRIMITIVES: tuple[Callable[..., Any], ...] = (
+    os.open,
+    os.mkdir,
+    os.unlink,
+    os.link,
+)
+_POSIX_MANIFEST_LINK_PRIMITIVE: Callable[..., Any] = os.link
+
+
+def _posix_manifest_storage_supported(
+    *,
+    platform_name: str,
+    o_directory: object,
+    o_nofollow: object,
+    supports_dir_fd: Collection[Callable[..., Any]],
+    supports_follow_symlinks: Collection[Callable[..., Any]],
+) -> bool:
+    """Check platform primitives without depending on instrumented call sites."""
+
+    return (
+        platform_name != "nt"
+        and isinstance(o_directory, int)
+        and isinstance(o_nofollow, int)
+        and all(
+            function in supports_dir_fd
+            for function in _POSIX_MANIFEST_DIR_FD_PRIMITIVES
+        )
+        and _POSIX_MANIFEST_LINK_PRIMITIVE in supports_follow_symlinks
+    )
+
+
 def _write_manifest_new_posix(
     *,
     root: Path,
@@ -1014,15 +1045,16 @@ def _write_manifest_new_posix(
     )
     o_directory = getattr(os, "O_DIRECTORY", None)
     o_nofollow = getattr(os, "O_NOFOLLOW", None)
-    required_dir_fd = (os.open, os.mkdir, os.unlink, os.link)
-    if (
-        os.name == "nt"
-        or not isinstance(o_directory, int)
-        or not isinstance(o_nofollow, int)
-        or any(function not in supports_dir_fd for function in required_dir_fd)
-        or os.link not in supports_follow_symlinks
+    if not _posix_manifest_storage_supported(
+        platform_name=os.name,
+        o_directory=o_directory,
+        o_nofollow=o_nofollow,
+        supports_dir_fd=supports_dir_fd,
+        supports_follow_symlinks=supports_follow_symlinks,
     ):
         raise AcquisitionError("MANIFEST_STORAGE_UNSUPPORTED")
+    o_directory = cast(int, o_directory)
+    o_nofollow = cast(int, o_nofollow)
 
     directory_flags = (
         os.O_RDONLY

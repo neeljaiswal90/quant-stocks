@@ -3025,6 +3025,49 @@ def test_posix_manifest_publication_contract_is_handle_confined_or_typed_unsuppo
         assert list(tmp_path.iterdir()) == []
 
 
+def test_posix_manifest_capability_gate_survives_compatible_call_site_instrumentation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import qme.data.alpha_vantage.acquisition as acquisition_module
+
+    def instrumented_open(*_args: object, **_kwargs: object) -> int:
+        raise AssertionError("the capability probe must not call the wrapper")
+
+    def instrumented_link(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("the capability probe must not call the wrapper")
+
+    monkeypatch.setattr(acquisition_module.os, "open", instrumented_open)
+    monkeypatch.setattr(acquisition_module.os, "link", instrumented_link)
+
+    assert acquisition_module._posix_manifest_storage_supported(
+        platform_name="posix",
+        o_directory=1,
+        o_nofollow=1,
+        supports_dir_fd=frozenset(
+            acquisition_module._POSIX_MANIFEST_DIR_FD_PRIMITIVES
+        ),
+        supports_follow_symlinks=frozenset(
+            {acquisition_module._POSIX_MANIFEST_LINK_PRIMITIVE}
+        ),
+    )
+
+
+def test_posix_manifest_capability_gate_fails_closed_when_a_primitive_is_unsupported() -> None:
+    import qme.data.alpha_vantage.acquisition as acquisition_module
+
+    assert not acquisition_module._posix_manifest_storage_supported(
+        platform_name="posix",
+        o_directory=1,
+        o_nofollow=1,
+        supports_dir_fd=frozenset(
+            acquisition_module._POSIX_MANIFEST_DIR_FD_PRIMITIVES[:-1]
+        ),
+        supports_follow_symlinks=frozenset(
+            {acquisition_module._POSIX_MANIFEST_LINK_PRIMITIVE}
+        ),
+    )
+
+
 @pytest.mark.skipif(os.name == "nt", reason="POSIX descriptor publication contract")
 @pytest.mark.skipif(
     hasattr(os, "geteuid") and os.geteuid() == 0,
@@ -3842,12 +3885,12 @@ def test_registered_extra_and_metadata_credential_keys_are_never_indexed() -> No
         body = json.dumps(
             {
                 "symbol": "AAPL",
-                "provider_metadata": {"apikey": "inert-metadata-value"},
+                "provider_metadata": {"apikey": "inert-metadata-value"},  # pragma: allowlist secret
                 "data": [
                     {
                         "effective_date": "2020-08-31",
                         "split_factor": "4.0",
-                        "provider_extra": {"apikey": "inert-row-value"},
+                        "provider_extra": {"apikey": "inert-row-value"},  # pragma: allowlist secret
                     }
                 ],
             }

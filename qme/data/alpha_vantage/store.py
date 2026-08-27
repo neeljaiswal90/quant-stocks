@@ -759,7 +759,7 @@ def _read_checked_file(
         raise
     except FileNotFoundError as exc:
         if missing_is_cache_miss:
-            raise RawCacheMissError("cached body is missing") from exc
+            raise RawCacheMissError("cached body is missing or unreadable") from exc
         raise _cache_lineage_invalid() from exc
     except RawPullStoreError:
         raise
@@ -851,7 +851,7 @@ def _read_checked_cache_files(layout: DataRootLayout, entry: RequestKeyEntry) ->
                         dir_fd=parent_descriptor,
                     )
                 except FileNotFoundError as exc:
-                    raise RawCacheMissError("cached body is missing") from exc
+                    raise RawCacheMissError("cached body is missing or unreadable") from exc
                 try:
                     meta_descriptor = os.open(
                         meta_parts[-1],
@@ -873,7 +873,7 @@ def _read_checked_cache_files(layout: DataRootLayout, entry: RequestKeyEntry) ->
                         directory / body_parts[-1]
                     )
                 except FileNotFoundError as exc:
-                    raise RawCacheMissError("cached body is missing") from exc
+                    raise RawCacheMissError("cached body is missing or unreadable") from exc
                 try:
                     meta_descriptor = _open_windows_checked_file(
                         directory / meta_parts[-1]
