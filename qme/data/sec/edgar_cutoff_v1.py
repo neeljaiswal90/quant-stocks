@@ -7,7 +7,10 @@ payload is never treated as a historical snapshot.
 This module is a pure function of already-verified filing records. It imports
 no transport, no HTTP client, and no raw-pull store. Duplicate accessions
 reconcile by content hash; conflicting bytes fail closed. Originals and
-amendments stay separately addressable.
+amendments stay separately addressable. A latest-as-of selector may consider only
+cutoff-eligible accessions and uses frozen policy
+:data:`LATEST_AS_OF_POLICY_VERSION`: one winner per ``(cik, form)``, ordered by
+``accepted_at`` then ``accession``.
 
 This is T2 engineering output. It registers nothing, reviews nothing, and does
 not authorize live SEC calls after an evidence packet is frozen.
@@ -24,6 +27,7 @@ from qme.data.identity.intervals_v1 import IntervalError, parse_iso_date
 from qme.data.identity.resolution_v1 import normalize_cik
 
 CUTOFF_SCHEMA_VERSION = "qme.edgar_cutoff_filing.v1"
+LATEST_AS_OF_POLICY_VERSION = "qme.edgar_latest_as_of.v1"
 SOURCE_ACCESSION_DOCUMENT = "ACCESSION_DOCUMENT"
 SOURCE_COMPANY_FACTS_CURRENT = "COMPANY_FACTS_CURRENT"
 _SOURCE_KINDS = frozenset({SOURCE_ACCESSION_DOCUMENT, SOURCE_COMPANY_FACTS_CURRENT})
@@ -118,5 +122,36 @@ def select_cutoff_filings(
         sorted(
             unique.values(),
             key=lambda item: (item.accepted_at or "", item.accession, item.sha256),
+        )
+    )
+
+
+def select_latest_filings_as_of(
+    records: Sequence[FilingRecord],
+    *,
+    analysis_as_of: str,
+) -> tuple[FilingRecord, ...]:
+    """Return one cutoff-eligible filing per ``(cik, form)`` using frozen precedence.
+
+    Precedence is ``accepted_at`` then ``accession``, both ascending comparison
+    so the later timestamp and later accession win. ``10-K`` and ``10-K/A`` are
+    different forms, so an original and its amendment stay separately addressable.
+    Future-accepted records still fail closed through :func:`select_cutoff_filings`.
+    """
+
+    eligible = select_cutoff_filings(records, analysis_as_of=analysis_as_of)
+    winners: dict[tuple[str, str], FilingRecord] = {}
+    for record in eligible:
+        key = (record.cik, record.form)
+        current = winners.get(key)
+        if current is None or (record.accepted_at or "", record.accession) > (
+            current.accepted_at or "",
+            current.accession,
+        ):
+            winners[key] = record
+    return tuple(
+        sorted(
+            winners.values(),
+            key=lambda item: (item.cik, item.form, item.accepted_at or "", item.accession),
         )
     )
