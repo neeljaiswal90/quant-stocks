@@ -10,11 +10,16 @@ import pytest
 
 from qme.data.alpha_vantage.client import CLASS_OK, RawResponse
 from qme.data.alpha_vantage.store import RawPullStore
-from qme.data.corporate_actions.registered_events import REGISTERED_EVENTS
+from qme.data.corporate_actions.registered_events import (
+    REGISTERED_EVENTS,
+    IdentityExpectation,
+    RegisteredEvent,
+)
 from qme.data.identity import (
     COVERAGE_LIMITATION,
     Ambiguous,
     DateInterval,
+    LinkKind,
     ResolvedSecurity,
     UnknownIdentityError,
     require_resolved,
@@ -23,6 +28,7 @@ from qme.data.universe.av_proxy_snapshot import AvProxySnapshotError, ListingRow
 from qme.data.universe.listing_status_identity_adapter_v1 import (
     ADAPTER_VERSION,
     ListingStatusIdentityAdapterError,
+    identity_links_from_registered_events,
     identity_table_from_listing_status,
     identity_table_from_stored_listing_status,
     listing_facts_from_rows,
@@ -229,6 +235,106 @@ def test_sourced_rename_joins_retired_and_continuing_tickers() -> None:
     assert before.security_id == after.security_id
     with pytest.raises(UnknownIdentityError):
         require_resolved(table.resolve("FB", "NASDAQ", "2023-01-03"))
+
+
+def test_sourced_exchange_move_keeps_one_security_across_venues() -> None:
+    move = RegisteredEvent(
+        event_id="MOVR-EXCHANGE-MOVE-2020",
+        event_class="IDENTITY_TICKER_CHANGE",
+        symbol="MOVR",
+        av_symbol="MOVR",
+        source_citation="test fixture: sourced NYSEAMERICAN to NASDAQ venue change on 2020-01-02",
+        identity=IdentityExpectation(
+            change_date="2020-01-02",
+            retired_symbol="MOVR",
+            continuing_symbol="MOVR",
+        ),
+    )
+    table = identity_table_from_listing_status(
+        active_rows=[
+            _row(
+                symbol="MOVR",
+                name="Mover Inc",
+                exchange="NASDAQ",
+                ipo_date="2020-01-02",
+            )
+        ],
+        delisted_rows=[
+            _row(
+                symbol="MOVR",
+                name="Mover Inc",
+                exchange="NYSEAMERICAN",
+                ipo_date="2016-01-04",
+                delisting_date="2020-01-02",
+                status="Delisted",
+                listing_state="delisted",
+            )
+        ],
+        active_pull_id="pull-active",
+        delisted_pull_id="pull-delisted",
+        identity_events=(move,),
+    )
+    before = require_resolved(table.resolve("MOVR", "NYSEAMERICAN", "2016-01-04"))
+    after = require_resolved(table.resolve("MOVR", "NASDAQ", "2020-01-02"))
+    assert before.security_id == after.security_id
+    listings, _issuers = listing_facts_from_rows(
+        [
+            _row(
+                symbol="MOVR",
+                name="Mover Inc",
+                exchange="NASDAQ",
+                ipo_date="2020-01-02",
+            )
+        ],
+        pull_id="pull-active",
+        listing_state="active",
+    )
+    retired, _retired_issuers = listing_facts_from_rows(
+        [
+            _row(
+                symbol="MOVR",
+                name="Mover Inc",
+                exchange="NYSEAMERICAN",
+                ipo_date="2016-01-04",
+                delisting_date="2020-01-02",
+                status="Delisted",
+                listing_state="delisted",
+            )
+        ],
+        pull_id="pull-delisted",
+        listing_state="delisted",
+    )
+    links = identity_links_from_registered_events(listings + retired, (move,))
+    assert len(links) == 1
+    assert links[0].link_kind is LinkKind.EXCHANGE_MOVE
+    venue_listings = [row for row in table.listings if row.security_id == before.security_id]
+    assert {row.exchange for row in venue_listings} == {"NASDAQ", "NYSEAMERICAN"}
+
+
+def test_cash_merger_delisting_does_not_invent_a_successor_security() -> None:
+    atvi = next(
+        event for event in REGISTERED_EVENTS if event.event_id == "ATVI-CASH-MERGER-DELISTING-2023"
+    )
+    table = identity_table_from_listing_status(
+        active_rows=[_row(symbol="MSFT", name="Microsoft")],
+        delisted_rows=[
+            _row(
+                symbol="ATVI",
+                name="Activision Blizzard",
+                ipo_date="1993-10-08",
+                delisting_date="2023-10-13",
+                status="Delisted",
+                listing_state="delisted",
+            )
+        ],
+        active_pull_id="pull-active",
+        delisted_pull_id="pull-delisted",
+        identity_events=(atvi,),
+    )
+    predecessor = require_resolved(table.resolve("ATVI", "NASDAQ", "2020-01-02"))
+    successor = require_resolved(table.resolve("MSFT", "NASDAQ", "2024-01-02"))
+    assert predecessor.security_id != successor.security_id
+    assert table.relationships == ()
 
 
 def test_rename_without_both_listing_facts_fails_closed() -> None:

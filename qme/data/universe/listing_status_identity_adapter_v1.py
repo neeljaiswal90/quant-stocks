@@ -24,10 +24,12 @@ listing facts; overlapping windows are the identity layer's conflicting-source
 case, not a silent merge.
 
 Registered ``IDENTITY_TICKER_CHANGE`` events become sourced :class:`IdentityLink`
-values. A rename is applied only when both listing windows meet at the registered
-change date and the event carries a source citation. The retired listing then
-reuses the continuing listing's vendor issuer key so the two windows share an
-issuer without inventing a CIK.
+values. A rename or exchange-move is applied only when both listing windows meet
+at the registered change date and the event carries a source citation. Same
+ticker plus a venue change is ``EXCHANGE_MOVE``; different tickers are
+``RENAME``. Same ticker and venue fails closed. The retired listing then reuses
+the continuing listing's vendor issuer key so the two windows share an issuer
+without inventing a CIK. A cash-merger delisting does not invent a successor.
 """
 
 from __future__ import annotations
@@ -184,11 +186,21 @@ def _unique_meeting_fact(
     return matches[0]
 
 
+def _link_kind(retired: ListingFact, continuing: ListingFact, *, event_id: str) -> LinkKind:
+    if retired.ticker == continuing.ticker and retired.exchange == continuing.exchange:
+        raise ListingStatusIdentityAdapterError(
+            f"IDENTITY_LINK_SAME_LISTING:{event_id}:{retired.ticker}/{retired.exchange}"
+        )
+    if retired.ticker == continuing.ticker:
+        return LinkKind.EXCHANGE_MOVE
+    return LinkKind.RENAME
+
+
 def identity_links_from_registered_events(
     listings: Sequence[ListingFact],
     events: Sequence[RegisteredEvent],
 ) -> tuple[IdentityLink, ...]:
-    """Turn sourced identity expectations into rename links. Skip events without identity."""
+    """Turn sourced identity expectations into same-security links. Skip events without identity."""
 
     links: list[IdentityLink] = []
     for event in events:
@@ -229,7 +241,7 @@ def identity_links_from_registered_events(
             IdentityLink(
                 link_id=f"link:{event.event_id}",
                 source_id=event.event_id,
-                link_kind=LinkKind.RENAME,
+                link_kind=_link_kind(retired, continuing, event_id=event.event_id),
                 from_fact_id=retired.fact_id,
                 to_fact_id=continuing.fact_id,
                 effective_date=identity.change_date,
