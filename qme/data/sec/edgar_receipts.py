@@ -78,6 +78,7 @@ from pathlib import Path
 from typing import Any
 
 from qme.data.alpha_vantage.client import Pacer
+from qme.data.sec.edgar_live_freeze_v1 import refuse_live_sec_if_packet_frozen
 from qme.foundation.data_root import DataRootLayout
 
 RECEIPTS_SCHEMA_VERSION = "qme.sec_cross_source_receipts.v1"
@@ -291,6 +292,7 @@ class EdgarClient:
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
         sleep: Callable[[float], None] = time.sleep,
         max_bytes: int = MAX_DOCUMENT_BYTES,
+        packet_frozen: bool = False,
     ) -> None:
         if not _USER_AGENT_RE.match(user_agent.strip()):
             raise EdgarError(
@@ -308,6 +310,7 @@ class EdgarClient:
         self._timeout = timeout_seconds
         self._sleep = sleep
         self._max_bytes = max_bytes
+        self._packet_frozen = packet_frozen
         self._requests_made = 0
 
     @property
@@ -321,6 +324,7 @@ class EdgarClient:
         return self._requests_made
 
     def get(self, url: str) -> EdgarResponse:
+        refuse_live_sec_if_packet_frozen(packet_frozen=self._packet_frozen)
         if not url.startswith("https://"):
             raise EdgarError(f"refusing a non-https EDGAR url: {url!r}")
         attempts = 0

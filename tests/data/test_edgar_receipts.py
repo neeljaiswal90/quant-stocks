@@ -11,6 +11,10 @@ from pathlib import Path
 import pytest
 
 from qme.data.alpha_vantage.client import Pacer
+from qme.data.sec.edgar_live_freeze_v1 import (
+    PACKET_FREEZE_POLICY_VERSION,
+    EdgarLiveFreezeError,
+)
 from qme.data.sec.edgar_receipts import (
     CLASS_HTTP_ERROR,
     CLASS_OVERSIZE,
@@ -260,6 +264,15 @@ def test_non_https_urls_are_refused() -> None:
     client, _, _ = make_client({})
     with pytest.raises(EdgarError, match="non-https"):
         client.get("http://www.sec.gov/Archives/edgar/data/1/2/3.htm")
+
+
+def test_frozen_evidence_packet_cannot_call_sec() -> None:
+    assert PACKET_FREEZE_POLICY_VERSION == "qme.edgar_live_freeze.v1"
+    client, transport, _ = make_client({}, packet_frozen=True)
+    with pytest.raises(EdgarLiveFreezeError, match="LIVE_SEC_FORBIDDEN_AFTER_PACKET_FREEZE"):
+        client.get("https://data.sec.gov/submissions/CIK0000320193.json")
+    assert transport.calls == []
+    assert client.requests_made == 0
 
 
 def test_pacer_spaces_requests_evenly() -> None:
