@@ -50,13 +50,15 @@ Unknown-adverse fallbacks are owner-registered. The primary recovery is `0.45`
 (`UNKNOWN_ADVERSE_BASE`, a −55% scenario return). The authorised sensitivity
 range is `[0, 0.70]`. Every fallback remains labelled `FALLBACK_SCENARIO`.
 
-The timing registry is still empty. `DelistingEvent` has no separate effective or
-payment-date field, every non-`LAST_TRADE_DATE` anchor collapses to
-`event.valuation_date`, and `coordinate_ordering` is checked only as a
-permutation. Registering `LAST_TRADE_DATE + 0` or `+1` session would invent
-settlement timing and potentially introduce look-ahead. Sourced cash/stock exits
-therefore still fail `BLOCKED_UNREGISTERED_TIMING_RULE` and leave held positions
-unaudited.
+The timing registry is still empty. The mechanics now require independently
+sourced coordinates (`last_trade_session`, `delisting_effective_date`,
+`transaction_effective_at`, `announced_payment_date`, `actual_allocation_at`)
+and derive `successor_mark_session` only through a named calendar mapping.
+Form 25 listing removal and an issuer-announced payment date cannot settle
+consideration. `LAST_TRADE_DATE + N` is not representable. Sourced cash/stock
+exits therefore still fail `BLOCKED_UNREGISTERED_TIMING_RULE` until an
+owner-approved, source-backed rule is registered, and held positions carrying
+those exits stay unaudited.
 
 Benchmark treatment stays `UNCHANGED` (no change record). There is still no
 missing-mark substitution or carry-forward policy.
@@ -268,24 +270,27 @@ trade" acceptance case lives.
 ### 5.2 The frozen timing rule
 
 `REGISTERED_DELISTING_TIMING_RULES` is `()`. A registered `DelistingTimingRule`
-must state:
+is selected by `event_type` and `outcome_kind` and must state:
 
-* `valuation_anchor` — which recorded coordinate the valuation hangs off;
-* `valuation_offset_sessions` — a signed count of **sessions**, never calendar days;
-* `coordinate_ordering` — the frozen ordering of ex-date / last-trade-date /
-  valuation-date, validated as a permutation of `TIMING_COORDINATES`.
+* `required_coordinates` — independently sourced coordinates, each with provenance;
+* `ordering_constraints` — executable comparisons such as `LAST_TRADE_SESSION <= TRANSACTION_EFFECTIVE_AT`;
+* `entitlement_coordinate` — when the cash or stock right arises;
+* `settlement_coordinate` — when cash or successor shares enter the ledger (must be actual allocation, never Form 25 or an announced payment date);
+* `session_mapping` — how a non-session date maps to an accepted session;
+* `successor_mark_mapping` — required for stock or mixed consideration, forbidden on cash-only rules.
 
-Nothing in the module infers any of the three. `settle_sourced_outcome` resolves
-the rule **first**, before it reads a price, so with the empty registry it raises
-`BLOCKED_UNREGISTERED_TIMING_RULE` and no number is computed and then discarded.
-`build_delisting_table` mirrors that ordering, so a row missing an entry basis
-still reports the timing refusal rather than the downstream data gap it would
-only have hit afterwards.
+`analysis_cutoff` is enforced as both `decision_cutoff` and `outcome_cutoff`
+unless the caller splits them. Evidence is valid only when `available_at <= required_by`.
+A caller-supplied `valuation_date` is `BLOCKED_CALLER_VALUATION_DATE_OVERRIDE`.
+CVR, elective, delayed, contingent and multi-tranche consideration fail closed
+until represented.
 
-If a registered rule derives a valuation date that contradicts the event's own
-recorded one, that is `BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE`: the
-recorded date is never preferred over the frozen rule, and the rule is never bent
-to the recorded date.
+Nothing in the module infers a last-trade offset. `settle_sourced_outcome`
+resolves the rule **first**, before it reads a price, so with the empty registry
+it raises `BLOCKED_UNREGISTERED_TIMING_RULE` and no number is computed and then
+discarded. `build_delisting_table` mirrors that ordering, so a row missing an
+entry basis still reports the timing refusal rather than the downstream data
+gap it would only have hit afterwards.
 
 A **continuation** needs no timing rule — no consideration changes hands, so
 there is nothing to value. Asking `settle_sourced_outcome` for a continuation's
@@ -531,7 +536,7 @@ ticket names:
 
 | Ticket case | Where it lives |
 | --- | --- |
-| valid cash merger | `evt-cash-merger`; settled to `3/167` under the probe timing rule |
+| valid cash merger | `evt-cash-merger`; the fixture event has no allocation coordinate and stays unresolved. Probe settlement of a fully specified cash merger is Tuesday allocation, return `3/167`, in `test_a_registered_timing_rule_settles_the_cash_merger_to_the_hand_derived_return` |
 | stock merger | `evt-stock-merger` (plus the missing-successor-mark refusal) |
 | bankruptcy / unknown adverse event | `evt-bankruptcy`; scenario `-13/20` under the probe haircut |
 | voluntary delist | `evt-voluntary-delist`, `NO_FALLBACK_PERMITTED` |
@@ -576,13 +581,15 @@ case.
 Approved now: seven coverage minima at `1`; unknown-adverse recoveries with
 primary `0.45` and range `[0, 0.70]`; benchmark treatment `UNCHANGED`; no
 missing-mark policy. **Not approved:** the timing record. NEE-128 remains open
-until the timing contract represents sourced effective/payment coordinates and
-there is measured evidence that the registered coverage gates pass on real data.
+until an owner-approved, source-backed timing rule is registered against the
+repaired coordinate contract, and there is measured evidence that the registered
+coverage gates pass on real data. `GATE_VALID` on synthetic fixtures is not
+that evidence.
 
 | # | Registry | Record | Required | Status | Typed state until registered | What it blocks |
 | --- | --- | --- | ---: | --- | --- | --- |
 | 1 | `REGISTERED_COVERAGE_THRESHOLDS` (`audit_v1`) | `CoverageThreshold` | 7 — one per class for `LISTINGS`, `IDENTITY`, `CLASSIFICATION`, `PRICES`, `ACTIONS`, `ANCHORS`, `BENCHMARKS` | Registered 2026-08-27 at `minimum_fraction="1"` | `BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD` | any coverage verdict at all |
-| 2 | `REGISTERED_DELISTING_TIMING_RULES` (`delisting_v1`) | `DelistingTimingRule` | 1 | **Empty.** Do not register until effective/payment coordinates exist. | `BLOCKED_UNREGISTERED_TIMING_RULE` | settling any sourced cash/stock exit, so every held position carrying one stays unaudited and invalidates its run |
+| 2 | `REGISTERED_DELISTING_TIMING_RULES` (`delisting_v1`) | `DelistingTimingRule` | 1 | **Empty.** Do not register `LAST_TRADE_DATE + N`. A rule must name required coordinates, executable ordering, entitlement vs settlement, and session mapping, selected by event type and outcome kind. | `BLOCKED_UNREGISTERED_TIMING_RULE` | settling any sourced cash/stock exit, so every held position carrying one stays unaudited and invalidates its run |
 | 3 | `REGISTERED_FALLBACK_HAIRCUTS` (`delisting_v1`) | `FallbackHaircut` | 4 | Registered: `UNKNOWN_ADVERSE_FULL_LOSS` `0`, `UNKNOWN_ADVERSE_BASE` `0.45`, `UNKNOWN_ADVERSE_NYSE_AMEX` `0.65`, `UNKNOWN_ADVERSE_SHUMWAY` `0.70` | `BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT` | evaluating any unknown adverse outcome |
 | 4 | `REGISTERED_SENSITIVITY_RANGES` (`delisting_v1`) | `SensitivityRange` | 1 | Registered: `[0, 0.70]` covering those four ids | `BLOCKED_UNREGISTERED_SENSITIVITY_RANGE` | a fallback sweep even when a haircut exists |
 | 5 | `REGISTERED_BENCHMARK_TREATMENT_DECISIONS` (`delisting_v1`) | `BenchmarkTreatmentDecision` | 0 (only if a treatment other than `UNCHANGED` is ever wanted) | Empty by design; default `UNCHANGED` | `BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE` | nothing today |

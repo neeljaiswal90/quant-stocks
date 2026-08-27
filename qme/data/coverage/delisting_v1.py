@@ -17,14 +17,16 @@ treatment the ticket requires on every record that can move one.
 The three rules, and how each is made structural
 ------------------------------------------------
 
-1. **Sourced cash / stock transactions use the sourced outcome under the FROZEN
-   TIMING RULE.** :data:`REGISTERED_DELISTING_TIMING_RULES` is ``()``, so
-   :func:`settle_sourced_outcome` raises ``BLOCKED_UNREGISTERED_TIMING_RULE``
-   *before* it reads a price. There is no default anchor and no default offset:
-   a rule must state which coordinate the valuation is anchored to and the exact
-   ordering of ex-date / last-trade-date / valuation-date. Nothing here guesses
-   that ordering, and a registered rule that contradicts an event's own recorded
-   ``valuation_date`` is refused rather than preferred.
+1. **Sourced cash / stock transactions use independently sourced coordinates
+   under a frozen timing rule.** :data:`REGISTERED_DELISTING_TIMING_RULES` is
+   ``()``, so :func:`settle_sourced_outcome` raises
+   ``BLOCKED_UNREGISTERED_TIMING_RULE`` *before* it reads a price. A rule is
+   selected by ``event_type`` and ``outcome_kind`` and must name required
+   coordinates, executable ordering, entitlement vs settlement roles, and the
+   session mapping. Form 25 listing removal and an announced payment date cannot
+   settle consideration. A caller-supplied ``valuation_date`` cannot override a
+   derived settlement session. The shipped registry stays empty until an
+   owner-approved, source-backed rule fits this shape.
 
 2. **Unknown adverse outcomes may be evaluated ONLY with preregistered
    sensitivity haircuts.** :data:`REGISTERED_FALLBACK_HAIRCUTS` and
@@ -264,6 +266,17 @@ CONSIDERATION_OUTCOME_KINDS: Final = (
 #: Every outcome kind, sourced and unknown together.
 OUTCOME_KINDS: Final = (*SOURCED_OUTCOME_KINDS, OUTCOME_UNKNOWN_ADVERSE)
 
+CONSIDERATION_STRUCTURE_SIMPLE: Final = "SIMPLE"
+CONSIDERATION_STRUCTURE_CVR: Final = "CVR"
+CONSIDERATION_STRUCTURE_ELECTIVE: Final = "ELECTIVE"
+CONSIDERATION_STRUCTURE_MULTI_TRANCHE: Final = "MULTI_TRANCHE"
+CONSIDERATION_STRUCTURES: Final = (
+    CONSIDERATION_STRUCTURE_SIMPLE,
+    CONSIDERATION_STRUCTURE_CVR,
+    CONSIDERATION_STRUCTURE_ELECTIVE,
+    CONSIDERATION_STRUCTURE_MULTI_TRANCHE,
+)
+
 FALLBACK_RULE_NOT_APPLICABLE_SOURCED_OUTCOME: Final = "NOT_APPLICABLE_SOURCED_OUTCOME"
 FALLBACK_RULE_PREREGISTERED_SENSITIVITY_HAIRCUT: Final = "PREREGISTERED_SENSITIVITY_HAIRCUT"
 FALLBACK_RULE_NO_FALLBACK_PERMITTED: Final = "NO_FALLBACK_PERMITTED"
@@ -293,9 +306,48 @@ BENCHMARK_TREATMENTS: Final = (
 DEFAULT_BENCHMARK_TREATMENT: Final = BENCHMARK_TREATMENT_UNCHANGED
 
 # ---------------------------------------------------------------------------
-# Timing vocabulary (the frozen rule's coordinates -- never inferred)
+# Timing vocabulary -- independently sourced coordinates, never inferred
 # ---------------------------------------------------------------------------
 
+COORDINATE_LAST_TRADE_SESSION: Final = "LAST_TRADE_SESSION"
+COORDINATE_DELISTING_EFFECTIVE_DATE: Final = "DELISTING_EFFECTIVE_DATE"
+COORDINATE_TRANSACTION_EFFECTIVE_AT: Final = "TRANSACTION_EFFECTIVE_AT"
+COORDINATE_ANNOUNCED_PAYMENT_DATE: Final = "ANNOUNCED_PAYMENT_DATE"
+COORDINATE_ACTUAL_ALLOCATION_AT: Final = "ACTUAL_ALLOCATION_AT"
+COORDINATE_SUCCESSOR_MARK_SESSION: Final = "SUCCESSOR_MARK_SESSION"
+TIMING_COORDINATE_KINDS: Final = (
+    COORDINATE_LAST_TRADE_SESSION,
+    COORDINATE_DELISTING_EFFECTIVE_DATE,
+    COORDINATE_TRANSACTION_EFFECTIVE_AT,
+    COORDINATE_ANNOUNCED_PAYMENT_DATE,
+    COORDINATE_ACTUAL_ALLOCATION_AT,
+    COORDINATE_SUCCESSOR_MARK_SESSION,
+)
+#: Instant-valued coordinates. The rest are calendar dates.
+INSTANT_COORDINATE_KINDS: Final = (
+    COORDINATE_TRANSACTION_EFFECTIVE_AT,
+    COORDINATE_ACTUAL_ALLOCATION_AT,
+)
+#: Form 25 listing removal and an issuer-announced payment date cannot settle
+#: consideration. Settlement is always actual allocation/posting.
+SETTLEMENT_FORBIDDEN_COORDINATES: Final = (
+    COORDINATE_DELISTING_EFFECTIVE_DATE,
+    COORDINATE_ANNOUNCED_PAYMENT_DATE,
+)
+
+CUTOFF_KIND_DECISION: Final = "DECISION_CUTOFF"
+CUTOFF_KIND_OUTCOME: Final = "OUTCOME_CUTOFF"
+CUTOFF_KINDS: Final = (CUTOFF_KIND_DECISION, CUTOFF_KIND_OUTCOME)
+
+CONSTRAINT_OP_LESS_OR_EQUAL: Final = "<="
+CONSTRAINT_OPS: Final = (CONSTRAINT_OP_LESS_OR_EQUAL,)
+
+SESSION_MAP_EXACT_SESSION: Final = "EXACT_SESSION"
+SESSION_MAP_NEXT_ELIGIBLE: Final = "NEXT_ELIGIBLE_SESSION"
+SESSION_MAPPINGS: Final = (SESSION_MAP_EXACT_SESSION, SESSION_MAP_NEXT_ELIGIBLE)
+
+# Retained names so existing probe docs still parse; they are not valuation
+# anchors. A rule may not settle by LAST_TRADE_DATE + N sessions.
 TIMING_ANCHOR_LAST_TRADE_DATE: Final = "LAST_TRADE_DATE"
 TIMING_ANCHOR_EX_DATE: Final = "EX_DATE"
 TIMING_ANCHOR_EFFECTIVE_DATE: Final = "EFFECTIVE_DATE"
@@ -306,9 +358,6 @@ TIMING_ANCHORS: Final = (
     TIMING_ANCHOR_EFFECTIVE_DATE,
     TIMING_ANCHOR_PAYMENT_DATE,
 )
-
-#: The three coordinates a frozen timing rule must order. A rule states the
-#: ordering explicitly; this module never derives it from an event's dates.
 TIMING_COORDINATES: Final = ("EX_DATE", "LAST_TRADE_DATE", "VALUATION_DATE")
 
 # ---------------------------------------------------------------------------
@@ -414,6 +463,17 @@ BLOCKED_VALUATION_BEFORE_LAST_TRADE: Final = "BLOCKED_VALUATION_BEFORE_LAST_TRAD
 BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE: Final = (
     "BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE"
 )
+BLOCKED_MISSING_REQUIRED_COORDINATE: Final = "BLOCKED_MISSING_REQUIRED_COORDINATE"
+BLOCKED_COORDINATE_AFTER_CUTOFF: Final = "BLOCKED_COORDINATE_AFTER_CUTOFF"
+BLOCKED_CONTRADICTORY_COORDINATES: Final = "BLOCKED_CONTRADICTORY_COORDINATES"
+BLOCKED_CALLER_VALUATION_DATE_OVERRIDE: Final = "BLOCKED_CALLER_VALUATION_DATE_OVERRIDE"
+BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE: Final = (
+    "BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE"
+)
+BLOCKED_ORDERING_CONSTRAINT_VIOLATED: Final = "BLOCKED_ORDERING_CONSTRAINT_VIOLATED"
+BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION: Final = (
+    "BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION"
+)
 
 #: Every fail-closed state this module **raises**, sorted. Callers may bind it;
 #: adding a state is an interface change and requires a new test.
@@ -454,6 +514,13 @@ DELISTING_FAIL_CLOSED_STATES: Final = (
     BLOCKED_UNREGISTERED_VOCABULARY_VALUE,
     BLOCKED_VALUATION_BEFORE_LAST_TRADE,
     BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE,
+    BLOCKED_MISSING_REQUIRED_COORDINATE,
+    BLOCKED_COORDINATE_AFTER_CUTOFF,
+    BLOCKED_CONTRADICTORY_COORDINATES,
+    BLOCKED_CALLER_VALUATION_DATE_OVERRIDE,
+    BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE,
+    BLOCKED_ORDERING_CONSTRAINT_VIOLATED,
+    BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION,
 )
 
 #: Outcome states an emitted delisting row may carry: the three resolved states
@@ -467,8 +534,16 @@ OUTCOME_STATES: Final = (
     BLOCKED_NO_FALLBACK_PERMITTED,
     BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT,
     BLOCKED_UNREGISTERED_SENSITIVITY_RANGE,
+    BLOCKED_UNREGISTERED_SOURCE_KIND,
     BLOCKED_UNREGISTERED_TIMING_RULE,
     BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE,
+    BLOCKED_MISSING_REQUIRED_COORDINATE,
+    BLOCKED_COORDINATE_AFTER_CUTOFF,
+    BLOCKED_CONTRADICTORY_COORDINATES,
+    BLOCKED_CALLER_VALUATION_DATE_OVERRIDE,
+    BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE,
+    BLOCKED_ORDERING_CONSTRAINT_VIOLATED,
+    BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION,
 )
 
 #: The one result label each outcome state may carry. This is the row-level half
@@ -490,6 +565,14 @@ OUTCOME_STATE_RESULT_LABELS: Final[Mapping[str, str]] = {
     BLOCKED_UNREGISTERED_SENSITIVITY_RANGE: RESULT_LABEL_UNRESOLVED,
     BLOCKED_UNREGISTERED_TIMING_RULE: RESULT_LABEL_UNRESOLVED,
     BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_MISSING_REQUIRED_COORDINATE: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_COORDINATE_AFTER_CUTOFF: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_CONTRADICTORY_COORDINATES: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_CALLER_VALUATION_DATE_OVERRIDE: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_ORDERING_CONSTRAINT_VIOLATED: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_UNREGISTERED_SOURCE_KIND: RESULT_LABEL_UNRESOLVED,
 }
 
 #: Downstream claims this prebuild has not earned. Written to every artifact.
@@ -749,6 +832,10 @@ def delisting_config_document() -> dict[str, Any]:
         "default_benchmark_treatment": DEFAULT_BENCHMARK_TREATMENT,
         "timing_anchors": list(TIMING_ANCHORS),
         "timing_coordinates": list(TIMING_COORDINATES),
+        "timing_coordinate_kinds": list(TIMING_COORDINATE_KINDS),
+        "cutoff_kinds": list(CUTOFF_KINDS),
+        "session_mappings": list(SESSION_MAPPINGS),
+        "consideration_structures": list(CONSIDERATION_STRUCTURES),
         "result_labels": list(RESULT_LABELS),
         "outcome_states": list(OUTCOME_STATES),
         "resolved_outcome_states": list(RESOLVED_OUTCOME_STATES),
@@ -807,51 +894,244 @@ def dataset_digest(document: Mapping[str, Any]) -> str:
 
 
 @dataclass(frozen=True)
-class DelistingTimingRule:
-    """One registered, frozen delisting timing rule.
+class TimingConstraint:
+    """One executable ordering constraint between two sourced coordinates."""
 
-    ``valuation_anchor`` names which recorded coordinate the valuation hangs
-    off; ``valuation_offset_sessions`` is a signed count of **sessions**, never
-    calendar days; ``coordinate_ordering`` is the frozen ordering of ex-date,
-    last-trade-date and valuation-date and must be a permutation of
-    :data:`TIMING_COORDINATES`. Nothing in this module infers any of the three.
+    left: str
+    op: str
+    right: str
+
+    def __post_init__(self) -> None:
+        _vocabulary(self.left, allowed=TIMING_COORDINATE_KINDS, what="constraint left")
+        _vocabulary(self.op, allowed=CONSTRAINT_OPS, what="constraint op")
+        _vocabulary(self.right, allowed=TIMING_COORDINATE_KINDS, what="constraint right")
+        if self.left == self.right:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                "an ordering constraint must name two distinct coordinates",
+            )
+
+    def to_json_dict(self) -> dict[str, str]:
+        return {"left": self.left, "op": self.op, "right": self.right}
+
+
+@dataclass(frozen=True)
+class CutoffPolicy:
+    """Decision evidence and later outcome-accounting evidence are separate cutoffs."""
+
+    decision_cutoff: str
+    outcome_cutoff: str
+
+    def __post_init__(self) -> None:
+        iso_instant(self.decision_cutoff, what="decision_cutoff")
+        iso_instant(self.outcome_cutoff, what="outcome_cutoff")
+
+    def cutoff_for(self, required_by: str) -> datetime:
+        _vocabulary(required_by, allowed=CUTOFF_KINDS, what="required_by")
+        if required_by == CUTOFF_KIND_DECISION:
+            return iso_instant(self.decision_cutoff, what="decision_cutoff")
+        return iso_instant(self.outcome_cutoff, what="outcome_cutoff")
+
+    def to_json_dict(self) -> dict[str, str]:
+        return {
+            "decision_cutoff": self.decision_cutoff,
+            "outcome_cutoff": self.outcome_cutoff,
+        }
+
+
+@dataclass(frozen=True)
+class SourcedCoordinate:
+    """One independently sourced timing coordinate with its own provenance."""
+
+    coordinate_kind: str
+    calendar_date: str
+    source_kind: str
+    source: str
+    source_reference: str
+    available_at: str
+    required_by: str
+    raw_artifact_sha256_grouped: str
+    instant: str | None = None
+    accession_or_event_id: str | None = None
+
+    def __post_init__(self) -> None:
+        _vocabulary(self.coordinate_kind, allowed=TIMING_COORDINATE_KINDS, what="coordinate_kind")
+        iso_day(self.calendar_date, what=f"{self.coordinate_kind}: calendar_date")
+        _vocabulary(self.source_kind, allowed=SOURCE_KINDS, what="source_kind")
+        _nonempty(self.source, what=f"{self.coordinate_kind}: source")
+        _nonempty(self.source_reference, what=f"{self.coordinate_kind}: source_reference")
+        iso_instant(self.available_at, what=f"{self.coordinate_kind}: available_at")
+        _vocabulary(self.required_by, allowed=CUTOFF_KINDS, what="required_by")
+        if not is_opaque_identifier(self.raw_artifact_sha256_grouped):
+            raise DelistingPolicyError(
+                BLOCKED_MALFORMED_IDENTIFIER,
+                f"{self.coordinate_kind}: raw_artifact_sha256_grouped must be a grouped sha256",
+            )
+        if self.coordinate_kind in INSTANT_COORDINATE_KINDS:
+            if self.instant is None:
+                raise DelistingPolicyError(
+                    BLOCKED_MISSING_REQUIRED_FIELD,
+                    f"{self.coordinate_kind} must carry a timezone-aware instant",
+                )
+            parsed = iso_instant(self.instant, what=f"{self.coordinate_kind}: instant")
+            if parsed.date().isoformat() != self.calendar_date:
+                raise DelistingPolicyError(
+                    BLOCKED_CONTRADICTORY_COORDINATES,
+                    f"{self.coordinate_kind}: calendar_date {self.calendar_date} does not "
+                    f"match instant UTC date {parsed.date().isoformat()}",
+                )
+        elif self.instant is not None:
+            raise DelistingPolicyError(
+                BLOCKED_OUTCOME_TERMS_MISMATCH,
+                f"{self.coordinate_kind} is a calendar date and may not carry an instant",
+            )
+        if self.accession_or_event_id is not None:
+            token(self.accession_or_event_id, what="accession_or_event_id")
+
+    def to_json_dict(self) -> dict[str, Any]:
+        return {
+            "coordinate_kind": self.coordinate_kind,
+            "calendar_date": self.calendar_date,
+            "instant": self.instant,
+            "source_kind": self.source_kind,
+            "source": self.source,
+            "source_reference": self.source_reference,
+            "available_at": self.available_at,
+            "required_by": self.required_by,
+            "raw_artifact_sha256_grouped": self.raw_artifact_sha256_grouped,
+            "accession_or_event_id": self.accession_or_event_id,
+        }
+
+
+@dataclass(frozen=True)
+class DelistingTimingRule:
+    """One owner-gated timing rule, selected by event type and outcome kind.
+
+    A generic ``LAST_TRADE_DATE + N`` offset is not representable. Cash, stock
+    and mixed consideration require different required coordinates, entitlement
+    vs settlement roles, and session mappings. The shipped registry stays empty
+    until an owner-approved, source-backed rule fits this shape.
     """
 
     rule_id: str
-    valuation_anchor: str
-    valuation_offset_sessions: int
-    coordinate_ordering: tuple[str, ...]
     applies_to_event_types: tuple[str, ...]
+    applies_to_outcome_kinds: tuple[str, ...]
+    required_coordinates: tuple[str, ...]
+    ordering_constraints: tuple[TimingConstraint, ...]
+    entitlement_coordinate: str
+    settlement_coordinate: str
+    session_mapping: str
+    applicable_source_kinds: tuple[str, ...]
     source_kind: str
     source: str
     source_reference: str
     effective_date: str
+    successor_mark_mapping: str | None = None
     expires_after: str | None = None
+    version: str = "v1"
     schema_version: str = SCHEMA_VERSION
 
     def __post_init__(self) -> None:
         token(self.rule_id, what="rule_id")
-        _vocabulary(self.valuation_anchor, allowed=TIMING_ANCHORS, what="valuation_anchor")
-        if type(self.valuation_offset_sessions) is not int:
-            raise DelistingPolicyError(
-                BLOCKED_UNREGISTERED_VOCABULARY_VALUE,
-                f"{self.rule_id}: valuation_offset_sessions must be a session count integer",
-            )
-        if sorted(self.coordinate_ordering) != sorted(TIMING_COORDINATES):
+        token(self.version, what="version")
+        if not self.applies_to_event_types or not self.applies_to_outcome_kinds:
             raise DelistingPolicyError(
                 BLOCKED_UNREGISTERED_TIMING_RULE,
-                f"{self.rule_id}: coordinate_ordering must be a permutation of "
-                f"{list(TIMING_COORDINATES)}; the ordering is never inferred",
-            )
-        if not self.applies_to_event_types:
-            raise DelistingPolicyError(
-                BLOCKED_UNREGISTERED_TIMING_RULE,
-                f"{self.rule_id}: a timing rule must name the event types it applies to",
+                f"{self.rule_id}: a timing rule must name event types and outcome kinds",
             )
         for event_type in self.applies_to_event_types:
             _vocabulary(
                 event_type, allowed=DELISTING_EVENT_TYPES, what=f"{self.rule_id}: event type"
             )
+        for outcome_kind in self.applies_to_outcome_kinds:
+            _vocabulary(outcome_kind, allowed=OUTCOME_KINDS, what=f"{self.rule_id}: outcome kind")
+        if not self.required_coordinates:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: a timing rule must name required coordinates",
+            )
+        seen: set[str] = set()
+        for kind in self.required_coordinates:
+            _vocabulary(kind, allowed=TIMING_COORDINATE_KINDS, what=f"{self.rule_id}: coordinate")
+            if kind in seen:
+                raise DelistingPolicyError(
+                    BLOCKED_UNREGISTERED_TIMING_RULE,
+                    f"{self.rule_id}: duplicate required coordinate {kind}",
+                )
+            seen.add(kind)
+        if COORDINATE_SUCCESSOR_MARK_SESSION in self.required_coordinates:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: SUCCESSOR_MARK_SESSION is derived, never a required input",
+            )
+        for constraint in self.ordering_constraints:
+            if not isinstance(constraint, TimingConstraint):
+                raise DelistingPolicyError(
+                    BLOCKED_UNREGISTERED_TIMING_RULE,
+                    f"{self.rule_id}: ordering_constraints must be TimingConstraint records",
+                )
+            if (
+                constraint.left not in self.required_coordinates
+                or constraint.right not in self.required_coordinates
+            ):
+                raise DelistingPolicyError(
+                    BLOCKED_UNREGISTERED_TIMING_RULE,
+                    f"{self.rule_id}: a constraint may only name required coordinates",
+                )
+        _vocabulary(
+            self.entitlement_coordinate,
+            allowed=TIMING_COORDINATE_KINDS,
+            what="entitlement_coordinate",
+        )
+        _vocabulary(
+            self.settlement_coordinate,
+            allowed=TIMING_COORDINATE_KINDS,
+            what="settlement_coordinate",
+        )
+        if self.entitlement_coordinate not in self.required_coordinates:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: entitlement_coordinate must be a required coordinate",
+            )
+        if self.settlement_coordinate not in self.required_coordinates:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: settlement_coordinate must be a required coordinate",
+            )
+        if self.settlement_coordinate in SETTLEMENT_FORBIDDEN_COORDINATES:
+            raise DelistingPolicyError(
+                BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION,
+                f"{self.rule_id}: {self.settlement_coordinate} cannot settle consideration; "
+                "Form 25 and announced payment dates are not allocation",
+            )
+        _vocabulary(self.session_mapping, allowed=SESSION_MAPPINGS, what="session_mapping")
+        if self.successor_mark_mapping is not None:
+            _vocabulary(
+                self.successor_mark_mapping,
+                allowed=SESSION_MAPPINGS,
+                what="successor_mark_mapping",
+            )
+        wants_stock = any(
+            kind in (OUTCOME_SOURCED_STOCK, OUTCOME_SOURCED_CASH_AND_STOCK)
+            for kind in self.applies_to_outcome_kinds
+        )
+        if wants_stock and self.successor_mark_mapping is None:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: a stock or mixed rule must name successor_mark_mapping",
+            )
+        if not wants_stock and self.successor_mark_mapping is not None:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: a cash-only rule may not derive a successor mark session",
+            )
+        if not self.applicable_source_kinds:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: a timing rule must name applicable source kinds",
+            )
+        for kind in self.applicable_source_kinds:
+            _vocabulary(kind, allowed=SOURCE_KINDS, what=f"{self.rule_id}: source kind")
         _vocabulary(self.source_kind, allowed=SOURCE_KINDS, what="source_kind")
         _nonempty(self.source, what=f"{self.rule_id}: source")
         _nonempty(self.source_reference, what=f"{self.rule_id}: source_reference")
@@ -877,30 +1157,27 @@ class DelistingTimingRule:
     def to_json_dict(self) -> dict[str, Any]:
         return {
             "rule_id": self.rule_id,
-            "valuation_anchor": self.valuation_anchor,
-            "valuation_offset_sessions": self.valuation_offset_sessions,
-            "coordinate_ordering": list(self.coordinate_ordering),
             "applies_to_event_types": list(self.applies_to_event_types),
+            "applies_to_outcome_kinds": list(self.applies_to_outcome_kinds),
+            "required_coordinates": list(self.required_coordinates),
+            "ordering_constraints": [item.to_json_dict() for item in self.ordering_constraints],
+            "entitlement_coordinate": self.entitlement_coordinate,
+            "settlement_coordinate": self.settlement_coordinate,
+            "session_mapping": self.session_mapping,
+            "successor_mark_mapping": self.successor_mark_mapping,
+            "applicable_source_kinds": list(self.applicable_source_kinds),
             "source_kind": self.source_kind,
             "source": self.source,
             "source_reference": self.source_reference,
             "effective_date": self.effective_date,
             "expires_after": self.expires_after,
+            "version": self.version,
             "schema_version": self.schema_version,
         }
 
 
-#: The frozen delisting timing rule this repository has evidence for.
-#:
-#: EMPTY BY DESIGN. The ticket puts the timing rule behind an owner record, and
-#: no such record exists. :func:`resolve_timing_rule` therefore fails closed with
-#: ``BLOCKED_UNREGISTERED_TIMING_RULE``, mirroring
-#: :data:`qme.data.stores.riskfree_v1.REGISTERED_SOURCES` and
-#: :data:`qme.data.alpha_vantage.plan_v1.REGISTERED_PLANS`: the machinery is
-#: complete and tested, and it refuses to run until a sourced record exists.
-#: Tests pass their own rules through the ``rules=`` parameter under the
-#: ``TEST_CONSTRUCTED`` kind, which :func:`validate_timing_rule_registry`
-#: forbids in the shipped registry.
+#: EMPTY BY DESIGN. The mechanics exist; no owner-approved source-backed rule
+#: has been registered. Tests pass TEST_CONSTRUCTED rules through ``rules=``.
 REGISTERED_DELISTING_TIMING_RULES: Final[tuple[DelistingTimingRule, ...]] = ()
 
 
@@ -920,7 +1197,7 @@ def validate_timing_rule_registry(
         raise DelistingPolicyError(
             BLOCKED_UNREGISTERED_TIMING_RULE,
             "no frozen delisting timing rule is registered; this policy refuses to "
-            "guess the ordering of ex-date, last-trade-date and valuation-date",
+            "invent LAST_TRADE_DATE offsets or treat Form 25 as consideration settlement",
         )
     shipped = rules is REGISTERED_DELISTING_TIMING_RULES
     seen: set[str] = set()
@@ -940,28 +1217,32 @@ def validate_timing_rule_registry(
 def resolve_timing_rule(
     event_type: str,
     *,
+    outcome_kind: str,
     as_of: str,
     rules: Sequence[DelistingTimingRule] = REGISTERED_DELISTING_TIMING_RULES,
 ) -> DelistingTimingRule:
-    """Return the frozen timing rule for ``event_type`` at ``as_of``, or fail closed."""
+    """Return the frozen timing rule for event type and outcome kind, or fail closed."""
     _vocabulary(event_type, allowed=DELISTING_EVENT_TYPES, what="event_type")
+    _vocabulary(outcome_kind, allowed=OUTCOME_KINDS, what="outcome_kind")
     validate_timing_rule_registry(rules)
     day = iso_day(as_of, what="as_of")
     matches = [
         rule
         for rule in rules
-        if event_type in rule.applies_to_event_types and rule.is_effective_on(day)
+        if event_type in rule.applies_to_event_types
+        and outcome_kind in rule.applies_to_outcome_kinds
+        and rule.is_effective_on(day)
     ]
     if not matches:
         raise DelistingPolicyError(
             BLOCKED_UNREGISTERED_TIMING_RULE,
-            f"no registered timing rule covers {event_type} on {day}",
+            f"no registered timing rule covers {event_type}/{outcome_kind} on {day}",
         )
     if len(matches) > 1:
         names = ", ".join(sorted(rule.rule_id for rule in matches))
         raise DelistingPolicyError(
             BLOCKED_UNREGISTERED_TIMING_RULE,
-            f"ambiguous timing rules for {event_type} on {day}: {names}",
+            f"ambiguous timing rules for {event_type}/{outcome_kind} on {day}: {names}",
         )
     return matches[0]
 
@@ -1597,10 +1878,22 @@ class SourcedOutcome:
     cash_per_share: str | None = None
     share_ratio: str | None = None
     successor_security_id: str | None = None
+    consideration_structure: str = CONSIDERATION_STRUCTURE_SIMPLE
 
     def __post_init__(self) -> None:
         _vocabulary(self.outcome_kind, allowed=SOURCED_OUTCOME_KINDS, what="outcome_kind")
         _vocabulary(self.source_kind, allowed=SOURCE_KINDS, what="source_kind")
+        _vocabulary(
+            self.consideration_structure,
+            allowed=CONSIDERATION_STRUCTURES,
+            what="consideration_structure",
+        )
+        if self.consideration_structure != CONSIDERATION_STRUCTURE_SIMPLE:
+            raise DelistingPolicyError(
+                BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE,
+                f"{self.consideration_structure} consideration is not represented; "
+                "CVR, elective, delayed, contingent and multi-tranche outcomes fail closed",
+            )
         _nonempty(self.source, what="outcome source")
         _nonempty(self.source_reference, what="outcome source_reference")
         iso_instant(self.availability_time, what="outcome availability_time")
@@ -1658,6 +1951,7 @@ class SourcedOutcome:
             "cash_per_share": self.cash_per_share,
             "share_ratio": self.share_ratio,
             "successor_security_id": self.successor_security_id,
+            "consideration_structure": self.consideration_structure,
         }
 
 
@@ -1730,6 +2024,7 @@ class DelistingEvent:
     fallback_rule: str
     benchmark_treatment: str
     benchmark_decision_ref: str | None = None
+    coordinates: tuple[SourcedCoordinate, ...] = ()
 
     def __post_init__(self) -> None:
         token(self.event_id, what="event_id")
@@ -1781,6 +2076,45 @@ class DelistingEvent:
                 event_id=self.event_id,
                 security_id=self.security_id,
             )
+
+        seen_kinds: set[str] = set()
+        for coordinate in self.coordinates:
+            if not isinstance(coordinate, SourcedCoordinate):
+                raise DelistingPolicyError(
+                    BLOCKED_OUTCOME_EVENT_MISMATCH,
+                    "coordinates must be SourcedCoordinate records",
+                    event_id=self.event_id,
+                    security_id=self.security_id,
+                )
+            if coordinate.coordinate_kind == COORDINATE_SUCCESSOR_MARK_SESSION:
+                raise DelistingPolicyError(
+                    BLOCKED_UNREGISTERED_TIMING_RULE,
+                    "SUCCESSOR_MARK_SESSION is derived by a registered mapping and may not "
+                    "be supplied as an input coordinate",
+                    event_id=self.event_id,
+                    security_id=self.security_id,
+                )
+            if coordinate.coordinate_kind in seen_kinds:
+                raise DelistingPolicyError(
+                    BLOCKED_CONTRADICTORY_COORDINATES,
+                    f"two sources supplied {coordinate.coordinate_kind}; competing sources "
+                    "fail closed rather than last-row-wins",
+                    event_id=self.event_id,
+                    security_id=self.security_id,
+                )
+            seen_kinds.add(coordinate.coordinate_kind)
+            if (
+                coordinate.coordinate_kind == COORDINATE_LAST_TRADE_SESSION
+                and self.last_trade_date is not None
+                and coordinate.calendar_date != self.last_trade_date
+            ):
+                raise DelistingPolicyError(
+                    BLOCKED_CONTRADICTORY_COORDINATES,
+                    f"last_trade_date {self.last_trade_date} disagrees with "
+                    f"LAST_TRADE_SESSION {coordinate.calendar_date}",
+                    event_id=self.event_id,
+                    security_id=self.security_id,
+                )
 
         if self.valuation_date is not None:
             iso_day(self.valuation_date, what=f"{self.event_id}: valuation_date")
@@ -1849,6 +2183,7 @@ class DelistingEvent:
             "fallback_rule": self.fallback_rule,
             "benchmark_treatment": self.benchmark_treatment,
             "benchmark_decision_ref": self.benchmark_decision_ref,
+            "coordinates": [item.to_json_dict() for item in self.coordinates],
         }
 
 
@@ -2223,27 +2558,87 @@ DelistingResult = ObservedDelistingReturn | FallbackScenarioResult
 # ---------------------------------------------------------------------------
 
 
-def _anchor_date(event: DelistingEvent, rule: DelistingTimingRule) -> str:
-    """The recorded coordinate the frozen rule anchors on. Never inferred."""
-    if rule.valuation_anchor == TIMING_ANCHOR_LAST_TRADE_DATE:
-        if event.last_trade_date is None:
-            raise DelistingPolicyError(
-                BLOCKED_MISSING_LAST_TRADE_DATE,
-                f"timing rule {rule.rule_id} anchors on the last trade date and the event "
-                "records none",
-                event_id=event.event_id,
-                security_id=event.security_id,
-            )
-        return event.last_trade_date
-    if event.valuation_date is None:
+def _index_coordinates(event: DelistingEvent) -> dict[str, SourcedCoordinate]:
+    return {item.coordinate_kind: item for item in event.coordinates}
+
+
+def _enforce_cutoffs(
+    event: DelistingEvent,
+    indexed: Mapping[str, SourcedCoordinate],
+    cutoff_policy: CutoffPolicy | None,
+) -> None:
+    if cutoff_policy is None:
+        return
+    event_available = iso_instant(event.availability_time, what="availability_time")
+    if event_available > cutoff_policy.cutoff_for(CUTOFF_KIND_OUTCOME):
         raise DelistingPolicyError(
-            BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE,
-            f"timing rule {rule.rule_id} anchors on {rule.valuation_anchor} and the event "
-            "records no date for it",
+            BLOCKED_COORDINATE_AFTER_CUTOFF,
+            f"event availability_time {event.availability_time} is after outcome_cutoff "
+            f"{cutoff_policy.outcome_cutoff}",
             event_id=event.event_id,
             security_id=event.security_id,
         )
-    return event.valuation_date
+    for coordinate in indexed.values():
+        available = iso_instant(coordinate.available_at, what="available_at")
+        limit = cutoff_policy.cutoff_for(coordinate.required_by)
+        if available > limit:
+            raise DelistingPolicyError(
+                BLOCKED_COORDINATE_AFTER_CUTOFF,
+                f"{coordinate.coordinate_kind} available_at {coordinate.available_at} is after "
+                f"{coordinate.required_by}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+
+
+def _map_to_session(
+    coordinate: SourcedCoordinate,
+    mapping: str,
+    calendar: TradingCalendar,
+    *,
+    event: DelistingEvent,
+) -> str:
+    if coordinate.coordinate_kind == COORDINATE_LAST_TRADE_SESSION:
+        mapping = SESSION_MAP_EXACT_SESSION
+    if mapping == SESSION_MAP_EXACT_SESSION:
+        if not calendar.is_session(coordinate.calendar_date):
+            raise DelistingPolicyError(
+                BLOCKED_ORDERING_CONSTRAINT_VIOLATED,
+                f"{coordinate.coordinate_kind} {coordinate.calendar_date} is not an accepted "
+                "session and EXACT_SESSION mapping refuses to substitute",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        return coordinate.calendar_date
+    try:
+        return calendar.next_eligible_session(coordinate.calendar_date)
+    except MarketStoreError as exc:
+        raise DelistingPolicyError(
+            BLOCKED_ORDERING_CONSTRAINT_VIOLATED,
+            f"{coordinate.coordinate_kind} cannot map to an accepted session: {exc.state}",
+            event_id=event.event_id,
+            security_id=event.security_id,
+            detail=exc.state,
+        ) from exc
+
+
+def _enforce_ordering(
+    indexed: Mapping[str, SourcedCoordinate],
+    rule: DelistingTimingRule,
+    *,
+    event: DelistingEvent,
+) -> None:
+    for constraint in rule.ordering_constraints:
+        left = indexed[constraint.left]
+        right = indexed[constraint.right]
+        if left.calendar_date > right.calendar_date:
+            raise DelistingPolicyError(
+                BLOCKED_ORDERING_CONSTRAINT_VIOLATED,
+                f"{constraint.left} {left.calendar_date} is after {constraint.right} "
+                f"{right.calendar_date}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
 
 
 def settle_sourced_outcome(
@@ -2257,16 +2652,14 @@ def settle_sourced_outcome(
     rules: Sequence[DelistingTimingRule] = REGISTERED_DELISTING_TIMING_RULES,
     calendar: TradingCalendar | None = None,
     decisions: Sequence[BenchmarkTreatmentDecision] = REGISTERED_BENCHMARK_TREATMENT_DECISIONS,
+    cutoff_policy: CutoffPolicy | None = None,
 ) -> ObservedDelistingReturn:
-    """Settle a sourced cash / stock outcome under the frozen timing rule.
+    """Settle a sourced cash / stock outcome under a coordinate timing rule.
 
-    The **only** function that returns an :class:`ObservedDelistingReturn`. Its
-    ``outcome`` parameter is typed :class:`SourcedOutcome`, so an
-    :class:`UnknownAdverseOutcome` cannot reach it under a static type check.
-
-    The timing rule is resolved *first*: with the shipped empty registry this
-    raises ``BLOCKED_UNREGISTERED_TIMING_RULE`` before any price is read, so no
-    number is ever computed and then discarded.
+    The **only** function that returns an :class:`ObservedDelistingReturn`. The
+    shipped empty registry raises ``BLOCKED_UNREGISTERED_TIMING_RULE`` before any
+    price is read. Cash enters the ledger on the mapped actual-allocation session,
+    never on Form 25 effectiveness or an inferred LAST_TRADE offset.
     """
     if type(outcome) is not SourcedOutcome:
         raise DelistingPolicyError(
@@ -2288,32 +2681,49 @@ def settle_sourced_outcome(
             security_id=event.security_id,
         )
 
-    rule = resolve_timing_rule(event.event_type, as_of=as_of, rules=rules)
-    anchor = _anchor_date(event, rule)
-    if rule.valuation_offset_sessions == 0:
-        valuation_date = anchor
-    else:
-        resolved_calendar = require_calendar(
-            calendar, what=f"timing rule {rule.rule_id} session offset"
-        )
-        try:
-            valuation_date = resolved_calendar.offset(anchor, rule.valuation_offset_sessions)
-        except MarketStoreError as exc:
-            raise DelistingPolicyError(
-                BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE,
-                f"the frozen offset leaves accepted coverage: {exc.state}",
-                event_id=event.event_id,
-                security_id=event.security_id,
-                detail=exc.state,
-            ) from exc
-    if event.valuation_date is not None and event.valuation_date != valuation_date:
+    rule = resolve_timing_rule(
+        event.event_type, outcome_kind=outcome.outcome_kind, as_of=as_of, rules=rules
+    )
+    if event.valuation_date is not None:
         raise DelistingPolicyError(
-            BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE,
-            f"the event records valuation_date {event.valuation_date} but timing rule "
-            f"{rule.rule_id} derives {valuation_date}; the recorded date is never preferred "
-            "over the frozen rule, and the rule is never bent to the recorded date",
+            BLOCKED_CALLER_VALUATION_DATE_OVERRIDE,
+            "a caller-supplied valuation_date cannot override a derived settlement session",
             event_id=event.event_id,
             security_id=event.security_id,
+        )
+    indexed = _index_coordinates(event)
+    missing = [kind for kind in rule.required_coordinates if kind not in indexed]
+    if missing:
+        raise DelistingPolicyError(
+            BLOCKED_MISSING_REQUIRED_COORDINATE,
+            f"timing rule {rule.rule_id} requires {missing} and the event records none; "
+            "Form 25 listing removal is not payment evidence",
+            event_id=event.event_id,
+            security_id=event.security_id,
+        )
+    if outcome.source_kind not in rule.applicable_source_kinds:
+        raise DelistingPolicyError(
+            BLOCKED_UNREGISTERED_SOURCE_KIND,
+            f"outcome source_kind {outcome.source_kind} is not applicable to {rule.rule_id}",
+            event_id=event.event_id,
+            security_id=event.security_id,
+        )
+    _enforce_cutoffs(event, indexed, cutoff_policy)
+    _enforce_ordering(indexed, rule, event=event)
+
+    resolved_calendar = require_calendar(calendar, what=f"timing rule {rule.rule_id} session map")
+    settlement_session = _map_to_session(
+        indexed[rule.settlement_coordinate],
+        rule.session_mapping,
+        resolved_calendar,
+        event=event,
+    )
+    if rule.successor_mark_mapping is not None:
+        _map_to_session(
+            indexed[rule.settlement_coordinate],
+            rule.successor_mark_mapping,
+            resolved_calendar,
+            event=event,
         )
 
     basis = exact(entry_basis, what="entry_basis")
@@ -2356,7 +2766,7 @@ def settle_sourced_outcome(
         event_type=event.event_type,
         reason=event.reason,
         timing_rule_id=rule.rule_id,
-        valuation_date=valuation_date,
+        valuation_date=settlement_session,
         entry_basis=basis,
         proceeds_per_share=proceeds,
         observed_return=observed_return,
@@ -2683,6 +3093,7 @@ def _settle_row(
     ranges: Sequence[SensitivityRange],
     decisions: Sequence[BenchmarkTreatmentDecision],
     calendar: TradingCalendar | None,
+    cutoff_policy: CutoffPolicy | None,
 ) -> tuple[DelistingOutcomeRow, ObservedDelistingReturn | None, FallbackScenarioResult | None]:
     """Resolve one event into a row, recording a refusal instead of inventing a number."""
     outcome = event.outcome
@@ -2711,7 +3122,12 @@ def _settle_row(
         # so a run with no registered rule reports the timing refusal rather than
         # a downstream data gap it would only have hit afterwards.
         try:
-            resolve_timing_rule(event.event_type, as_of=as_of, rules=rules)
+            resolve_timing_rule(
+                event.event_type,
+                outcome_kind=outcome.outcome_kind,
+                as_of=as_of,
+                rules=rules,
+            )
         except DelistingPolicyError as refusal:
             return (
                 DelistingOutcomeRow(
@@ -2752,6 +3168,7 @@ def _settle_row(
                 rules=rules,
                 calendar=calendar,
                 decisions=decisions,
+                cutoff_policy=cutoff_policy,
             )
         except DelistingPolicyError as refusal:
             return (
@@ -2875,6 +3292,7 @@ def build_delisting_table(
     ranges: Sequence[SensitivityRange] = REGISTERED_SENSITIVITY_RANGES,
     decisions: Sequence[BenchmarkTreatmentDecision] = REGISTERED_BENCHMARK_TREATMENT_DECISIONS,
     calendar: TradingCalendar | None = None,
+    cutoff_policy: CutoffPolicy | None = None,
 ) -> DelistingTable:
     """Resolve every delisting / exit event into an immutable outcome table.
 
@@ -2930,6 +3348,7 @@ def build_delisting_table(
             ranges=ranges,
             decisions=decisions,
             calendar=calendar,
+            cutoff_policy=cutoff_policy,
         )
         rows.append(row)
         if settled is not None:
@@ -3120,8 +3539,11 @@ __all__ = [
     "BENCHMARK_TREATMENT_CONSTITUENT_REPLACED",
     "BENCHMARK_TREATMENT_UNCHANGED",
     "BLOCKED_BENCHMARK_TREATMENT_WITHOUT_DECISION_REF",
+    "BLOCKED_CALLER_VALUATION_DATE_OVERRIDE",
     "BLOCKED_CARRY_FORWARD_HORIZON_EXCEEDED",
     "BLOCKED_CONTINUATION_HAS_NO_DELISTING_RETURN",
+    "BLOCKED_CONTRADICTORY_COORDINATES",
+    "BLOCKED_COORDINATE_AFTER_CUTOFF",
     "BLOCKED_DUPLICATE_DELISTING_EVENT",
     "BLOCKED_DUPLICATE_EXIT_PRICING_INPUT",
     "BLOCKED_EVENT_REASON_MISMATCH",
@@ -3135,14 +3557,18 @@ __all__ = [
     "BLOCKED_MISSING_LAST_TRADE_DATE",
     "BLOCKED_MISSING_MARK_NO_POLICY",
     "BLOCKED_MISSING_PRIOR_CLOSE",
+    "BLOCKED_MISSING_REQUIRED_COORDINATE",
     "BLOCKED_MISSING_REQUIRED_FIELD",
     "BLOCKED_MISSING_SUCCESSOR_MARK",
+    "BLOCKED_ORDERING_CONSTRAINT_VIOLATED",
     "BLOCKED_NONPOSITIVE_ENTRY_BASIS",
     "BLOCKED_NOT_AN_ISO_DATE",
     "BLOCKED_NO_FALLBACK_PERMITTED",
     "BLOCKED_OUTCOME_EVENT_MISMATCH",
     "BLOCKED_OUTCOME_TERMS_MISMATCH",
+    "BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION",
     "BLOCKED_STALE_MARK_NO_CARRY_FORWARD_POLICY",
+    "BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE",
     "BLOCKED_UNREGISTERED_BENCHMARK_TREATMENT_CHANGE",
     "BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT",
     "BLOCKED_UNREGISTERED_SENSITIVITY_RANGE",
@@ -3152,7 +3578,17 @@ __all__ = [
     "BLOCKED_VALUATION_BEFORE_LAST_TRADE",
     "BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE",
     "CONSIDERATION_OUTCOME_KINDS",
+    "CONSIDERATION_STRUCTURES",
     "CONTINUATION_EVENT_TYPES",
+    "COORDINATE_ACTUAL_ALLOCATION_AT",
+    "COORDINATE_ANNOUNCED_PAYMENT_DATE",
+    "COORDINATE_DELISTING_EFFECTIVE_DATE",
+    "COORDINATE_LAST_TRADE_SESSION",
+    "COORDINATE_SUCCESSOR_MARK_SESSION",
+    "COORDINATE_TRANSACTION_EFFECTIVE_AT",
+    "CUTOFF_KIND_DECISION",
+    "CUTOFF_KIND_OUTCOME",
+    "CUTOFF_KINDS",
     "DEFAULT_BENCHMARK_TREATMENT",
     "DELISTING_ARTIFACT_SCALE",
     "DELISTING_EVENT_TYPES",
@@ -3213,11 +3649,14 @@ __all__ = [
     "TIMING_ANCHOR_EX_DATE",
     "TIMING_ANCHOR_LAST_TRADE_DATE",
     "TIMING_ANCHOR_PAYMENT_DATE",
+    "TIMING_COORDINATE_KINDS",
     "TIMING_COORDINATES",
+    "TimingConstraint",
     "UNKNOWN_ADVERSE_FALLBACK_RULES",
     "ZERO_NOTIONAL",
     "BenchmarkTreatmentDecision",
     "CoverageError",
+    "CutoffPolicy",
     "DelistingEvent",
     "DelistingOutcome",
     "DelistingOutcomeRow",
@@ -3234,6 +3673,10 @@ __all__ = [
     "ObservedDelistingReturn",
     "OutcomeAttributionRow",
     "SensitivityRange",
+    "SESSION_MAP_EXACT_SESSION",
+    "SESSION_MAP_NEXT_ELIGIBLE",
+    "SESSION_MAPPINGS",
+    "SourcedCoordinate",
     "SourcedOutcome",
     "UnknownAdverseOutcome",
     "attribute_pnl_by_outcome_type",

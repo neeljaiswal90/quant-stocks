@@ -19,6 +19,7 @@
     "s_b": "2024-03-14",
     "s_c": "2024-03-15",
     "s_d": "2024-03-18",
+    "s_tue": "2024-03-19",
     "non_session": "2024-03-16"
   },
   "audit_id": "nee128-coverage-audit-fixture-1",
@@ -303,7 +304,7 @@
     "delisting_row_count": 6,
     "fallback_result_count": 0,
     "attribution_row_count": 6,
-    "report_sha256_grouped": "2adda99b:26bb04c4:fd8f658e:67f9f282:2cccb411:f115921c:2d8afeb8:f8f71d72"
+    "report_sha256_grouped": "79e3ba39:9a2c4215:51a412c3:825a3e84:743e2bbc:370fbe60:4dd8ea14:34570a95"
   },
   "clean_run": {
     "note": "A run with nothing missing in any of the eight classes. Coverage minima are owner-registered at 1, so this synthetic run is GATE_VALID. Timing remains unregistered, so a sourced cash/stock exit would still leave held positions unaudited.",
@@ -332,16 +333,24 @@
       "held_position_coverage_exact": "1/1",
       "unregistered_threshold_classes": []
     },
-    "report_sha256_grouped": "dda31fe7:ee95817b:a7ae77c7:2aa2d62c:3480891d:7108198b:e763696f:b43e3629"
+    "report_sha256_grouped": "b3b2a45b:a0510614:13382d90:5f406417:e87af307:2b48846a:4e01a0f1:366001ce"
   },
   "registered_probe": {
     "note": "Test-only records passed through the `rules=` / `haircuts=` / `ranges=` / `thresholds=` parameters under the TEST_CONSTRUCTED source kind, which every validate_*_registry forbids in a shipped registry. They exist to prove the machinery is complete, not to register anything.",
     "timing_rule": {
-      "rule_id": "test-timing-last-trade-plus-one",
-      "valuation_anchor": "LAST_TRADE_DATE",
-      "valuation_offset_sessions": 1,
-      "coordinate_ordering": ["EX_DATE", "LAST_TRADE_DATE", "VALUATION_DATE"],
-      "applies_to_event_types": ["CASH_MERGER", "STOCK_MERGER"],
+      "rule_id": "test-timing-cash-allocation",
+      "applies_to_event_types": ["CASH_MERGER"],
+      "applies_to_outcome_kinds": ["SOURCED_CASH"],
+      "required_coordinates": ["LAST_TRADE_SESSION", "TRANSACTION_EFFECTIVE_AT", "ACTUAL_ALLOCATION_AT"],
+      "ordering_constraints": [
+        {"left": "LAST_TRADE_SESSION", "op": "<=", "right": "TRANSACTION_EFFECTIVE_AT"},
+        {"left": "TRANSACTION_EFFECTIVE_AT", "op": "<=", "right": "ACTUAL_ALLOCATION_AT"}
+      ],
+      "entitlement_coordinate": "TRANSACTION_EFFECTIVE_AT",
+      "settlement_coordinate": "ACTUAL_ALLOCATION_AT",
+      "session_mapping": "NEXT_ELIGIBLE_SESSION",
+      "successor_mark_mapping": null,
+      "applicable_source_kinds": ["ISSUER_FILING", "TEST_CONSTRUCTED"],
       "effective_date": "2024-01-01"
     },
     "haircut": {
@@ -362,16 +371,16 @@
     },
     "coverage_threshold_minimum_fraction": "0.80",
     "expected_cash_merger_settlement": {
-      "timing_rule_id": "test-timing-last-trade-plus-one",
+      "timing_rule_id": "test-timing-cash-allocation",
       "anchor_session": "2024-03-15",
-      "valuation_date": "2024-03-18",
+      "valuation_date": "2024-03-19",
       "proceeds_per_share_exact": "85/2",
       "entry_basis_exact": "167/4",
       "observed_return_exact": "3/167",
       "observed_return_artifact": "0.017964071856287425",
       "affected_notional": "125000",
       "pnl_impact_exact": "375000/167",
-      "derivation": "proceeds 42.5 over basis 41.75 is 170/167; minus 1 is 3/167. The exact rational is not representable in base 10, which is why coverage and returns are compared as rationals and only rendered once, at the artifact boundary."
+      "derivation": "proceeds 42.5 over basis 41.75 is 170/167; minus 1 is 3/167. Cash is recognized at the sourced transaction-effective instant on Friday 2024-03-15 and enters the ledger on the mapped actual-allocation session Tuesday 2024-03-19. It is not settled on last-trade Friday and not invented as last-trade plus one session (Monday 2024-03-18)."
     },
     "expected_bankruptcy_scenario": {
       "scenario_id": "sc-bankruptcy-recovery-35",
@@ -427,6 +436,13 @@
     "fallback_rule_outcome_mismatch": "BLOCKED_FALLBACK_RULE_OUTCOME_MISMATCH",
     "valuation_before_last_trade": "BLOCKED_VALUATION_BEFORE_LAST_TRADE",
     "valuation_contradicts_timing_rule": "BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE",
+    "caller_valuation_date_override": "BLOCKED_CALLER_VALUATION_DATE_OVERRIDE",
+    "missing_required_coordinate": "BLOCKED_MISSING_REQUIRED_COORDINATE",
+    "coordinate_after_cutoff": "BLOCKED_COORDINATE_AFTER_CUTOFF",
+    "contradictory_coordinates": "BLOCKED_CONTRADICTORY_COORDINATES",
+    "unsupported_consideration_structure": "BLOCKED_UNSUPPORTED_CONSIDERATION_STRUCTURE",
+    "ordering_constraint_violated": "BLOCKED_ORDERING_CONSTRAINT_VIOLATED",
+    "settlement_coordinate_not_allocation": "BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION",
     "missing_successor_mark": "BLOCKED_MISSING_SUCCESSOR_MARK",
     "nonpositive_entry_basis": "BLOCKED_NONPOSITIVE_ENTRY_BASIS",
     "missing_prior_close": "BLOCKED_MISSING_PRIOR_CLOSE",
@@ -469,10 +485,10 @@
       "record_type": "DelistingTimingRule",
       "count_required": 1,
       "registered": false,
-      "subject": "the frozen delisting timing rule: which coordinate a sourced exit is valued from, the signed session offset, and the frozen ordering of ex-date / last-trade-date / valuation-date",
+      "subject": "the frozen delisting timing rule: required coordinates, executable ordering, entitlement vs settlement roles, and session mapping selected by event type and outcome kind. LAST_TRADE_DATE + N is not representable. Form 25 and announced payment dates cannot settle consideration.",
       "typed_state_until_registered": "BLOCKED_UNREGISTERED_TIMING_RULE",
       "blocks": "settling any sourced cash or stock delisting outcome, so every held position carrying such an exit stays unaudited and invalidates its run",
-      "required_fields": ["rule_id", "valuation_anchor", "valuation_offset_sessions", "coordinate_ordering", "applies_to_event_types", "source_kind", "source", "source_reference", "effective_date"]
+      "required_fields": ["rule_id", "applies_to_event_types", "applies_to_outcome_kinds", "required_coordinates", "ordering_constraints", "entitlement_coordinate", "settlement_coordinate", "session_mapping", "applicable_source_kinds", "source_kind", "source", "source_reference", "effective_date"]
     },
     {
       "registry": "qme.data.coverage.delisting_v1.REGISTERED_FALLBACK_HAIRCUTS",

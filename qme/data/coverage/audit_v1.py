@@ -123,6 +123,7 @@ from qme.data.coverage.delisting_v1 import (
     SOURCE_KINDS,
     BenchmarkTreatmentDecision,
     CoverageError,
+    CutoffPolicy,
     DelistingEvent,
     DelistingPolicyError,
     DelistingTable,
@@ -1656,6 +1657,8 @@ def build_coverage_audit(
     ranges: Sequence[SensitivityRange] = REGISTERED_SENSITIVITY_RANGES,
     decisions: Sequence[BenchmarkTreatmentDecision] = REGISTERED_BENCHMARK_TREATMENT_DECISIONS,
     mark_policies: Sequence[MissingMarkPolicy] = REGISTERED_MISSING_MARK_POLICIES,
+    decision_cutoff: str | None = None,
+    outcome_cutoff: str | None = None,
 ) -> CoverageAuditReport:
     """Build the whole audit: coverage, ledger, delisting, fallbacks, attribution, gate.
 
@@ -1666,6 +1669,10 @@ def build_coverage_audit(
     token(audit_id, what="audit_id")
     iso_instant(analysis_cutoff, what="analysis_cutoff")
     iso_day(as_of, what="as_of")
+    cutoff_policy = CutoffPolicy(
+        decision_cutoff=analysis_cutoff if decision_cutoff is None else decision_cutoff,
+        outcome_cutoff=analysis_cutoff if outcome_cutoff is None else outcome_cutoff,
+    )
 
     indexed = _validated_items(required_items, calendar=calendar)
     declared_states = {key: item.state for key, item in indexed.items()}
@@ -1695,6 +1702,7 @@ def build_coverage_audit(
         ranges=ranges,
         decisions=decisions,
         calendar=calendar,
+        cutoff_policy=cutoff_policy,
     )
     # One run, one configuration, one code binding: the delisting table's own
     # standalone config/code digests are re-stamped with the audit's, so every

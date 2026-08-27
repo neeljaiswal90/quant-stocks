@@ -16,7 +16,7 @@ import re
 import subprocess
 import sys
 from collections.abc import Iterator
-from dataclasses import MISSING, FrozenInstanceError, fields
+from dataclasses import MISSING, FrozenInstanceError, fields, replace
 from fractions import Fraction
 from pathlib import Path
 from typing import Any
@@ -105,6 +105,11 @@ from qme.data.coverage.delisting_v1 import (
     BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT,
     BLOCKED_UNREGISTERED_SENSITIVITY_RANGE,
     BLOCKED_UNREGISTERED_TIMING_RULE,
+    COORDINATE_ACTUAL_ALLOCATION_AT,
+    COORDINATE_DELISTING_EFFECTIVE_DATE,
+    COORDINATE_LAST_TRADE_SESSION,
+    COORDINATE_TRANSACTION_EFFECTIVE_AT,
+    CUTOFF_KIND_OUTCOME,
     DEFAULT_BENCHMARK_TREATMENT,
     DELISTING_EVENT_TYPES,
     DELISTING_FAIL_CLOSED_STATES,
@@ -148,7 +153,9 @@ from qme.data.coverage.delisting_v1 import (
     MissingMarkPolicy,
     ObservedDelistingReturn,
     SensitivityRange,
+    SourcedCoordinate,
     SourcedOutcome,
+    TimingConstraint,
     UnknownAdverseOutcome,
     attribute_pnl_by_outcome_type,
     build_delisting_table,
@@ -195,6 +202,7 @@ NEW_FILES = (
     FIXTURE,
     DOC,
     Path(__file__).resolve(),
+    ROOT / "tests" / "data" / "test_delisting_timing_contract.py",
 )
 
 VECTORS: dict[str, Any] = json.loads(FIXTURE.read_text("utf-8"))
@@ -352,14 +360,101 @@ def _probe_timing_rule() -> DelistingTimingRule:
     raw = VECTORS["registered_probe"]["timing_rule"]
     return DelistingTimingRule(
         rule_id=raw["rule_id"],
-        valuation_anchor=raw["valuation_anchor"],
-        valuation_offset_sessions=raw["valuation_offset_sessions"],
-        coordinate_ordering=tuple(raw["coordinate_ordering"]),
         applies_to_event_types=tuple(raw["applies_to_event_types"]),
+        applies_to_outcome_kinds=tuple(raw["applies_to_outcome_kinds"]),
+        required_coordinates=tuple(raw["required_coordinates"]),
+        ordering_constraints=tuple(
+            TimingConstraint(item["left"], item["op"], item["right"])
+            for item in raw["ordering_constraints"]
+        ),
+        entitlement_coordinate=raw["entitlement_coordinate"],
+        settlement_coordinate=raw["settlement_coordinate"],
+        session_mapping=raw["session_mapping"],
+        successor_mark_mapping=raw["successor_mark_mapping"],
+        applicable_source_kinds=tuple(raw["applicable_source_kinds"]),
         source_kind=SOURCE_KIND_TEST_CONSTRUCTED,
         source="test-constructed timing rule",
         source_reference="tests/data/test_coverage_audit.py",
         effective_date=raw["effective_date"],
+    )
+
+
+def _probe_stock_timing_rule() -> DelistingTimingRule:
+    cash = _probe_timing_rule()
+    return DelistingTimingRule(
+        rule_id="test-timing-stock-allocation",
+        applies_to_event_types=("STOCK_MERGER",),
+        applies_to_outcome_kinds=("SOURCED_STOCK",),
+        required_coordinates=cash.required_coordinates,
+        ordering_constraints=cash.ordering_constraints,
+        entitlement_coordinate=cash.entitlement_coordinate,
+        settlement_coordinate=cash.settlement_coordinate,
+        session_mapping=cash.session_mapping,
+        successor_mark_mapping="NEXT_ELIGIBLE_SESSION",
+        applicable_source_kinds=cash.applicable_source_kinds,
+        source_kind=SOURCE_KIND_TEST_CONSTRUCTED,
+        source="test-constructed stock timing rule",
+        source_reference="tests/data/test_coverage_audit.py",
+        effective_date=cash.effective_date,
+    )
+
+
+_COORD_ARTIFACT = grouped_sha256(b"QME-NEE128-TIMING-COORD-V1:probe")
+
+
+def _coordinate(
+    kind: str,
+    day: str,
+    *,
+    instant: str | None = None,
+    required_by: str = CUTOFF_KIND_OUTCOME,
+    available_at: str = "2024-03-18T13:30:00+00:00",
+) -> SourcedCoordinate:
+    return SourcedCoordinate(
+        coordinate_kind=kind,
+        calendar_date=day,
+        instant=instant,
+        source_kind="ISSUER_FILING",
+        source="test-constructed coordinate",
+        source_reference="fixture://timing/coordinate",
+        available_at=available_at,
+        required_by=required_by,
+        raw_artifact_sha256_grouped=_COORD_ARTIFACT,
+        accession_or_event_id="acc-probe-1",
+    )
+
+
+def _cash_settlement_coordinates() -> tuple[SourcedCoordinate, ...]:
+    last_trade = SESSIONS["s_c"]
+    return (
+        _coordinate(COORDINATE_LAST_TRADE_SESSION, last_trade),
+        _coordinate(
+            COORDINATE_TRANSACTION_EFFECTIVE_AT,
+            last_trade,
+            instant=f"{last_trade}T20:00:00+00:00",
+        ),
+        _coordinate(
+            COORDINATE_ACTUAL_ALLOCATION_AT,
+            SESSIONS["s_tue"],
+            instant=f"{SESSIONS['s_tue']}T12:00:00+00:00",
+        ),
+    )
+
+
+def _stock_settlement_coordinates() -> tuple[SourcedCoordinate, ...]:
+    last_trade = SESSIONS["s_c"]
+    return (
+        _coordinate(COORDINATE_LAST_TRADE_SESSION, last_trade),
+        _coordinate(
+            COORDINATE_TRANSACTION_EFFECTIVE_AT,
+            last_trade,
+            instant=f"{last_trade}T20:00:00+00:00",
+        ),
+        _coordinate(
+            COORDINATE_ACTUAL_ALLOCATION_AT,
+            SESSIONS["s_d"],
+            instant=f"{SESSIONS['s_d']}T12:00:00+00:00",
+        ),
     )
 
 
@@ -1166,7 +1261,9 @@ def test_a_sourced_outcome_cannot_be_settled_without_the_frozen_timing_rule() ->
         )
     assert caught.value.state == BLOCKED_UNREGISTERED_TIMING_RULE
     with pytest.raises(DelistingPolicyError):
-        resolve_timing_rule("CASH_MERGER", as_of=VECTORS["as_of"])
+        resolve_timing_rule(
+            "CASH_MERGER", outcome_kind="SOURCED_CASH", as_of=VECTORS["as_of"]
+        )
 
 
 def test_the_timing_rule_is_resolved_before_any_price_is_read(calendar: Any) -> None:
@@ -1199,7 +1296,7 @@ def test_a_registered_timing_rule_settles_the_cash_merger_to_the_hand_derived_re
     calendar: Any,
 ) -> None:
     expected = VECTORS["registered_probe"]["expected_cash_merger_settlement"]
-    event = _event("evt-cash-merger")
+    event = replace(_event("evt-cash-merger"), coordinates=_cash_settlement_coordinates())
     assert isinstance(event.outcome, SourcedOutcome)
     settled = settle_sourced_outcome(
         event,
@@ -1241,6 +1338,7 @@ def test_a_recorded_valuation_date_that_contradicts_the_frozen_rule_is_refused(
         valuation_date=SESSIONS["s_c"],
         fallback_rule=event.fallback_rule,
         benchmark_treatment=event.benchmark_treatment,
+        coordinates=_cash_settlement_coordinates(),
     )
     assert isinstance(contradicting.outcome, SourcedOutcome)
     with pytest.raises(DelistingPolicyError) as caught:
@@ -1253,27 +1351,39 @@ def test_a_recorded_valuation_date_that_contradicts_the_frozen_rule_is_refused(
             rules=(_probe_timing_rule(),),
             calendar=calendar,
         )
-    assert caught.value.state == "BLOCKED_VALUATION_DATE_CONTRADICTS_TIMING_RULE"
+    assert caught.value.state == "BLOCKED_CALLER_VALUATION_DATE_OVERRIDE"
 
 
-def test_a_timing_rule_must_state_the_full_coordinate_ordering() -> None:
+def test_a_timing_rule_cannot_settle_on_form_25_or_announced_payment() -> None:
+    cash = _probe_timing_rule()
     with pytest.raises(DelistingPolicyError) as caught:
         DelistingTimingRule(
-            rule_id="test-partial-ordering",
-            valuation_anchor="LAST_TRADE_DATE",
-            valuation_offset_sessions=0,
-            coordinate_ordering=("LAST_TRADE_DATE", "VALUATION_DATE"),
-            applies_to_event_types=("CASH_MERGER",),
+            rule_id="test-form-25-settlement",
+            applies_to_event_types=cash.applies_to_event_types,
+            applies_to_outcome_kinds=cash.applies_to_outcome_kinds,
+            required_coordinates=(
+                COORDINATE_LAST_TRADE_SESSION,
+                COORDINATE_DELISTING_EFFECTIVE_DATE,
+            ),
+            ordering_constraints=(
+                TimingConstraint(
+                    COORDINATE_LAST_TRADE_SESSION, "<=", COORDINATE_DELISTING_EFFECTIVE_DATE
+                ),
+            ),
+            entitlement_coordinate=COORDINATE_LAST_TRADE_SESSION,
+            settlement_coordinate=COORDINATE_DELISTING_EFFECTIVE_DATE,
+            session_mapping=cash.session_mapping,
+            applicable_source_kinds=cash.applicable_source_kinds,
             source_kind=SOURCE_KIND_TEST_CONSTRUCTED,
             source="test",
             source_reference="tests/data/test_coverage_audit.py",
             effective_date="2024-01-01",
         )
-    assert caught.value.state == BLOCKED_UNREGISTERED_TIMING_RULE
+    assert caught.value.state == "BLOCKED_SETTLEMENT_COORDINATE_NOT_ALLOCATION"
 
 
 def test_a_stock_outcome_is_not_valued_without_a_successor_mark(calendar: Any) -> None:
-    event = _event("evt-stock-merger")
+    event = replace(_event("evt-stock-merger"), coordinates=_stock_settlement_coordinates())
     assert isinstance(event.outcome, SourcedOutcome)
     with pytest.raises(DelistingPolicyError) as caught:
         settle_sourced_outcome(
@@ -1283,7 +1393,7 @@ def test_a_stock_outcome_is_not_valued_without_a_successor_mark(calendar: Any) -
             held_notional="88000",
             successor_close=None,
             as_of=VECTORS["as_of"],
-            rules=(_probe_timing_rule(),),
+            rules=(_probe_stock_timing_rule(),),
             calendar=calendar,
         )
     assert caught.value.state == "BLOCKED_MISSING_SUCCESSOR_MARK"
@@ -2245,7 +2355,7 @@ def test_the_remaining_blocked_cases_fail_closed_with_their_registered_state(
         )
     assert ordering.value.state == cases["valuation_before_last_trade"]
 
-    event = _event("evt-cash-merger")
+    event = replace(_event("evt-cash-merger"), coordinates=_cash_settlement_coordinates())
     assert isinstance(event.outcome, SourcedOutcome)
     with pytest.raises(DelistingPolicyError) as basis:
         settle_sourced_outcome(
@@ -2295,10 +2405,18 @@ def test_the_remaining_blocked_cases_fail_closed_with_their_registered_state(
     with pytest.raises(DelistingPolicyError) as source_kind:
         DelistingTimingRule(
             rule_id="shipped-test-record",
-            valuation_anchor="LAST_TRADE_DATE",
-            valuation_offset_sessions=0,
-            coordinate_ordering=("EX_DATE", "LAST_TRADE_DATE", "VALUATION_DATE"),
             applies_to_event_types=("CASH_MERGER",),
+            applies_to_outcome_kinds=("SOURCED_CASH",),
+            required_coordinates=(
+                COORDINATE_LAST_TRADE_SESSION,
+                COORDINATE_TRANSACTION_EFFECTIVE_AT,
+                COORDINATE_ACTUAL_ALLOCATION_AT,
+            ),
+            ordering_constraints=(),
+            entitlement_coordinate=COORDINATE_TRANSACTION_EFFECTIVE_AT,
+            settlement_coordinate=COORDINATE_ACTUAL_ALLOCATION_AT,
+            session_mapping="NEXT_ELIGIBLE_SESSION",
+            applicable_source_kinds=("ISSUER_FILING",),
             source_kind="NOT_A_SOURCE_KIND",
             source="s",
             source_reference="r",
