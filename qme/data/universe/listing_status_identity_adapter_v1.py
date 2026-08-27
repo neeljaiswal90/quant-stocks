@@ -6,9 +6,10 @@ adapter lives on the ingest side and emits :class:`ListingFact` /
 and does not lift ``AV_SURVIVORSHIP_REDUCED_PROXY``.
 
 Until EDGAR CIK ingest exists, each listing row gets a vendor-scoped issuer key
-``AV:{exchange}:{symbol}``. That key is opaque source identity, not a
-``security_id``. Distinct listings therefore remain distinct issuers until a
-sourced CIK join lands; the adapter never guesses that two names are one firm.
+``AV:{exchange}:{symbol}``. Sourced :class:`SourcedCikMapping` values may attach a
+CIK onto overlapping listings; missing listings and missing evidence fail closed.
+Two disagreeing sourced CIKs become the identity layer's CIK-mismatch ambiguity,
+not a guessed winner.
 
 Interval mapping (half-open ``[ipo_date, delisting_date)``):
 
@@ -33,7 +34,7 @@ issuer without inventing a CIK.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 
 from qme.data.alpha_vantage.store import RawPullStore
 from qme.data.corporate_actions.registered_events import RegisteredEvent
@@ -45,6 +46,7 @@ from qme.data.identity.resolution_v1 import (
     LinkKind,
     ListingFact,
     build_identity_table,
+    normalize_cik,
 )
 from qme.data.universe.av_proxy_snapshot import ListingRow, load_verified_listing_rows
 
@@ -55,6 +57,18 @@ _LISTING_STATES = frozenset({"active", "delisted"})
 
 class ListingStatusIdentityAdapterError(ValueError):
     """Raised when a LISTING_STATUS row cannot be mapped to identity facts."""
+
+
+@dataclass(frozen=True)
+class SourcedCikMapping:
+    """One sourced CIK interval for a ticker/exchange. Never inferred from a name."""
+
+    ticker: str
+    exchange: str
+    cik: str
+    interval: DateInterval
+    source_id: str
+    evidence_ref: str
 
 
 def _require_iso_date(value: str, *, what: str) -> str:
@@ -143,6 +157,7 @@ def identity_table_from_listing_status(
     active_pull_id: str,
     delisted_pull_id: str,
     identity_events: Sequence[RegisteredEvent] = (),
+    cik_mappings: Sequence[SourcedCikMapping] = (),
 ) -> IdentityTable:
     """Build an identity table from one active and one delisted LISTING_STATUS pull."""
 
@@ -160,6 +175,7 @@ def identity_table_from_listing_status(
         raise ListingStatusIdentityAdapterError("NO_LISTING_ROWS")
     links = identity_links_from_registered_events(listings, identity_events)
     listings, issuers = _align_issuers_for_identity_links(listings, issuers, links)
+    issuers = apply_sourced_cik_mappings(listings, issuers, cik_mappings)
     return build_identity_table(
         listing_facts=listings, issuer_facts=issuers, links=links
     )
@@ -271,6 +287,51 @@ def _align_issuers_for_identity_links(
     return rewritten_listings, rewritten_issuers
 
 
+def apply_sourced_cik_mappings(
+    listings: Sequence[ListingFact],
+    issuers: Sequence[IssuerFact],
+    mappings: Sequence[SourcedCikMapping],
+) -> tuple[IssuerFact, ...]:
+    """Attach sourced CIKs onto overlapping listing issuers. Do not guess from names."""
+
+    if not mappings:
+        return tuple(issuers)
+    issuers_by_ref = {fact.evidence_ref: fact for fact in issuers}
+    replaced_refs: set[str] = set()
+    sourced: list[IssuerFact] = []
+    for index, mapping in enumerate(mappings):
+        if not mapping.evidence_ref or mapping.evidence_ref != mapping.evidence_ref.strip():
+            raise ListingStatusIdentityAdapterError(
+                f"CIK_MAPPING_MISSING_EVIDENCE:{mapping.ticker}/{mapping.exchange}"
+            )
+        cik = normalize_cik(mapping.cik)
+        matches = [
+            listing
+            for listing in listings
+            if listing.ticker == mapping.ticker
+            and listing.exchange == mapping.exchange
+            and listing.interval.overlaps(mapping.interval)
+        ]
+        if not matches:
+            raise ListingStatusIdentityAdapterError(
+                f"CIK_MAPPING_MISSING_LISTING:{mapping.ticker}/{mapping.exchange}"
+            )
+        for listing in matches:
+            issuer = issuers_by_ref[listing.evidence_ref]
+            sourced.append(
+                replace(
+                    issuer,
+                    fact_id=f"issuer-cik:{index}:{listing.fact_id}",
+                    source_id=mapping.source_id,
+                    evidence_ref=mapping.evidence_ref,
+                    cik=cik,
+                )
+            )
+            replaced_refs.add(listing.evidence_ref)
+    kept = tuple(fact for fact in issuers if fact.evidence_ref not in replaced_refs)
+    return kept + tuple(sourced)
+
+
 def identity_table_from_stored_listing_status(
     store: RawPullStore,
     *,
@@ -278,6 +339,7 @@ def identity_table_from_stored_listing_status(
     active_pull_id: str,
     delisted_pull_id: str,
     identity_events: Sequence[RegisteredEvent] = (),
+    cik_mappings: Sequence[SourcedCikMapping] = (),
 ) -> IdentityTable:
     """Build an identity table from hash-verified stored LISTING_STATUS pulls."""
 
@@ -299,4 +361,5 @@ def identity_table_from_stored_listing_status(
         active_pull_id=active_pull_id,
         delisted_pull_id=delisted_pull_id,
         identity_events=identity_events,
+        cik_mappings=cik_mappings,
     )
