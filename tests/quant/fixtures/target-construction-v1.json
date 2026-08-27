@@ -1,0 +1,400 @@
+{
+  "artifact_id": "QME-COMPOSITION-TARGET-CONSTRUCTION-KAT-V1",
+  "calendar": {
+    "calendar_id": "XSYN-TARGETS",
+    "calendar_sha256_grouped": "cedf5732:3b3e6c02:d9e64bce:a90250cc:f5fde794:6975062d:456bf73b:64c7f307"
+  },
+  "cases": {
+    "kat-three-name-residual-and-unselected-carry": {
+      "expected": {
+        "deltas": {
+          "SYN-AAA": "6.00000000",
+          "SYN-BBB": "4.00000000",
+          "SYN-CCC": "3.00000000",
+          "SYN-DDD": "-5.00000000"
+        },
+        "final_positions": {
+          "SYN-AAA": "6.00000000",
+          "SYN-BBB": "10.90000000",
+          "SYN-CCC": "3.00000000",
+          "SYN-DDD": "0.50000000"
+        },
+        "repair_iteration_ceiling": 19,
+        "rows": {
+          "SYN-AAA": {
+            "fractional_residual_in": "0.00000000",
+            "fractional_residual_out": "0.00000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "0.00000000",
+            "repair_decrements": 0,
+            "signed_delta_raw_shares": "6.00000000",
+            "target_raw_shares": "6.00000000"
+          },
+          "SYN-BBB": {
+            "fractional_residual_in": "0.90000000",
+            "fractional_residual_out": "0.90000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "6.90000000",
+            "repair_decrements": 0,
+            "signed_delta_raw_shares": "4.00000000",
+            "target_raw_shares": "10.90000000"
+          },
+          "SYN-CCC": {
+            "fractional_residual_in": "0.00000000",
+            "fractional_residual_out": "0.00000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "0.00000000",
+            "repair_decrements": 0,
+            "signed_delta_raw_shares": "3.00000000",
+            "target_raw_shares": "3.00000000"
+          },
+          "SYN-DDD": {
+            "fractional_residual_in": "0.50000000",
+            "fractional_residual_out": "0.50000000",
+            "membership": "UNSELECTED_HOLDING",
+            "prior_raw_shares": "5.50000000",
+            "repair_decrements": 0,
+            "signed_delta_raw_shares": "-5.00000000",
+            "target_raw_shares": "0.50000000"
+          }
+        },
+        "target_weight_decimal_display": "0.333333333333333333",
+        "totals": {
+          "declared_pre_trade_nav": "827.50000000",
+          "initial_projected_cash_post": "69.27000000",
+          "pre_trade_nav": "827.50000000",
+          "pre_trade_nav_identity_tolerance": "0.000001",
+          "projected_cash_post": "69.27000000",
+          "projected_fees": "0.00000000",
+          "projected_gross_buy_notional": "580.00000000",
+          "projected_gross_sell_notional": "50.00000000",
+          "projected_supported_withholding": "0.00000000",
+          "projected_transaction_cost": "0.63000000",
+          "projected_transaction_tax": "0.10000000",
+          "repair_steps_total": 0,
+          "selection_count_k_t": 3
+        },
+        "trace": []
+      },
+      "input": {
+        "cash_pre": "600",
+        "cost_policy": "cost-synthetic-10bps",
+        "declared_pre_trade_nav": "827.5",
+        "declared_selection_count": 3,
+        "price_session": "s1",
+        "prices": {
+          "SYN-AAA": "40",
+          "SYN-BBB": "25",
+          "SYN-CCC": "80",
+          "SYN-DDD": "10"
+        },
+        "prior_positions": {
+          "SYN-BBB": "6.9",
+          "SYN-DDD": "5.5"
+        },
+        "receivables_pre": "0",
+        "request_id": "QME-TARGETS-KAT-B-THREE-NAME-RESIDUAL",
+        "selected": ["SYN-CCC", "SYN-AAA", "SYN-BBB"],
+        "transaction_tax_policy": "tax-sell-20bps"
+      }
+    },
+    "kat-two-name-equal-weight": {
+      "expected": {
+        "deltas": {
+          "SYN-AAA": "16.00000000",
+          "SYN-BBB": "7.00000000"
+        },
+        "final_positions": {
+          "SYN-AAA": "16.00000000",
+          "SYN-BBB": "7.00000000"
+        },
+        "repair_iteration_ceiling": 23,
+        "rows": {
+          "SYN-AAA": {
+            "fractional_residual_in": "0.00000000",
+            "fractional_residual_out": "0.00000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "0.00000000",
+            "repair_decrements": 0,
+            "signed_delta_raw_shares": "16.00000000",
+            "target_raw_shares": "16.00000000"
+          },
+          "SYN-BBB": {
+            "fractional_residual_in": "0.00000000",
+            "fractional_residual_out": "0.00000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "0.00000000",
+            "repair_decrements": 0,
+            "signed_delta_raw_shares": "7.00000000",
+            "target_raw_shares": "7.00000000"
+          }
+        },
+        "target_weight_decimal_display": "0.500000000000000000",
+        "totals": {
+          "declared_pre_trade_nav": "1000.00000000",
+          "initial_projected_cash_post": "29.03000000",
+          "pre_trade_nav": "1000.00000000",
+          "pre_trade_nav_identity_tolerance": "0.000001",
+          "projected_cash_post": "29.03000000",
+          "projected_fees": "0.00000000",
+          "projected_gross_buy_notional": "970.00000000",
+          "projected_gross_sell_notional": "0.00000000",
+          "projected_supported_withholding": "0.00000000",
+          "projected_transaction_cost": "0.97000000",
+          "projected_transaction_tax": "0.00000000",
+          "repair_steps_total": 0,
+          "selection_count_k_t": 2
+        },
+        "trace": []
+      },
+      "input": {
+        "cash_pre": "1000",
+        "cost_policy": "cost-synthetic-10bps",
+        "declared_pre_trade_nav": "1000",
+        "declared_selection_count": 2,
+        "price_session": "s1",
+        "prices": {
+          "SYN-AAA": "30",
+          "SYN-BBB": "70"
+        },
+        "prior_positions": {},
+        "receivables_pre": "0",
+        "request_id": "QME-TARGETS-KAT-A-TWO-NAME",
+        "selected": ["SYN-AAA", "SYN-BBB"],
+        "transaction_tax_policy": "tax-none"
+      }
+    },
+    "negative-cash-repair-two-decrements": {
+      "expected": {
+        "deltas": {
+          "SYN-AAA": "4.00000000",
+          "SYN-BBB": "4.00000000"
+        },
+        "final_positions": {
+          "SYN-AAA": "4.00000000",
+          "SYN-BBB": "4.00000000"
+        },
+        "repair_iteration_ceiling": 10,
+        "rows": {
+          "SYN-AAA": {
+            "fractional_residual_in": "0.00000000",
+            "fractional_residual_out": "0.00000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "0.00000000",
+            "repair_decrements": 1,
+            "signed_delta_raw_shares": "4.00000000",
+            "target_raw_shares": "4.00000000"
+          },
+          "SYN-BBB": {
+            "fractional_residual_in": "0.00000000",
+            "fractional_residual_out": "0.00000000",
+            "membership": "SELECTED",
+            "prior_raw_shares": "0.00000000",
+            "repair_decrements": 1,
+            "signed_delta_raw_shares": "4.00000000",
+            "target_raw_shares": "4.00000000"
+          }
+        },
+        "target_weight_decimal_display": "0.500000000000000000",
+        "totals": {
+          "declared_pre_trade_nav": "1000.00000000",
+          "initial_projected_cash_post": "-151.00000000",
+          "pre_trade_nav": "1000.00000000",
+          "pre_trade_nav_identity_tolerance": "0.000001",
+          "projected_cash_post": "49.20000000",
+          "projected_fees": "0.00000000",
+          "projected_gross_buy_notional": "800.00000000",
+          "projected_gross_sell_notional": "0.00000000",
+          "projected_supported_withholding": "0.00000000",
+          "projected_transaction_cost": "0.80000000",
+          "projected_transaction_tax": "0.00000000",
+          "repair_steps_total": 2,
+          "selection_count_k_t": 2
+        },
+        "trace": [
+          {
+            "engine_projection": "ENGINE_REFUSED_NEGATIVE_CASH",
+            "recomputed_cash_post": "-50.90000000",
+            "recomputed_fees": "0.00000000",
+            "recomputed_gross_buy_notional": "900.00000000",
+            "recomputed_supported_withholding": "0.00000000",
+            "recomputed_transaction_cost": "0.90000000",
+            "recomputed_transaction_tax": "0.00000000",
+            "security_id": "SYN-BBB",
+            "step_index": 1,
+            "target_after_raw_shares": "4.00000000",
+            "target_before_raw_shares": "5.00000000"
+          },
+          {
+            "engine_projection": "ENGINE_ACCEPTED",
+            "recomputed_cash_post": "49.20000000",
+            "recomputed_fees": "0.00000000",
+            "recomputed_gross_buy_notional": "800.00000000",
+            "recomputed_supported_withholding": "0.00000000",
+            "recomputed_transaction_cost": "0.80000000",
+            "recomputed_transaction_tax": "0.00000000",
+            "security_id": "SYN-AAA",
+            "step_index": 2,
+            "target_after_raw_shares": "4.00000000",
+            "target_before_raw_shares": "5.00000000"
+          }
+        ]
+      },
+      "input": {
+        "cash_pre": "850",
+        "cost_policy": "cost-synthetic-10bps",
+        "declared_pre_trade_nav": "1000",
+        "declared_selection_count": 2,
+        "price_session": "s1",
+        "prices": {
+          "SYN-AAA": "100",
+          "SYN-BBB": "100"
+        },
+        "prior_positions": {},
+        "receivables_pre": "150",
+        "request_id": "QME-TARGETS-KAT-C-NEGATIVE-CASH-REPAIR",
+        "selected": ["SYN-AAA", "SYN-BBB"],
+        "transaction_tax_policy": "tax-none"
+      }
+    }
+  },
+  "change_tier": "T1_ACCEPTED_KERNEL",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "evidence_registry": {
+    "s0": {
+      "analysis_as_of": "2026-04-30T21:00:00+00:00",
+      "available_at": "2026-04-30T14:31:00+00:00",
+      "observation_session": "2026-04-30",
+      "snapshot_id": "qme-targets-s0",
+      "snapshot_sha256_grouped": "657aceba:f04d784c:72d6d259:b4d1756e:5885324e:1198b17d:a12be2ca:f78e68ff",
+      "source_id": "SYNTHETIC_TARGET_FIXTURE"
+    },
+    "s1": {
+      "analysis_as_of": "2026-05-01T21:00:00+00:00",
+      "available_at": "2026-05-01T14:31:00+00:00",
+      "observation_session": "2026-05-01",
+      "snapshot_id": "qme-targets-s1",
+      "snapshot_sha256_grouped": "3ecfebd0:614f014c:8fb3b37a:421290d4:2b1752a1:d7abddab:03a7a505:bd4faf71",
+      "source_id": "SYNTHETIC_TARGET_FIXTURE"
+    }
+  },
+  "kernel_id": "QME-COMPOSITION-TARGET-CONSTRUCTION-KERNEL-V1",
+  "kernel_schema_version": "qme.target_construction.v1",
+  "nonclaims": {
+    "alpha_demonstrated": false,
+    "capacity_value_registered": false,
+    "empirical_performance_measured": false,
+    "freeze_blocker_changed": false,
+    "independent_review_recorded": false,
+    "live_order_authority": false,
+    "owner_gated_values_registered": false,
+    "production_deployment_authorized": false,
+    "production_ready": false,
+    "prospective_observations_consumable": false
+  },
+  "oracle": {
+    "charge_date": "2026-05-01",
+    "eligible_session": "s1",
+    "fill_session": "s1",
+    "opening_session": "s0",
+    "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+    "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+    "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+    "signal_session": "s0",
+    "trade_date": "2026-05-01"
+  },
+  "policies": {
+    "cost-synthetic-10bps": {
+      "effective_date": "2026-01-01",
+      "policy_id": "QME-TARGETS-KAT-SYNTHETIC-COST-V1",
+      "regulatory_authority": false,
+      "source": "synthetic target-construction KAT; not an owner cost registration",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/target-construction-v1.json",
+      "transaction_cost_rate_bps": "10"
+    },
+    "ledger-source-synthetic": {
+      "coordinate_system": "raw_price",
+      "effective_date": "2026-01-01",
+      "source": "synthetic target-construction KAT; raw-coordinate evidence source",
+      "source_id": "SYNTHETIC_TARGET_FIXTURE",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/target-construction-v1.json"
+    },
+    "participation-limit-100pct": {
+      "effective_date": "2026-01-01",
+      "limit_id": "QME-TARGETS-KAT-PARTICIPATION-V1",
+      "maximum_participation": "1",
+      "source": "synthetic target-construction KAT; not an owner participation registration",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/target-construction-v1.json"
+    },
+    "tax-none": {
+      "assessment_base": "RAW_FILL_NOTIONAL",
+      "assessment_side": "NONE",
+      "policy_id": "QME-TARGETS-KAT-NO-TRANSACTION-TAX-V1",
+      "policy_sha256_grouped": "a846431e:0e8943dd:b4e0ee11:2c622001:9c334e7e:787b3605:0c7a02bc:5868c1e5",
+      "rate_bps": "0",
+      "source_id": "SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY"
+    },
+    "tax-sell-20bps": {
+      "assessment_base": "RAW_FILL_NOTIONAL",
+      "assessment_side": "SELL",
+      "policy_id": "QME-TARGETS-KAT-SELL-TRANSACTION-TAX-V1",
+      "policy_sha256_grouped": "92f0b9a9:d4baf264:44dc3de2:26122d15:7ecd3704:827ed8b2:dd21da8b:1468034e",
+      "rate_bps": "20",
+      "source_id": "SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY"
+    }
+  },
+  "refusal_cases": {
+    "empty-cost-registry": {
+      "base_case": "kat-two-name-equal-weight",
+      "expected_state": "BLOCKED_NO_REGISTERED_COST_RATE_POLICY",
+      "overrides": {
+        "drop_cost_registry": true
+      }
+    },
+    "nav-identity-violation": {
+      "base_case": "kat-two-name-equal-weight",
+      "expected_state": "INVALID_PRE_TRADE_NAV_IDENTITY",
+      "overrides": {
+        "declared_pre_trade_nav": "1000.01"
+      }
+    },
+    "selection-count-mismatch": {
+      "base_case": "kat-two-name-equal-weight",
+      "expected_state": "INVALID_SELECTION_COUNT_MISMATCH",
+      "overrides": {
+        "declared_selection_count": 3
+      }
+    },
+    "zero-selection": {
+      "base_case": "kat-two-name-equal-weight",
+      "expected_state": "INVALID_ZERO_SELECTION_SIZE",
+      "overrides": {
+        "declared_selection_count": 0,
+        "selected": []
+      }
+    }
+  },
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "reviewer_identity": null,
+  "schema_version": "qme.target_construction_kat.v1",
+  "sessions": {
+    "s0": {
+      "ordinal": 500,
+      "session_date": "2026-04-30"
+    },
+    "s1": {
+      "ordinal": 501,
+      "session_date": "2026-05-01"
+    }
+  },
+  "status": "REGRESSION_KAT_CANDIDATE_NOT_ACCEPTANCE_EVIDENCE",
+  "ticket_id": "PENDING_OWNER_ASSIGNMENT",
+  "units": {
+    "cash": "raw currency at the 0.00000001 internal quantum",
+    "prices": "raw execution prices equal to common raw execution marks",
+    "shares": "raw shares at the 0.00000001 storage quantum, integer order quantum 1"
+  }
+}

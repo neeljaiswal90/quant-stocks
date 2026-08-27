@@ -1,0 +1,1001 @@
+{
+  "schema_version": "qme.walk_forward_backtest_driver_kat.v1",
+  "artifact_id": "NEE-134-WALK-FORWARD-DRIVER-KAT-V1",
+  "ticket": "NEE-134",
+  "status": "REGRESSION_KAT_CANDIDATE_NOT_ACCEPTANCE_EVIDENCE",
+  "change_tier": "T1_ACCEPTED_KERNEL",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "reviewer_identity": null,
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "hash_rendering": "GROUPED_SHA256_EIGHT_LOWERCASE_8_HEX_GROUPS_JOINED_BY_COLON",
+  "nonclaims": {
+    "alpha_demonstrated": false,
+    "capacity_value_established": false,
+    "empirical_performance_measured": false,
+    "freeze_blocker_changed": false,
+    "independent_review_recorded": false,
+    "live_order_authority": false,
+    "owner_registration_recorded": false,
+    "production_deployment_authorized": false,
+    "production_ready": false,
+    "prospective_observations_consumable": false
+  },
+  "registry_state_under_test": {
+    "note": "qme.experiments.walk_forward_v1 threads the engines' SHIPPED EMPTY owner-gated registries by default. Every record embedded below is a TEST_CONSTRUCTED record injected through an engine override seam; none is an owner registration and none ships. With the empty defaults a real run fails closed with the engines' own typed BLOCKED_* states.",
+    "empty_registry_states": {
+      "signal": [
+        "BLOCKED_NO_REGISTERED_FEATURE_VARIANT",
+        "BLOCKED_NO_REGISTERED_TIE_BREAK_POLICY",
+        "BLOCKED_NO_REGISTERED_BREADTH_MINIMUM"
+      ],
+      "universe": [
+        "BLOCKED_NO_REGISTERED_UNIVERSE_THRESHOLDS"
+      ],
+      "execution": [
+        "BLOCKED_NO_REGISTERED_COST_RATE_POLICY",
+        "BLOCKED_UNREGISTERED_LEDGER_COORDINATE_SOURCE"
+      ],
+      "scenarios": [
+        "BLOCKED_NO_REGISTERED_LIQUIDITY_LOOKBACK",
+        "BLOCKED_NO_REGISTERED_PARTICIPATION_SCENARIO"
+      ],
+      "benchmarks": [
+        "BLOCKED_NO_REGISTERED_BENCHMARK_CONTROL"
+      ]
+    }
+  },
+  "sample_fold_id": "nee134-kat-sample-v1",
+  "valid_fold_id": "fold-nee134-kat-valid",
+  "unauthorized_fold_id": "fold-nee134-kat-unauthorized",
+  "benchmark_control_id": "nee134-kat-spy-buy-hold-not-registered",
+  "synthetic_code_identity": {
+    "repository_commit": "synthetic-nee134-kat-commit-not-a-real-revision",
+    "dirty_worktree": true,
+    "note": "A fixed, synthetic code identity so the golden run_id is reproducible in the KAT; the real driver binds the observed repository commit and dirty flag."
+  },
+  "modes": {
+    "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+    "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+    "cost_policy_id": "NEE129-KAT-SYNTHETIC-COST-V1",
+    "transaction_tax_policy_id": "NEE129-KAT-SELL-TRANSACTION-TAX-V1",
+    "transaction_tax_policy_sha256_grouped": "b112f012:19fbd1d4:012f2cb4:a114fd23:c0f4fbe1:9b4a13e9:b657483a:9d6faf64"
+  },
+  "signal": {
+    "test_constructed_records": {
+      "feature_variant": {
+        "variant_id": "nee131-kat-primary-252-21",
+        "variant_role": "PRIMARY",
+        "lookback_sessions": 252,
+        "skip_sessions": 21,
+        "source_kind": "TEST_CONSTRUCTED",
+        "source": "NEE-131 known-answer test record, not an owner registration",
+        "source_reference": "tests/quant/fixtures/signal-rank-selection-v1.json"
+      },
+      "tie_break_policy": {
+        "policy_id": "nee131-kat-tie-break-v1",
+        "total_order": [
+          "signal_decimal_descending",
+          "security_id_utf8_bytes_ascending"
+        ],
+        "stable_key": "security_id",
+        "stable_key_normalization": "NFC",
+        "stable_key_order": "UTF8_BYTES_ASCENDING",
+        "rank_method": "UNIQUE_ORDINAL_AFTER_STABLE_TIE_BREAK",
+        "boundary_tie_policy": "SPLIT_BY_STABLE_SECURITY_ID_ORDER",
+        "source_kind": "TEST_CONSTRUCTED",
+        "source": "NEE-131 known-answer test record, not an owner registration",
+        "source_reference": "tests/quant/fixtures/signal-rank-selection-v1.json"
+      },
+      "breadth_minimum": {
+        "threshold_id": "nee131-kat-breadth-10",
+        "minimum_rank_eligible_breadth": 10,
+        "unit": "security_count",
+        "evidence_source_type": "OWNER_MANDATE",
+        "evidence_reference": "tests/quant/fixtures/signal-rank-selection-v1.json",
+        "boundary_proof": "floor(0.20 * 10) = 2",
+        "source_kind": "TEST_CONSTRUCTED",
+        "source": "NEE-131 known-answer test record, not an owner registration",
+        "source_reference": "tests/quant/fixtures/signal-rank-selection-v1.json"
+      }
+    },
+    "primary_cross_section": {
+      "variant_id": "nee131-kat-primary-252-21",
+      "tie_policy_id": "nee131-kat-tie-break-v1",
+      "breadth_threshold_id": "nee131-kat-breadth-10",
+      "signal_session": "2015-01-30",
+      "signal_session_rule": "LAST_EXCHANGE_SESSION_OF_CALENDAR_MONTH",
+      "analysis_cutoff": "2015-01-30",
+      "recent_anchor_session": "2014-12-30",
+      "old_anchor_session": "2014-01-30",
+      "observed_span_start": "2014-01-30",
+      "short_observed_span_start": "2014-01-31",
+      "securities": [
+        {
+          "security_id": "NEE131-SEC-01",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "200"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-02",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "150"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-03",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "200"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "300"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-04",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "130"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-05",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "110"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-06",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "100"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-07",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "90"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-08",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "50"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-09",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "25"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-10",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "10"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-11",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_INVALID",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "200"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-12",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-31",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "200"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-13",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-14",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-12-30",
+              "total_return_close": "200"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-15",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_STALE_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "200"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-16",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "0"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-17",
+          "universe_membership": "IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "-50"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "100"
+            }
+          ]
+        },
+        {
+          "security_id": "NEE131-SEC-18",
+          "universe_membership": "NOT_IN_REQUIRED_UNIVERSE",
+          "observed_span_start": "2014-01-30",
+          "total_return_chain_state": "TOTAL_RETURN_CHAIN_OK",
+          "source_freshness_state": "SOURCE_FRESH_AT_CUTOFF",
+          "observations": [
+            {
+              "session": "2014-01-30",
+              "total_return_close": "100"
+            },
+            {
+              "session": "2014-12-30",
+              "total_return_close": "200"
+            }
+          ]
+        }
+      ],
+      "expected_run": {
+        "selection_state": "SELECTION_VALID",
+        "rank_eligible_breadth": 10,
+        "selection_size": 2,
+        "selected_security_ids": [
+          "NEE131-SEC-01",
+          "NEE131-SEC-02"
+        ],
+        "run_id": "def586e0:f562ce59:9b62e23c:3509e915:f4aa468f:7977c7eb:3befb538:4684d316",
+        "input_sha256_grouped": "3b8f60a4:8082cb4c:58a917f8:48f373f1:97e677e8:28e7fb9a:a57f5517:c269fd1c",
+        "config_sha256_grouped": "c7dbb216:23e4c8b6:e0205ae6:232776d1:6ea040bd:691ec5f5:fb699dbb:beba2eea",
+        "code_binding_sha256_grouped": "483282c1:b6445f68:e218ecd4:0dd344aa:e283122a:c3af129d:1863f352:538a26f1",
+        "schema_sha256_grouped": "6950a63a:8f759f03:6072cc44:cb09673f:f4305aa8:db6ba9e3:0c588998:625d71d2",
+        "rows_sha256_grouped": "e4549c45:590d510d:dab2eac5:a9c5bdff:e69b522a:6d4b6b2c:06214af0:4a694906",
+        "manifest_sha256_grouped": "dd3aedd1:e48fcef8:a4e3bea0:e2601cc8:c8071b7c:7812af8b:4ebc24a1:1327fe70"
+      },
+      "expected_rows": [
+        {
+          "security_id": "NEE131-SEC-01",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "200",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "2/1",
+          "feature_value": "0.693147180559945309",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "1.000000000000000000",
+          "rank": 1,
+          "tie_group_key": "7912663b:ebb2132f:d05a10de:1fd66471:0637675b:8f621acd:df2615f4:a7aa3e8b",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": true,
+          "selection_reason": "INCLUDED_BY_RANK",
+          "row_sha256_grouped": "6683ecd8:7a309ab2:3277449d:a7428937:ba67df62:1fb4c07f:31bedc80:4fa19cab"
+        },
+        {
+          "security_id": "NEE131-SEC-02",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "150",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "3/2",
+          "feature_value": "0.405465108108164382",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "0.500000000000000000",
+          "rank": 2,
+          "tie_group_key": "b0d230e0:1562e109:675c10b9:ea71974a:d1b56ec7:54060db9:a0135b34:b00d4fff",
+          "tie_group_size": 2,
+          "tie_break_ordinal": 1,
+          "selected": true,
+          "selection_reason": "INCLUDED_BOUNDARY_TIE_BREAK",
+          "row_sha256_grouped": "ca53cce4:a946b578:f57154ab:b19941f3:723df545:20e248fe:7397cd29:318a9938"
+        },
+        {
+          "security_id": "NEE131-SEC-03",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "300",
+          "old_anchor_total_return": "200",
+          "ranking_ratio": "3/2",
+          "feature_value": "0.405465108108164382",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "0.500000000000000000",
+          "rank": 3,
+          "tie_group_key": "b0d230e0:1562e109:675c10b9:ea71974a:d1b56ec7:54060db9:a0135b34:b00d4fff",
+          "tie_group_size": 2,
+          "tie_break_ordinal": 2,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BOUNDARY_TIE_BREAK",
+          "row_sha256_grouped": "366ff0b8:580b9ac1:b48b5fc6:5282d2b8:48eba0fc:94e6ea3e:66e4d63b:1caf8967"
+        },
+        {
+          "security_id": "NEE131-SEC-04",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "130",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "13/10",
+          "feature_value": "0.262364264467491052",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "0.300000000000000000",
+          "rank": 4,
+          "tie_group_key": "72da2c0f:342306ca:65093b1f:da4ca0f8:b07d3e6c:c30f325e:cf662d1f:1a577503",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "5bdf1e17:fca619da:7fa192db:60d25df2:f2c4d704:d30e151d:f9c8e63e:e087deda"
+        },
+        {
+          "security_id": "NEE131-SEC-05",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "110",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "11/10",
+          "feature_value": "0.095310179804324860",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "0.100000000000000000",
+          "rank": 5,
+          "tie_group_key": "0e5b9e88:99c12825:5e23beb7:1ddac5f5:222ab58f:9b563e11:883463aa:cfd6ec2c",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "7ece2dee:a73ede20:58f75540:4fa94451:6cdc16c5:ba4e99bd:dabed8da:99e96a39"
+        },
+        {
+          "security_id": "NEE131-SEC-06",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "100",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "1/1",
+          "feature_value": "0.000000000000000000",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "0.000000000000000000",
+          "rank": 6,
+          "tie_group_key": "c1fc7aec:3c9ae0b4:c81a1dee:7142cfd8:6bac81a5:158601d7:88bdbbf9:428f7e8d",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "5cbed009:fb3d63c4:54f1d8fe:9c037856:eb8043b7:a3d29691:4460b5a6:1cfbb0e3"
+        },
+        {
+          "security_id": "NEE131-SEC-07",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "90",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "9/10",
+          "feature_value": "-0.105360515657826301",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "-0.100000000000000000",
+          "rank": 7,
+          "tie_group_key": "abfbced4:4fa0aa4d:52e07875:5f4cd38e:fe34e20f:975b8aac:f5733fe0:7e3573df",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "a570aafd:b939d2df:92201c3c:39c537f3:3da89e4c:d5730c74:b1134c11:6e008a55"
+        },
+        {
+          "security_id": "NEE131-SEC-08",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "50",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "1/2",
+          "feature_value": "-0.693147180559945309",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "-0.500000000000000000",
+          "rank": 8,
+          "tie_group_key": "73b31511:f5e4f551:b076ed92:22bbd3ec:cd7d9327:ee107802:2d745b41:b6d09ce8",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "13f000bd:1576e134:212db963:7912a2bb:88b5ab44:cb8ac5bb:597a17f3:d2071c24"
+        },
+        {
+          "security_id": "NEE131-SEC-09",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "25",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "1/4",
+          "feature_value": "-1.386294361119890619",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "-0.750000000000000000",
+          "rank": 9,
+          "tie_group_key": "23ba0277:6f749193:55f2de08:af2f6204:5a93ed95:66507079:4febad73:94fb9ba6",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "2c7f9724:eddb0369:110b3b6f:e4a8cee6:aa817dfd:124e8b4c:92702be5:d58bcf5f"
+        },
+        {
+          "security_id": "NEE131-SEC-10",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "RANK_ELIGIBLE",
+          "recent_anchor_total_return": "10",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "1/10",
+          "feature_value": "-2.302585092994045684",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "-0.900000000000000000",
+          "rank": 10,
+          "tie_group_key": "d7cd4a82:393a5f00:00e03416:811f56b1:b8c85d0a:8f53f820:4e8645e5:524d9b45",
+          "tie_group_size": 1,
+          "tie_break_ordinal": 1,
+          "selected": false,
+          "selection_reason": "EXCLUDED_BELOW_SELECTION_CUTOFF",
+          "row_sha256_grouped": "f887bf50:d19ac0b8:af5898a7:b0124688:b9d7e63a:80dfad56:a2422c66:a9b1ef8c"
+        },
+        {
+          "security_id": "NEE131-SEC-11",
+          "feature_status": "NOT_SCORABLE_INVALID_TOTAL_RETURN_CHAIN",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": null,
+          "old_anchor_total_return": null,
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "615f3036:4651a535:21ef45f1:f95b39d6:4818fe39:31a5ad79:eac1b2ff:107d2c8f"
+        },
+        {
+          "security_id": "NEE131-SEC-12",
+          "feature_status": "NOT_SCORABLE_INSUFFICIENT_HISTORY",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": null,
+          "old_anchor_total_return": null,
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "8972e92f:0577163e:fd5f29c9:51ffb919:06c9d63f:000cd545:c8934196:df78a52a"
+        },
+        {
+          "security_id": "NEE131-SEC-13",
+          "feature_status": "NOT_SCORABLE_MISSING_ANCHOR_RECENT",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": null,
+          "old_anchor_total_return": null,
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "0d2c6590:e53754d7:3ebebb7a:015bd3c1:0de61584:c6a1854c:13247c83:db8ef9be"
+        },
+        {
+          "security_id": "NEE131-SEC-14",
+          "feature_status": "NOT_SCORABLE_MISSING_ANCHOR_OLD",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": "200",
+          "old_anchor_total_return": null,
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "e7a3ffd8:98c54492:5e09d0c3:aaa57db3:bb87dac1:806d12ac:ec80eace:bb6a9ccb"
+        },
+        {
+          "security_id": "NEE131-SEC-15",
+          "feature_status": "NOT_SCORABLE_STALE_SOURCE",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": "200",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "4d9240bc:d0fb465a:ad59c549:f085c2bb:62d1f765:ba0b95b4:cf29a2f8:eb8a231a"
+        },
+        {
+          "security_id": "NEE131-SEC-16",
+          "feature_status": "NOT_SCORABLE_NONPOSITIVE_ANCHOR_RECENT",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": "0",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "41ad7194:0014bdf2:dd3ad64f:143a75e0:331637dc:ff2dbfe1:5cf927ef:0f3bd669"
+        },
+        {
+          "security_id": "NEE131-SEC-17",
+          "feature_status": "NOT_SCORABLE_NONPOSITIVE_ANCHOR_OLD",
+          "eligibility_state": "EXCLUDED_NOT_SCORABLE",
+          "recent_anchor_total_return": "100",
+          "old_anchor_total_return": "-50",
+          "ranking_ratio": null,
+          "feature_value": null,
+          "feature_exactness": "NOT_COMPUTED",
+          "diagnostic_simple_return": null,
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "be10cb20:be72dd6f:6c4442a3:c15371e8:60ba0608:3b4ade09:fd9a4039:a820426f"
+        },
+        {
+          "security_id": "NEE131-SEC-18",
+          "feature_status": "FEATURE_SCORABLE",
+          "eligibility_state": "EXCLUDED_NOT_IN_REQUIRED_UNIVERSE",
+          "recent_anchor_total_return": "200",
+          "old_anchor_total_return": "100",
+          "ranking_ratio": "2/1",
+          "feature_value": "0.693147180559945309",
+          "feature_exactness": "ROUNDED_DECIMAL_ARTIFACT",
+          "diagnostic_simple_return": "1.000000000000000000",
+          "rank": null,
+          "tie_group_key": null,
+          "tie_group_size": null,
+          "tie_break_ordinal": null,
+          "selected": false,
+          "selection_reason": "NOT_SELECTED_NOT_RANK_ELIGIBLE",
+          "row_sha256_grouped": "aa500b19:c5cd4646:50a9abb3:1cb64b77:9e527376:8c91832f:00b8a92b:8c9f6fed"
+        }
+      ]
+    }
+  },
+  "universe": {
+    "session_id": "2015-06-15",
+    "next_session_id": "2015-06-16",
+    "exchange": "XNAS",
+    "analysis_as_of": "2015-06-15T21:00:00Z",
+    "observed_at": "2015-06-15T20:30:00Z",
+    "classification_analysis_cutoff": "2015-06-15T20:00:00Z",
+    "classification_evidence_as_of": "2015-01-02T00:00:00Z",
+    "boundary_history_first_observed_session": "2014-06-12",
+    "required_coverage_series": [
+      "RAW_CLOSE",
+      "RAW_ADV_NOTIONAL",
+      "SESSION_HISTORY"
+    ],
+    "threshold_set": {
+      "threshold_set_id": "pit-universe-test-v1",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source": "synthetic test vector; not an owner mandate and not registrable",
+      "source_reference": "tests/quant/fixtures/pit-universe-v1.json",
+      "mandate_reference": "NONE_TEST_CONSTRUCTED_NO_OWNER_MANDATE_EXISTS",
+      "preregistered_at": "2014-12-31T00:00:00Z",
+      "effective_date": "2015-01-02",
+      "raw_price_floor": "5",
+      "liquidity_floor_raw_adv_notional": "1000000",
+      "minimum_observed_sessions": 252,
+      "maximum_staleness_sessions": 0,
+      "minimum_coverage_fraction": "0.5",
+      "minimum_rank_eligible_breadth": 2
+    },
+    "required_tickers": [
+      "AAA",
+      "BBB"
+    ]
+  },
+  "execution": {
+    "input": {
+      "cost_policy": "cost-synthetic-10bps",
+      "opening": {
+        "cash": "100",
+        "marks": {},
+        "positions": {},
+        "receivables": "0",
+        "session": "s0"
+      },
+      "program_id": "nee129-kat-residual-cash",
+      "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+      "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+      "stages": [
+        {
+          "availability": {
+            "AAA": {
+              "delisted": false,
+              "halted": false,
+              "open": true,
+              "print": false
+            },
+            "BBB": {
+              "delisted": false,
+              "halted": false,
+              "open": true,
+              "print": false
+            }
+          },
+          "charge_date": "2026-05-01",
+          "eligible_session": "s1",
+          "fill_session": "s1",
+          "kind": "REBALANCE",
+          "marks": {
+            "AAA": "50",
+            "BBB": "25"
+          },
+          "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+          "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+          "rebalance_id": "residual-r1",
+          "signal_session": "s0",
+          "target": {
+            "kind": "EQUAL_WEIGHT",
+            "prices": {
+              "AAA": "50",
+              "BBB": "25"
+            },
+            "selected": [
+              "AAA",
+              "BBB"
+            ]
+          },
+          "trade_date": "2026-05-01"
+        }
+      ],
+      "transaction_tax_policy": "tax-sell-20bps"
+    },
+    "calendar": {
+      "calendar_id": "XSYN",
+      "calendar_sha256_grouped": "a6153714:4ed73a6f:c807b5de:37738524:1efe0c2d:04c1446e:3f6a6756:5e0bd0c9"
+    },
+    "sessions": {
+      "s0": {
+        "ordinal": 500,
+        "session_date": "2026-04-30"
+      },
+      "s1": {
+        "ordinal": 501,
+        "session_date": "2026-05-01"
+      },
+      "s2": {
+        "ordinal": 502,
+        "session_date": "2026-05-04"
+      },
+      "s3": {
+        "ordinal": 503,
+        "session_date": "2026-05-05"
+      }
+    },
+    "evidence_registry": {
+      "s0": {
+        "analysis_as_of": "2026-04-30T21:00:00+00:00",
+        "available_at": "2026-04-30T14:31:00+00:00",
+        "observation_session": "2026-04-30",
+        "snapshot_id": "nee129-s0",
+        "snapshot_sha256_grouped": "d98963ee:bee9a539:477059fe:9cd494c0:27337d33:a5726439:86eafb84:664fb299",
+        "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+      },
+      "s1": {
+        "analysis_as_of": "2026-05-01T21:00:00+00:00",
+        "available_at": "2026-05-01T14:31:00+00:00",
+        "observation_session": "2026-05-01",
+        "snapshot_id": "nee129-s1",
+        "snapshot_sha256_grouped": "6c3ae10f:9029ad82:4dc63862:61dd1456:c4445212:2dd138c1:afa1aed8:cc7cddc7",
+        "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+      },
+      "s2": {
+        "analysis_as_of": "2026-05-04T21:00:00+00:00",
+        "available_at": "2026-05-04T14:31:00+00:00",
+        "observation_session": "2026-05-04",
+        "snapshot_id": "nee129-s2",
+        "snapshot_sha256_grouped": "29bde581:b6b68ddb:20aa764c:1d7adc30:d330aeaa:ec59fb02:a208d8e8:e4bb2b37",
+        "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+      },
+      "s3": {
+        "analysis_as_of": "2026-05-05T21:00:00+00:00",
+        "available_at": "2026-05-05T14:31:00+00:00",
+        "observation_session": "2026-05-05",
+        "snapshot_id": "nee129-s3",
+        "snapshot_sha256_grouped": "2a791174:054b2340:5a12d821:7bc9fd29:2f765b85:dca7325f:9b54a579:99bb6a05",
+        "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+      }
+    },
+    "policies": {
+      "cost-synthetic-10bps": {
+        "effective_date": "2026-01-01",
+        "policy_id": "NEE129-KAT-SYNTHETIC-COST-V1",
+        "regulatory_authority": false,
+        "source": "synthetic regression fixture; not an owner cost registration",
+        "source_kind": "TEST_CONSTRUCTED",
+        "source_reference": "tests/quant/fixtures/execution-accounting-v1.json",
+        "transaction_cost_rate_bps": "10"
+      },
+      "tax-sell-20bps": {
+        "assessment_base": "RAW_FILL_NOTIONAL",
+        "assessment_side": "SELL",
+        "policy_id": "NEE129-KAT-SELL-TRANSACTION-TAX-V1",
+        "policy_sha256_grouped": "b112f012:19fbd1d4:012f2cb4:a114fd23:c0f4fbe1:9b4a13e9:b657483a:9d6faf64",
+        "rate_bps": "20",
+        "source_id": "SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY"
+      },
+      "participation-limit-100pct": {
+        "effective_date": "2026-01-01",
+        "limit_id": "NEE129-KAT-PARTICIPATION-V1",
+        "maximum_participation": "1",
+        "source": "synthetic regression fixture; not an owner participation registration",
+        "source_kind": "TEST_CONSTRUCTED",
+        "source_reference": "tests/quant/fixtures/execution-accounting-v1.json"
+      },
+      "ledger-source-synthetic": {
+        "coordinate_system": "raw_price",
+        "effective_date": "2026-01-01",
+        "source": "synthetic regression fixture; raw-coordinate evidence source",
+        "source_id": "SYNTHETIC_EXECUTION_FIXTURE",
+        "source_kind": "TEST_CONSTRUCTED",
+        "source_reference": "tests/quant/fixtures/execution-accounting-v1.json"
+      },
+      "withholding-zero": {
+        "effective_date": "2026-01-01",
+        "policy_id": "NEE129-KAT-ZERO-WITHHOLDING-V1",
+        "source": "synthetic regression fixture; explicit zero-rate gross accrual",
+        "source_kind": "TEST_CONSTRUCTED",
+        "source_reference": "tests/quant/fixtures/execution-accounting-v1.json",
+        "withholding_rate": "0"
+      }
+    }
+  },
+  "scenarios": {
+    "lookback": {
+      "lookback_id": "NEE132-KAT-LOOKBACK-L3",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source": "synthetic test lookback",
+      "source_reference": "tests/quant/test_cost_turnover_capacity.py",
+      "owner": "NEE-132 test author",
+      "effective_version": "kat-v1",
+      "lookback_sessions": 3,
+      "unit": "exchange_sessions",
+      "sensitivity_range": "L in {3, 21, 63} evaluated; test pins L=3"
+    },
+    "participation": {
+      "scenario_id": "NEE132-KAT-PARTICIPATION-P10",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source": "synthetic test participation ceiling",
+      "source_reference": "tests/quant/test_cost_turnover_capacity.py",
+      "owner": "NEE-132 test author",
+      "effective_version": "kat-v1",
+      "participation_ceiling": "0.1",
+      "unit": "fraction_of_adv",
+      "sensitivity_range": "p_star in {0.05, 0.1, 0.2} evaluated; test pins 0.1"
+    }
+  },
+  "expected": {
+    "note": "golden anchors under the fixed synthetic code identity; regenerated if inputs change",
+    "run_id": "59195e32:66e54fe4:7ff1ad99:74bdc404:abbd116d:d923e625:97777369:a63b2600",
+    "result_identity_sha256_grouped": "ad380554:781fef2a:7dba99ad:5790983d:df8e449a:3076eb7c:b7fef6c2:ad494dab",
+    "valid_fold_ids": [
+      "fold-nee134-kat-valid"
+    ],
+    "state": "WALK_FORWARD_RUN_COMPLETED_WITH_VALID_PARTITIONS",
+    "table_row_counts": {
+      "signal_rank": 18,
+      "universe_rows": 2,
+      "universe_coverage": 1,
+      "nav": 1,
+      "cash": 1,
+      "receivables": 1,
+      "holdings": 2,
+      "targets_orders_fills": 1,
+      "lots": 1,
+      "actions": 0,
+      "session_close": 0,
+      "costs": 1,
+      "turnover": 1,
+      "capacity": 1,
+      "benchmarks": 1,
+      "warnings_errors": 1
+    },
+    "degraded_reason_codes": [
+      "BLOCKED_FOLD_NOT_AUTHORIZED"
+    ]
+  }
+}

@@ -1,0 +1,389 @@
+{
+  "schema_version": "qme.cost_turnover_capacity_kat.v1",
+  "artifact_id": "NEE-132-COST-TURNOVER-CAPACITY-KAT-V1",
+  "status": "REGRESSION_KAT_CANDIDATE_NOT_ACCEPTANCE_EVIDENCE",
+  "change_tier": "T1_ACCEPTED_KERNEL",
+  "reviewer_identity": null,
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "kernel_id": "QME-NEE132-COST-TURNOVER-LIQUIDITY-PARTICIPATION-CAPACITY-SCENARIO-ENGINE-V1",
+  "method_id": "QME-NEE132-TRANSPARENT-COST-TURNOVER-CAPACITY-SCENARIO-V1",
+  "engine_schema_version": "qme.cost_turnover_capacity_scenarios.v1",
+  "nonclaims": {
+    "alpha_demonstrated": false,
+    "capacity_value_measured": false,
+    "empirical_performance_measured": false,
+    "freeze_blocker_changed": false,
+    "impact_coefficient_calibrated": false,
+    "independent_review_recorded": false,
+    "live_order_authority": false,
+    "production_deployment_authorized": false,
+    "production_ready": false,
+    "prospective_observations_consumable": false,
+    "spread_coefficient_calibrated": false,
+    "uncalibrated_coefficient_presented_as_estimate": false
+  },
+  "registries": {
+    "lookback": {
+      "lookback_id": "NEE132-KAT-LOOKBACK-L3",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source": "synthetic test lookback",
+      "source_reference": "tests/quant/test_cost_turnover_capacity.py",
+      "owner": "NEE-132 test author",
+      "effective_version": "kat-v1",
+      "lookback_sessions": 3,
+      "unit": "exchange_sessions",
+      "sensitivity_range": "L in {3, 21, 63} evaluated; test pins L=3"
+    },
+    "participation": {
+      "scenario_id": "NEE132-KAT-PARTICIPATION-P10",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source": "synthetic test participation ceiling",
+      "source_reference": "tests/quant/test_cost_turnover_capacity.py",
+      "owner": "NEE-132 test author",
+      "effective_version": "kat-v1",
+      "participation_ceiling": "0.1",
+      "unit": "fraction_of_adv",
+      "sensitivity_range": "p_star in {0.05, 0.1, 0.2} evaluated; test pins 0.1"
+    }
+  },
+  "cases": {
+    "buys-only": {
+      "execution": {
+        "program_id": "nee132-kat-buys-only",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "1000", "positions": {}, "marks": {}},
+        "rebalance": {
+          "rebalance_id": "buys-r1",
+          "marks": {"AAA": "10", "BBB": "20"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "30", "price": "10"},
+            {"symbol": "BBB", "delta": "20", "price": "20"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "10", "volume": "3000"},
+        "BBB": {"close": "20", "volume": "1000"}
+      },
+      "expected": {
+        "gross_trade_notional": "700.00000000",
+        "gtn_ratio": "0.7",
+        "one_way_turnover": "0.35",
+        "nav_minus": "1000.00000000",
+        "regulatory_fees_total": "0.00000000",
+        "tier_costs_ledger": {"5": "0.35000000", "10": "0.70000000", "25": "1.75000000"},
+        "tier_costs_rational": {"5": "7/20", "10": "7/10", "25": "7/4"},
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_SCENARIO_COMPLETE",
+        "portfolio_capacity_rational": "5000/1",
+        "portfolio_capacity_ledger": "5000.00000000",
+        "binding_security_id": "BBB",
+        "rows": {
+          "AAA": {
+            "side": "BUY",
+            "gross_notional": "300.00000000",
+            "adv_rational": "30000/1",
+            "participation_state": "PARTICIPATION_MEASURED_SCENARIO",
+            "participation_rational": "1/100",
+            "participation_ledger": "0.01000000",
+            "target_weight_change_rational": "3/10",
+            "capacity_state": "CAPACITY_MEASURED_SCENARIO",
+            "aum_capacity_rational": "10000/1"
+          },
+          "BBB": {
+            "side": "BUY",
+            "gross_notional": "400.00000000",
+            "adv_rational": "20000/1",
+            "participation_state": "PARTICIPATION_MEASURED_SCENARIO",
+            "participation_rational": "1/50",
+            "participation_ledger": "0.02000000",
+            "target_weight_change_rational": "2/5",
+            "capacity_state": "CAPACITY_MEASURED_SCENARIO",
+            "aum_capacity_rational": "5000/1"
+          }
+        }
+      }
+    },
+    "sells-only": {
+      "execution": {
+        "program_id": "nee132-kat-sells-only",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "100", "positions": {"AAA": "50", "BBB": "40"}, "marks": {"AAA": "10", "BBB": "20"}},
+        "rebalance": {
+          "rebalance_id": "sells-r1",
+          "marks": {"AAA": "10", "BBB": "20"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "-20", "price": "10"},
+            {"symbol": "BBB", "delta": "-10", "price": "20"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "10", "volume": "4000"},
+        "BBB": {"close": "20", "volume": "500"}
+      },
+      "expected": {
+        "gross_trade_notional": "400.00000000",
+        "nav_minus": "1400.00000000",
+        "regulatory_fees_total": "0.00000000",
+        "tier_costs_ledger": {"5": "0.20000000", "10": "0.40000000", "25": "1.00000000"},
+        "tier_costs_rational": {"5": "1/5", "10": "2/5", "25": "1/1"},
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_SCENARIO_COMPLETE",
+        "portfolio_capacity_rational": "7000/1",
+        "binding_security_id": "BBB",
+        "rows": {
+          "AAA": {
+            "side": "SELL",
+            "gross_notional": "200.00000000",
+            "adv_rational": "40000/1",
+            "participation_rational": "1/200",
+            "target_weight_change_rational": "1/7",
+            "aum_capacity_rational": "28000/1"
+          },
+          "BBB": {
+            "side": "SELL",
+            "gross_notional": "200.00000000",
+            "adv_rational": "10000/1",
+            "participation_rational": "1/50",
+            "target_weight_change_rational": "1/7",
+            "aum_capacity_rational": "7000/1"
+          }
+        }
+      }
+    },
+    "funded-rebalance": {
+      "execution": {
+        "program_id": "nee132-kat-funded",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "50", "positions": {"AAA": "100", "BBB": "10"}, "marks": {"AAA": "5", "BBB": "50"}},
+        "rebalance": {
+          "rebalance_id": "funded-r1",
+          "marks": {"AAA": "5", "BBB": "50"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "-40", "price": "5"},
+            {"symbol": "BBB", "delta": "4", "price": "50"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "5", "volume": "4000"},
+        "BBB": {"close": "50", "volume": "160"}
+      },
+      "expected": {
+        "gross_trade_notional": "400.00000000",
+        "nav_minus": "1050.00000000",
+        "regulatory_fees_total": "0.00000000",
+        "tier_costs_ledger": {"5": "0.20000000", "10": "0.40000000", "25": "1.00000000"},
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_SCENARIO_COMPLETE",
+        "portfolio_capacity_rational": "4200/1",
+        "binding_security_id": "BBB",
+        "rows": {
+          "AAA": {
+            "side": "SELL",
+            "gross_notional": "200.00000000",
+            "adv_rational": "20000/1",
+            "participation_rational": "1/100",
+            "target_weight_change_rational": "4/21",
+            "aum_capacity_rational": "10500/1"
+          },
+          "BBB": {
+            "side": "BUY",
+            "gross_notional": "200.00000000",
+            "adv_rational": "8000/1",
+            "participation_rational": "1/40",
+            "target_weight_change_rational": "4/21",
+            "aum_capacity_rational": "4200/1"
+          }
+        }
+      }
+    },
+    "zero-trade": {
+      "execution": {
+        "program_id": "nee132-kat-zero-trade",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "1000", "positions": {}, "marks": {}},
+        "close": {"stage_id": "zero-close"}
+      },
+      "adv_bars": {},
+      "expected": {
+        "rebalance_count": 0
+      }
+    },
+    "missing-adv": {
+      "execution": {
+        "program_id": "nee132-kat-missing-adv",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "1000", "positions": {}, "marks": {}},
+        "rebalance": {
+          "rebalance_id": "missing-r1",
+          "marks": {"AAA": "10", "BBB": "20"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "30", "price": "10"},
+            {"symbol": "BBB", "delta": "20", "price": "20"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "10", "volume": "3000"}
+      },
+      "expected": {
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_INCOMPLETE_MISSING_ADV",
+        "portfolio_capacity_rational": null,
+        "binding_security_id": null,
+        "rows": {
+          "AAA": {
+            "participation_state": "PARTICIPATION_MEASURED_SCENARIO",
+            "participation_rational": "1/100",
+            "capacity_state": "CAPACITY_MEASURED_SCENARIO",
+            "aum_capacity_rational": "10000/1"
+          },
+          "BBB": {
+            "participation_state": "PARTICIPATION_UNAVAILABLE_MISSING_ADV",
+            "participation_rational": null,
+            "capacity_state": "CAPACITY_UNAVAILABLE_MISSING_ADV",
+            "aum_capacity_rational": null,
+            "adv_rational": null
+          }
+        }
+      }
+    },
+    "illiquid-outlier": {
+      "execution": {
+        "program_id": "nee132-kat-illiquid",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "1000", "positions": {}, "marks": {}},
+        "rebalance": {
+          "rebalance_id": "illiquid-r1",
+          "marks": {"AAA": "10", "BBB": "20"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "30", "price": "10"},
+            {"symbol": "BBB", "delta": "20", "price": "20"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "10", "volume": "30000"},
+        "BBB": {"close": "20", "volume": "100"}
+      },
+      "expected": {
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_SCENARIO_COMPLETE",
+        "portfolio_capacity_rational": "500/1",
+        "binding_security_id": "BBB",
+        "rows": {
+          "AAA": {
+            "adv_rational": "300000/1",
+            "participation_rational": "1/1000",
+            "aum_capacity_rational": "100000/1"
+          },
+          "BBB": {
+            "adv_rational": "2000/1",
+            "participation_rational": "1/5",
+            "aum_capacity_rational": "500/1"
+          }
+        }
+      }
+    },
+    "fee-reconciliation": {
+      "execution": {
+        "program_id": "nee132-kat-fee-recon",
+        "fee_mode": "POSTED_HISTORICAL",
+        "cost_bps": "10",
+        "regulatory_authority": true,
+        "opening": {"cash": "100", "positions": {"AAA": "10"}, "marks": {"AAA": "50"}},
+        "rebalance": {
+          "rebalance_id": "fee-r1",
+          "marks": {"AAA": "50"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "-10", "price": "50"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "50", "volume": "1000"}
+      },
+      "expected": {
+        "gross_trade_notional": "500.00000000",
+        "nav_minus": "600.00000000",
+        "regulatory_fees_total": "0.01225000",
+        "regulatory_fee_component_amount_ledger": "0.01225000",
+        "regulatory_fee_component_amount_rational": "49/4000",
+        "tier_costs_ledger": {"5": "0.25000000", "10": "0.50000000", "25": "1.25000000"},
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_SCENARIO_COMPLETE",
+        "portfolio_capacity_rational": "6000/1",
+        "binding_security_id": "AAA",
+        "rows": {
+          "AAA": {
+            "side": "SELL",
+            "gross_notional": "500.00000000",
+            "adv_rational": "50000/1",
+            "participation_rational": "1/100",
+            "target_weight_change_rational": "5/6",
+            "aum_capacity_rational": "6000/1"
+          }
+        }
+      }
+    },
+    "halted-zero-adv": {
+      "execution": {
+        "program_id": "nee132-kat-halted-zero-adv",
+        "fee_mode": "EXCLUDED",
+        "cost_bps": "10",
+        "regulatory_authority": false,
+        "opening": {"cash": "1000", "positions": {}, "marks": {}},
+        "rebalance": {
+          "rebalance_id": "halted-r1",
+          "marks": {"AAA": "10", "BBB": "20"},
+          "deltas": [
+            {"symbol": "AAA", "delta": "30", "price": "10"},
+            {"symbol": "BBB", "delta": "20", "price": "20"}
+          ]
+        }
+      },
+      "adv_bars": {
+        "AAA": {"close": "10", "volume": "3000"},
+        "BBB": {"close": "20", "volume": "0"}
+      },
+      "expected": {
+        "portfolio_capacity_state": "PORTFOLIO_CAPACITY_INCOMPLETE_NON_POSITIVE_ADV",
+        "portfolio_capacity_rational": null,
+        "binding_security_id": null,
+        "rows": {
+          "AAA": {
+            "side": "BUY",
+            "gross_notional": "300.00000000",
+            "adv_rational": "30000/1",
+            "participation_state": "PARTICIPATION_MEASURED_SCENARIO",
+            "participation_rational": "1/100",
+            "capacity_state": "CAPACITY_MEASURED_SCENARIO",
+            "aum_capacity_rational": "10000/1"
+          },
+          "BBB": {
+            "side": "BUY",
+            "gross_notional": "400.00000000",
+            "adv_rational": "0/1",
+            "adv_ledger": "0.00000000",
+            "participation_state": "PARTICIPATION_UNAVAILABLE_NON_POSITIVE_ADV",
+            "participation_rational": null,
+            "participation_ledger": null,
+            "target_weight_change_rational": "2/5",
+            "capacity_state": "CAPACITY_UNAVAILABLE_NON_POSITIVE_ADV",
+            "aum_capacity_rational": null,
+            "aum_capacity_ledger": null
+          }
+        }
+      }
+    }
+  }
+}

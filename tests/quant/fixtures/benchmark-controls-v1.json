@@ -1,0 +1,60 @@
+{
+  "schema_version": "qme.benchmark_controls.v1",
+  "artifact_id": "QME-NEE130-BENCHMARK-CONTROLS-V1",
+  "status": "TEST_CONSTRUCTED_SYNTHETIC_VECTOR",
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "provenance": "Hand-authored synthetic vectors. Not an owner mandate and not registrable; every registry record is injected as TEST_CONSTRUCTED and can never ship.",
+  "availability_cutoff": "2020-06-01T00:00:00Z",
+  "available_at": "2020-01-01T00:00:00Z",
+  "opening_cash": "100000",
+  "cost_rate_bps": "10",
+  "eligible_sessions": ["2020-01-03", "2020-01-08"],
+  "strategy_config_dimensions": {
+    "action.rebalance_policy": "MONTHLY_EQUAL_WEIGHT",
+    "cost.rate_bps": "10",
+    "execution.fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+    "execution.share_mode": "WHOLE_SHARE_ORDERS_INTEGRAL_CUSTODY",
+    "universe.classification_filter": "COMMON_ONLY",
+    "universe.coverage_minimum": "0.5",
+    "universe.eligibility_filter": "ALL_REGISTERED",
+    "universe.history_minimum": "252",
+    "universe.liquidity_floor": "1000000",
+    "universe.raw_price_floor": "5",
+    "universe.staleness_bound": "0"
+  },
+  "spy_expected": {
+    "initial_nav": "100000.00000000",
+    "final_nav": "102800.00000000",
+    "final_cash": "300.00000000",
+    "final_positions": {"SPY": "250.00000000"},
+    "dividend_receivable_total": "400.00000000",
+    "transaction_cost_total": "100.00000000",
+    "transaction_tax_total": "0.00000000",
+    "rebalance_count": 2,
+    "nav_by_session": {"2020-01-03": "99920.00000000", "2020-01-08": "102800.00000000"}
+  },
+  "equal_weight_expected": {
+    "initial_nav": "100000.00000000",
+    "final_nav": "100850.50000000",
+    "final_cash": "400.50000000",
+    "final_positions": {"EW1": "166.00000000", "EW2": "71.00000000"},
+    "transaction_cost_total": "99.50000000",
+    "rebalance_count": 1,
+    "selected": ["EW1", "EW2"],
+    "nav_by_session": {"2020-01-03": "100850.50000000", "2020-01-08": "100850.50000000"}
+  },
+  "nonclaims": {
+    "alpha_demonstrated": false,
+    "benchmark_outperformance_measured": false,
+    "capacity_value_registered": false,
+    "economic_comparison_drawn": false,
+    "empirical_performance_measured": false,
+    "freeze_blocker_changed": false,
+    "independent_review_recorded": false,
+    "live_order_authority": false,
+    "owner_gated_values_registered": false,
+    "production_deployment_authorized": false,
+    "production_ready": false,
+    "prospective_observations_consumable": false
+  }
+}
