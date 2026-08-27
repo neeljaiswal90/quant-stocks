@@ -1,0 +1,1381 @@
+{
+  "artifact_id": "NEE-129-EXECUTION-ACCOUNTING-KAT-V1",
+  "blocked_cases": {
+    "action-on-fill-date": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-action-on-fill-date",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "actions_effective_on_fill_session": [
+              "ca-on-fill-session"
+            ],
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "action-on-fill-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-1",
+                  "price": "50",
+                  "symbol": "AAA"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_CORPORATE_ACTION_ON_FILL_DATE"
+    },
+    "delisting-between-signal-and-fill": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-delisting",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": true,
+                "halted": false,
+                "open": false,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "delisting-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-1",
+                  "price": "50",
+                  "symbol": "AAA"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_DELISTING_BETWEEN_SIGNAL_AND_FILL"
+    },
+    "halt": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-halt",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": true,
+                "open": false,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "halt-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-1",
+                  "price": "50",
+                  "symbol": "AAA"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_HALTED_SECURITY_NO_REGULAR_SESSION_PRINT"
+    },
+    "missing-open": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-missing-open",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": false,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "missing-open-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-1",
+                  "price": "50",
+                  "symbol": "AAA"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_MISSING_OFFICIAL_RAW_OPEN"
+    },
+    "negative-cash": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-negative-cash",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "BBB": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50",
+              "BBB": "25"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "negative-cash-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "100",
+                  "price": "25",
+                  "symbol": "BBB"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_NEGATIVE_POST_TRADE_CASH"
+    },
+    "unavailable-after-registered-bound": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-deferral-bound",
+        "registries": {
+          "maximum_fill_deferrals": [
+            {
+              "bound_id": "NEE129-KAT-DEFERRAL-BOUND-V1",
+              "effective_date": "2026-01-01",
+              "maximum_deferral_sessions": 1,
+              "source": "synthetic regression fixture bound",
+              "source_kind": "TEST_CONSTRUCTED",
+              "source_reference": "tests/quant/fixtures/execution-accounting-v1.json"
+            }
+          ]
+        },
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-05",
+            "eligible_session": "s1",
+            "fill_session": "s3",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50"
+            },
+            "maximum_fill_deferral_bound_id": "NEE129-KAT-DEFERRAL-BOUND-V1",
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "BOUNDED_NEXT_SESSION_DEFERRAL",
+            "rebalance_id": "deferral-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-1",
+                  "price": "50",
+                  "symbol": "AAA"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-05"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_UNAVAILABLE_FILL_AFTER_REGISTERED_BOUND"
+    },
+    "unsupported-held-corporate-action": {
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-unsupported-held-action",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "applied_event_registry_before": [],
+            "kind": "ACTION",
+            "marks_after_entitlement": {
+              "AAA": "50"
+            },
+            "marks_after_split": {
+              "AAA": "50"
+            },
+            "session": "s2",
+            "stage_id": "unsupported-action",
+            "unsupported_actions": [
+              {
+                "action_type": "MERGER",
+                "event_id": "unsupported-merger",
+                "security_id": "AAA"
+              }
+            ]
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      },
+      "state": "BLOCKED_UNSUPPORTED_HELD_CORPORATE_ACTION"
+    }
+  },
+  "calendar": {
+    "calendar_id": "XSYN",
+    "calendar_sha256_grouped": "a6153714:4ed73a6f:c807b5de:37738524:1efe0c2d:04c1446e:3f6a6756:5e0bd0c9"
+  },
+  "change_tier": "T1_ACCEPTED_KERNEL",
+  "data_class": "SYNTHETIC_NON_EMPIRICAL_TEST_ONLY",
+  "engine_id": "QME-NEE129-RAW-PRICE-EXECUTION-SELF-FINANCING-ENGINE-V1",
+  "engine_schema_version": "qme.execution_accounting.v1",
+  "evidence_registry": {
+    "s0": {
+      "analysis_as_of": "2026-04-30T21:00:00+00:00",
+      "available_at": "2026-04-30T14:31:00+00:00",
+      "observation_session": "2026-04-30",
+      "snapshot_id": "nee129-s0",
+      "snapshot_sha256_grouped": "d98963ee:bee9a539:477059fe:9cd494c0:27337d33:a5726439:86eafb84:664fb299",
+      "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+    },
+    "s1": {
+      "analysis_as_of": "2026-05-01T21:00:00+00:00",
+      "available_at": "2026-05-01T14:31:00+00:00",
+      "observation_session": "2026-05-01",
+      "snapshot_id": "nee129-s1",
+      "snapshot_sha256_grouped": "6c3ae10f:9029ad82:4dc63862:61dd1456:c4445212:2dd138c1:afa1aed8:cc7cddc7",
+      "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+    },
+    "s2": {
+      "analysis_as_of": "2026-05-04T21:00:00+00:00",
+      "available_at": "2026-05-04T14:31:00+00:00",
+      "observation_session": "2026-05-04",
+      "snapshot_id": "nee129-s2",
+      "snapshot_sha256_grouped": "29bde581:b6b68ddb:20aa764c:1d7adc30:d330aeaa:ec59fb02:a208d8e8:e4bb2b37",
+      "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+    },
+    "s3": {
+      "analysis_as_of": "2026-05-05T21:00:00+00:00",
+      "available_at": "2026-05-05T14:31:00+00:00",
+      "observation_session": "2026-05-05",
+      "snapshot_id": "nee129-s3",
+      "snapshot_sha256_grouped": "2a791174:054b2340:5a12d821:7bc9fd29:2f765b85:dca7325f:9b54a579:99bb6a05",
+      "source_id": "SYNTHETIC_EXECUTION_FIXTURE"
+    }
+  },
+  "golden_reconciliation": {
+    "cannot_reconcile": [
+      {
+        "quantity": "asymmetric_buy_sell_costs",
+        "reason": "ASYMMETRIC_BUY_SELL_COSTS is in the golden fixture's explicitly excluded unresolved scope; its cost is symmetric 10 bps on both sides"
+      },
+      {
+        "quantity": "capacity_or_target_trim_solver",
+        "reason": "CAPACITY_OR_TARGET_TRIM_SOLVER is excluded scope and the vectors supply signed deltas as given, so no target solution is pinned"
+      },
+      {
+        "quantity": "gtn_ratio_and_one_way_turnover",
+        "reason": "the golden expected ledger pins neither ratio; they are pinned only in accounting-equations-v1.vectors.json for a different portfolio"
+      },
+      {
+        "quantity": "half_even_tie_break_at_q8",
+        "reason": "every product in the golden path is exactly representable at 1e-8, so no pinned value discriminates ROUND_HALF_EVEN from another half rule"
+      },
+      {
+        "quantity": "lot_basis_gain_and_wash_fields",
+        "reason": "TAX_LOT_REALIZATION_CONVENTION is excluded scope; the fixture pins no basis, realized gain, holding period, or wash-sale value"
+      },
+      {
+        "quantity": "real_regulatory_fees",
+        "reason": "the golden policy source_id is SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY and its 20 bps SELL charge is invented, so the NEE-205 kernel is run in this engine's separate historical-regulatory-fee scenario instead"
+      },
+      {
+        "quantity": "spread_slippage_or_impact",
+        "reason": "the oracle and the frozen identity both require execution price equal to the common mark, and no non-zero self-financing residual vector exists"
+      },
+      {
+        "quantity": "zero_position_pruning",
+        "reason": "no symbol reaches zero anywhere in the golden fixture, so pruning versus retaining a zeroed position is unpinned there"
+      }
+    ],
+    "fixture_spec_id": "NEE-116A-GOLDEN-TWO-REBALANCE-V1",
+    "oracle": "qme.fixtures.golden_two_rebalance.evaluate_fixture",
+    "reconciles": [
+      "cash",
+      "costs",
+      "lot_share_counts",
+      "nav",
+      "positions",
+      "receivables",
+      "taxes"
+    ]
+  },
+  "method_id": "QME-NEE129-RAW-EXECUTION-SELF-FINANCING-ACCOUNTING-V1",
+  "nonclaims": {
+    "alpha_demonstrated": false,
+    "capacity_value_registered": false,
+    "empirical_performance_measured": false,
+    "freeze_blocker_changed": false,
+    "independent_review_recorded": false,
+    "live_order_authority": false,
+    "owner_gated_values_registered": false,
+    "production_deployment_authorized": false,
+    "production_ready": false,
+    "prospective_observations_consumable": false
+  },
+  "policies": {
+    "cost-regulatory-10bps": {
+      "effective_date": "2026-01-01",
+      "policy_id": "NEE129-KAT-REGULATORY-COST-V1",
+      "regulatory_authority": true,
+      "source": "synthetic regression fixture; not an owner cost registration",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/execution-accounting-v1.json",
+      "transaction_cost_rate_bps": "10"
+    },
+    "cost-synthetic-10bps": {
+      "effective_date": "2026-01-01",
+      "policy_id": "NEE129-KAT-SYNTHETIC-COST-V1",
+      "regulatory_authority": false,
+      "source": "synthetic regression fixture; not an owner cost registration",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/execution-accounting-v1.json",
+      "transaction_cost_rate_bps": "10"
+    },
+    "ledger-source-synthetic": {
+      "coordinate_system": "raw_price",
+      "effective_date": "2026-01-01",
+      "source": "synthetic regression fixture; raw-coordinate evidence source",
+      "source_id": "SYNTHETIC_EXECUTION_FIXTURE",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/execution-accounting-v1.json"
+    },
+    "participation-limit-100pct": {
+      "effective_date": "2026-01-01",
+      "limit_id": "NEE129-KAT-PARTICIPATION-V1",
+      "maximum_participation": "1",
+      "source": "synthetic regression fixture; not an owner participation registration",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/execution-accounting-v1.json"
+    },
+    "tax-none": {
+      "assessment_base": "RAW_FILL_NOTIONAL",
+      "assessment_side": "NONE",
+      "policy_id": "NEE129-KAT-NO-TRANSACTION-TAX-V1",
+      "policy_sha256_grouped": "a1fd1f80:a024debb:affdb88c:e6b0fc4c:7d407ed1:dacba26c:db652856:207f6537",
+      "rate_bps": "0",
+      "source_id": "SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY"
+    },
+    "tax-sell-20bps": {
+      "assessment_base": "RAW_FILL_NOTIONAL",
+      "assessment_side": "SELL",
+      "policy_id": "NEE129-KAT-SELL-TRANSACTION-TAX-V1",
+      "policy_sha256_grouped": "b112f012:19fbd1d4:012f2cb4:a114fd23:c0f4fbe1:9b4a13e9:b657483a:9d6faf64",
+      "rate_bps": "20",
+      "source_id": "SYNTHETIC_FIXTURE_NOT_REGULATORY_AUTHORITY"
+    },
+    "withholding-zero": {
+      "effective_date": "2026-01-01",
+      "policy_id": "NEE129-KAT-ZERO-WITHHOLDING-V1",
+      "source": "synthetic regression fixture; explicit zero-rate gross accrual",
+      "source_kind": "TEST_CONSTRUCTED",
+      "source_reference": "tests/quant/fixtures/execution-accounting-v1.json",
+      "withholding_rate": "0"
+    }
+  },
+  "review_status": "PENDING_INDEPENDENT_REVIEW",
+  "reviewer_identity": null,
+  "scenarios": {
+    "equal-weight-residual-cash-repair": {
+      "expected": {
+        "action_outcomes": [],
+        "final_cash": "24.92500000",
+        "final_nav": "99.92500000",
+        "final_positions": {
+          "AAA": "1.00000000",
+          "BBB": "1.00000000"
+        },
+        "final_receivables": "0.00000000",
+        "initial_nav": "100.00000000",
+        "open_lots": [
+          {
+            "acquired": "2026-05-01",
+            "basis": "50.05000000",
+            "holding_start": "2026-05-01",
+            "lot_id": 1,
+            "security_id": "AAA",
+            "shares": "1.00000000"
+          },
+          {
+            "acquired": "2026-05-01",
+            "basis": "25.02500000",
+            "holding_start": "2026-05-01",
+            "lot_id": 2,
+            "security_id": "BBB",
+            "shares": "1.00000000"
+          }
+        ],
+        "realized_events": [],
+        "rebalances": [
+          {
+            "cash_plus": "24.92500000",
+            "fill_states": [
+              {
+                "cash_after_fill": "49.95000000",
+                "delta_raw_shares": "1.00000000",
+                "fill_index": 0,
+                "gross_notional": "50.00000000",
+                "positions_after_fill": {
+                  "AAA": "1.00000000"
+                },
+                "side": "BUY",
+                "symbol": "AAA",
+                "transaction_cost": "0.05000000",
+                "transaction_tax": "0.00000000"
+              },
+              {
+                "cash_after_fill": "24.92500000",
+                "delta_raw_shares": "1.00000000",
+                "fill_index": 1,
+                "gross_notional": "25.00000000",
+                "positions_after_fill": {
+                  "AAA": "1.00000000",
+                  "BBB": "1.00000000"
+                },
+                "side": "BUY",
+                "symbol": "BBB",
+                "transaction_cost": "0.02500000",
+                "transaction_tax": "0.00000000"
+              }
+            ],
+            "gross_trade_notional": "75.00000000",
+            "nav_minus": "100.00000000",
+            "nav_plus": "99.92500000",
+            "positions_plus": {
+              "AAA": "1.00000000",
+              "BBB": "1.00000000"
+            },
+            "rebalance_id": "residual-r1",
+            "receivables_plus": "0.00000000",
+            "regulatory_fee_lines": [],
+            "regulatory_fees_total": "0.00000000",
+            "self_financing_residual": "0.00000000",
+            "self_financing_status": "COMMON_MARK_IDENTITY_HELD",
+            "transaction_cost": "0.07500000",
+            "transaction_tax": "0.00000000"
+          }
+        ],
+        "session_close_records": [],
+        "state": "EXECUTION_OK"
+      },
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "100",
+          "marks": {},
+          "positions": {},
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-residual-cash",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              },
+              "BBB": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50",
+              "BBB": "25"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "residual-r1",
+            "signal_session": "s0",
+            "target": {
+              "kind": "EQUAL_WEIGHT",
+              "prices": {
+                "AAA": "50",
+                "BBB": "25"
+              },
+              "selected": [
+                "AAA",
+                "BBB"
+              ]
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      }
+    },
+    "historical-regulatory-fee-posting": {
+      "expected": {
+        "action_outcomes": [],
+        "final_cash": "748.73775000",
+        "final_nav": "1998.73775000",
+        "final_positions": {
+          "AAA": "10.00000000",
+          "BBB": "30.00000000"
+        },
+        "final_receivables": "0.00000000",
+        "initial_nav": "2000.00000000",
+        "open_lots": [
+          {
+            "acquired": "2026-04-30",
+            "basis": "500.00000000",
+            "holding_start": "2026-04-30",
+            "lot_id": 1,
+            "security_id": "AAA",
+            "shares": "10.00000000"
+          },
+          {
+            "acquired": "2026-05-01",
+            "basis": "750.75000000",
+            "holding_start": "2026-05-01",
+            "lot_id": 2,
+            "security_id": "BBB",
+            "shares": "30.00000000"
+          }
+        ],
+        "realized_events": [
+          {
+            "basis": "500.00000000",
+            "proceeds": "499.48775000",
+            "raw_gain": "-0.51225000",
+            "recognized_gain": "-0.51225000",
+            "sale_date": "2026-05-01",
+            "security_id": "AAA",
+            "shares": "10.00000000",
+            "term": "SHORT_TERM",
+            "wash_disallowed": "0.00000000"
+          }
+        ],
+        "rebalances": [
+          {
+            "cash_plus": "748.73775000",
+            "fill_states": [
+              {
+                "cash_after_fill": "1499.50000000",
+                "delta_raw_shares": "-10.00000000",
+                "fill_index": 0,
+                "gross_notional": "500.00000000",
+                "positions_after_fill": {
+                  "AAA": "10.00000000"
+                },
+                "side": "SELL",
+                "symbol": "AAA",
+                "transaction_cost": "0.50000000",
+                "transaction_tax": "0.00000000"
+              },
+              {
+                "cash_after_fill": "748.75000000",
+                "delta_raw_shares": "30.00000000",
+                "fill_index": 1,
+                "gross_notional": "750.00000000",
+                "positions_after_fill": {
+                  "AAA": "10.00000000",
+                  "BBB": "30.00000000"
+                },
+                "side": "BUY",
+                "symbol": "BBB",
+                "transaction_cost": "0.75000000",
+                "transaction_tax": "0.00000000"
+              }
+            ],
+            "gross_trade_notional": "1250.00000000",
+            "nav_minus": "2000.00000000",
+            "nav_plus": "1998.73775000",
+            "positions_plus": {
+              "AAA": "10.00000000",
+              "BBB": "30.00000000"
+            },
+            "rebalance_id": "regulatory-r1",
+            "receivables_plus": "0.00000000",
+            "regulatory_fee_lines": [
+              {
+                "charge_date": "2026-05-01",
+                "finra_taf_raw": "0",
+                "kernel_status": "NOT_INVOKED_BUY_REGISTERED_ZERO",
+                "ledger_amount": "0.00000000",
+                "regulatory_trade_id": null,
+                "sec31_raw": "0",
+                "side": "BUY",
+                "symbol": "BBB",
+                "total_raw": "0",
+                "trade_date": "2026-05-01"
+              },
+              {
+                "charge_date": "2026-05-01",
+                "finra_taf_raw": "0.00195",
+                "kernel_status": "CALCULATED_HISTORICAL_RAW_REGULATORY_ASSESSMENT_ONLY",
+                "ledger_amount": "0.01225000",
+                "regulatory_trade_id": "RT-NEE129-AAA-1",
+                "sec31_raw": "0.0103",
+                "side": "SELL",
+                "symbol": "AAA",
+                "total_raw": "0.01225",
+                "trade_date": "2026-05-01"
+              }
+            ],
+            "regulatory_fees_total": "0.01225000",
+            "self_financing_residual": "0.00000000",
+            "self_financing_status": "COMMON_MARK_IDENTITY_HELD",
+            "transaction_cost": "1.25000000",
+            "transaction_tax": "0.00000000"
+          }
+        ],
+        "session_close_records": [],
+        "state": "EXECUTION_OK"
+      },
+      "input": {
+        "cost_policy": "cost-regulatory-10bps",
+        "opening": {
+          "cash": "1000",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "20"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-historical-regulatory-fee",
+        "regulatory_fee_mode": "POSTED_HISTORICAL_REGULATORY_FEES_V3",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              },
+              "BBB": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50",
+              "BBB": "25"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "regulatory-r1",
+            "regulatory_trade_metadata": {
+              "AAA": "RT-NEE129-AAA-1"
+            },
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-10",
+                  "price": "50",
+                  "symbol": "AAA"
+                },
+                {
+                  "delta_raw_shares": "30",
+                  "price": "25",
+                  "symbol": "BBB"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          }
+        ],
+        "transaction_tax_policy": "tax-none"
+      }
+    },
+    "integer-orders-fractional-custody": {
+      "expected": {
+        "action_outcomes": [
+          {
+            "applied_event_registry_after": [
+              "fractional-split",
+              "fractional-dividend",
+              "fractional-payment"
+            ],
+            "cash_after_payment": "511.50000000",
+            "dividend_eligible_raw_shares": "12.50000000",
+            "dividend_receivable": "12.50000000",
+            "event_order": [
+              "SPLIT",
+              "DIVIDEND_ENTITLEMENT"
+            ],
+            "nav_after_entitlement": "999.00000000",
+            "nav_after_payment": "999.00000000",
+            "nav_after_split": "999.00000000",
+            "post_split_raw_shares": "12.50000000",
+            "receivables_after_payment": "0.00000000",
+            "split_reference_value_after": "250.00000000",
+            "split_reference_value_before": "250.00000000"
+          }
+        ],
+        "final_cash": "511.50000000",
+        "final_nav": "999.00000000",
+        "final_positions": {
+          "AAA": "12.50000000",
+          "BBB": "10.00000000"
+        },
+        "final_receivables": "0.00000000",
+        "initial_nav": "1000.00000000",
+        "open_lots": [
+          {
+            "acquired": "2026-04-30",
+            "basis": "250.00000000",
+            "holding_start": "2026-04-30",
+            "lot_id": 1,
+            "security_id": "AAA",
+            "shares": "12.50000000"
+          },
+          {
+            "acquired": "2026-05-01",
+            "basis": "250.25000000",
+            "holding_start": "2026-05-01",
+            "lot_id": 2,
+            "security_id": "BBB",
+            "shares": "10.00000000"
+          }
+        ],
+        "realized_events": [
+          {
+            "basis": "250.00000000",
+            "proceeds": "249.25000000",
+            "raw_gain": "-0.75000000",
+            "recognized_gain": "-0.75000000",
+            "sale_date": "2026-05-01",
+            "security_id": "AAA",
+            "shares": "5.00000000",
+            "term": "SHORT_TERM",
+            "wash_disallowed": "0.00000000"
+          }
+        ],
+        "rebalances": [
+          {
+            "cash_plus": "499.00000000",
+            "fill_states": [
+              {
+                "cash_after_fill": "749.25000000",
+                "delta_raw_shares": "-5.00000000",
+                "fill_index": 0,
+                "gross_notional": "250.00000000",
+                "positions_after_fill": {
+                  "AAA": "5.00000000"
+                },
+                "side": "SELL",
+                "symbol": "AAA",
+                "transaction_cost": "0.25000000",
+                "transaction_tax": "0.50000000"
+              },
+              {
+                "cash_after_fill": "499.00000000",
+                "delta_raw_shares": "10.00000000",
+                "fill_index": 1,
+                "gross_notional": "250.00000000",
+                "positions_after_fill": {
+                  "AAA": "5.00000000",
+                  "BBB": "10.00000000"
+                },
+                "side": "BUY",
+                "symbol": "BBB",
+                "transaction_cost": "0.25000000",
+                "transaction_tax": "0.00000000"
+              }
+            ],
+            "gross_trade_notional": "500.00000000",
+            "nav_minus": "1000.00000000",
+            "nav_plus": "999.00000000",
+            "positions_plus": {
+              "AAA": "5.00000000",
+              "BBB": "10.00000000"
+            },
+            "rebalance_id": "fractional-r1",
+            "receivables_plus": "0.00000000",
+            "regulatory_fee_lines": [],
+            "regulatory_fees_total": "0.00000000",
+            "self_financing_residual": "0.00000000",
+            "self_financing_status": "COMMON_MARK_IDENTITY_HELD",
+            "transaction_cost": "0.50000000",
+            "transaction_tax": "0.50000000"
+          }
+        ],
+        "session_close_records": [
+          {
+            "cash_after": "511.50000000",
+            "nav_after": "999.00000000",
+            "raw_close_marks": {
+              "AAA": "19.00000000",
+              "BBB": "25.00000000"
+            },
+            "receivables_after": "0.00000000"
+          }
+        ],
+        "state": "EXECUTION_OK"
+      },
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-fractional-custody",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "INTEGER_ORDERS_FRACTIONAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              },
+              "BBB": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50",
+              "BBB": "25"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "fractional-r1",
+            "signal_diagnostics": [
+              {
+                "coordinate": "total_return",
+                "security_id": "AAA",
+                "session_date": "2026-04-30",
+                "value": "1.2345"
+              }
+            ],
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-5",
+                  "price": "50",
+                  "symbol": "AAA"
+                },
+                {
+                  "delta_raw_shares": "10",
+                  "price": "25",
+                  "symbol": "BBB"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          },
+          {
+            "applied_event_registry_before": [],
+            "declared_withholding_policy_id": "NEE129-KAT-ZERO-WITHHOLDING-V1",
+            "dividend": {
+              "event_id": "fractional-dividend",
+              "raw_cash_per_share": "1",
+              "security_id": "AAA",
+              "share_basis": "POST_SPLIT"
+            },
+            "kind": "ACTION",
+            "marks_after_entitlement": {
+              "AAA": "19",
+              "BBB": "25"
+            },
+            "marks_after_split": {
+              "AAA": "20",
+              "BBB": "25"
+            },
+            "payment": {
+              "dividend_event_id": "fractional-dividend",
+              "event_id": "fractional-payment",
+              "session": "s3"
+            },
+            "session": "s2",
+            "split": {
+              "event_id": "fractional-split",
+              "security_id": "AAA",
+              "split_factor": "2.5"
+            },
+            "stage_id": "fractional-action"
+          },
+          {
+            "kind": "CLOSE",
+            "raw_close_marks": {
+              "AAA": "19",
+              "BBB": "25"
+            },
+            "session": "s3",
+            "stage_id": "fractional-close"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      }
+    },
+    "whole-share-integral-custody": {
+      "expected": {
+        "action_outcomes": [
+          {
+            "applied_event_registry_after": [
+              "whole-split",
+              "whole-dividend"
+            ],
+            "cash_after_payment": "449.15000000",
+            "dividend_eligible_raw_shares": "12.00000000",
+            "dividend_receivable": "12.00000000",
+            "event_order": [
+              "SPLIT",
+              "DIVIDEND_ENTITLEMENT"
+            ],
+            "nav_after_entitlement": "999.15000000",
+            "nav_after_payment": "999.15000000",
+            "nav_after_split": "999.15000000",
+            "post_split_raw_shares": "12.00000000",
+            "receivables_after_payment": "12.00000000",
+            "split_reference_value_after": "300.00000000",
+            "split_reference_value_before": "300.00000000"
+          }
+        ],
+        "final_cash": "461.15000000",
+        "final_nav": "999.15000000",
+        "final_positions": {
+          "AAA": "12.00000000",
+          "BBB": "10.00000000"
+        },
+        "final_receivables": "0.00000000",
+        "initial_nav": "1000.00000000",
+        "open_lots": [
+          {
+            "acquired": "2026-04-30",
+            "basis": "300.00000000",
+            "holding_start": "2026-04-30",
+            "lot_id": 1,
+            "security_id": "AAA",
+            "shares": "12.00000000"
+          },
+          {
+            "acquired": "2026-05-01",
+            "basis": "250.25000000",
+            "holding_start": "2026-05-01",
+            "lot_id": 2,
+            "security_id": "BBB",
+            "shares": "10.00000000"
+          }
+        ],
+        "realized_events": [
+          {
+            "basis": "200.00000000",
+            "proceeds": "199.40000000",
+            "raw_gain": "-0.60000000",
+            "recognized_gain": "-0.60000000",
+            "sale_date": "2026-05-01",
+            "security_id": "AAA",
+            "shares": "4.00000000",
+            "term": "SHORT_TERM",
+            "wash_disallowed": "0.00000000"
+          }
+        ],
+        "rebalances": [
+          {
+            "cash_plus": "449.15000000",
+            "fill_states": [
+              {
+                "cash_after_fill": "699.40000000",
+                "delta_raw_shares": "-4.00000000",
+                "fill_index": 0,
+                "gross_notional": "200.00000000",
+                "positions_after_fill": {
+                  "AAA": "6.00000000"
+                },
+                "side": "SELL",
+                "symbol": "AAA",
+                "transaction_cost": "0.20000000",
+                "transaction_tax": "0.40000000"
+              },
+              {
+                "cash_after_fill": "449.15000000",
+                "delta_raw_shares": "10.00000000",
+                "fill_index": 1,
+                "gross_notional": "250.00000000",
+                "positions_after_fill": {
+                  "AAA": "6.00000000",
+                  "BBB": "10.00000000"
+                },
+                "side": "BUY",
+                "symbol": "BBB",
+                "transaction_cost": "0.25000000",
+                "transaction_tax": "0.00000000"
+              }
+            ],
+            "gross_trade_notional": "450.00000000",
+            "nav_minus": "1000.00000000",
+            "nav_plus": "999.15000000",
+            "positions_plus": {
+              "AAA": "6.00000000",
+              "BBB": "10.00000000"
+            },
+            "rebalance_id": "whole-r1",
+            "receivables_plus": "0.00000000",
+            "regulatory_fee_lines": [],
+            "regulatory_fees_total": "0.00000000",
+            "self_financing_residual": "0.00000000",
+            "self_financing_status": "COMMON_MARK_IDENTITY_HELD",
+            "transaction_cost": "0.45000000",
+            "transaction_tax": "0.40000000"
+          }
+        ],
+        "session_close_records": [
+          {
+            "cash_after": "461.15000000",
+            "nav_after": "999.15000000",
+            "raw_close_marks": {
+              "AAA": "24.00000000",
+              "BBB": "25.00000000"
+            },
+            "receivables_after": "0.00000000"
+          }
+        ],
+        "state": "EXECUTION_OK"
+      },
+      "input": {
+        "cost_policy": "cost-synthetic-10bps",
+        "opening": {
+          "cash": "500",
+          "marks": {
+            "AAA": "50"
+          },
+          "positions": {
+            "AAA": "10"
+          },
+          "receivables": "0",
+          "session": "s0"
+        },
+        "program_id": "nee129-kat-whole-share",
+        "regulatory_fee_mode": "EXCLUDED_SYNTHETIC_NON_REGULATORY_SOURCE",
+        "share_mode": "WHOLE_SHARE_ORDERS_INTEGRAL_CUSTODY",
+        "stages": [
+          {
+            "availability": {
+              "AAA": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              },
+              "BBB": {
+                "delisted": false,
+                "halted": false,
+                "open": true,
+                "print": false
+              }
+            },
+            "charge_date": "2026-05-01",
+            "eligible_session": "s1",
+            "fill_session": "s1",
+            "kind": "REBALANCE",
+            "marks": {
+              "AAA": "50",
+              "BBB": "25"
+            },
+            "participation_limit_id": "NEE129-KAT-PARTICIPATION-V1",
+            "reason_code": "OFFICIAL_NEXT_SESSION_RAW_OPEN",
+            "rebalance_id": "whole-r1",
+            "signal_session": "s0",
+            "target": {
+              "deltas": [
+                {
+                  "delta_raw_shares": "-4",
+                  "price": "50",
+                  "symbol": "AAA"
+                },
+                {
+                  "delta_raw_shares": "10",
+                  "price": "25",
+                  "symbol": "BBB"
+                }
+              ],
+              "kind": "DECLARED"
+            },
+            "trade_date": "2026-05-01"
+          },
+          {
+            "applied_event_registry_before": [],
+            "declared_withholding_policy_id": "NEE129-KAT-ZERO-WITHHOLDING-V1",
+            "dividend": {
+              "event_id": "whole-dividend",
+              "raw_cash_per_share": "1",
+              "security_id": "AAA",
+              "share_basis": "POST_SPLIT"
+            },
+            "kind": "ACTION",
+            "marks_after_entitlement": {
+              "AAA": "24",
+              "BBB": "25"
+            },
+            "marks_after_split": {
+              "AAA": "25",
+              "BBB": "25"
+            },
+            "session": "s2",
+            "split": {
+              "event_id": "whole-split",
+              "security_id": "AAA",
+              "split_factor": "2"
+            },
+            "stage_id": "whole-action"
+          },
+          {
+            "kind": "CLOSE",
+            "raw_close_marks": {
+              "AAA": "24",
+              "BBB": "25"
+            },
+            "receivable_settlements": [
+              {
+                "amount": "12",
+                "event_id": "whole-dividend"
+              }
+            ],
+            "session": "s3",
+            "stage_id": "whole-close"
+          }
+        ],
+        "transaction_tax_policy": "tax-sell-20bps"
+      }
+    }
+  },
+  "schema_version": "qme.execution_accounting_kat.v1",
+  "sessions": {
+    "s0": {
+      "ordinal": 500,
+      "session_date": "2026-04-30"
+    },
+    "s1": {
+      "ordinal": 501,
+      "session_date": "2026-05-01"
+    },
+    "s2": {
+      "ordinal": 502,
+      "session_date": "2026-05-04"
+    },
+    "s3": {
+      "ordinal": 503,
+      "session_date": "2026-05-05"
+    }
+  },
+  "status": "REGRESSION_KAT_CANDIDATE_NOT_ACCEPTANCE_EVIDENCE",
+  "units": {
+    "currency_quantum": "0.00000001",
+    "order_quantum": "1",
+    "share_storage_quantum": "0.00000001"
+  }
+}

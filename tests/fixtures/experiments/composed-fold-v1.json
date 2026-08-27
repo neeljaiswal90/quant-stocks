@@ -1,0 +1,182 @@
+{
+  "kernel_id": "QME-COMPOSITION-COMPOSED-FOLD-V1",
+  "schema_version": "qme.composed_fold.v1",
+  "ticket_id": "PENDING_OWNER_ASSIGNMENT",
+  "authority": "composition ticket C under gate NEE-108, lead plan 2026-08-25; TEST_CONSTRUCTED records only, no owner mandate",
+  "exchange": "XNAS",
+  "candidate_names": ["SYN-A", "SYN-B", "SYN-C", "SYN-D", "SYN-E", "SYN-F", "SYN-G", "SYN-H", "SYN-I", "SYN-J"],
+  "reference_security_id": "SYN-REF",
+  "schedule": {
+    "policy_id": "composed-fold-month-end-v1",
+    "source": "tests/fixtures/experiments/composed-fold-v1.json",
+    "source_reference": "composition ticket C composed fold; not an owner registration",
+    "range_start": "2010-01-04",
+    "range_end": "2010-03-31",
+    "lookback_sessions": 2,
+    "skip_sessions": 1,
+    "event_ordinal": 0,
+    "warmup_insufficient_lookback_sessions": 252,
+    "warmup_insufficient_skip_sessions": 21
+  },
+  "universe": {
+    "threshold": {
+      "threshold_set_id": "composed-fold-threshold-v1",
+      "source": "synthetic composed-fold test vector; not an owner mandate",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json",
+      "mandate_reference": "NONE_TEST_CONSTRUCTED_NO_OWNER_MANDATE_EXISTS",
+      "preregistered_at": "2009-12-31T00:00:00Z",
+      "effective_date": "2010-01-04",
+      "raw_price_floor": "1",
+      "liquidity_floor_raw_adv_notional": "1",
+      "minimum_observed_sessions": 2,
+      "maximum_staleness_sessions": 0,
+      "minimum_coverage_fraction": "0.5",
+      "minimum_rank_eligible_breadth": 2
+    },
+    "required_coverage_series": ["RAW_CLOSE", "RAW_ADV_NOTIONAL", "SESSION_HISTORY"],
+    "universe_rules_version": "qme.point_in_time_universe_rules.v1",
+    "raw_close": "12.5",
+    "raw_adv_notional": "5000000",
+    "observed_session_count": 5,
+    "history_first_session": "2010-01-04",
+    "listing_from": "2010-01-04",
+    "classification_evidence_as_of": "2010-01-05T00:00:00Z",
+    "classification_observed_class": "COMMON_STOCK_PROXY",
+    "adv_window_sessions": 20
+  },
+  "signal": {
+    "variant": {
+      "variant_id": "composed-fold-variant-v1",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "tie": {
+      "policy_id": "composed-fold-tie-v1",
+      "total_order": ["signal_decimal_descending", "security_id_utf8_bytes_ascending"],
+      "stable_key": "security_id",
+      "stable_key_normalization": "NFC",
+      "stable_key_order": "UTF8_BYTES_ASCENDING",
+      "rank_method": "UNIQUE_ORDINAL_AFTER_STABLE_TIE_BREAK",
+      "boundary_tie_policy": "SPLIT_BY_STABLE_SECURITY_ID_ORDER",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "breadth": {
+      "threshold_id": "composed-fold-breadth-v1",
+      "minimum_rank_eligible_breadth": 10,
+      "unit": "security_count",
+      "evidence_source_type": "PRE_REGISTERED_UNIVERSE_EVIDENCE",
+      "evidence_reference": "tests/fixtures/experiments/composed-fold-v1.json",
+      "boundary_proof": "floor.0.20.times.10.equals.2",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "old_total_return_close": "100",
+    "recent_total_return_close_by_name": {
+      "SYN-A": "101", "SYN-B": "102", "SYN-C": "103", "SYN-D": "104", "SYN-E": "105",
+      "SYN-F": "106", "SYN-G": "107", "SYN-H": "108", "SYN-I": "109", "SYN-J": "110"
+    },
+    "observed_span_start": "2010-01-04"
+  },
+  "execution": {
+    "program_id": "composed-fold-program",
+    "cost_policy": {
+      "policy_id": "composed-fold-cost-10bps",
+      "transaction_cost_rate_bps": "10",
+      "effective_date": "2009-12-31",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "participation_limit": {
+      "limit_id": "composed-fold-participation-100pct",
+      "maximum_participation": "1",
+      "effective_date": "2009-12-31",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "ledger_coordinate_source": {
+      "source_id": "COMPOSED-FOLD-LEDGER-SOURCE",
+      "coordinate_system": "raw_price",
+      "effective_date": "2009-12-31",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "tax_policy": {
+      "policy_id": "composed-fold-tax-none",
+      "policy_sha256_seed": "composed-fold-tax-policy",
+      "source_id": "COMPOSED-FOLD-LEDGER-SOURCE",
+      "assessment_base": "RAW_FILL_NOTIONAL",
+      "rate_bps": "0"
+    },
+    "prior_positions": {"SYN-A": "10"},
+    "price": "12.5",
+    "opening_cash": "10000",
+    "opening_receivables": "0",
+    "declared_pre_trade_nav": "10125",
+    "ledger_source_id": "COMPOSED-FOLD-LEDGER-SOURCE",
+    "ledger_snapshot_id": "COMPOSED-FOLD-SNAPSHOT",
+    "ledger_snapshot_seed": "composed-fold-ledger-snapshot",
+    "rebalance_id": "composed-fold-rebalance"
+  },
+  "scenarios": {
+    "adv_sessions": ["2010-01-26", "2010-01-27", "2010-01-28"],
+    "adv_raw_close": "12.5",
+    "adv_raw_volume": "1000000",
+    "lookback": {
+      "lookback_id": "composed-fold-lookback-L3",
+      "owner": "composition ticket C test author",
+      "effective_version": "composed-fold-v1",
+      "lookback_sessions": 3,
+      "unit": "exchange_sessions",
+      "sensitivity_range": "L in 3 pinned for this fold",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "participation": {
+      "scenario_id": "composed-fold-participation-P10",
+      "owner": "composition ticket C test author",
+      "effective_version": "composed-fold-v1",
+      "participation_ceiling": "0.1",
+      "unit": "fraction_of_adv",
+      "sensitivity_range": "p in 0.1 pinned for this fold",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    }
+  },
+  "benchmarks": {
+    "strategy_id": "qme-momentum-v0.1",
+    "config_dimensions": {
+      "lookback_sessions": "2",
+      "skip_sessions": "1",
+      "selection": "equal_weight_over_k_t"
+    },
+    "control": {
+      "control_id": "composed-fold-control-reference",
+      "effective_date": "2009-12-31",
+      "source": "synthetic composed-fold test vector; not an owner registration",
+      "source_reference": "tests/fixtures/experiments/composed-fold-v1.json"
+    },
+    "reference_price": "50",
+    "reference_delta_raw_shares": "10",
+    "reference_rebalance_id": "composed-fold-control-buy"
+  },
+  "expected": {
+    "included_count": 10,
+    "selection_k_t": 2,
+    "selected_names": ["SYN-I", "SYN-J"],
+    "execution_state": "EXECUTION_OK",
+    "event_signal_session": "2010-01-29",
+    "event_signal_session_position": 18,
+    "event_fill_session": "2010-02-01",
+    "event_fill_session_position": 19,
+    "event_recent_anchor": "2010-01-28",
+    "event_old_anchor": "2010-01-27",
+    "prior_held_name": "SYN-A",
+    "opening_nav": "10125.00000000",
+    "closing_cash": "2.26250000",
+    "closing_receivables": "0.00000000",
+    "closing_nav": "10114.76250000",
+    "closing_held_positions_by_name": {"SYN-I": "405.00000000", "SYN-J": "404.00000000"},
+    "closing_open_lot_count": 2
+  }
+}
