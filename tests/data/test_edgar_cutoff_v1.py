@@ -6,11 +6,13 @@ import pytest
 
 from qme.data.sec.edgar_cutoff_v1 import (
     CUTOFF_SCHEMA_VERSION,
+    LATEST_AS_OF_POLICY_VERSION,
     SOURCE_ACCESSION_DOCUMENT,
     SOURCE_COMPANY_FACTS_CURRENT,
     EdgarCutoffError,
     FilingRecord,
     select_cutoff_filings,
+    select_latest_filings_as_of,
 )
 
 
@@ -165,3 +167,56 @@ def test_input_order_does_not_change_selected_accessions() -> None:
     assert tuple(item.accession for item in forward) == tuple(
         item.accession for item in backward
     )
+
+
+def test_latest_as_of_policy_version_is_frozen() -> None:
+    assert LATEST_AS_OF_POLICY_VERSION == "qme.edgar_latest_as_of.v1"
+
+
+def test_latest_as_of_picks_the_later_accepted_filing_per_cik_and_form() -> None:
+    earlier = _filing(accepted_at="2023-11-03T06:01:27.000Z")
+    later = _filing(
+        accession="0000320193-23-000107",
+        accepted_at="2023-11-03T08:00:00.000Z",
+        sha256="bb" * 32,
+    )
+    other_form = _filing(
+        accession="0000320193-23-000108",
+        form="8-K",
+        accepted_at="2023-11-03T07:00:00.000Z",
+        sha256="cc" * 32,
+    )
+    selected = select_latest_filings_as_of(
+        (earlier, later, other_form),
+        analysis_as_of="2023-11-03T12:00:00.000Z",
+    )
+
+    assert tuple((item.form, item.accession) for item in selected) == (
+        ("10-K", "0000320193-23-000107"),
+        ("8-K", "0000320193-23-000108"),
+    )
+
+
+def test_latest_as_of_keeps_original_and_amendment_as_separate_forms() -> None:
+    original = _filing()
+    amendment = _filing(
+        accession="0000320193-23-000108",
+        form="10-K/A",
+        accepted_at="2023-11-03T09:00:00.000Z",
+        amendment_of="0000320193-23-000106",
+        sha256="cc" * 32,
+    )
+    selected = select_latest_filings_as_of(
+        (original, amendment),
+        analysis_as_of="2023-11-03T12:00:00.000Z",
+    )
+
+    assert {item.form for item in selected} == {"10-K", "10-K/A"}
+
+
+def test_latest_as_of_still_rejects_future_accepted_filings() -> None:
+    with pytest.raises(EdgarCutoffError, match="FUTURE_ACCEPTED_FILING"):
+        select_latest_filings_as_of(
+            (_filing(accepted_at="2023-11-04T00:00:00.000Z"),),
+            analysis_as_of="2023-11-03T12:00:00.000Z",
+        )
