@@ -304,7 +304,7 @@
     "delisting_row_count": 6,
     "fallback_result_count": 0,
     "attribution_row_count": 6,
-    "report_sha256_grouped": "79e3ba39:9a2c4215:51a412c3:825a3e84:743e2bbc:370fbe60:4dd8ea14:34570a95"
+    "report_sha256_grouped": "cf587412:1be96137:aeb66055:326d8723:43faa395:85e4fd01:6b6b00c8:01786725"
   },
   "clean_run": {
     "note": "A run with nothing missing in any of the eight classes. Coverage minima are owner-registered at 1, so this synthetic run is GATE_VALID. Timing remains unregistered, so a sourced cash/stock exit would still leave held positions unaudited.",
@@ -333,7 +333,7 @@
       "held_position_coverage_exact": "1/1",
       "unregistered_threshold_classes": []
     },
-    "report_sha256_grouped": "b3b2a45b:a0510614:13382d90:5f406417:e87af307:2b48846a:4e01a0f1:366001ce"
+    "report_sha256_grouped": "33a22e92:151c6727:e6a676a5:5c75652c:f23efda1:5e53879e:a74f7a83:f39ad3ae"
   },
   "registered_probe": {
     "note": "Test-only records passed through the `rules=` / `haircuts=` / `ranges=` / `thresholds=` parameters under the TEST_CONSTRUCTED source kind, which every validate_*_registry forbids in a shipped registry. They exist to prove the machinery is complete, not to register anything.",
@@ -466,7 +466,14 @@
     "unregistered_coverage_class": "BLOCKED_UNREGISTERED_COVERAGE_CLASS",
     "unregistered_coverage_threshold": "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
     "unregistered_item_state": "BLOCKED_UNREGISTERED_ITEM_STATE",
-    "unresolved_identity": "BLOCKED_UNRESOLVED_IDENTITY"
+    "unresolved_identity": "BLOCKED_UNRESOLVED_IDENTITY",
+    "caller_declared_coverage_state": "BLOCKED_CALLER_DECLARED_COVERAGE_STATE",
+    "duplicate_coverage_observation": "BLOCKED_DUPLICATE_COVERAGE_OBSERVATION",
+    "orphan_coverage_observation": "BLOCKED_ORPHAN_COVERAGE_OBSERVATION",
+    "listing_status_not_event_evidence": "BLOCKED_LISTING_STATUS_NOT_EVENT_EVIDENCE",
+    "denominator_changed_after_preregistration": "BLOCKED_DENOMINATOR_CHANGED_AFTER_PREREGISTRATION",
+    "implicit_benchmark_proxy": "BLOCKED_IMPLICIT_BENCHMARK_PROXY",
+    "action_absence_is_not_completeness": "BLOCKED_ACTION_ABSENCE_IS_NOT_COMPLETENESS"
   },
   "owner_registrations_required": [
     {

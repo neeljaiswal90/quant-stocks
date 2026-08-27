@@ -60,6 +60,13 @@ exits therefore still fail `BLOCKED_UNREGISTERED_TIMING_RULE` until an
 owner-approved, source-backed rule is registered, and held positions carrying
 those exits stay unaudited.
 
+The sourced auditor (`sourced_v1`) derives `CoverageRequirement` records from a
+frozen plan view and joins them to `CoverageObservation` records. The caller
+cannot supply `RequiredItem(state="ITEM_VALID")` on that path. That is the
+non-gameable denominator. It is **not** yet a real-data proof: PRs #73/#75 and
+#74/#76 are still open, and `LISTING_STATUS` cannot evidence merger or payment
+timing.
+
 Benchmark treatment stays `UNCHANGED` (no change record). There is still no
 missing-mark substitution or carry-forward policy.
 

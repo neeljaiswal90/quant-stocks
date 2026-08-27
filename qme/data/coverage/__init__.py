@@ -11,6 +11,9 @@ Two modules, imported by their full paths:
   missingness / exclusion ledger, the coverage-threshold registry (seven 100%
   minima owner-registered; held-position coverage remains hard-wired at 1),
   and the gate.
+* :mod:`qme.data.coverage.sourced_v1` -- plan-derived requirements joined to
+  source observations; the caller supplies neither the denominator nor the
+  verdict. Not a production coverage proof until source PRs land.
 
 This package initializer deliberately imports nothing, so
 ``import qme.data.coverage`` pulls no registry, no vocabulary, and no sibling

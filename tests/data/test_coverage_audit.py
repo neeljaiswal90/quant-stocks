@@ -192,17 +192,20 @@ ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "tests" / "fixtures" / "data" / "coverage-audit-v1.json"
 AUDIT_MODULE = ROOT / "qme" / "data" / "coverage" / "audit_v1.py"
 DELISTING_MODULE = ROOT / "qme" / "data" / "coverage" / "delisting_v1.py"
+SOURCED_MODULE = ROOT / "qme" / "data" / "coverage" / "sourced_v1.py"
 PACKAGE_INIT = ROOT / "qme" / "data" / "coverage" / "__init__.py"
 DOC = ROOT / "docs" / "data" / "NEE_128_COVERAGE_AUDIT_V1.md"
 
 NEW_FILES = (
     AUDIT_MODULE,
     DELISTING_MODULE,
+    SOURCED_MODULE,
     PACKAGE_INIT,
     FIXTURE,
     DOC,
     Path(__file__).resolve(),
     ROOT / "tests" / "data" / "test_delisting_timing_contract.py",
+    ROOT / "tests" / "data" / "test_sourced_coverage.py",
 )
 
 VECTORS: dict[str, Any] = json.loads(FIXTURE.read_text("utf-8"))
@@ -697,7 +700,7 @@ def test_no_api_name_or_emitted_key_offers_a_pooled_coverage_figure(
     report: CoverageAuditReport,
 ) -> None:
     forbidden = re.compile(r"(?i)(overall|pooled|headline|aggregate|combined|total)")
-    for path in (AUDIT_MODULE, DELISTING_MODULE):
+    for path in (AUDIT_MODULE, DELISTING_MODULE, SOURCED_MODULE):
         tree = ast.parse(path.read_text("utf-8"), filename=str(path))
         offenders = sorted({name for name in _defined_names(tree) if forbidden.search(name)})
         assert offenders == [], f"{path.name}: {offenders}"
@@ -2576,9 +2579,10 @@ def test_the_coverage_package_imports_no_transport_or_vendor_module() -> None:
         "qme.data.classification.rules_v1",
         "qme.data.identity",
         "qme.data.coverage.delisting_v1",
+        "qme.data.coverage.audit_v1",
         "qme.foundation.lineage",
     }
-    for path in (AUDIT_MODULE, DELISTING_MODULE, PACKAGE_INIT):
+    for path in (AUDIT_MODULE, DELISTING_MODULE, SOURCED_MODULE, PACKAGE_INIT):
         tree = ast.parse(path.read_text("utf-8"), filename=str(path))
         modules: set[str] = set()
         for node in ast.walk(tree):
