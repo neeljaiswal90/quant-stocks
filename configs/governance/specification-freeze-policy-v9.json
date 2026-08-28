@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/governance/specification-freeze-policy-v9.schema.json",
+  "schema_version": "qme.specification_freeze_policy.v9",
+  "candidate_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V9",
+  "ticket_id": "NEE-110",
+  "candidate_kind": "CI_AUTHORITY_SUCCESSOR_AMENDMENT_NOT_M0_REOPENING",
+  "status": "CANDIDATE_OWNER_AUTHORIZED_CI_AUTHORITY_TRANSITION_V8_UNCHANGED_PENDING_EXACT_BYTE_LOCK_MERGE_AND_PROTECTED_MAIN_PARALLEL_CI",
+  "semantic_sha256": "6649a975:4ec877f6:9e0b434f:eb0d75cb:4f1fe1c0:1acb1f5e:8859274d:8120a019",
+  "predecessor_freeze": "V8",
+  "ceiling_minutes": 30,
+  "replay_timeout_minutes": 20,
+  "branch_protection_strict": true,
+  "required_check_contexts": [
+    "static-build",
+    "tests-data-architecture",
+    "tests-rest",
+    "secrets-fixture-publication",
+    "foundation-parallel",
+    "nee123-posix",
+    "deterministic-replay"
+  ],
+  "owner_disposition_context_set": [
+    "static-build",
+    "tests-data-architecture",
+    "tests-rest",
+    "secrets-fixture-publication",
+    "nee123-posix",
+    "foundation-parallel",
+    "deterministic-replay"
+  ],
+  "authority": {
+    "approval_owner": "neeljaiswal90",
+    "candidate_date": "2026-08-27",
+    "disposition": "APPROVED — FREEZE_V9_CI_AUTHORITY_TRANSITION; 30_MIN_PER_JOB_RETAINED"
+  },
+  "owner_disposition": {
+    "source_system": "OWNER_CHAT",
+    "disposition": "APPROVED — FREEZE_V9_CI_AUTHORITY_TRANSITION; 30_MIN_PER_JOB_RETAINED",
+    "source_path": "docs/governance/blocker-transition-receipts/freeze-v9-ci-authority/OWNER-DISPOSITION.md",
+    "source_body_bytes": 2600,
+    "source_body_sha256": "905e9644:037d1741:b765840f:d3a1899f:72f1e983:a6e17510:c77e14ce:eefda904",
+    "source_body_hash_convention": "RAW_UTF8_FILE_BYTES_NO_NORMALIZATION",
+    "source_body": "# Owner CI Ceiling Disposition\n**Disposition: `APPROVED — FREEZE_V9_CI_AUTHORITY_TRANSITION; 30_MIN_PER_JOB_RETAINED`**\n1. The **30-minute ceiling remains unchanged per bounded CI job**. No 35- or 40-minute increase is authorized.\n2. The monolithic `qme-ci / foundation` job is retired as an active acceptance gate. No third rerun of [run 33031711262](https://github.com/neeljaiswal90/quant-stocks/actions/runs/33031711262) is required.\n3. The active required-check contract becomes the existing bounded set:\n   - `static-build`\n   - `tests-data-architecture`\n   - `tests-rest`\n   - `secrets-fixture-publication`\n   - `nee123-posix`\n   - `foundation-parallel`\n   - `deterministic-replay`\n   This is already the live `main` branch-protection configuration.\n4. A scoped **Freeze V9 successor amendment is authorized** to register the parallel workflow and shard-verification machinery as the current CI authority. Freeze V8 and the hash-pinned `.github/workflows/ci.yml` remain immutable historical evidence; they must not be rewritten.\n5. Freeze V9 acceptance requires:\n   - Exact hashes for `qme-ci-parallel.yml` and `verify_test_shards.py`.\n   - All jobs retaining the 30-minute ceiling.\n   - Proof that the test shards are disjoint and their union equals the full Windows collection.\n   - One successful exact-head PR run and one successful exact-SHA protected-main run.\n   - The required-check context list recorded in the successor evidence.\n   - No weakening of secret scanning, fixture determinism, clean-tree verification, POSIX publication testing, typing, linting, or replay controls.\n6. Historical PR #68 evidence is classified as:\n   **`MERGED_WITH_PROTECTED_MAIN_CI_CEILING_EXCEPTION`**\n   Branch run [33027639052](https://github.com/neeljaiswal90/quant-stocks/actions/runs/33027639052) succeeded on the byte-identical tree, but the two cancelled protected-main attempts are not retroactively called successful.\n7. For [PR #67](https://github.com/neeljaiswal90/quant-stocks/pull/67), the cancelled legacy `foundation` job is **non-blocking** because every currently required parallel context passed at exact head `8d7028e76539c73fb035ecea034bb14d9f852515`. This preserves the P1 push clearance but does not authorize merge or close NEE-128/M1. After any merge, the exact protected-main parallel checks must pass before closure.\n**Rationale:** the legacy serial job now consumed 28m49s in tests alone and reached the ceiling before later controls. Raising its timeout would postpone the same scaling failure. Bounded, exhaustive sharding preserves the ceiling and the substantive gates.\n"
+  },
+  "candidate_incapability": {
+    "can_change_active_freeze": false,
+    "can_rewrite_ci_yml": false,
+    "can_raise_timeout_ceiling": false,
+    "can_close_nee128": false,
+    "can_close_m1": false,
+    "can_relabel_cancelled_serial_jobs_successful": false
+  },
+  "pinned_artifacts": {
+    ".github/workflows/ci.yml": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f",
+    ".github/workflows/qme-ci-parallel.yml": "b0848415:0adfc712:98bc10f6:9acc931d:abaed0ff:39b48f11:2e79f81f:928d1aff",
+    "scripts/verify_test_shards.py": "53f5e660:cd4a7218:1f93140a:d2d5e24f:c22e8a8c:4a31682f:d8ea09b0:f3839ecb",
+    ".github/workflows/m0-substantive-evidence-linux.yml": "ed440006:55c9f83c:c08ae8d9:6f996508:25450fe7:8b0458ca:7283109a:562df037",
+    "tests/foundation/test_verify_test_shards.py": "94d3150a:a0231062:b6d82662:089cbb7a:9c9f0035:42837e41:bb0be71c:7db029d1",
+    "configs/governance/specification-freeze-policy-v8.json": "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d",
+    "configs/governance/specification-freeze-v8.hashes.json": "e0562c4f:675303a1:26b66c10:47d03b4a:8a21c736:adc4c75e:f76aa51c:4244065c"
+  },
+  "parallel_jobs": [
+    "static-build",
+    "tests-data-architecture",
+    "tests-rest",
+    "secrets-fixture-publication",
+    "nee123-posix",
+    "foundation-parallel"
+  ],
+  "shard_proof": {
+    "verifier_path": "scripts/verify_test_shards.py",
+    "full_manifest": "manifests/nodes-full.json",
+    "shards": [
+      "manifests/nodes-data-architecture.json",
+      "manifests/nodes-rest.json"
+    ],
+    "protected_main_job_id": "98628575981"
+  },
+  "protected_main_parallel_proof": {
+    "commit": "9de316c8803469565ae9bfc6a463c2f555a2f605",
+    "tree": "768b6ebffe6125551c04beb74f10dba1fd7c7da0",
+    "run_id": "33101938472",
+    "event": "push",
+    "conclusion": "success",
+    "workflow": "qme-ci-parallel",
+    "foundation_parallel_job_id": "98628575981"
+  },
+  "protected_main_replay_proof": {
+    "commit": "9de316c8803469565ae9bfc6a463c2f555a2f605",
+    "run_id": "33101938460",
+    "event": "push",
+    "conclusion": "success",
+    "job_id": "98621630571",
+    "timeout_minutes": 20
+  },
+  "exact_head_pr_parallel_proof": {
+    "pull_request": 67,
+    "exact_head": "8d7028e76539c73fb035ecea034bb14d9f852515",
+    "run_id": "33132288549",
+    "event": "pull_request",
+    "conclusion": "success",
+    "replay_run_id": "33132288478",
+    "authorizes_merge": false
+  },
+  "historical_pr68": {
+    "classification": "MERGED_WITH_PROTECTED_MAIN_CI_CEILING_EXCEPTION",
+    "branch_head": "8b1d7a85ba4c6221df271dab7cc7ac49525dd883",
+    "merge_commit": "3c17d45c0932ff1c25849ce5867b1380f807049b",
+    "branch_run_id": "33027639052",
+    "branch_run_conclusion": "success",
+    "cancelled_protected_main_run_id": "33031711262",
+    "cancelled_protected_main_called_successful": false,
+    "third_rerun_authorized": false
+  },
+  "pr67_boundary": {
+    "exact_head": "8d7028e76539c73fb035ecea034bb14d9f852515",
+    "parallel_run_id": "33132288549",
+    "cancelled_legacy_foundation_non_blocking": true,
+    "merge_authorized": false,
+    "closes_nee128": false,
+    "closes_m1": false
+  },
+  "claims": {
+    "ci_authority_is_bounded_parallel_workflow": true,
+    "serial_foundation_retired_as_acceptance_gate": true,
+    "thirty_minute_ceiling_retained": true,
+    "v8_bytes_unchanged": true,
+    "ci_yml_immutable": true,
+    "production_ready": false,
+    "live_order_authority": false,
+    "nee128_complete": false,
+    "milestone_m1_complete": false,
+    "pr67_merge_authorized": false,
+    "cancelled_serial_foundation_called_successful": false,
+    "timeout_increase_authorized": false
+  },
+  "nonclaims": [
+    "THIS_AMENDMENT_DOES_NOT_REOPEN_OR_REWRITE_FREEZE_V8",
+    "THIS_AMENDMENT_DOES_NOT_REWRITE_GITHUB_WORKFLOWS_CI_YML",
+    "SERIAL_FOUNDATION_IS_NOT_A_REQUIRED_CHECK",
+    "CANCELLED_PROTECTED_MAIN_SERIAL_JOBS_ARE_NOT_SUCCESS",
+    "PR_67_IS_NOT_AUTHORIZED_TO_MERGE_OR_CLOSE_NEE128_OR_M1",
+    "NO_TIMEOUT_CEILING_INCREASE",
+    "NO_PRODUCTION_READINESS_OR_LIVE_ORDER_AUTHORITY",
+    "V9_BYTES_STILL_REQUIRE_EXACT_BYTE_LOCK_MERGE_AND_PROTECTED_MAIN_PARALLEL_CI"
+  ]
+}
