@@ -1,0 +1,63 @@
+{
+  "schema_version": "qme.hash_manifest.v1",
+  "artifact_id": "NEE-110-SPECIFICATION-FREEZE-CANDIDATE-V9",
+  "status": "CANDIDATE_CI_AUTHORITY_TRANSITION",
+  "artifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a2f84258:c1b694cd:6e2761fd:5b4a07c2:c7306cf4:5368af1e:e5c5ff7a:c933992f"
+    },
+    {
+      "path": ".github/workflows/qme-ci-parallel.yml",
+      "sha256": "b0848415:0adfc712:98bc10f6:9acc931d:abaed0ff:39b48f11:2e79f81f:928d1aff"
+    },
+    {
+      "path": ".github/workflows/m0-substantive-evidence-linux.yml",
+      "sha256": "ed440006:55c9f83c:c08ae8d9:6f996508:25450fe7:8b0458ca:7283109a:562df037"
+    },
+    {
+      "path": "configs/governance/specification-freeze-v8.hashes.json",
+      "sha256": "e0562c4f:675303a1:26b66c10:47d03b4a:8a21c736:adc4c75e:f76aa51c:4244065c"
+    },
+    {
+      "path": "configs/governance/specification-freeze-policy-v8.json",
+      "sha256": "34925587:f2782d25:d72e8983:fd8f45be:cfaaf8a1:24c6114a:ae36537c:2c16c15d"
+    },
+    {
+      "path": "configs/governance/specification-freeze-policy-v9.json",
+      "sha256": "b08cbcbe:19446fe2:e77a60d6:49454e41:c6713e84:41f706c8:ccc5f4dc:6aef5fb7"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/freeze-v9-ci-authority/OWNER-DISPOSITION.md",
+      "sha256": "905e9644:037d1741:b765840f:d3a1899f:72f1e983:a6e17510:c77e14ce:eefda904"
+    },
+    {
+      "path": "docs/governance/blocker-transition-receipts/freeze-v9-ci-authority/RECEIPT.md",
+      "sha256": "cf195a61:abf9331a:9c3c57dc:f7c22aa0:1257e48d:f07a2871:dc1176c5:5e1b684b"
+    },
+    {
+      "path": "docs/governance/SPECIFICATION_FREEZE_V9.md",
+      "sha256": "41a21942:9b35ee4e:fb494519:0566966f:dbc68164:a794e06c:fb16452e:b31a69ad"
+    },
+    {
+      "path": "qme/governance/specification_freeze_v9.py",
+      "sha256": "5f85f1fe:898d2bf8:c0698cd6:dcc0c6db:2b4f8047:4f50be68:fb1d6b64:0457ec9d"
+    },
+    {
+      "path": "schemas/governance/specification-freeze-policy-v9.schema.json",
+      "sha256": "0b7ef3e3:ed0ba22b:c6c8d7ff:eb3a91b2:74128fca:463eb1ce:0273a6b8:5a20f4bc"
+    },
+    {
+      "path": "scripts/verify_test_shards.py",
+      "sha256": "53f5e660:cd4a7218:1f93140a:d2d5e24f:c22e8a8c:4a31682f:d8ea09b0:f3839ecb"
+    },
+    {
+      "path": "tests/foundation/test_verify_test_shards.py",
+      "sha256": "94d3150a:a0231062:b6d82662:089cbb7a:9c9f0035:42837e41:bb0be71c:7db029d1"
+    },
+    {
+      "path": "tests/governance/test_specification_freeze_v9.py",
+      "sha256": "dde3eec9:d25ccd19:4f2153ac:cd49701d:a2abbc2d:1a0a94ca:7cec1de5:6863cdd2"
+    }
+  ]
+}
