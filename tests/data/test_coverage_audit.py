@@ -106,9 +106,11 @@ from qme.data.coverage.delisting_v1 import (
     BLOCKED_UNREGISTERED_SENSITIVITY_RANGE,
     BLOCKED_UNREGISTERED_TIMING_RULE,
     COORDINATE_ACTUAL_ALLOCATION_AT,
+    COORDINATE_ANNOUNCED_PAYMENT_DATE,
     COORDINATE_DELISTING_EFFECTIVE_DATE,
     COORDINATE_LAST_TRADE_SESSION,
     COORDINATE_TRANSACTION_EFFECTIVE_AT,
+    CUTOFF_KIND_DECISION,
     CUTOFF_KIND_OUTCOME,
     DEFAULT_BENCHMARK_TREATMENT,
     DELISTING_EVENT_TYPES,
@@ -304,7 +306,7 @@ def _pricing() -> list[ExitPricingInput]:
             event_id=raw["event_id"],
             held_notional=raw["held_notional"],
             entry_basis=raw.get("entry_basis"),
-            successor_close=raw.get("successor_close"),
+            successor_mark=None,
             haircut_id=raw.get("haircut_id"),
             sensitivity_range_id=raw.get("sensitivity_range_id"),
         )
@@ -359,6 +361,16 @@ def clean_report(calendar: Any) -> CoverageAuditReport:
 # -- test-only registry records (TEST_CONSTRUCTED; never shippable) ---------
 
 
+def _probe_cutoff_lanes() -> tuple[tuple[str, str], ...]:
+    return (
+        (COORDINATE_LAST_TRADE_SESSION, CUTOFF_KIND_DECISION),
+        (COORDINATE_TRANSACTION_EFFECTIVE_AT, CUTOFF_KIND_OUTCOME),
+        (COORDINATE_ACTUAL_ALLOCATION_AT, CUTOFF_KIND_OUTCOME),
+        (COORDINATE_DELISTING_EFFECTIVE_DATE, CUTOFF_KIND_DECISION),
+        (COORDINATE_ANNOUNCED_PAYMENT_DATE, CUTOFF_KIND_OUTCOME),
+    )
+
+
 def _probe_timing_rule() -> DelistingTimingRule:
     raw = VECTORS["registered_probe"]["timing_rule"]
     return DelistingTimingRule(
@@ -375,6 +387,7 @@ def _probe_timing_rule() -> DelistingTimingRule:
         session_mapping=raw["session_mapping"],
         successor_mark_mapping=raw["successor_mark_mapping"],
         applicable_source_kinds=tuple(raw["applicable_source_kinds"]),
+        cutoff_lanes=_probe_cutoff_lanes(),
         source_kind=SOURCE_KIND_TEST_CONSTRUCTED,
         source="test-constructed timing rule",
         source_reference="tests/data/test_coverage_audit.py",
@@ -395,6 +408,7 @@ def _probe_stock_timing_rule() -> DelistingTimingRule:
         session_mapping=cash.session_mapping,
         successor_mark_mapping="NEXT_ELIGIBLE_SESSION",
         applicable_source_kinds=cash.applicable_source_kinds,
+        cutoff_lanes=cash.cutoff_lanes,
         source_kind=SOURCE_KIND_TEST_CONSTRUCTED,
         source="test-constructed stock timing rule",
         source_reference="tests/data/test_coverage_audit.py",
@@ -405,12 +419,21 @@ def _probe_stock_timing_rule() -> DelistingTimingRule:
 _COORD_ARTIFACT = grouped_sha256(b"QME-NEE128-TIMING-COORD-V1:probe")
 
 
+_COORDINATE_CUTOFF_LANES = {
+    COORDINATE_LAST_TRADE_SESSION: CUTOFF_KIND_DECISION,
+    COORDINATE_DELISTING_EFFECTIVE_DATE: CUTOFF_KIND_DECISION,
+    COORDINATE_TRANSACTION_EFFECTIVE_AT: CUTOFF_KIND_OUTCOME,
+    COORDINATE_ANNOUNCED_PAYMENT_DATE: CUTOFF_KIND_OUTCOME,
+    COORDINATE_ACTUAL_ALLOCATION_AT: CUTOFF_KIND_OUTCOME,
+}
+
+
 def _coordinate(
     kind: str,
     day: str,
     *,
     instant: str | None = None,
-    required_by: str = CUTOFF_KIND_OUTCOME,
+    required_by: str | None = None,
     available_at: str = "2024-03-18T13:30:00+00:00",
 ) -> SourcedCoordinate:
     return SourcedCoordinate(
@@ -421,7 +444,7 @@ def _coordinate(
         source="test-constructed coordinate",
         source_reference="fixture://timing/coordinate",
         available_at=available_at,
-        required_by=required_by,
+        required_by=_COORDINATE_CUTOFF_LANES[kind] if required_by is None else required_by,
         raw_artifact_sha256_grouped=_COORD_ARTIFACT,
         accession_or_event_id="acc-probe-1",
     )
@@ -1377,6 +1400,7 @@ def test_a_timing_rule_cannot_settle_on_form_25_or_announced_payment() -> None:
             settlement_coordinate=COORDINATE_DELISTING_EFFECTIVE_DATE,
             session_mapping=cash.session_mapping,
             applicable_source_kinds=cash.applicable_source_kinds,
+            cutoff_lanes=_probe_cutoff_lanes(),
             source_kind=SOURCE_KIND_TEST_CONSTRUCTED,
             source="test",
             source_reference="tests/data/test_coverage_audit.py",
@@ -1394,7 +1418,7 @@ def test_a_stock_outcome_is_not_valued_without_a_successor_mark(calendar: Any) -
             event.outcome,
             entry_basis="22.5",
             held_notional="88000",
-            successor_close=None,
+            successor_mark=None,
             as_of=VECTORS["as_of"],
             rules=(_probe_stock_timing_rule(),),
             calendar=calendar,
@@ -2420,6 +2444,7 @@ def test_the_remaining_blocked_cases_fail_closed_with_their_registered_state(
             settlement_coordinate=COORDINATE_ACTUAL_ALLOCATION_AT,
             session_mapping="NEXT_ELIGIBLE_SESSION",
             applicable_source_kinds=("ISSUER_FILING",),
+            cutoff_lanes=_probe_cutoff_lanes(),
             source_kind="NOT_A_SOURCE_KIND",
             source="s",
             source_reference="r",

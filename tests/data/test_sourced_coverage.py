@@ -7,6 +7,7 @@ LISTING_STATUS still cannot evidence delisting reason or merger payment.
 
 from __future__ import annotations
 
+import inspect
 from dataclasses import fields
 from pathlib import Path
 
@@ -17,6 +18,7 @@ from qme.data.coverage.audit_v1 import (
     BLOCKED_DENOMINATOR_CHANGED_AFTER_PREREGISTRATION,
     BLOCKED_DUPLICATE_COVERAGE_OBSERVATION,
     BLOCKED_LISTING_STATUS_NOT_EVENT_EVIDENCE,
+    BLOCKED_PREREGISTRATION_MISMATCH,
     COVERAGE_CLASS_ACTIONS,
     COVERAGE_CLASS_BENCHMARKS,
     COVERAGE_CLASS_HELD_POSITION_MARKS_EXITS,
@@ -28,6 +30,7 @@ from qme.data.coverage.audit_v1 import (
     ITEM_VALID,
     CoverageAuditError,
     RequiredItem,
+    report_sha256_grouped,
 )
 from qme.data.coverage.delisting_v1 import (
     CUTOFF_KIND_DECISION,
@@ -41,6 +44,7 @@ from qme.data.coverage.sourced_v1 import (
     CoverageRequirement,
     assert_preregistration_matches,
     build_sourced_coverage_audit,
+    denominator_sha256_grouped,
     derive_coverage_requirements,
     join_coverage,
 )
@@ -108,6 +112,51 @@ def _cutoff() -> CutoffPolicy:
     return CutoffPolicy(decision_cutoff=CUTOFF, outcome_cutoff=CUTOFF)
 
 
+def _preregistration(
+    view: CoveragePlanView,
+    *,
+    composed_run_plan_hash: str | None = None,
+    benchmark_id: str = "ndx-total-return",
+    price_coordinate: str = "unadjusted_close",
+    exclusion_policy: str = "none",
+    decision_cutoff: str = CUTOFF,
+    outcome_cutoff: str = CUTOFF,
+) -> CoverageProofPreregistration:
+    requirements = derive_coverage_requirements(view)
+    return CoverageProofPreregistration(
+        code_commit="deadbeef",
+        tree_sha256_grouped=ARTIFACT,
+        composed_run_plan_hash=(
+            view.plan_sha256_grouped if composed_run_plan_hash is None else composed_run_plan_hash
+        ),
+        decision_cutoff=decision_cutoff,
+        outcome_cutoff=outcome_cutoff,
+        benchmark_id=benchmark_id,
+        price_coordinate=price_coordinate,
+        trade_eligible=False,
+        denominator_sha256_grouped=denominator_sha256_grouped(requirements),
+        exclusion_policy=exclusion_policy,
+    )
+
+
+def _listing_observation(
+    *,
+    raw_artifact_sha256_grouped: str = ARTIFACT,
+) -> CoverageObservation:
+    return CoverageObservation(
+        coverage_class=COVERAGE_CLASS_LISTINGS,
+        subject_id=SECURITY,
+        session=SESSION,
+        available_at="2024-03-14T20:00:00+00:00",
+        source_kind="TEST_CONSTRUCTED",
+        source="sourced-coverage test",
+        source_reference="tests/data/test_sourced_coverage.py",
+        raw_artifact_sha256_grouped=raw_artifact_sha256_grouped,
+        evidence_kind="LISTING_INTERVAL",
+        payload={"interval_start": "2020-01-01", "interval_end": ""},
+    )
+
+
 def test_a_coverage_observation_has_no_verdict_field() -> None:
     names = {item.name for item in fields(CoverageObservation)}
     assert "state" not in names
@@ -135,22 +184,104 @@ def test_the_auditor_assigns_item_valid_the_caller_does_not() -> None:
     joined = join_coverage((requirement,), observations=(observation,), cutoff_policy=_cutoff())
     assert joined[0].state == ITEM_VALID
     assert joined[0].source == observation.source
+    assert joined[0].source_reference == observation.source_reference
+    assert joined[0].raw_artifact_sha256_grouped == observation.raw_artifact_sha256_grouped
+    assert joined[0].evidence_kind == observation.evidence_kind
+    assert dict(joined[0].payload) == dict(observation.payload)
 
 
 def test_sourced_audit_refuses_caller_supplied_item_valid(calendar: object | None = None) -> None:
     calendar = load_calendar(ROOT)
+    view = _plan_view()
     declared = RequiredItem(COVERAGE_CLASS_LISTINGS, SECURITY, SESSION, ITEM_VALID)
     with pytest.raises(CoverageAuditError) as caught:
         build_sourced_coverage_audit(
             audit_id="sourced-caller-state",
-            analysis_cutoff=CUTOFF,
             as_of="2024-04-01",
-            requirements=derive_coverage_requirements(_plan_view()),
+            plan_view=view,
+            preregistration=_preregistration(view),
             observations=(),
             declared_items=(declared,),
             calendar=calendar,
         )
     assert caught.value.state == BLOCKED_CALLER_DECLARED_COVERAGE_STATE
+
+
+def test_public_builder_requires_preregistration_and_the_plan_view() -> None:
+    params = inspect.signature(build_sourced_coverage_audit).parameters
+    assert "plan_view" in params
+    assert "preregistration" in params
+    assert "requirements" not in params
+
+
+def test_changing_observation_evidence_changes_the_report_hash() -> None:
+    calendar = load_calendar(ROOT)
+    view = _plan_view()
+    prereg = _preregistration(view)
+    first = build_sourced_coverage_audit(
+        audit_id="sourced-lineage-a",
+        as_of="2024-04-01",
+        plan_view=view,
+        preregistration=prereg,
+        observations=(_listing_observation(),),
+        calendar=calendar,
+    )
+    second = build_sourced_coverage_audit(
+        audit_id="sourced-lineage-a",
+        as_of="2024-04-01",
+        plan_view=view,
+        preregistration=prereg,
+        observations=(
+            _listing_observation(
+                raw_artifact_sha256_grouped=grouped_sha256(b"QME-NEE128-SOURCED-COVERAGE-V1:other")
+            ),
+        ),
+        calendar=calendar,
+    )
+    assert first.coverage.results[0].valid_items == second.coverage.results[0].valid_items
+    assert first.lineage.dataset_sha256_grouped != second.lineage.dataset_sha256_grouped
+    assert report_sha256_grouped(first) != report_sha256_grouped(second)
+
+
+def test_preregistration_bindings_change_the_report_hash() -> None:
+    calendar = load_calendar(ROOT)
+    view = _plan_view()
+    first = build_sourced_coverage_audit(
+        audit_id="sourced-prereg-bind",
+        as_of="2024-04-01",
+        plan_view=view,
+        preregistration=_preregistration(view, exclusion_policy="none"),
+        observations=(_listing_observation(),),
+        calendar=calendar,
+    )
+    second = build_sourced_coverage_audit(
+        audit_id="sourced-prereg-bind",
+        as_of="2024-04-01",
+        plan_view=view,
+        preregistration=_preregistration(view, exclusion_policy="drop-unlisted"),
+        observations=(_listing_observation(),),
+        calendar=calendar,
+    )
+    assert report_sha256_grouped(first) != report_sha256_grouped(second)
+
+
+def test_a_mismatched_plan_hash_or_benchmark_is_refused() -> None:
+    view = _plan_view()
+    requirements = derive_coverage_requirements(view)
+    with pytest.raises(CoverageAuditError) as plan_hash:
+        assert_preregistration_matches(
+            _preregistration(view, composed_run_plan_hash=ARTIFACT),
+            plan_view=view,
+            requirements=requirements,
+        )
+    assert plan_hash.value.state == BLOCKED_PREREGISTRATION_MISMATCH
+    with pytest.raises(CoverageAuditError) as benchmark:
+        assert_preregistration_matches(
+            _preregistration(view, benchmark_id="spy-total-return"),
+            plan_view=view,
+            requirements=requirements,
+        )
+    assert benchmark.value.state == BLOCKED_PREREGISTRATION_MISMATCH
 
 
 def test_listing_status_cannot_evidence_merger_or_payment() -> None:
@@ -243,7 +374,7 @@ def test_preregistration_rejects_a_changed_denominator() -> None:
         exclusion_policy="none",
     )
     with pytest.raises(CoverageAuditError) as caught:
-        assert_preregistration_matches(prereg, requirements)
+        assert_preregistration_matches(prereg, plan_view=view, requirements=requirements)
     assert caught.value.state == BLOCKED_DENOMINATOR_CHANGED_AFTER_PREREGISTRATION
 
 

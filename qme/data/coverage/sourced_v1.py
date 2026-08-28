@@ -13,7 +13,7 @@ PRs #73/#75 and #74/#76 remain open, so no real-data bundle is frozen here.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Final
 
 from qme.data.classification.rules_v1 import is_opaque_identifier
@@ -25,6 +25,7 @@ from qme.data.coverage.audit_v1 import (
     BLOCKED_IMPLICIT_BENCHMARK_PROXY,
     BLOCKED_LISTING_STATUS_NOT_EVENT_EVIDENCE,
     BLOCKED_ORPHAN_COVERAGE_OBSERVATION,
+    BLOCKED_PREREGISTRATION_MISMATCH,
     BLOCKED_UNREGISTERED_COVERAGE_CLASS,
     COVERAGE_CLASS_ACTIONS,
     COVERAGE_CLASS_ANCHORS,
@@ -52,6 +53,8 @@ from qme.data.coverage.delisting_v1 import (
     CUTOFF_KINDS,
     SOURCE_KINDS,
     CutoffPolicy,
+    Lineage,
+    dataset_digest,
     iso_day,
     iso_instant,
     opaque_security_id,
@@ -197,6 +200,20 @@ class CoverageObservation:
     def item_key(self) -> str:
         return _item_key(self.coverage_class, self.subject_id, self.session)
 
+    def to_json_dict(self) -> dict[str, object]:
+        return {
+            "coverage_class": self.coverage_class,
+            "subject_id": self.subject_id,
+            "session": self.session,
+            "available_at": self.available_at,
+            "source_kind": self.source_kind,
+            "source": self.source,
+            "source_reference": self.source_reference,
+            "raw_artifact_sha256_grouped": self.raw_artifact_sha256_grouped,
+            "evidence_kind": self.evidence_kind,
+            "payload": dict(self.payload),
+        }
+
 
 @dataclass(frozen=True)
 class CoveragePlanView:
@@ -222,6 +239,19 @@ class CoveragePlanView:
                 BLOCKED_UNREGISTERED_COVERAGE_CLASS,
                 "plan_sha256_grouped must be a grouped sha256",
             )
+
+    def to_json_dict(self) -> dict[str, object]:
+        return {
+            "plan_sha256_grouped": self.plan_sha256_grouped,
+            "listings": [list(item) for item in self.listings],
+            "identity_keys": [list(item) for item in self.identity_keys],
+            "classifications": [list(item) for item in self.classifications],
+            "prices": [list(item) for item in self.prices],
+            "actions": [list(item) for item in self.actions],
+            "anchors": [list(item) for item in self.anchors],
+            "held_marks": [list(item) for item in self.held_marks],
+            "benchmarks": [list(item) for item in self.benchmarks],
+        }
 
 
 @dataclass(frozen=True)
@@ -267,6 +297,20 @@ class CoverageProofPreregistration:
             )
         token(self.exclusion_policy, what="exclusion_policy")
 
+    def to_json_dict(self) -> dict[str, object]:
+        return {
+            "code_commit": self.code_commit,
+            "tree_sha256_grouped": self.tree_sha256_grouped,
+            "composed_run_plan_hash": self.composed_run_plan_hash,
+            "decision_cutoff": self.decision_cutoff,
+            "outcome_cutoff": self.outcome_cutoff,
+            "benchmark_id": self.benchmark_id,
+            "price_coordinate": self.price_coordinate,
+            "trade_eligible": self.trade_eligible,
+            "denominator_sha256_grouped": self.denominator_sha256_grouped,
+            "exclusion_policy": self.exclusion_policy,
+        }
+
 
 def denominator_sha256_grouped(requirements: Sequence[CoverageRequirement]) -> str:
     """Grouped digest of the frozen requirement set, independent of input order."""
@@ -301,14 +345,37 @@ def derive_coverage_requirements(view: CoveragePlanView) -> tuple[CoverageRequir
 
 def assert_preregistration_matches(
     preregistration: CoverageProofPreregistration,
+    *,
+    plan_view: CoveragePlanView,
     requirements: Sequence[CoverageRequirement],
 ) -> None:
-    """Refuse a measured denominator that is not the frozen one."""
+    """Refuse a measured denominator or plan binding that is not the frozen one."""
+    if type(plan_view) is not CoveragePlanView:
+        raise CoverageAuditError(
+            BLOCKED_PREREGISTRATION_MISMATCH,
+            "a sourced coverage audit requires a CoveragePlanView",
+        )
+    if type(preregistration) is not CoverageProofPreregistration:
+        raise CoverageAuditError(
+            BLOCKED_PREREGISTRATION_MISMATCH,
+            "a sourced coverage audit requires a CoverageProofPreregistration",
+        )
+    if preregistration.composed_run_plan_hash != plan_view.plan_sha256_grouped:
+        raise CoverageAuditError(
+            BLOCKED_PREREGISTRATION_MISMATCH,
+            "the composed run plan hash does not match the plan view",
+        )
     actual = denominator_sha256_grouped(requirements)
     if actual != preregistration.denominator_sha256_grouped:
         raise CoverageAuditError(
             BLOCKED_DENOMINATOR_CHANGED_AFTER_PREREGISTRATION,
             "the measured requirement set does not match the frozen preregistration",
+        )
+    benchmark_subjects = {subject for subject, _session in plan_view.benchmarks}
+    if preregistration.benchmark_id not in benchmark_subjects:
+        raise CoverageAuditError(
+            BLOCKED_PREREGISTRATION_MISMATCH,
+            "the frozen benchmark_id is not in the plan view",
         )
 
 
@@ -431,6 +498,12 @@ def join_coverage(
                 state=state,
                 source=matched.source,
                 availability_time=matched.available_at,
+                source_kind=matched.source_kind,
+                source_reference=matched.source_reference,
+                raw_artifact_sha256_grouped=matched.raw_artifact_sha256_grouped,
+                evidence_kind=matched.evidence_kind,
+                payload=matched.payload,
+                required_by=requirement.required_by,
             )
         )
     return tuple(items)
@@ -439,19 +512,17 @@ def join_coverage(
 def build_sourced_coverage_audit(
     *,
     audit_id: str,
-    analysis_cutoff: str,
     as_of: str,
-    requirements: Sequence[CoverageRequirement],
+    plan_view: CoveragePlanView,
+    preregistration: CoverageProofPreregistration,
     observations: Sequence[CoverageObservation],
     calendar: TradingCalendar | None = None,
     declared_items: Sequence[RequiredItem] = (),
-    decision_cutoff: str | None = None,
-    outcome_cutoff: str | None = None,
 ) -> CoverageAuditReport:
-    """Build the coverage audit from plan requirements and source observations.
+    """Build the coverage audit from a frozen plan view and source observations.
 
-    ``declared_items`` exists only so a caller-supplied ``ITEM_VALID`` can be
-    refused. Production callers omit it.
+    Requirements are derived internally. ``declared_items`` exists only so a
+    caller-supplied ``ITEM_VALID`` can be refused. Production callers omit it.
     """
     if declared_items:
         raise CoverageAuditError(
@@ -459,21 +530,44 @@ def build_sourced_coverage_audit(
             "a sourced coverage audit does not accept caller-declared item states; "
             "the auditor joins requirements to observations",
         )
+    requirements = derive_coverage_requirements(plan_view)
+    assert_preregistration_matches(
+        preregistration, plan_view=plan_view, requirements=requirements
+    )
     cutoff_policy = CutoffPolicy(
-        decision_cutoff=analysis_cutoff if decision_cutoff is None else decision_cutoff,
-        outcome_cutoff=analysis_cutoff if outcome_cutoff is None else outcome_cutoff,
+        decision_cutoff=preregistration.decision_cutoff,
+        outcome_cutoff=preregistration.outcome_cutoff,
     )
     items = join_coverage(
         requirements, observations=observations, cutoff_policy=cutoff_policy
     )
-    return build_coverage_audit(
+    report = build_coverage_audit(
         audit_id=audit_id,
-        analysis_cutoff=analysis_cutoff,
+        analysis_cutoff=preregistration.decision_cutoff,
         as_of=as_of,
         required_items=items,
         calendar=calendar,
-        decision_cutoff=decision_cutoff,
-        outcome_cutoff=outcome_cutoff,
+        decision_cutoff=preregistration.decision_cutoff,
+        outcome_cutoff=preregistration.outcome_cutoff,
+    )
+    sourced_dataset = dataset_digest(
+        {
+            "items": report.lineage.dataset_sha256_grouped,
+            "plan_view": plan_view.to_json_dict(),
+            "preregistration": preregistration.to_json_dict(),
+            "observations": sorted(
+                (item.to_json_dict() for item in observations), key=lambda row: str(row)
+            ),
+            "cutoff_policy": cutoff_policy.to_json_dict(),
+        }
+    )
+    return replace(
+        report,
+        lineage=Lineage(
+            dataset_sha256_grouped=sourced_dataset,
+            config_sha256_grouped=report.lineage.config_sha256_grouped,
+            code_sha256_grouped=report.lineage.code_sha256_grouped,
+        ),
     )
 
 

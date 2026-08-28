@@ -103,6 +103,7 @@ from qme.data.classification.rules_v1 import (
     STATUS_CONFIRMED,
     STATUS_UNKNOWN,
     TERMINAL_STATUSES,
+    is_opaque_identifier,
 )
 from qme.data.corporate_actions.factors_v1 import (
     EXCLUDED_UNSUPPORTED_UNHELD_ACTION,
@@ -431,6 +432,7 @@ BLOCKED_IMPLICIT_BENCHMARK_PROXY: Final = "BLOCKED_IMPLICIT_BENCHMARK_PROXY"
 BLOCKED_ACTION_ABSENCE_IS_NOT_COMPLETENESS: Final = (
     "BLOCKED_ACTION_ABSENCE_IS_NOT_COMPLETENESS"
 )
+BLOCKED_PREREGISTRATION_MISMATCH: Final = "BLOCKED_PREREGISTRATION_MISMATCH"
 
 #: Every fail-closed state this module raises, sorted. Callers may bind it.
 COVERAGE_FAIL_CLOSED_STATES: Final = (
@@ -450,6 +452,7 @@ COVERAGE_FAIL_CLOSED_STATES: Final = (
     BLOCKED_LISTING_STATUS_NOT_EVENT_EVIDENCE,
     BLOCKED_MARK_FOR_UNDECLARED_HELD_ITEM,
     BLOCKED_ORPHAN_COVERAGE_OBSERVATION,
+    BLOCKED_PREREGISTRATION_MISMATCH,
     BLOCKED_UNREGISTERED_COVERAGE_CLASS,
     BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD,
     BLOCKED_UNREGISTERED_ITEM_STATE,
@@ -734,6 +737,12 @@ class RequiredItem:
     state: str
     source: str | None = None
     availability_time: str | None = None
+    source_kind: str | None = None
+    source_reference: str | None = None
+    raw_artifact_sha256_grouped: str | None = None
+    evidence_kind: str | None = None
+    payload: Mapping[str, str] | None = None
+    required_by: str | None = None
 
     def __post_init__(self) -> None:
         if self.coverage_class not in COVERAGE_CLASSES:
@@ -764,6 +773,30 @@ class RequiredItem:
             )
         if self.availability_time is not None:
             iso_instant(self.availability_time, what="availability_time")
+        if self.source_kind is not None:
+            token(self.source_kind, what="source_kind")
+        if self.source_reference is not None and not self.source_reference.strip():
+            raise CoverageAuditError(
+                BLOCKED_UNREGISTERED_ITEM_STATE,
+                "source_reference must be non-empty",
+                coverage_class=self.coverage_class,
+                session=self.session,
+            )
+        if self.raw_artifact_sha256_grouped is not None and not is_opaque_identifier(
+            self.raw_artifact_sha256_grouped
+        ):
+            raise CoverageAuditError(
+                BLOCKED_UNREGISTERED_ITEM_STATE,
+                "raw_artifact_sha256_grouped must be a grouped sha256",
+                coverage_class=self.coverage_class,
+                session=self.session,
+            )
+        if self.evidence_kind is not None:
+            token(self.evidence_kind, what="evidence_kind")
+        if self.payload is not None:
+            object.__setattr__(self, "payload", dict(self.payload))
+        if self.required_by is not None:
+            token(self.required_by, what="required_by")
 
     @property
     def item_key(self) -> str:
@@ -787,10 +820,16 @@ class RequiredItem:
             state=state,
             source=self.source,
             availability_time=self.availability_time,
+            source_kind=self.source_kind,
+            source_reference=self.source_reference,
+            raw_artifact_sha256_grouped=self.raw_artifact_sha256_grouped,
+            evidence_kind=self.evidence_kind,
+            payload=self.payload,
+            required_by=self.required_by,
         )
 
     def to_json_dict(self) -> dict[str, Any]:
-        return {
+        document: dict[str, Any] = {
             "coverage_class": self.coverage_class,
             "subject_kind": self.subject_kind,
             "subject_id": self.subject_id,
@@ -799,6 +838,19 @@ class RequiredItem:
             "source": self.source,
             "availability_time": self.availability_time,
         }
+        if self.source_kind is not None:
+            document["source_kind"] = self.source_kind
+        if self.source_reference is not None:
+            document["source_reference"] = self.source_reference
+        if self.raw_artifact_sha256_grouped is not None:
+            document["raw_artifact_sha256_grouped"] = self.raw_artifact_sha256_grouped
+        if self.evidence_kind is not None:
+            document["evidence_kind"] = self.evidence_kind
+        if self.payload is not None:
+            document["payload"] = dict(self.payload)
+        if self.required_by is not None:
+            document["required_by"] = self.required_by
+        return document
 
 
 @dataclass(frozen=True)
@@ -1871,6 +1923,7 @@ __all__ = [
     "BLOCKED_LISTING_STATUS_NOT_EVENT_EVIDENCE",
     "BLOCKED_MARK_FOR_UNDECLARED_HELD_ITEM",
     "BLOCKED_ORPHAN_COVERAGE_OBSERVATION",
+    "BLOCKED_PREREGISTRATION_MISMATCH",
     "BLOCKED_UNREGISTERED_COVERAGE_CLASS",
     "BLOCKED_UNREGISTERED_COVERAGE_THRESHOLD",
     "BLOCKED_UNREGISTERED_ITEM_STATE",

@@ -445,6 +445,7 @@ BLOCKED_MISSING_LAST_TRADE_DATE: Final = "BLOCKED_MISSING_LAST_TRADE_DATE"
 BLOCKED_MISSING_MARK_NO_POLICY: Final = "BLOCKED_MISSING_MARK_NO_POLICY"
 BLOCKED_MISSING_PRIOR_CLOSE: Final = "BLOCKED_MISSING_PRIOR_CLOSE"
 BLOCKED_MISSING_SUCCESSOR_MARK: Final = "BLOCKED_MISSING_SUCCESSOR_MARK"
+BLOCKED_SUCCESSOR_MARK_NOT_BOUND: Final = "BLOCKED_SUCCESSOR_MARK_NOT_BOUND"
 BLOCKED_NONPOSITIVE_ENTRY_BASIS: Final = "BLOCKED_NONPOSITIVE_ENTRY_BASIS"
 BLOCKED_NO_FALLBACK_PERMITTED: Final = "BLOCKED_NO_FALLBACK_PERMITTED"
 BLOCKED_NOT_AN_ISO_DATE: Final = "BLOCKED_NOT_AN_ISO_DATE"
@@ -500,6 +501,7 @@ DELISTING_FAIL_CLOSED_STATES: Final = (
     BLOCKED_MISSING_MARK_NO_POLICY,
     BLOCKED_MISSING_REQUIRED_FIELD,
     BLOCKED_MISSING_SUCCESSOR_MARK,
+    BLOCKED_SUCCESSOR_MARK_NOT_BOUND,
     BLOCKED_NONPOSITIVE_ENTRY_BASIS,
     BLOCKED_NOT_AN_ISO_DATE,
     BLOCKED_NO_FALLBACK_PERMITTED,
@@ -530,6 +532,7 @@ OUTCOME_STATES: Final = (
     BLOCKED_CONTINUATION_HAS_NO_DELISTING_RETURN,
     BLOCKED_MISSING_PRIOR_CLOSE,
     BLOCKED_MISSING_SUCCESSOR_MARK,
+    BLOCKED_SUCCESSOR_MARK_NOT_BOUND,
     BLOCKED_NONPOSITIVE_ENTRY_BASIS,
     BLOCKED_NO_FALLBACK_PERMITTED,
     BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT,
@@ -559,6 +562,7 @@ OUTCOME_STATE_RESULT_LABELS: Final[Mapping[str, str]] = {
     BLOCKED_CONTINUATION_HAS_NO_DELISTING_RETURN: RESULT_LABEL_UNRESOLVED,
     BLOCKED_MISSING_PRIOR_CLOSE: RESULT_LABEL_UNRESOLVED,
     BLOCKED_MISSING_SUCCESSOR_MARK: RESULT_LABEL_UNRESOLVED,
+    BLOCKED_SUCCESSOR_MARK_NOT_BOUND: RESULT_LABEL_UNRESOLVED,
     BLOCKED_NONPOSITIVE_ENTRY_BASIS: RESULT_LABEL_UNRESOLVED,
     BLOCKED_NO_FALLBACK_PERMITTED: RESULT_LABEL_UNRESOLVED,
     BLOCKED_UNREGISTERED_FALLBACK_HAIRCUT: RESULT_LABEL_UNRESOLVED,
@@ -1004,6 +1008,51 @@ class SourcedCoordinate:
 
 
 @dataclass(frozen=True)
+class SuccessorMark:
+    """A sourced successor close bound to the derived mark session.
+
+    A bare scalar is not a mark. The security, session, source hash and
+    availability must match the outcome and the rule-derived session before the
+    close can enter proceeds.
+    """
+
+    security_id: str
+    session: str
+    close: str
+    source: str
+    source_kind: str
+    source_reference: str
+    raw_artifact_sha256_grouped: str
+    available_at: str
+
+    def __post_init__(self) -> None:
+        opaque_security_id(self.security_id, what="successor_mark security_id")
+        iso_day(self.session, what="successor_mark session")
+        exact(self.close, what="successor_mark close")
+        _nonempty(self.source, what="successor_mark source")
+        _vocabulary(self.source_kind, allowed=SOURCE_KINDS, what="successor_mark source_kind")
+        _nonempty(self.source_reference, what="successor_mark source_reference")
+        if not is_opaque_identifier(self.raw_artifact_sha256_grouped):
+            raise DelistingPolicyError(
+                BLOCKED_MALFORMED_IDENTIFIER,
+                "successor_mark raw_artifact_sha256_grouped must be a grouped sha256",
+            )
+        iso_instant(self.available_at, what="successor_mark available_at")
+
+    def to_json_dict(self) -> dict[str, str]:
+        return {
+            "security_id": self.security_id,
+            "session": self.session,
+            "close": self.close,
+            "source": self.source,
+            "source_kind": self.source_kind,
+            "source_reference": self.source_reference,
+            "raw_artifact_sha256_grouped": self.raw_artifact_sha256_grouped,
+            "available_at": self.available_at,
+        }
+
+
+@dataclass(frozen=True)
 class DelistingTimingRule:
     """One owner-gated timing rule, selected by event type and outcome kind.
 
@@ -1022,6 +1071,7 @@ class DelistingTimingRule:
     settlement_coordinate: str
     session_mapping: str
     applicable_source_kinds: tuple[str, ...]
+    cutoff_lanes: tuple[tuple[str, str], ...]
     source_kind: str
     source: str
     source_reference: str
@@ -1132,6 +1182,29 @@ class DelistingTimingRule:
             )
         for kind in self.applicable_source_kinds:
             _vocabulary(kind, allowed=SOURCE_KINDS, what=f"{self.rule_id}: source kind")
+        seen_lanes: set[str] = set()
+        lane_map: dict[str, str] = {}
+        if not self.cutoff_lanes:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: a timing rule must name cutoff lanes",
+            )
+        for kind, lane in self.cutoff_lanes:
+            _vocabulary(kind, allowed=TIMING_COORDINATE_KINDS, what=f"{self.rule_id}: cutoff lane")
+            _vocabulary(lane, allowed=CUTOFF_KINDS, what=f"{self.rule_id}: cutoff lane kind")
+            if kind in seen_lanes:
+                raise DelistingPolicyError(
+                    BLOCKED_UNREGISTERED_TIMING_RULE,
+                    f"{self.rule_id}: duplicate cutoff lane for {kind}",
+                )
+            seen_lanes.add(kind)
+            lane_map[kind] = lane
+        missing_lanes = [kind for kind in self.required_coordinates if kind not in lane_map]
+        if missing_lanes:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{self.rule_id}: cutoff lanes missing for {missing_lanes}",
+            )
         _vocabulary(self.source_kind, allowed=SOURCE_KINDS, what="source_kind")
         _nonempty(self.source, what=f"{self.rule_id}: source")
         _nonempty(self.source_reference, what=f"{self.rule_id}: source_reference")
@@ -1166,6 +1239,7 @@ class DelistingTimingRule:
             "session_mapping": self.session_mapping,
             "successor_mark_mapping": self.successor_mark_mapping,
             "applicable_source_kinds": list(self.applicable_source_kinds),
+            "cutoff_lanes": [[kind, lane] for kind, lane in self.cutoff_lanes],
             "source_kind": self.source_kind,
             "source": self.source,
             "source_reference": self.source_reference,
@@ -2562,9 +2636,14 @@ def _index_coordinates(event: DelistingEvent) -> dict[str, SourcedCoordinate]:
     return {item.coordinate_kind: item for item in event.coordinates}
 
 
+def _cutoff_lane_map(rule: DelistingTimingRule) -> dict[str, str]:
+    return dict(rule.cutoff_lanes)
+
+
 def _enforce_cutoffs(
     event: DelistingEvent,
     indexed: Mapping[str, SourcedCoordinate],
+    rule: DelistingTimingRule,
     cutoff_policy: CutoffPolicy | None,
 ) -> None:
     if cutoff_policy is None:
@@ -2578,14 +2657,75 @@ def _enforce_cutoffs(
             event_id=event.event_id,
             security_id=event.security_id,
         )
+    outcome_available = iso_instant(
+        event.outcome.availability_time, what="outcome availability_time"
+    )
+    if outcome_available > cutoff_policy.cutoff_for(CUTOFF_KIND_OUTCOME):
+        raise DelistingPolicyError(
+            BLOCKED_COORDINATE_AFTER_CUTOFF,
+            f"outcome availability_time {event.outcome.availability_time} is after "
+            f"outcome_cutoff {cutoff_policy.outcome_cutoff}",
+            event_id=event.event_id,
+            security_id=event.security_id,
+        )
+    lanes = _cutoff_lane_map(rule)
     for coordinate in indexed.values():
+        if coordinate.coordinate_kind not in lanes:
+            raise DelistingPolicyError(
+                BLOCKED_CONTRADICTORY_COORDINATES,
+                f"{coordinate.coordinate_kind} has no cutoff lane on timing rule {rule.rule_id}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        lane = lanes[coordinate.coordinate_kind]
+        if coordinate.required_by != lane:
+            raise DelistingPolicyError(
+                BLOCKED_CONTRADICTORY_COORDINATES,
+                f"{coordinate.coordinate_kind} required_by {coordinate.required_by} disagrees "
+                f"with rule lane {lane}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
         available = iso_instant(coordinate.available_at, what="available_at")
-        limit = cutoff_policy.cutoff_for(coordinate.required_by)
+        limit = cutoff_policy.cutoff_for(lane)
         if available > limit:
             raise DelistingPolicyError(
                 BLOCKED_COORDINATE_AFTER_CUTOFF,
                 f"{coordinate.coordinate_kind} available_at {coordinate.available_at} is after "
-                f"{coordinate.required_by}",
+                f"{lane}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+
+
+def _enforce_rule_owned_sources(
+    indexed: Mapping[str, SourcedCoordinate],
+    rule: DelistingTimingRule,
+    *,
+    event: DelistingEvent,
+) -> None:
+    lanes = _cutoff_lane_map(rule)
+    for coordinate in indexed.values():
+        if coordinate.coordinate_kind not in lanes:
+            raise DelistingPolicyError(
+                BLOCKED_CONTRADICTORY_COORDINATES,
+                f"{coordinate.coordinate_kind} has no cutoff lane on timing rule {rule.rule_id}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        if coordinate.required_by != lanes[coordinate.coordinate_kind]:
+            raise DelistingPolicyError(
+                BLOCKED_CONTRADICTORY_COORDINATES,
+                f"{coordinate.coordinate_kind} required_by {coordinate.required_by} disagrees "
+                f"with rule lane {lanes[coordinate.coordinate_kind]}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        if coordinate.source_kind not in rule.applicable_source_kinds:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_SOURCE_KIND,
+                f"{coordinate.coordinate_kind} source_kind {coordinate.source_kind} is not "
+                f"applicable to {rule.rule_id}",
                 event_id=event.event_id,
                 security_id=event.security_id,
             )
@@ -2622,6 +2762,31 @@ def _map_to_session(
         ) from exc
 
 
+def _left_after_right(left: SourcedCoordinate, right: SourcedCoordinate) -> bool:
+    """Order two coordinates. Instants compare as instants; mixed uses UTC dates.
+
+    When both sides carry instants, the canonical instants are compared. When
+    either side is date-only, each side contributes its UTC civil date so a
+    last-trade session can precede a same-day effective instant without
+    inventing an intra-day time for the date-only coordinate.
+    """
+    if left.instant is not None and right.instant is not None:
+        return iso_instant(left.instant, what="left instant") > iso_instant(
+            right.instant, what="right instant"
+        )
+    left_day = (
+        iso_instant(left.instant, what="left instant").date().isoformat()
+        if left.instant is not None
+        else left.calendar_date
+    )
+    right_day = (
+        iso_instant(right.instant, what="right instant").date().isoformat()
+        if right.instant is not None
+        else right.calendar_date
+    )
+    return left_day > right_day
+
+
 def _enforce_ordering(
     indexed: Mapping[str, SourcedCoordinate],
     rule: DelistingTimingRule,
@@ -2631,11 +2796,10 @@ def _enforce_ordering(
     for constraint in rule.ordering_constraints:
         left = indexed[constraint.left]
         right = indexed[constraint.right]
-        if left.calendar_date > right.calendar_date:
+        if _left_after_right(left, right):
             raise DelistingPolicyError(
                 BLOCKED_ORDERING_CONSTRAINT_VIOLATED,
-                f"{constraint.left} {left.calendar_date} is after {constraint.right} "
-                f"{right.calendar_date}",
+                f"{constraint.left} is after {constraint.right}",
                 event_id=event.event_id,
                 security_id=event.security_id,
             )
@@ -2647,7 +2811,7 @@ def settle_sourced_outcome(
     *,
     entry_basis: str,
     held_notional: str,
-    successor_close: str | None = None,
+    successor_mark: SuccessorMark | None = None,
     as_of: str,
     rules: Sequence[DelistingTimingRule] = REGISTERED_DELISTING_TIMING_RULES,
     calendar: TradingCalendar | None = None,
@@ -2708,7 +2872,8 @@ def settle_sourced_outcome(
             event_id=event.event_id,
             security_id=event.security_id,
         )
-    _enforce_cutoffs(event, indexed, cutoff_policy)
+    _enforce_rule_owned_sources(indexed, rule, event=event)
+    _enforce_cutoffs(event, indexed, rule, cutoff_policy)
     _enforce_ordering(indexed, rule, event=event)
 
     resolved_calendar = require_calendar(calendar, what=f"timing rule {rule.rule_id} session map")
@@ -2718,8 +2883,9 @@ def settle_sourced_outcome(
         resolved_calendar,
         event=event,
     )
+    successor_session: str | None = None
     if rule.successor_mark_mapping is not None:
-        _map_to_session(
+        successor_session = _map_to_session(
             indexed[rule.settlement_coordinate],
             rule.successor_mark_mapping,
             resolved_calendar,
@@ -2740,15 +2906,60 @@ def settle_sourced_outcome(
     if outcome.outcome_kind in (OUTCOME_SOURCED_CASH, OUTCOME_SOURCED_CASH_AND_STOCK):
         proceeds += exact(outcome.cash_per_share, what="cash_per_share")
     if outcome.outcome_kind in (OUTCOME_SOURCED_STOCK, OUTCOME_SOURCED_CASH_AND_STOCK):
-        if successor_close is None:
+        if successor_mark is None:
             raise DelistingPolicyError(
                 BLOCKED_MISSING_SUCCESSOR_MARK,
                 "a stock outcome cannot be valued without a successor mark; none is assumed",
                 event_id=event.event_id,
                 security_id=event.security_id,
             )
+        if type(successor_mark) is not SuccessorMark:
+            raise DelistingPolicyError(
+                BLOCKED_MISSING_SUCCESSOR_MARK,
+                "successor_mark must be a SuccessorMark",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        if successor_session is None:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_TIMING_RULE,
+                f"{rule.rule_id}: a stock outcome requires a derived successor mark session",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        if (
+            successor_mark.security_id != outcome.successor_security_id
+            or successor_mark.session != successor_session
+        ):
+            raise DelistingPolicyError(
+                BLOCKED_SUCCESSOR_MARK_NOT_BOUND,
+                "successor_mark security_id and session must match the outcome and the "
+                "derived successor mark session",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        if successor_mark.source_kind not in rule.applicable_source_kinds:
+            raise DelistingPolicyError(
+                BLOCKED_UNREGISTERED_SOURCE_KIND,
+                f"successor_mark source_kind {successor_mark.source_kind} is not applicable "
+                f"to {rule.rule_id}",
+                event_id=event.event_id,
+                security_id=event.security_id,
+            )
+        if cutoff_policy is not None:
+            mark_available = iso_instant(
+                successor_mark.available_at, what="successor_mark available_at"
+            )
+            if mark_available > cutoff_policy.cutoff_for(CUTOFF_KIND_OUTCOME):
+                raise DelistingPolicyError(
+                    BLOCKED_COORDINATE_AFTER_CUTOFF,
+                    f"successor_mark available_at {successor_mark.available_at} is after "
+                    f"outcome_cutoff {cutoff_policy.outcome_cutoff}",
+                    event_id=event.event_id,
+                    security_id=event.security_id,
+                )
         proceeds += exact(outcome.share_ratio, what="share_ratio") * exact(
-            successor_close, what="successor_close"
+            successor_mark.close, what="successor_mark close"
         )
 
     observed_return = proceeds / basis - 1
@@ -2875,7 +3086,7 @@ class ExitPricingInput:
     event_id: str
     held_notional: str
     entry_basis: str | None = None
-    successor_close: str | None = None
+    successor_mark: SuccessorMark | None = None
     haircut_id: str | None = None
     sensitivity_range_id: str | None = None
 
@@ -2890,8 +3101,12 @@ class ExitPricingInput:
             )
         if self.entry_basis is not None:
             exact(self.entry_basis, what="entry_basis")
-        if self.successor_close is not None:
-            exact(self.successor_close, what="successor_close")
+        if self.successor_mark is not None and type(self.successor_mark) is not SuccessorMark:
+            raise DelistingPolicyError(
+                BLOCKED_MISSING_SUCCESSOR_MARK,
+                "successor_mark must be a SuccessorMark",
+                event_id=self.event_id,
+            )
         if self.haircut_id is not None:
             token(self.haircut_id, what="haircut_id")
         if self.sensitivity_range_id is not None:
@@ -2902,7 +3117,9 @@ class ExitPricingInput:
             "event_id": self.event_id,
             "held_notional": self.held_notional,
             "entry_basis": self.entry_basis,
-            "successor_close": self.successor_close,
+            "successor_mark": (
+                None if self.successor_mark is None else self.successor_mark.to_json_dict()
+            ),
             "haircut_id": self.haircut_id,
             "sensitivity_range_id": self.sensitivity_range_id,
         }
@@ -3163,7 +3380,7 @@ def _settle_row(
                 outcome,
                 entry_basis=basis,
                 held_notional=notional,
-                successor_close=None if pricing is None else pricing.successor_close,
+                successor_mark=None if pricing is None else pricing.successor_mark,
                 as_of=as_of,
                 rules=rules,
                 calendar=calendar,
@@ -3560,6 +3777,7 @@ __all__ = [
     "BLOCKED_MISSING_REQUIRED_COORDINATE",
     "BLOCKED_MISSING_REQUIRED_FIELD",
     "BLOCKED_MISSING_SUCCESSOR_MARK",
+    "BLOCKED_SUCCESSOR_MARK_NOT_BOUND",
     "BLOCKED_ORDERING_CONSTRAINT_VIOLATED",
     "BLOCKED_NONPOSITIVE_ENTRY_BASIS",
     "BLOCKED_NOT_AN_ISO_DATE",
@@ -3678,6 +3896,7 @@ __all__ = [
     "SESSION_MAPPINGS",
     "SourcedCoordinate",
     "SourcedOutcome",
+    "SuccessorMark",
     "UnknownAdverseOutcome",
     "attribute_pnl_by_outcome_type",
     "build_delisting_table",

@@ -238,7 +238,7 @@
   ],
   "pricing": [
     {"event_id": "evt-cash-merger", "held_notional": "125000", "entry_basis": "41.75"},
-    {"event_id": "evt-stock-merger", "held_notional": "88000", "entry_basis": "22.5", "successor_close": "31.2"},
+    {"event_id": "evt-stock-merger", "held_notional": "88000", "entry_basis": "22.5"},
     {"event_id": "evt-bankruptcy", "held_notional": "40000", "haircut_id": "hc-bankruptcy-recovery-a", "sensitivity_range_id": "sr-bankruptcy-v1"}
   ],
   "expected_coverage": {
@@ -304,7 +304,7 @@
     "delisting_row_count": 6,
     "fallback_result_count": 0,
     "attribution_row_count": 6,
-    "report_sha256_grouped": "cf587412:1be96137:aeb66055:326d8723:43faa395:85e4fd01:6b6b00c8:01786725"
+    "report_sha256_grouped": "5cb4745f:c54eacdf:b6a4ec5a:c817d601:ba390fe3:141af4ee:1b7e9bde:045e9219"
   },
   "clean_run": {
     "note": "A run with nothing missing in any of the eight classes. Coverage minima are owner-registered at 1, so this synthetic run is GATE_VALID. Timing remains unregistered, so a sourced cash/stock exit would still leave held positions unaudited.",
@@ -333,7 +333,7 @@
       "held_position_coverage_exact": "1/1",
       "unregistered_threshold_classes": []
     },
-    "report_sha256_grouped": "33a22e92:151c6727:e6a676a5:5c75652c:f23efda1:5e53879e:a74f7a83:f39ad3ae"
+    "report_sha256_grouped": "1785c74f:1f15968b:bbf57177:4eb46dc0:44ec4754:aef97993:0bc11d17:5b93ff92"
   },
   "registered_probe": {
     "note": "Test-only records passed through the `rules=` / `haircuts=` / `ranges=` / `thresholds=` parameters under the TEST_CONSTRUCTED source kind, which every validate_*_registry forbids in a shipped registry. They exist to prove the machinery is complete, not to register anything.",
@@ -472,8 +472,10 @@
     "orphan_coverage_observation": "BLOCKED_ORPHAN_COVERAGE_OBSERVATION",
     "listing_status_not_event_evidence": "BLOCKED_LISTING_STATUS_NOT_EVENT_EVIDENCE",
     "denominator_changed_after_preregistration": "BLOCKED_DENOMINATOR_CHANGED_AFTER_PREREGISTRATION",
+    "preregistration_mismatch": "BLOCKED_PREREGISTRATION_MISMATCH",
     "implicit_benchmark_proxy": "BLOCKED_IMPLICIT_BENCHMARK_PROXY",
-    "action_absence_is_not_completeness": "BLOCKED_ACTION_ABSENCE_IS_NOT_COMPLETENESS"
+    "action_absence_is_not_completeness": "BLOCKED_ACTION_ABSENCE_IS_NOT_COMPLETENESS",
+    "successor_mark_not_bound": "BLOCKED_SUCCESSOR_MARK_NOT_BOUND"
   },
   "owner_registrations_required": [
     {
